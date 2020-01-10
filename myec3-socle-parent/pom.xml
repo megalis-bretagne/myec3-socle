@@ -1,0 +1,708 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>org.myec3.socle</groupId>
+	<artifactId>myec3-socle-parent</artifactId>
+	<packaging>pom</packaging>
+
+	<name>MyEc3 - Socle parent pom</name>
+	<version>5.6.2-MEGALIS-SNAPSHOT</version>
+
+	<description>
+		Parent pom designed to be used in any Myec3 module.
+		Mainly
+		defined plugin and environments configuration.
+   </description>
+
+	<!-- This pom is a parent pom. DECLARE DEPENDENCIES HERE ! -->
+
+	<properties>
+		<mysql-connector-java-version>5.1.36</mysql-connector-java-version>
+		<log4j-version>2.11.1</log4j-version>
+		<slf4j-version>1.7.25</slf4j-version>
+		<junit-version>4.12</junit-version>
+		<tapestry-version>5.4.4</tapestry-version>
+		<spring-version>5.1.3.RELEASE</spring-version>
+		<jackson-version>2.9.8</jackson-version>
+		<javax-validation-version>2.0.0.Final</javax-validation-version>
+		<javax-ws-version>2.1.1</javax-ws-version>
+		<spring-security-version>5.1.2.RELEASE</spring-security-version>
+		<hibernate-version>5.4.0.Final</hibernate-version>
+		<hibernate-validator-version>6.0.2.Final</hibernate-validator-version>
+		<glassfish-version>2.2.6</glassfish-version>
+		<javax-el-version>3.0.0</javax-el-version>
+		<jersey-version>2.28</jersey-version>
+		<activemq-core-version>5.15.8</activemq-core-version>
+		<quartz-scheduler-version>2.3.0</quartz-scheduler-version>
+		<commons-dbcp-version>1.4</commons-dbcp-version>
+		<commons-lang-version>3.8.1</commons-lang-version>
+		<javassist-version>3.18.2-GA</javassist-version>
+		<camel-version>2.23.0</camel-version>
+		<xbean-spring-version>3.9</xbean-spring-version>
+		<javax-mail-version>1.4.5</javax-mail-version>
+		<jetty-version>9.4.14.v20181114</jetty-version>
+		<jetty-test-version>8.2.0.v20160908</jetty-test-version>
+		<sysmm-version>1.0</sysmm-version>
+		<opencsv-version>2.0</opencsv-version>
+		<commons-io-version>1.3.2</commons-io-version>
+		<servlet-version>4.0.1</servlet-version>
+		<json-version>20140107</json-version>
+		<httpclient-version>4.5.8</httpclient-version>
+		<dbunit-version>2.4.8</dbunit-version>
+		<h2database-version>1.4.194</h2database-version>
+		<jwt-version>3.4.0</jwt-version>
+		<assertj-version>3.12.1</assertj-version>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<main.config.directory>src/main/config</main.config.directory>
+		<config.env.filtering>true</config.env.filtering>
+		<git-repo-url>https://gitlab.kazan.priv.atos.fr/myec3/myec3-socle</git-repo-url>
+	</properties>
+
+    <!-- SCM connection -->
+	<scm>
+		<connection>scm:git:${git-repo-url}</connection>
+		<developerConnection>scm:git:${git-repo-url}</developerConnection>
+	  <tag>5.4</tag>
+  </scm>
+
+    <dependencyManagement>
+		<dependencies>
+			<!-- Spring dependencies -->
+			<dependency>
+				<groupId>org.springframework</groupId>
+				<artifactId>spring-beans</artifactId>
+				<version>${spring-version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework</groupId>
+				<artifactId>spring-core</artifactId>
+				<version>${spring-version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework</groupId>
+				<artifactId>spring-context</artifactId>
+				<version>${spring-version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework</groupId>
+				<artifactId>spring-context-support</artifactId>
+				<version>${spring-version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework</groupId>
+				<artifactId>spring-tx</artifactId>
+				<version>${spring-version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework</groupId>
+				<artifactId>spring-orm</artifactId>
+				<version>${spring-version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework</groupId>
+				<artifactId>spring-web</artifactId>
+				<version>${spring-version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework</groupId>
+				<artifactId>spring-jdbc</artifactId>
+				<version>${spring-version}</version>
+			</dependency>
+			<dependency>
+			    <groupId>org.springframework</groupId>
+			    <artifactId>spring-webmvc</artifactId>
+			    <version>${spring-version}</version>
+			</dependency>
+			
+			<!-- Jackson -->
+			<dependency>
+			    <groupId>com.fasterxml.jackson.core</groupId>
+			    <artifactId>jackson-databind</artifactId>
+			    <version>${jackson-version}</version>
+			</dependency>
+			<dependency>
+	            <groupId>com.fasterxml.jackson.core</groupId>
+	            <artifactId>jackson-core</artifactId>
+	            <version>${jackson-version}</version>
+	        </dependency>
+	        <dependency>
+	            <groupId>com.fasterxml.jackson.core</groupId>
+	            <artifactId>jackson-annotations</artifactId>
+	            <version>${jackson-version}</version>
+	        </dependency>
+			
+			<!-- Javax -->
+			<dependency>
+			    <groupId>javax.validation</groupId>
+			    <artifactId>validation-api</artifactId>
+			    <version>${javax-validation-version}</version>
+			</dependency>
+			
+			<dependency>
+			    <groupId>javax.ws.rs</groupId>
+			    <artifactId>javax.ws.rs-api</artifactId>
+			    <version>${javax-ws-version}</version>
+			</dependency>
+
+            <dependency>
+                <groupId>javax.servlet</groupId>
+    			<artifactId>javax.servlet-api</artifactId>
+                <version>${servlet-version}</version>
+            </dependency>
+            
+            <!-- Jersey -->
+            <dependency>
+                <groupId>org.glassfish.jersey.core</groupId>
+    			<artifactId>jersey-client</artifactId>
+                <version>${jersey-version}</version>
+            </dependency>
+            <dependency>
+			    <groupId>org.glassfish.jersey.media</groupId>
+			    <artifactId>jersey-media-json-jackson</artifactId>
+			    <version>${jersey-version}</version>
+			</dependency>
+			<dependency>
+			    <groupId>org.glassfish.jersey.media</groupId>
+			    <artifactId>jersey-media-jaxb</artifactId>
+			    <version>${jersey-version}</version>
+			</dependency>
+			<dependency>
+			    <groupId>org.glassfish.jersey.core</groupId>
+			    <artifactId>jersey-common</artifactId>
+			    <version>${jersey-version}</version>
+			</dependency>
+			<dependency>
+			    <groupId>org.glassfish.jersey.inject</groupId>
+			    <artifactId>jersey-hk2</artifactId>
+			    <version>${jersey-version}</version>
+			</dependency>
+
+	        <!-- SpoolMess -->
+			<dependency>
+				<groupId>net.atos.mm.fwk</groupId>
+				<artifactId>sysmm</artifactId>
+				<version>${sysmm-version}</version>
+			</dependency>
+
+			<!-- Quartz dependencies -->
+			<dependency>
+				<groupId>org.quartz-scheduler</groupId>
+				<artifactId>quartz</artifactId>
+				<version>${quartz-scheduler-version}</version>
+			</dependency>
+
+			<!-- Used by quartz JDBC Store TX -->
+			<dependency>
+				<groupId>commons-dbcp</groupId>
+				<artifactId>commons-dbcp</artifactId>
+				<version>${commons-dbcp-version}</version>
+			</dependency>
+
+			<!-- DB -->
+			<dependency>
+				<groupId>mysql</groupId>
+				<artifactId>mysql-connector-java</artifactId>
+				<version>${mysql-connector-java-version}</version>
+			</dependency>
+
+			<!-- Spring Security -->
+			<dependency>
+				<groupId>org.springframework.security</groupId>
+				<artifactId>spring-security-core</artifactId>
+				<version>${spring-security-version}</version>
+				<exclusions>
+					<exclusion>
+						 <groupId>org.springframework</groupId>
+	  					<artifactId>spring-expression</artifactId>
+					</exclusion>
+				</exclusions>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework.security</groupId>
+				<artifactId>spring-security-config</artifactId>
+				<version>${spring-security-version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework.security</groupId>
+				<artifactId>spring-security-acl</artifactId>
+				<version>${spring-security-version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework.security</groupId>
+				<artifactId>spring-security-web</artifactId>
+				<version>${spring-security-version}</version>
+			</dependency>
+
+			<!-- Hibernate cache-->
+			<dependency>
+			    <groupId>org.hibernate</groupId>
+			    <artifactId>hibernate-jcache</artifactId>
+			    <version>${hibernate-version}</version>
+			</dependency>
+			<dependency>
+		      	<groupId>org.ehcache</groupId>
+		      	<artifactId>ehcache</artifactId>
+		      	<version>3.6.3</version>
+		    </dependency>
+			
+			<!-- Audit -->
+			<dependency>
+				<groupId>org.hibernate</groupId>
+				<artifactId>hibernate-envers</artifactId>
+				<version>${hibernate-version}</version>
+			</dependency>
+			
+			<!-- Bean Validation -->
+			<dependency>
+			    <groupId>org.hibernate.validator</groupId>
+			    <artifactId>hibernate-validator</artifactId>
+			    <version>${hibernate-validator-version}</version>
+			</dependency>
+			<dependency>
+			    <groupId>org.hibernate.validator</groupId>
+			    <artifactId>hibernate-validator-annotation-processor</artifactId>
+			    <version>${hibernate-validator-version}</version>
+			</dependency>
+			
+			<dependency>
+			    <groupId>javax.el</groupId>
+			    <artifactId>javax.el-api</artifactId>
+			    <version>${javax-el-version}</version>
+			</dependency>
+			<dependency>
+			    <groupId>org.glassfish.web</groupId>
+			    <artifactId>javax.el</artifactId>
+			    <version>${glassfish-version}</version>
+			</dependency>
+
+			<!-- Logging -->
+			<dependency>
+			    <groupId>org.apache.logging.log4j</groupId>
+			    <artifactId>log4j-core</artifactId>
+			    <version>${log4j-version}</version>
+			</dependency>
+			<dependency>
+			    <groupId>org.apache.logging.log4j</groupId>
+			    <artifactId>log4j-api</artifactId>
+			    <version>${log4j-version}</version>
+			</dependency>
+			<dependency>
+			    <groupId>org.apache.logging.log4j</groupId>
+			    <artifactId>log4j-slf4j-impl</artifactId>
+			    <version>${log4j-version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.slf4j</groupId>
+				<artifactId>slf4j-api</artifactId>
+				<version>${slf4j-version}</version>
+			</dependency>
+
+			<!-- Tapestry -->
+			<dependency>
+				<groupId>org.apache.tapestry</groupId>
+				<artifactId>tapestry-core</artifactId>
+				<version>${tapestry-version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.tapestry</groupId>
+				<artifactId>tapestry-spring</artifactId>
+				<version>${tapestry-version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.tapestry</groupId>
+				<artifactId>tapestry-upload</artifactId>
+				<version>${tapestry-version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.tapestry</groupId>
+				<artifactId>tapestry-ioc</artifactId>
+				<version>${tapestry-version}</version>
+				<exclusions>
+					<exclusion>
+						<groupId>jboss</groupId>
+						<artifactId>javassist</artifactId>
+					</exclusion>
+					<exclusion>
+						<artifactId>javassist</artifactId>
+						<groupId>javassist</groupId>
+					</exclusion>
+				</exclusions>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.tapestry</groupId>
+				<artifactId>tapestry-test</artifactId>
+				<version>${tapestry-version}</version>
+				<exclusions>
+					<exclusion>
+						<groupId>ant</groupId>
+						<artifactId>ant</artifactId>
+					</exclusion>
+				</exclusions>
+				<scope>test</scope>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.commons</groupId>
+    			<artifactId>commons-lang3</artifactId>
+				<version>${commons-lang-version}</version>
+			</dependency>
+
+			<!-- ActiveMQ -->
+			<dependency>
+			    <groupId>org.apache.activemq</groupId>
+			    <artifactId>activemq-client</artifactId>
+			    <version>${activemq-core-version}</version>
+			</dependency>
+			
+			<dependency>
+			    <groupId>org.apache.activemq</groupId>
+			    <artifactId>activemq-broker</artifactId>
+			    <version>${activemq-core-version}</version>
+			</dependency>
+			
+			<dependency>
+				<groupId>org.apache.activemq</groupId>
+				<artifactId>activemq-camel</artifactId>
+				<version>${activemq-core-version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>org.apache.activemq</groupId>
+				<artifactId>activemq-pool</artifactId>
+				<version>${activemq-core-version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>org.javassist</groupId>
+				<artifactId>javassist</artifactId>
+				<version>${javassist-version}</version>
+			</dependency>
+
+			<!-- Apache Camel -->
+			<dependency>
+				<groupId>org.apache.camel</groupId>
+				<artifactId>camel-core</artifactId>
+				<version>${camel-version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>org.apache.camel</groupId>
+				<artifactId>camel-spring</artifactId>
+				<version>${camel-version}</version>
+			</dependency>
+			
+			<dependency>
+			    <groupId>org.apache.camel</groupId>
+			    <artifactId>camel-spring-javaconfig</artifactId>
+			    <version>${camel-version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>org.apache.camel</groupId>
+				<artifactId>camel-jms</artifactId>
+				<version>${camel-version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>org.apache.xbean</groupId>
+				<artifactId>xbean-spring</artifactId>
+				<version>${xbean-spring-version}</version>
+			</dependency>
+
+			<!-- Mail -->
+			<dependency>
+				<groupId>com.sun.mail</groupId>
+				<artifactId>javax.mail</artifactId>
+				<version>${javax-mail-version}</version>
+			</dependency>
+
+			<!-- Tests -->
+			<dependency>
+				<groupId>org.springframework</groupId>
+				<artifactId>spring-test</artifactId>
+				<version>${spring-version}</version>
+				<scope>test</scope>
+			</dependency>
+			<dependency>
+				<groupId>junit</groupId>
+				<artifactId>junit</artifactId>
+				<version>${junit-version}</version>
+				<scope>test</scope>
+			</dependency>
+			<dependency>
+				<groupId>org.dbunit</groupId>
+				<artifactId>dbunit</artifactId>
+				<version>${dbunit-version}</version>
+				<scope>test</scope>
+			</dependency>
+			<dependency>
+			    <groupId>com.h2database</groupId>
+			    <artifactId>h2</artifactId>
+			    <version>${h2database-version}</version>
+			    <scope>test</scope>
+			</dependency>
+			<dependency>
+			    <groupId>org.glassfish.jersey.containers</groupId>
+			    <artifactId>jersey-container-grizzly2-http</artifactId>
+			    <version>${jersey-version}</version>
+			    <scope>test</scope>
+			</dependency>
+			<dependency>
+			    <groupId>org.glassfish.jersey.ext</groupId>
+			    <artifactId>jersey-spring4</artifactId>
+			    <version>${jersey-version}</version>
+			    <scope>test</scope>
+			</dependency>
+			<dependency>
+			    <groupId>org.glassfish.jersey.containers</groupId>
+			    <artifactId>jersey-container-servlet</artifactId>
+			    <version>${jersey-version}</version>
+			    <scope>test</scope>
+			</dependency>
+
+			<!-- Jetty -->
+			<dependency>
+				<groupId>org.eclipse.jetty</groupId>
+				<artifactId>test-jetty-servlet</artifactId>
+				<version>${jetty-test-version}</version>
+			</dependency>
+
+			<!-- OpenCSV -->
+			<dependency>
+				<groupId>net.sf.opencsv</groupId>
+				<artifactId>opencsv</artifactId>
+				<version>${opencsv-version}</version>
+			</dependency>
+
+			 <!--  Apache commons io -->
+	        <dependency>
+	            <groupId>org.apache.commons</groupId>
+	            <artifactId>commons-io</artifactId>
+	            <version>${commons-io-version}</version>
+	        </dependency>
+
+	        <dependency>
+				<groupId>org.json</groupId>
+				<artifactId>json</artifactId>
+				<version>${json-version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>org.apache.httpcomponents</groupId>
+				<artifactId>httpclient</artifactId>
+				<version>${httpclient-version}</version>
+			</dependency>
+
+			<!-- JSON Web Token -->
+			<dependency>
+				<groupId>com.auth0</groupId>
+				<artifactId>java-jwt</artifactId>
+				<version>${jwt-version}</version>
+			</dependency>
+			
+			<dependency>
+			<groupId>org.assertj</groupId>
+			<artifactId>assertj-core</artifactId>
+			<version>${assertj-version}</version>
+			<scope>test</scope>
+		</dependency>
+		</dependencies>
+	</dependencyManagement>
+
+	<build>
+		<pluginManagement>
+			<plugins>
+
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-jar-plugin</artifactId>
+					<version>2.3.1</version>
+				</plugin>
+
+				<!-- Set default compilation to Java 1.8 and UTF-8 for encoding -->
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-compiler-plugin</artifactId>
+					<version>2.3.2</version>
+					<configuration>
+						<encoding>UTF-8</encoding>
+						<source>1.8</source>
+						<target>1.8</target>
+					</configuration>
+				</plugin>
+
+				<!-- It is recommanded to define resource encoding to avoid charset issues -->
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-resources-plugin</artifactId>
+					<version>2.5</version>
+					<configuration>
+						<encoding>UTF-8</encoding>
+					</configuration>
+				</plugin>
+
+				<plugin>
+					<groupId>org.codehaus.mojo</groupId>
+					<artifactId>cobertura-maven-plugin</artifactId>
+					<version>2.5.1</version>
+				</plugin>
+
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-javadoc-plugin</artifactId>
+					<version>2.8</version>
+					<configuration>
+						<doclet>org.umlgraph.doclet.UmlGraphDoc</doclet>
+						<docletArtifact>
+							<groupId>org.umlgraph</groupId>
+							<artifactId>doclet</artifactId>
+							<version>5.1</version>
+						</docletArtifact>
+						<additionalparam>-all</additionalparam>
+						<useStandardDocletOptions>true</useStandardDocletOptions>
+						<minmemory>128m</minmemory>
+						<maxmemory>512m</maxmemory>
+						<encoding>UTF-8</encoding>
+						<charset>UTF-8</charset>
+						<docencoding>UTF-8</docencoding>
+						<aggregate>true</aggregate>
+						<excludePackageNames>org.myec3.socle.webapp.*
+						</excludePackageNames>
+					</configuration>
+				</plugin>
+				<plugin>
+					<groupId>org.eclipse.jetty</groupId>
+					<artifactId>jetty-maven-plugin</artifactId>
+					<version>${jetty-version}</version>
+				</plugin>
+			</plugins>
+		</pluginManagement>
+
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-resources-plugin</artifactId>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-javadoc-plugin</artifactId>
+			</plugin>
+			<plugin>
+			<groupId>org.apache.maven.plugins</groupId>
+			<artifactId>maven-war-plugin</artifactId>
+			<version>2.6</version>
+			<configuration>
+				<failOnMissingWebXml>false</failOnMissingWebXml>
+			</configuration>
+		</plugin>
+		</plugins>
+	</build>
+
+	<reporting>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-javadoc-plugin</artifactId>
+				<version>2.8</version>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-project-info-reports-plugin</artifactId>
+				<version>2.1.2</version>
+				<reportSets>
+					<reportSet>
+						<reports>
+							<report>issue-tracking</report>
+							<report>license</report>
+							<report>summary</report>
+							<report>mailing-list</report>
+							<report>project-team</report>
+							<report>scm</report>
+							<report>cim</report>
+							<report>index</report>
+						</reports>
+					</reportSet>
+				</reportSets>
+			</plugin>
+		</plugins>
+	</reporting>
+
+	<!-- repositories> <repository> <id>central</id> <name>Maven Repository
+		Switchboard</name> <layout>default</layout> <url>http://repo1.maven.org/maven2</url>
+		<snapshots> <enabled>false</enabled> </snapshots> </repository> <repository>
+		<id>jahia</id> <name>jahia</name> <url>http://maven.jahia.org/maven2</url>
+		<releases> <enabled>true</enabled> </releases> <snapshots> <enabled>false</enabled>
+		</snapshots> </repository> <repository> <id>Springframework milestone</id>
+		<url>http://maven.springframework.org/milestone</url> <releases> <enabled>true</enabled>
+		</releases> <snapshots> <enabled>false</enabled> </snapshots> </repository>
+		<repository> <id>sun</id> <name>sun java</name> <url>http://download.java.net/maven/2/</url>
+		<releases> <enabled>true</enabled> </releases> <snapshots> <enabled>false</enabled>
+		</snapshots> </repository> <repository> <id>resthub</id> <url>http://resthub.org/nexus/content/groups/resthub</url>
+		</repository> </repositories -->
+
+	<!-- pluginRepositories> <pluginRepository> <id>central</id> <name>Maven
+		Plugin Repository</name> <url>http://repo1.maven.org/maven2</url> <layout>default</layout>
+		<snapshots> <enabled>false</enabled> </snapshots> <releases> <updatePolicy>never</updatePolicy>
+		</releases> </pluginRepository> <pluginRepository> <id>resthub</id> <url>http://resthub.org/nexus/content/groups/resthub</url>
+		</pluginRepository> </pluginRepositories -->
+
+
+	<!-- Debut : A supprimer lors de la mise en OpenSource -->
+<!-- 	<repositories> -->
+<!-- 		<repository> -->
+<!-- 			<id></id> -->
+<!-- 			<name></name> -->
+<!-- 			<url></url> -->
+<!-- 			<releases> -->
+<!-- 				<enabled>true</enabled> -->
+<!-- 			</releases> -->
+<!-- 			<snapshots> -->
+<!-- 				<enabled>true</enabled> -->
+<!-- 			</snapshots> -->
+<!-- 		</repository> -->
+<!-- 	</repositories> -->
+
+<!-- 	<pluginRepositories> -->
+<!-- 		<pluginRepository> -->
+<!-- 			<id></id> -->
+<!-- 			<url></url> -->
+<!-- 		</pluginRepository> -->
+<!-- 	</pluginRepositories> -->
+
+	<profiles>
+		<profile>
+			<id>jrebel</id>
+			<activation>
+				<property>
+					<name>env</name>
+					<value>local</value>
+				</property>
+			</activation>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.zeroturnaround</groupId>
+						<artifactId>jrebel-maven-plugin</artifactId>
+						<version>1.1.8</version>
+						<executions>
+							<execution>
+								<id>generate-rebel-xml</id>
+								<phase>process-resources</phase>
+								<goals>
+									<goal>generate</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
+
+	<!-- Fin : A supprimer lors de la mise en OpenSource -->
+</project>

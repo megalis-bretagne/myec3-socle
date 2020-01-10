@@ -1,0 +1,19 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns:t="http://tapestry.apache.org/schema/tapestry_5_1_0.xsd">
+	<p><t:label for="country">${message:country-label} *:</t:label> <t:select
+		t:id="country" onChange="javascript:postalCodeControl()" t:value="address.country" t:validate="required" />
+	</p>
+	<p><t:label for="postalAddress">${message:postalAddress-label} *:</t:label>
+	<t:textfield t:id="postalAddress"
+		t:value="address.postalAddress" t:validate="maxlength=255,required" />
+	</p>
+	<p><t:label for="postalCode">${message:postalCode-label} *:</t:label>
+		<t:textfield t:id="postalCode" t:maxlength="5" t:value="address.postalCode" t:validate="regexp,required" />
+	</p>
+	<p><t:label for="city">${message:city-label} *:</t:label> <t:textfield
+		t:id="city" t:value="address.city" t:validate="required,maxlength=255" />
+	</p>
+	<p><t:label for="canton">${message:canton-label} :</t:label> <t:textfield
+		t:id="canton" t:value="address.canton"
+		t:validate="maxlength=255" /></p>
+</html>

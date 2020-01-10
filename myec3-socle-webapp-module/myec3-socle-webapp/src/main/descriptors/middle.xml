@@ -1,0 +1,37 @@
+<assembly>
+	<id>middle</id>
+	<!-- This package should be extracted in /MIDDLE/customer/service on a middle server -->
+	<formats>
+		<format>zip</format>
+	</formats>
+	<includeBaseDirectory>false</includeBaseDirectory>
+	<baseDirectory></baseDirectory>
+	<fileSets>
+		<fileSet>
+			<directory>${project.build.directory}/${project.build.finalName}</directory>
+			<includes>
+				<include>static/**</include>
+				<include>ebou.ico</include>
+				<include>WEB-INF/**</include>
+				<include>META-INF/**</include>
+				<include>**/*.jsp</include>
+				<include>**/*.tml</include>
+			</includes>
+			<excludes>
+				<exclude>**/database.properties</exclude>
+				<exclude>**/log4j.properties</exclude>
+				<exclude>**/cofaceWs.properties</exclude>
+				<exclude>**/emailService.properties</exclude>
+				<exclude>**/esb.properties</exclude>
+				<exclude>**/fileUpload.properties</exclude>
+				<exclude>**/init.properties</exclude>
+				<exclude>**/my-ebourgogne.properties</exclude>
+				<exclude>**/opensso.properties</exclude>
+				<exclude>**/socleCore.properties</exclude>
+				<exclude>**/structure-ref.properties</exclude>
+				<exclude>**/webapp.properties</exclude>
+			</excludes>
+			<outputDirectory>/</outputDirectory>
+		</fileSet>
+	</fileSets>
+</assembly>

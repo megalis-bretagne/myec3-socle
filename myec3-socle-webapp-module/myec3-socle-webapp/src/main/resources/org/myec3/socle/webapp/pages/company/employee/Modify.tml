@@ -1,0 +1,19 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html t:type="layout" xmlns:t="http://tapestry.apache.org/schema/tapestry_5_1_0.xsd">
+    <div id="main-content">
+	   	<h2>${employeeProfile?.user?.firstname} ${employeeProfile?.user?.lastname}</h2> 
+		
+		<t:if test="errorMessage">
+           <p class="error">${errorMessage}</p>
+        </t:if>	
+		
+		<ul class="tabs"> 
+			<li class="active"><strong>${message:user-data-label}</strong></li>
+			<t:if test="!isHimselfAndNotAdmin">
+				<li><t:pagelink page="company/employee/modifyroles" context="${employeeProfile.id}">${message:user-services-label}</t:pagelink></li>
+			</t:if>
+		</ul> 
+		
+	    <div t:type="employeeForm" t:id="employee_form" employeeProfile="employeeProfile" oldEstablishment="oldEstablishment" cancelRedirect="listEmployeesPage"></div>
+	</div>	
+</html>

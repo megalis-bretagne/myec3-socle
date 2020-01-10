@@ -1,0 +1,49 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"> 
+<html t:type="layout" xmlns:t="http://tapestry.apache.org/schema/tapestry_5_1_0.xsd">
+    <div id="main-content">
+    	<h2>${organism?.article?.label} ${organism?.label}</h2>
+    	
+    	<t:if test="successMessage">
+            <p class="success">${successMessage}</p>
+        </t:if>
+        
+        <t:if test="errorMessage">
+        	<p class="error">${errorMessage}</p>
+        </t:if>
+        
+  		<div class="tabbed-data"> 
+			<ul class="tabs"> 
+				<li><t:pagelink page="organism/detailOrganism" context="organism.id">${message:info-label}</t:pagelink></li> 
+				<t:if test="isAdmin">
+					<li><t:pagelink page="structure/relation/listRelations" context="organism.id">${message:relation-label}</t:pagelink></li>
+					<li><t:pagelink page="organism/detailOrganismApplications" context="organism.id">${message:service-label}</t:pagelink></li>
+					<li class="active"><strong>${message:api-label}</strong></li>
+				</t:if>
+				<li><t:pagelink page="organism/department/view" context="organism.id">${message:oragnization-level-label}</t:pagelink></li>  
+				<li><t:pagelink page="organism/agent/listAgents" context="organism.id">${message:User-label}</t:pagelink></li>
+				<t:if test="isAppManagerActive">
+				    <li><t:pagelink page="organism/appmanager/listAppManagers" context="organism.id">${message:AppAdmin-label}</t:pagelink></li>
+                </t:if>
+			</ul> 
+			
+			<div class="tabs-content">
+				<p class="mandatory">&nbsp;</p>
+				
+				<div class="actions-bar">
+					<p>
+						${message:api-key-label} : <strong>${organism?.apiKey}</strong>
+					</p>
+					<ul>
+						<li><t:actionLink t:id="generate" t:mixins="confirm" t:message="${message:generate-api-key-confirm}">
+						 		 <img src="${context:static/images/key.png}" alt="${message:generate-api-key-label}" title="${message:generate-api-key-label}" /> ${message:generate-api-key-label}
+							</t:actionLink>
+						</li>
+					</ul>
+				</div>
+
+			</div>
+		</div>
+	</div>
+</html>
+				
+    	

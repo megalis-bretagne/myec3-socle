@@ -1,0 +1,143 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<t:container
+	xmlns:t="http://tapestry.apache.org/schema/tapestry_5_1_0.xsd"
+	xmlns:p="tapestry:parameter">
+	<p class="mandatory">${message:mandatory-label}</p>
+	<t:form t:id="modification_form">
+		<t:if test="newOrganismDeparment">
+			<p t:banner="message:error-creation-department-label" t:type="errors"
+				t:clientClass="errorDialogue"></p>
+			<p:else>
+				<p t:banner="message:error-modification-department-label"
+					t:type="errors" t:clientClass="errorDialogue"></p>
+			</p:else>
+		</t:if>
+		<fieldset>
+			<legend> ${message:legend-label} </legend>
+			<p>
+				<t:label for="label">
+                    ${message:label-label} *:
+                </t:label>
+				<t:textfield t:id="label" t:value="organismDepartment.label"
+					t:validate="required, maxlength=255" />
+			</p>
+			<p>
+				<t:label for="sigle">
+                    ${message:sigle-label} *:
+                </t:label>
+				<t:textfield t:id="sigle" t:value="organismDepartment.abbreviation"
+					t:maxlength="8" t:validate="required, regexp" />
+				<a href="#" title="${message:sigle-help}"><img
+					src="${context:static/images/pic_help.png}" class="picHelp"
+					alt="${message:help-label}" />
+				</a>
+			</p>
+			<p>
+				<t:label for="siren">
+                    ${message:siren-label} :
+                </t:label>
+				<t:textfield t:id="siren" t:value="organismDepartment.siren"
+					t:validate="maxlength=255" />
+			</p>
+			<p>
+				<t:label for="description">
+                    ${message:description-label}
+                </t:label>
+				<input t:type="TextArea" t:id="description"
+					t:value="organismDepartment.description" cols="17" rows="5"
+					t:validate="maxlength=250" />
+			</p>
+			<p> 
+				<t:label for="parentDepartment"> 
+                    ${message:parentDepartment-label} : 
+                </t:label>
+				<t:select t:id="parentDepartment" t:validate="required"
+					t:encoder="departmentEncoder" t:model="departments"
+					t:value="selectedRootDepartment" />
+		    </p> 
+			<p>
+				<t:label for="postalAddress">
+                    ${message:postalAddress-label} *:
+                </t:label>
+				<t:textfield t:id="postalAddress"
+					t:value="organismDepartment.address.postalAddress"
+					t:validate="required, maxlength=255" />
+			</p>
+			<p>
+				<t:label for="postalCode">
+                    ${message:postalCode-label} *:
+                </t:label>
+				<t:textfield t:id="postalCode"
+					t:value="organismDepartment.address.postalCode"
+					t:validate="required, regexp" />
+			</p>
+			<p>
+				<t:label for="city">
+                    ${message:city-label} *:
+                </t:label>
+				<t:textfield t:id="city" t:value="organismDepartment.address.city"
+					t:validate="required, maxlength=255" />
+			</p>
+			<p>
+				<t:label for="canton">
+                    ${message:canton-label} :
+                </t:label>
+				<t:textfield t:id="canton"
+					t:value="organismDepartment.address.canton"
+					t:validate="maxlength=255" />
+			</p>
+			<p>
+				<t:label for="country">
+                    ${message:country-label} *:
+                </t:label>
+				<t:select t:id="country"
+					t:value="organismDepartment.address.country"
+					t:validate="required, required" />
+			</p>
+			<p>
+				<t:label for="email">
+                    ${message:email-label} *:
+                </t:label>
+				<t:textfield t:id="email" t:value="organismDepartment.email"
+					t:validate="required, regexp" />
+			</p>
+			<p>
+				<t:label for="phone">
+                    ${message:phone-label} :
+                </t:label>
+				<t:textfield t:id="phone" t:value="organismDepartment.phone"
+					t:validate="regexp" />
+			</p>
+			<p>
+				<t:label for="fax">
+                    ${message:fax-label} :
+                </t:label>
+				<t:textfield t:id="fax" t:value="organismDepartment.fax"
+					t:validate="regexp" />
+			</p>
+			<p>
+				<t:label for="website">
+                    ${message:website-label} :
+                </t:label>
+				<t:textfield t:id="website" t:value="organismDepartment.website"
+					t:validate="regexp, maxlength=255" />
+				<a href="#" title="${message:website-help}"><img
+					src="${context:static/images/pic_help.png}" class="picHelp"
+					alt="${message:website-help}" />
+				</a>
+			</p>
+			<div class="form-actions">
+				<p>
+					<input type="submit" name="submit" class="button btnOk"
+						value="${message:save-label}" /><input type="reset"
+						value="${message:reset-label}" id="cancelButton" />
+				</p>
+			</div>
+			&nbsp;
+			<ul class="links">
+				<li class="back"><a href="javascript:history.go(-1)">${message:back-label}</a>
+				</li>
+			</ul>
+		</fieldset>
+	</t:form>
+</t:container>

@@ -1,0 +1,25 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html t:type="layout" xmlns:t="http://tapestry.apache.org/schema/tapestry_5_1_0.xsd">
+    <div id="main-content">
+	    <h2>${agentProfile?.user?.firstname} ${agentProfile?.user?.lastname}</h2>
+		<div id="sectionContent">
+			<ul class="tabs"> 
+				<li class="active"><strong>${message:user-data-label}</strong></li>
+				<t:if test="!isHimselfAndNotAdmin">
+				<li><t:pagelink page="organism/agent/modifyroles" context="${agentProfile.id}">${message:user-services-label}</t:pagelink></li>
+				</t:if>
+			</ul> 
+			<t:if test="errorMessage">
+          	 	<p class="error">${errorMessage}</p>
+       		</t:if>	
+       		
+       		 <t:if test="certificateSuccessMessage">
+				<p class="success">${certificateSuccessMessage}</p>
+			</t:if>
+			<t:if test="certificateErrorMessage">
+				<p class="error">${certificateErrorMessage}</p>
+			</t:if>	
+	        <div t:id="agent_form" t:type="agentForm" agentProfile="agentProfile" cancelRedirect="viewPage"/>
+    	</div>
+	</div>
+</html>

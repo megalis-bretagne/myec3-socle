@@ -1,0 +1,54 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"> 
+<html t:type="layout" xmlns:t="http://tapestry.apache.org/schema/tapestry_5_1_0.xsd">
+    <div id="main-content">
+    	<h2>${organism?.article?.label} ${organism?.label}</h2>
+    	
+    	<t:if test="successMessage">
+            <p class="success">${successMessage}</p>
+        </t:if>
+        
+  		<div class="tabbed-data"> 
+			<ul class="tabs"> 
+				<li><t:pagelink page="organism/detailOrganism" context="organism.id">${message:info-label}</t:pagelink></li> 
+				<t:if test="isAdmin">
+					<li><t:pagelink page="structure/relation/listRelations" context="organism.id">${message:relation-label}</t:pagelink></li>
+					<li class="active"><strong>${message:service-label}</strong></li>
+					<li><t:pagelink page="organism/apiManagement" context="organism.id">${message:api-label}</t:pagelink></li> 	
+				</t:if>
+				<li><t:pagelink page="organism/department/view" context="organism.id">${message:oragnization-level-label}</t:pagelink></li>  
+				<li><t:pagelink page="organism/agent/listAgents" context="organism.id">${message:User-label}</t:pagelink></li>
+				<t:if test="isAppManagerActive">
+				    <li><t:pagelink page="organism/appmanager/listAppManagers" context="organism.id">${message:AppAdmin-label}</t:pagelink></li>
+                </t:if>
+				
+			</ul> 
+			<div class="tabs-content">
+				<p class="mandatory">&nbsp;</p>
+				<div class="actions-bar">
+						<ul>
+							<li><t:pagelink page="organism/managesubscriptions" context="[organism.id,organism.id]">
+							 ${message:manage-subscription-label}
+								</t:pagelink>
+							</li>
+						</ul>
+				</div>
+				<fieldset>
+					<legend>${message:list-subscription-label}</legend>
+						<ul class="service-list">
+						<t:loop source="availableApplications"  value="applicationLoop" t:empty="${message:empty-applications-label}">
+	                	<li>
+		                	${applicationLoop.label}
+	                	</li>
+	                </t:loop>
+	                	</ul>
+               		<ul class="links">
+               			<li class="back"><t:pagelink page="organism/searchresult">${message:back-searchresult-label}</t:pagelink></li>
+						<li class="back"><a href="javascript:history.go(-1)">${message:back-label}</a></li>
+					</ul>
+				</fieldset>
+			</div>
+		</div>
+	</div>
+</html>
+				
+    	

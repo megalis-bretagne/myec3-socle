@@ -1,0 +1,191 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html t:type="layout" xmlns:t="http://tapestry.apache.org/schema/tapestry_5_1_0.xsd">
+	<div id="main-content">
+		<h2>${message:pageTitle-label} ${organism?.article?.label} ${organism?.label}</h2>
+		<t:if test="errorMessage">
+            <p class="error">${errorMessage}</p>
+        </t:if>
+		<t:form t:id="modification_form">
+			<p t:banner="message:form-error"  t:type="errors" t:clientClass="errorDialogue"></p>
+
+			<p class="mandatory">${message:mandatory-label}</p>
+
+				<fieldset id="infosOrganism">
+					<legend>${message:info-organism-label}</legend>
+
+	<t:delegate t:to="chooseBlock" />
+
+	<!-- IF IT IS AN ADMIN (FUNCTIONAL OR TECHNICAL) -->
+	<t:block t:id="superAdminBlock">
+
+                    <p>
+                        <table id="organismModificationTable">
+                            <thead>
+                                <tr>
+                                    <th>${message:member-status-label}(s) *:</th>
+                                    <th>Label</th>
+                                    <th>${message:membership-begin-date-label}</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr t:id="status_list" t:type="AjaxFormLoop" t:source="organismStatusList" t:value="organismStatusLoop" t:model="plateformSelectModel" t:encoder="encoder">
+                                    <t:submitnotifier>
+                                        <td></td>
+                                        <td>
+											<t:select t:id="memberStatus" t:value="organismStatusLoop.status" model="listOrganismMemberStatusModel" t:validate="required" />
+										</td>
+                                        <td><t:datefield class="datePicker-input" t:id="beginMemberShipDate" t:value="organismStatusLoop.date" t:format="literal:dd/MM/yyyy" t:maxlength="10" t:validate="required, regexp" /></td>
+                                        <td><t:removerowlink style="text-decoration: none;"><input class="button btnOk" type="submit" value="${message:delete-label}" onclick="this.disabled=true;"/></t:removerowlink></td>
+                                    </t:submitnotifier>
+                                    <t:parameter name="addRow">
+                                        <td colspan="7" style="text-align: right; border:0px">
+                                            <t:addrowlink>${message:organism-add-status}</t:addrowlink>
+                                        </td>
+                                    </t:parameter>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </p>
+
+					<div class="datePicker-div">
+						<t:label class="datePicker-label" for="ideoSignatureDate">${message:ideo-signature-date-label} :</t:label>
+						<t:datefield class="datePicker-input" t:id="ideoSignatureDate" t:value="organism.ideoSignatureDate" t:format="literal:dd/MM/yyyy" t:maxlength="10" t:validate="regexp" />
+					</div>
+					<p>
+	            		<t:label for="article">${message:article-label} :</t:label>
+	            		<t:select t:id="article" t:value="organism.article" t:blankOption="auto"/>
+	            	</p>
+			       	<p>
+		                <t:label for="label">${message:label-label} *:</t:label>
+		                <t:textfield t:id="label" t:value="organism.label" t:validate="required, maxlength=255"/>
+		            </p>
+		            <p>
+		                <t:label for="siren">${message:siren-label} :</t:label>
+		                <t:textfield t:id="siren" t:value="organism.siren" t:validate="regexp"/>
+		            </p>
+		            <p>
+		                <t:label for="siret">${message:organism-nic-label} :</t:label>
+		                <t:textfield t:id="siret" t:value="organism.nic" t:maxlength="5" t:validate="regexp"/>
+		            </p>
+		            <p>
+		            	<t:label for="legalCategory">${message:legal-category-label} *:</t:label>
+		            	<t:select t:id="legalCategory" t:value="organism.legalCategory" t:validate="required" />
+		            </p>
+					<p>
+		            	<t:label for="organismNafCodeEnabled">${message:apeNafLabel-label} :</t:label>
+		        		<t:select t:id="organismNafCodeEnabled" t:encoder="nafCodeEncoder" t:model="listOfOrganismNafCode" t:value="organism.apeCode" t:blankLabel="message:unspecified-label" />
+	        		</p>
+					<p>
+						<t:label for="college">${message:college-label} *:</t:label>
+						<t:select t:id="college" t:value="organism.college" model="listCollegeModel" t:validate="required" />
+					</p>
+	</t:block>
+
+	<!-- IF IT IS AN OTHER USER -->
+	<t:block t:id="userBlock">
+				<p>
+	            	<t:label for="organismArticle">${message:article-label} :</t:label>
+	            	<t:select t:id="organismArticle" t:value="organism.article" t:blankOption="auto"/>
+	            </p>
+		       	<p>
+	                <t:label for="organismLabel">${message:label-label} *:</t:label>
+	                <t:textfield t:id="organismLabel" t:value="organism.label" t:validate="required, maxlength=255" t:disabled="true"/>
+					<a href="#" title="${message:field-disabled-help}">
+	        				<img src="${context:static/images/pic_help.png}" class="picHelp" alt="${message:field-disabled-help}"/>
+	        		</a>
+	            </p>
+	            <p>
+	                <t:label for="organismSiren">${message:siren-label} :</t:label>
+	                <t:textfield t:id="organismSiren" t:value="organism.siren" t:validate="regexp" t:disabled="true"/>
+					<a href="#" title="${message:field-disabled-help}">
+	        				<img src="${context:static/images/pic_help.png}" class="picHelp" alt="${message:field-disabled-help}"/>
+	        		</a>
+	            </p>
+				<p>
+					<t:label for="organismNic">${message:organism-nic-label} :</t:label>
+					<t:textfield t:id="organismNic" t:value="organism.nic" t:maxlength="5" t:validate="regexp" />
+				</p>
+				<p>
+	            	<t:label for="organismLegalCategory">${message:legal-category-label} *:</t:label>
+	            	<t:select t:id="organismLegalCategory" t:value="organism.legalCategory" t:validate="required" t:disabled="true" />
+					<a href="#" title="${message:field-disabled-help}">
+	        				<img src="${context:static/images/pic_help.png}" class="picHelp" alt="${message:field-disabled-help}"/>
+	        		</a>
+	            </p>
+				<p>
+	            	<t:label for="organismNafCodeDisabled">${message:apeNafLabel-label} :</t:label>
+	        		<t:select t:id="organismNafCodeDisabled" t:encoder="nafCodeEncoder" t:model="listOfOrganismNafCode" t:value="organism.apeCode" t:blankLabel="message:unspecified-label" t:disabled="true"/>
+					<a href="#" title="${message:field-disabled-help}">
+	        				<img src="${context:static/images/pic_help.png}" class="picHelp" alt="${message:field-disabled-help}"/>
+	        		</a>
+	        	</p>
+	</t:block>
+
+                <p><t:label for="postalAddress">${message:postalAddress-label} *:</t:label>
+                        <t:textfield t:id="postalAddress" t:value="organism.address.postalAddress" t:validate="required"/>
+                </p>
+
+
+                <p>
+                    <t:label for="localityAddress">${message:localityAddress-label} :</t:label>
+                    <t:textfield t:id="localityAddress" t:value="organism.address.localityAddress"/>
+                </p>
+
+                <p>
+                    <t:label for="additionalInfoAddress">${message:additionalInfoAddress-label} :</t:label>
+                    <t:textfield t:id="additionalInfoAddress" t:value="organism.address.additionalInfoAddress"/>
+                </p>
+
+
+                <p><t:label for="postalCode">${message:postalCode-label} *:</t:label>
+                        <t:textfield t:id="postalCode" t:value="organism.address.postalCode" t:validate="required"/>
+                </p>
+                <p><t:label for="city">${message:city-label} *:</t:label>
+                        <t:textfield t:id="city" t:value="organism.address.city" t:validate="required"/>
+                </p>
+                <p>
+                    <t:label for="country">${message:country-label} *:</t:label>
+                    <t:select
+                        t:id="country"
+                        t:value="organism.address.country"
+                        t:validate="required" />
+                </p>
+
+	            <p>
+	                <t:label for="email">${message:email-label} *:</t:label>
+	                <t:textfield t:id="email" t:value="organism.email" t:validate="email,required"/>
+	            </p>
+	            <p>
+	                <t:label for="phone">${message:phone-label} :</t:label>
+	                <t:textfield t:id="phone" t:value="organism.phone" t:validate="regexp"/>
+	            </p>
+	            <p>
+	                <t:label for="fax">${message:fax-label} :</t:label>
+	                <t:textfield t:id="fax" t:value="organism.fax" t:validate="regexp"/>
+	            </p>
+	            <p>
+	                <t:label for="website">${message:website-label} :</t:label>
+	                <t:textfield t:id="website" t:value="organism.website" t:validate="regexp, maxlength=255"/>
+					<a href="#" title="${message:website-help}">
+	        				<img src="${context:static/images/pic_help.png}" class="picHelp" alt="${message:website-help}"/>
+	        		</a>
+	            </p>
+	            <p>
+	                <t:label for="logo">${message:logo-label} :</t:label>
+	                <t:upload t:id="logo" t:value="logo"/>
+	            </p>
+	            <div class="form-actions">
+					<p>
+						<t:submit t:id="submit" class="button btnOk" value="message:save-label" />
+						<input type="reset" value="${message:reset-label}" id="cancelButton" />
+					</p>
+				</div>
+				&nbsp;
+				<ul class="links">
+					<li class="back"><a href="javascript:history.go(-1)">${message:back-label}</a></li>
+				</ul>
+			</fieldset>
+			</t:form>
+	</div>
+</html>

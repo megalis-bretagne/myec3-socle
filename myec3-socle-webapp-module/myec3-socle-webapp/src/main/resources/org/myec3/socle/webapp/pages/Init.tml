@@ -1,0 +1,76 @@
+<html t:type="layout" xmlns:t="http://tapestry.apache.org/schema/tapestry_5_1_0.xsd">
+  	
+  	<div id="main-content">
+	  	<h2>Outils d'initialisations de la base de données</h2>
+	  	<t:if test="successMessage">
+	        <p>${successMessage}</p>
+	    </t:if>
+	    
+	    <p>
+		   <t:actionlink t:id="initDatabase" t:mixins="confirm" t:message="Etes vous sûr de vouloir initialiser la base de données ?">Initialiser la base de données</t:actionlink>    	
+		</p>
+		
+	    <!--
+	    <fieldset>
+			<legend>Structure Type</legend>
+		    <p>
+		        <t:actionlink t:id="initStructureType" t:mixins="confirm" t:message="Etes vous sûr de vouloir initialiser les structure types ?">Initialisation des structure types</t:actionlink>    	
+		    </p>
+		    <t:form t:id="structureTypeApplication_form">
+		    	<fieldset>
+					<legend>Ajout d'un StructureTypeApplication</legend>
+					<table>
+						<tbody>
+							<tr>
+								<th><t:label for="idApplication">Id Application :</t:label></th>
+								<th><t:label for="structureType">Type de structure :</t:label></th>
+								<th><t:label for="subscribable">Peut être souscrit :</t:label></th>
+								<th><t:label for="defaultSubscription">Service par défaut :</t:label></th>
+							</tr>
+							<tr>
+								<td><t:textfield t:id="idApplication" t:value="idApplication" t:validate="required"/></td>
+								<td><t:select t:id="structureType" t:value="structureTypeValue" t:validate="required"/></td>
+								<td><t:checkbox t:id="subscribable" t:value="newStructureTypeApplication.subscribable"/></td>
+								<td><t:checkbox t:id="defaultSubscription" t:value="newStructureTypeApplication.defaultSubscription"/></td>
+							</tr>
+						</tbody>
+		            </table>
+		            <p>
+		            	<t:submit t:id="submitStructureTypeApplication" class="button btnOk" value="Ajouter" />
+		            </p>
+		        </fieldset>
+		    </t:form>
+	    </fieldset>
+	    <fieldset>
+			<legend>Profile Type</legend>
+		    <p>
+		        <t:actionlink t:id="initProfileType" t:mixins="confirm" t:message="Etes vous sûr de vouloir initialiser les profile types ?">Initialisation des profile types</t:actionlink>    	
+		    </p>
+		    <t:form t:id="profileTypeRole_form">
+		    	<fieldset>
+					<legend>Ajout d'un ProfileTypeRole</legend>
+					<table>
+						<tbody>
+							<tr>
+								<th><t:label for="idRole">Id Role :</t:label></th>
+								<th><t:label for="profileType">Type de profile :</t:label></th>
+								<th><t:label for="defaultAdmin">Role admin par défaut :</t:label></th>
+								<th><t:label for="defaultBasic">Role de base par défaut :</t:label></th>
+							</tr>
+							<tr>
+								<td><t:textfield t:id="idRole" t:value="idRole" t:validate="required"/></td>
+								<td><t:select t:id="profileType" t:value="profileTypeValue" t:validate="required"/></td>
+								<td><t:checkbox t:id="defaultAdmin" t:value="newProfileTypeRole.defaultAdmin"/></td>
+								<td><t:checkbox t:id="defaultBasic" t:value="newProfileTypeRole.defaultBasic"/></td>
+							</tr>
+						</tbody>
+		            </table>
+		            <p>
+		            	<t:submit t:id="submitProfileTypeRole" class="button btnOk" value="Ajouter" />
+		            </p>
+		        </fieldset>
+		    </t:form>
+		</fieldset>
+		-->
+	</div>
+</html>

@@ -1,0 +1,40 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html t:type="layout"
+	xmlns:t="http://tapestry.apache.org/schema/tapestry_5_1_0.xsd"
+	xmlns:p="tapestry:parameter">
+
+<div id="main-content">
+	<h2>${message:page-title}</h2>
+
+	<!-- DISPLAY SUCCESS MESAGE IF EXISTS -->
+	<!--  
+	<t:if test="successMessage">
+		<p class="success">${successMessage}</p>
+	</t:if>
+	-->
+
+	<div class="tabbed-data">
+
+		<!-- MENU -->
+		<ul class="tabs">
+			<li class="active"><strong>Integration des organismes</strong>
+			</li>
+		</ul>
+
+		<div class="tabs-content">
+			<!-- Error banner -->
+			<fieldset id="report">
+				<legend>Import du 16/12/2012 à 21:06</legend>
+
+			</fieldset>
+
+			<!-- LINKS -->
+			<ul class="links">
+				<li class="back"><t:pagelink
+						page="organism/export/importprospects"
+						class="back">Retour import</t:pagelink></li>
+			</ul>
+		</div>
+	</div>
+</div>
+</html>

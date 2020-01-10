@@ -1,0 +1,28 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html t:type="layout" xmlns:t="http://tapestry.apache.org/schema/tapestry_5_1_0.xsd">
+    <div id="main-content">
+	    <h2>${message:pageTitle-label}</h2>
+		
+		<p class="intro">${message:abstract-label}</p> 
+		
+		<div class="steps"> 
+			<ol> 
+				<li id="step1" class="active">${message:info-label}</li> 
+				<li id="step2">${message:service-label}</li> 
+			</ol> 
+		</div> 
+		
+		<t:if test="errorMessage">
+           <p class="error">${errorMessage}</p>
+       </t:if>	
+       
+        <t:if test="certificateSuccessMessage">
+			<p class="success">${certificateSuccessMessage}</p>
+		</t:if>
+		<t:if test="certificateErrorMessage">
+			<p class="error">${certificateErrorMessage}</p>
+		</t:if>	
+		
+	    <div t:id="agent_form" t:type="agentForm" agentProfile="agentProfile" cancelRedirect="listAgentsPage"/>
+	</div>
+</html>

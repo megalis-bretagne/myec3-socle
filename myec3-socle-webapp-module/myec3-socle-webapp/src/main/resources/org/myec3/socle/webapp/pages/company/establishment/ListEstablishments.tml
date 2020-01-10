@@ -1,0 +1,80 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html t:type="layout" xmlns:t="http://tapestry.apache.org/schema/tapestry_5_1_0.xsd">
+	<div id="main-content">
+		<h2>${message:pageTitle-label}</h2>
+		<t:if test="successMessage">
+			<p class="success">${successMessage}</p>
+		</t:if>
+		<div class="tabbed-data"> 
+			<t:if test="company">
+				<ul class="tabs"> 
+					<li><t:pagelink page="company/detailcompany" context="company.id">${message:info-label}</t:pagelink></li>
+					<li class="active"><strong>${message:establishment-label}</strong></li> 
+					<li><t:pagelink page="company/employee/listemployees" context="company.id">${message:User-label}</t:pagelink></li> 
+				</ul>
+			</t:if>
+			<div class="tabs-content">
+				<div class="actions-bar">
+					<p>${message:total-results-label} : <strong>${resultsNumber}</strong></p> 
+		        	<ul>			
+						<li><t:actionlink t:id="createEstablishment"
+										context="company.id"> 									
+											${message:create-info-label}</t:actionlink>
+						</li>
+					</ul>
+				</div>
+				
+				<div class="caption">
+	        			<p>${message:result-label}</p>
+	        	</div>
+
+				<table t:id="establishmentsGrid" model="gridModel" t:type="grid"
+					pagerPosition="bottom"
+					t:row="establishmentRow" t:source="establishmentsList"
+					t:rowIndex="rowIndex" t:rowsPerPage="${message:rowsPerPage}"
+					t:inplace="true" t:empty="${message:empty-label}">
+					
+					<t:parameter name="labelCell">
+						<t:if test="establishmentRow.label">
+							<t:pagelink page="company/establishment/view" context="establishmentRow.id">
+								${establishmentRow.label}
+							</t:pagelink>
+							
+							<t:if test="isHeadOfficeDisplay">
+								<img src="${context:static/images/head_office.png}"
+									alt="${message:headOffice-label}" title="${message:headOffice-label}" />
+							</t:if>
+						</t:if>
+					</t:parameter>
+					<t:parameter name="nicCell">
+						<t:if test="!establishmentRow.foreignIdentifier">
+							${establishmentRow?.nic}
+						</t:if>
+					</t:parameter>
+					<t:parameter name="postalAddressCell">
+						${establishmentRow?.address?.postalAddress}
+					</t:parameter>
+					<t:parameter name="postalCodeCell">
+						${establishmentRow?.address?.postalCode}
+					</t:parameter>
+					<t:parameter name="cityCell">
+						${establishmentRow?.address?.city}
+					</t:parameter>
+					<t:parameter name="mailCell">
+						${establishmentRow?.email}
+					</t:parameter>
+				</table>
+				&nbsp;
+				<ul class="links">
+					<t:if test="isAdmin">
+						<li class="back"><t:pagelink page="company/searchresult">${message:back-searchresult-label}</t:pagelink></li>
+					</t:if>
+					<li class="back"><a href="javascript:history.go(-1)">${message:back-label}</a></li>
+				</ul>
+
+			</div>
+		</div>
+	</div>
+	
+
+</html>

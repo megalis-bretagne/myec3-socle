@@ -1,0 +1,123 @@
+EXCEPTION STACK:
+
+
+  Exception: org.apache.tapestry5.ioc.internal.OperationException
+    Message: 
+      trace: Streaming classpath:META-INF/assets/tapestry5/jquery.js (compressed)
+
+  Exception: org.eclipse.jetty.io.EofException
+    Message: 
+
+  Exception: java.io.IOException
+    Message: Une connexion établie a été abandonnée par un logiciel de votre ordinateur hôte
+
+  Stack trace:
+
+  - sun.nio.ch.SocketDispatcher.write0(Native Method)
+  - sun.nio.ch.SocketDispatcher.write(SocketDispatcher.java:51)
+  - sun.nio.ch.IOUtil.writeFromNativeBuffer(IOUtil.java:93)
+  - sun.nio.ch.IOUtil.write(IOUtil.java:65)
+  - sun.nio.ch.SocketChannelImpl.write(SocketChannelImpl.java:471)
+  - org.eclipse.jetty.io.ChannelEndPoint.flush(ChannelEndPoint.java:263)
+  - org.eclipse.jetty.io.WriteFlusher.flush(WriteFlusher.java:393)
+  - org.eclipse.jetty.io.WriteFlusher.completeWrite(WriteFlusher.java:349)
+  - org.eclipse.jetty.io.ChannelEndPoint$3.run(ChannelEndPoint.java:133)
+  - org.eclipse.jetty.util.thread.strategy.EatWhatYouKill.runTask(EatWhatYouKill.java:333)
+  - org.eclipse.jetty.util.thread.strategy.EatWhatYouKill.doProduce(EatWhatYouKill.java:295)
+  - org.eclipse.jetty.util.thread.strategy.EatWhatYouKill.tryProduce(EatWhatYouKill.java:168)
+  - org.eclipse.jetty.util.thread.strategy.EatWhatYouKill.run(EatWhatYouKill.java:126)
+  - org.eclipse.jetty.util.thread.ReservedThreadExecutor$ReservedThread.run(ReservedThreadExecutor.java:366)
+  - org.eclipse.jetty.util.thread.QueuedThreadPool.runJob(QueuedThreadPool.java:765)
+  - org.eclipse.jetty.util.thread.QueuedThreadPool$2.run(QueuedThreadPool.java:683)
+  - java.lang.Thread.run(Thread.java:748)
+
+REQUEST:
+
+Basic Information:
+
+      contextPath: 
+            flags: requestedSessionIdValid
+           method: GET
+             path: /assets/meta/z8c546d97/tapestry5/jquery.js
+           locale: fr_FR
+       serverName: localhost
+       remoteHost: 0:0:0:0:0:0:0:1
+
+Headers:
+
+           Accept: */*
+  Accept-Encoding: gzip, deflate, br
+  Accept-Language: fr-FR,fr;q=0.9,en-US;q=0.8,en;q=0.7
+    Cache-Control: no-cache
+       Connection: keep-alive
+           Cookie: SillageTypePoste=bureau; Idea-7e64b6e6=a8241e3a-5c1a-4f89-8d3e-ee891fe0368c; JSESSIONID=node01h3dj9t7cxjpptrnbntvmr0b01.node0
+             Host: localhost:8080
+           Pragma: no-cache
+          Referer: http://localhost:8080/
+   Sec-Fetch-Mode: no-cors
+   Sec-Fetch-Site: same-origin
+       User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.88 Safari/537.36
+              uid: 67231
+         usertype: ADMIN
+
+SESSION:
+
+
+SYSTEM INFORMATION:
+
+Memory:
+      757 558 168 bytes free
+      952 631 296 bytes total
+    3 790 077 952 bytes max
+
+50 Threads:
+                                                                                Reference Handler WAITING, daemon, priority 10
+                                                                                        Finalizer WAITING, daemon, priority 8
+                                                                                Signal Dispatcher RUNNABLE, daemon, priority 9
+                                                                                  Attach Listener RUNNABLE, daemon
+                                                                                             main WAITING
+                                                                                  qtp281312377-17 RUNNABLE
+                                                                                  qtp281312377-20 RUNNABLE
+                                                                                  qtp281312377-21 TIMED_WAITING
+                                                                                  qtp281312377-23 RUNNABLE
+                                                                                  qtp281312377-24 RUNNABLE
+                                                                                  qtp281312377-26 RUNNABLE
+                                                                                  qtp281312377-27 RUNNABLE
+  qtp281312377-28-acceptor-0@73b6eb41-ServerConnector@33bd8ebd{HTTP/1.1,[http/1.1]}{0.0.0.0:8080} RUNNABLE, priority 3
+                                                                              Scheduler-800097023 TIMED_WAITING
+                                                              Abandoned connection cleanup thread TIMED_WAITING, daemon
+                                                                            ramScheduler_Worker-1 TIMED_WAITING, priority 1
+                                                                            ramScheduler_Worker-2 TIMED_WAITING, priority 1
+                                                                            ramScheduler_Worker-3 TIMED_WAITING, priority 1
+                                                                            ramScheduler_Worker-4 TIMED_WAITING, priority 1
+                                                                            ramScheduler_Worker-5 TIMED_WAITING, priority 1
+                                                                            jmsScheduler_Worker-1 TIMED_WAITING, priority 1
+                                                        ActiveMQ InactivityMonitor ReadCheckTimer WAITING, daemon
+                            org.springframework.scheduling.quartz.SchedulerFactoryBean#0_Worker-1 TIMED_WAITING
+                            org.springframework.scheduling.quartz.SchedulerFactoryBean#0_Worker-2 TIMED_WAITING
+                            org.springframework.scheduling.quartz.SchedulerFactoryBean#0_Worker-3 TIMED_WAITING
+                            org.springframework.scheduling.quartz.SchedulerFactoryBean#0_Worker-4 TIMED_WAITING
+                            org.springframework.scheduling.quartz.SchedulerFactoryBean#0_Worker-5 TIMED_WAITING
+                            org.springframework.scheduling.quartz.SchedulerFactoryBean#0_Worker-6 TIMED_WAITING
+                            org.springframework.scheduling.quartz.SchedulerFactoryBean#0_Worker-7 TIMED_WAITING
+                            org.springframework.scheduling.quartz.SchedulerFactoryBean#0_Worker-8 TIMED_WAITING
+                            org.springframework.scheduling.quartz.SchedulerFactoryBean#0_Worker-9 TIMED_WAITING
+                           org.springframework.scheduling.quartz.SchedulerFactoryBean#0_Worker-10 TIMED_WAITING
+   C3P0PooledConnectionPoolManager[identityToken->2rwcn5a710thh0b12y4vcw|159d2313]-AdminTaskTimer TIMED_WAITING, daemon
+  C3P0PooledConnectionPoolManager[identityToken->2rwcn5a710thh0b12y4vcw|159d2313]-HelperThread-#0 TIMED_WAITING, daemon
+  C3P0PooledConnectionPoolManager[identityToken->2rwcn5a710thh0b12y4vcw|159d2313]-HelperThread-#1 TIMED_WAITING, daemon
+  C3P0PooledConnectionPoolManager[identityToken->2rwcn5a710thh0b12y4vcw|159d2313]-HelperThread-#2 TIMED_WAITING, daemon
+                                        QuartzScheduler_jmsScheduler-NON_CLUSTERED_MisfireHandler TIMED_WAITING
+                                                                             Scheduler-1458334048 TIMED_WAITING
+                                                                                  qtp281312377-59 RUNNABLE
+*                                                                                 qtp281312377-60 RUNNABLE
+                                                                                  qtp281312377-61 RUNNABLE
+                                                                                  qtp281312377-63 RUNNABLE
+                                                                                  qtp281312377-64 TIMED_WAITING
+                                                                                  qtp281312377-65 RUNNABLE
+                                                                                  qtp281312377-66 RUNNABLE
+                                                                                  qtp281312377-67 TIMED_WAITING
+                                                                                  qtp281312377-68 TIMED_WAITING
+                                                               ramScheduler_QuartzSchedulerThread TIMED_WAITING
+                                                               jmsScheduler_QuartzSchedulerThread TIMED_WAITING
+               org.springframework.scheduling.quartz.SchedulerFactoryBean#0_QuartzSchedulerThread TIMED_WAITING

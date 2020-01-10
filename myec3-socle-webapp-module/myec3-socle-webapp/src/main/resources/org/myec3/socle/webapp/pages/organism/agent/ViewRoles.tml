@@ -1,0 +1,95 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html t:type="layout" xmlns:t="http://tapestry.apache.org/schema/tapestry_5_1_0.xsd" xmlns:p="tapestry:parameter">
+    <div id="main-content">
+        <h2>${agentProfile?.user?.firstname} ${agentProfile?.user?.lastname}</h2>
+        <div class="tabbed-data">
+            <ul class="tabs">
+                <li>
+                    <t:pagelink page="organism/agent/view" context="${agentProfile.id}">
+                        ${message:user-data-label}
+                    </t:pagelink>
+                </li>
+                <li class="active">
+                    <strong>${message:user-services-label}</strong>
+                </li>
+            </ul>
+            <div class="tabs-content">
+            	<t:if test="successMessage">
+                    <p class="success">
+                        ${successMessage}
+                    </p>
+                </t:if>
+                <div class="tabs-content">
+                    <p class="mandatory">
+                        &nbsp;
+                    </p>
+                    <div class="actions-bar">
+                    <ul>
+	                    <t:if test="agentProfile.user.enabled">
+	                           <li>
+	                                <t:pagelink page="organism/agent/modifyroles" context="agentProfile.id">
+	                                    <img src="${context:static/images/organisme_modifier.png}" alt="${message:modify-roles-label}" title="${message:modify-roles-label}" />&nbsp;${message:modify-roles-label}
+	                                </t:pagelink>
+	                           </li>
+	                      </t:if>
+	                      <t:if test="!agentProfile.user.enabled">
+	                            <li>
+				                      <a class="disable" >
+				                      	<img src="${context:static/images/organisme_modifier.png}" alt="${message:modify-roles-label}" title="${message:modify-role-label-disable}" />&nbsp;<span title="${message:modify-role-label-disable}">${message:modify-roles-label}</span>
+				                      </a>
+	                           </li>                       
+	                      </t:if>
+                      </ul>
+                    </div>
+                    <fieldset>
+                        <legend>
+                            ${message:legend-label}
+                        </legend>
+                        <ul class="role-list">
+                            <t:loop source="applicationsAgentSubscribed" value="applicationLoop" t:empty="${message:empty-roles-label}">
+                                <t:if test="displayedApplication">
+								    <li>                	
+                                        <t:if test="isMultipleRolesApplication">
+                                        	<strong>${applicationLoop.label}</strong>
+                                        	   <ul class="sub-role-list">  
+												<t:loop source="rolesApplication" value="roleApplicationLoop" t:empty="${message:empty-roles-label}">
+                                           	 		<li>
+                                                		${roleApplicationLoop.label}
+                                            		</li>
+                                        		</t:loop>
+											  </ul>
+											<p:else>
+												<t:loop source="rolesApplication" value="roleApplicationLoop" t:empty="${message:empty-roles-label}">
+													<strong>${applicationLoop.label}&nbsp;:&nbsp;</strong>${roleApplicationLoop.label}
+												</t:loop>
+											</p:else>
+										</t:if>                                    
+	                                </li>
+								</t:if>
+                            </t:loop>
+                        </ul>
+                        <ul class="links">
+                            <t:if test="isOrganismAdmin">
+                                <li class="back">
+                                    <t:pagelink page="organism/detail" context="agentProfile.organismDepartment.organism.id">
+                                        ${message:back-detailorganism-label}
+                                    </t:pagelink>
+                                </li>
+                            <p:else>
+                                <li class="back">
+                                    <t:pagelink page="organism/agent/listAgents" context="agentProfile.organismDepartment.organism.id">
+                                        ${message:back-users-list-label}
+                                    </t:pagelink>
+                                </li>
+                            </p:else>
+                            </t:if>
+                            <li class="back">
+                                <a href="javascript:history.go(-1)">${message:back-label}</a>
+                            </li>
+                        </ul>
+                    </fieldset>
+                </div>
+            </div>
+        </div>
+    </div>
+</html>

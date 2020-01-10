@@ -1,0 +1,34 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"> 
+<t:container xmlns:t="http://tapestry.apache.org/schema/tapestry_5_1_0.xsd" xmlns:p="tapestry:parameter">
+
+	    <t:form t:id="filter_form">
+          	
+	    	<fieldset>
+	    		<legend>${message:form-legend-label}</legend>
+	    	
+	    	<div class="filter-fields">
+	            <p class="first">
+	            	<t:label for="firstname">${message:firstname-label} :</t:label>
+	            	<t:textfield t:id="firstname" t:value="searchFirstname"/>
+	            </p>
+	            
+	            <p>
+	            	<t:label for="lastname">${message:lastname-label} :</t:label>
+	            	<t:textfield t:id="lastname" t:value="searchLastname"/>
+	            </p>
+	        
+	            <p>
+	                <t:label for="email">${message:email-label} :</t:label>
+	              	<t:textfield t:id="email" t:value="searchEmail"/>
+	            </p>
+			</div>	
+		    <div class="form-actions"> 
+		    		<p>
+		        		<t:submit t:id="submitFilter" class="button btnOk" value="message:filter-label" />
+		        	</p>
+		    </div>
+		        
+	        </fieldset>
+	    </t:form>
+    
+</t:container>

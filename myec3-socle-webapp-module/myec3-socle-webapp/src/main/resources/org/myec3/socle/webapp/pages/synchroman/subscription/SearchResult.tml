@@ -1,0 +1,49 @@
+<html t:type="layout" xmlns:t="http://tapestry.apache.org/schema/tapestry_5_1_0.xsd" xmlns:p="tapestry:parameter">
+    <div id="main-content">
+        <h2>${message:title}</h2>
+        <t:if test="successMessage">
+			<p class="success">${successMessage}</p>
+		</t:if>
+        <div class="actions-bar"> 
+       		<p>${message:total-results-label}<strong>${resultsNumber}</strong></p> 
+	     	<ul>  
+          		<li><a href="#" onclick="javascript:window.print()">
+								<img src="${context:static/images/printer.png}"
+									alt="${message:print-label}" title="${message:print-label}"/> ${message:print-label}
+					</a>
+				</li>
+			</ul> 
+		</div> 
+        
+        <div class="caption">
+        	<p>${message:results-label}</p>
+        </div>
+    	<table t:id="synchronizationSubscriptionGrid" t:empty="block:empty" pagerPosition="bottom" model="gridModel" t:type="grid" t:row="synchronizationSubscriptionRow" t:source="synchronizationSubscriptionResult" t:rowsPerPage="${message:rowsPerPage}" t:inplace="true">	        
+			<t:parameter name="applicationCell">
+				${synchronizationSubscriptionRow.application.name}
+			</t:parameter>
+			<t:parameter name="actionsCell">
+				<t:pagelink page="synchroman/subscription/DetailsSubscription" context="synchronizationSubscriptionRow.id">
+		        	 <img src="${context:static/images/voir.png}" alt="${message:view-label}" title="${message:view-label}" />
+	        	</t:pagelink>
+	        
+		        <t:pagelink page="synchroman/subscription/Modify" context="synchronizationSubscriptionRow.id">
+		        	<img src="${context:static/images/modifier.png}" alt="${message:modify-label}" title="${message:modify-label}" />
+	        	</t:pagelink>
+	       
+		        <t:actionlink t:id="delete" context="synchronizationSubscriptionRow.id" t:mixins="confirm" t:message="message:confirm-label">
+					<img src="${context:static/images/supprimer.png}" alt="${message:delete-label}" title="${message:delete-label}" />
+				</t:actionlink>
+	        </t:parameter>
+  		</table>
+  		
+	    <t:block t:id="empty">
+	        ${message:empty-message}
+	    </t:block>
+	    
+	    <ul class="navigational"> 
+			<li><t:pagelink page="synchroman/subscription/Search" class="back">${message:back-to-search-label}</t:pagelink></li> 
+			<li><a href="#" class="top">${message:top-of-page-label}</a></li> 
+		</ul> 
+	</div>
+</html>

@@ -1,0 +1,59 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html t:type="layout" xmlns:t="http://tapestry.apache.org/schema/tapestry_5_1_0.xsd">
+    <t:form t:id="creation_customer_form">
+        <div id="main-content">
+            <h2>${message:pageTitle-label}</h2>
+            <div class="steps">
+                <ol>
+                    <li id="step1">
+                        ${message:step-create-customer-label}
+                    </li>
+                    <li id="step2">
+                        ${message:step-subscriptions-label}
+                    </li>
+                    <li id="step3" class="active">
+                        ${message:step-admin-label}
+                    </li>
+                </ol>
+            </div>
+            <t:if test="errorMessage">
+                <p class="error">
+                    ${errorMessage}
+                </p>
+            </t:if>
+            <p t:banner="message:form-error" t:type="errors" t:clientClass="errorDialogue">
+            </p>
+            <p class="mandatory">
+                ${message:mandatory-label}
+            </p>
+            <fieldset id="infosAdminCustomer">
+                <legend>
+                    ${message:admin-customer-info-label}
+                </legend>
+	            <p>
+	            	<t:label for="firstname">${message:firstname-label} *:</t:label>
+	            	<t:textfield t:id="firstname" t:value="adminProfile.user.firstname" t:validate="required"/>
+	            </p>
+	            <p>
+	            	<t:label for="lastname">${message:lastname-label} *:</t:label>
+	            	<t:textfield t:id="lastname" t:value="adminProfile.user.lastname" t:validate="required"/>
+	            </p>  
+	             <t:address address="adminProfile.address"/>    
+   				 <p>
+	                <t:label for="email">${message:email-label} *:</t:label>
+	              	<t:textfield t:id="email" t:value="adminProfile.email" t:validate="required,regexp"/>
+	            </p>
+  	                    
+                <div class="form-actions">
+                    <p>
+                        <t:submit t:id="submit" class="button btnOk" value="message:save-label" />
+                        <input type="reset" value="${message:reset-label}" id="cancelButton" />
+                    </p>
+                </div>
+            </fieldset>
+            <ul class="links">
+					<li class="back"><a href="javascript:history.go(-1)">${message:back-label}</a></li>
+			</ul>
+        </div>
+    </t:form>
+</html>

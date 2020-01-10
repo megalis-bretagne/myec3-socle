@@ -1,0 +1,59 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html t:type="layout" xmlns:t="http://tapestry.apache.org/schema/tapestry_5_1_0.xsd" xmlns:p="tapestry:parameter">
+	<div id="main-content">
+        <h2>${message:title}</h2>
+        
+        <t:if test="infoMessage">
+            <p class="info">${infoMessage}</p>
+        </t:if>
+        
+        <t:form t:id="company_search_form">
+        	<t:errors />
+    		<p class="mandatory">
+        		${message:mandatory-label}
+        	</p>
+            <fieldset>
+            	<legend>${message:legend-label}</legend>
+	        	<p>
+	                <t:label for="company">${message:company-label} : </t:label>
+	        		<t:textfield t:id="company" t:value="searchLabel" />
+	        		<a href="#" title="${message:label-help}">
+	        			<img src="${context:static/images/pic_help.png}" class="picHelp" alt="${message:help-label}"/>
+	        		</a>
+				</p>
+				
+				<p>
+	                <t:label for="acronym">${message:acronym-label} : </t:label>
+	        		<t:textfield t:id="acronym" t:value="searchAcronym" />
+				</p>
+				
+				<p>
+	                <t:label for="siren">${message:siren-label} : </t:label>
+	        		<t:textfield t:id="siren" t:value="searchSiren" />
+	        		<a href="#" title="${message:siren-help}">
+	        			<img src="${context:static/images/pic_help.png}" class="picHelp" alt="${message:help-label}"/>
+	        		</a>
+				</p>
+				<p>
+	                <t:label for="postalCode">${message:postal-code-label} : </t:label>
+	        		<t:textfield t:id="postalCode" t:value="searchPostalCode" />
+	        		<a href="#" title="${message:postal-code-help}">
+	        			<img src="${context:static/images/pic_help.png}" class="picHelp" alt="${message:help-postal-code}"/>
+	        		</a>
+				</p>
+				<p>
+	                <t:label for="city">${message:city-label} : </t:label>
+	        		<t:textfield t:id="city" t:value="searchCity" />
+	        		<a href="#" title="${message:city-help}">
+	        			<img src="${context:static/images/pic_help.png}" class="picHelp" alt="${message:help-city}"/>
+	        		</a>
+				</p>
+				<div class="form-actions">
+					<p>
+						<t:submit t:id="submit" value="message:search-label" />
+					</p>
+				</div>
+            </fieldset>
+        </t:form>
+	</div>
+</html>

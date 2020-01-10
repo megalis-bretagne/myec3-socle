@@ -1,0 +1,288 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html t:type="layout" xmlns:t="http://tapestry.apache.org/schema/tapestry_5_1_0.xsd">
+    	<p>
+		<t:if test="successMessage">
+	        <p class="success">
+	            ${successMessage}
+	        </p>
+	    </t:if>
+	    <t:if test="errorMessage">
+	        <p class="error">
+	            ${errorMessage}
+	        </p>
+		</t:if>
+		</p>
+		
+	<!-- Choose block to display depending on logged user -->
+    <t:delegate to="chooseBlock" />
+    
+    	<!-- Technical Administrator block -->
+	    <t:block id="technicalAdminBlock">
+	    	<div id="main-content">
+	    	 	<h2>${message:welcome-title-label}</h2>
+	    	 	<fieldset>
+            		<legend>${message:technical-admin-welcome-description-label}</legend>	 
+					<!-- FIXME !! -->
+					<p style="margin-left:15px;margin-right:15px;">${message:technical-admin-welcome-abstract-label}</p>       	
+            	</fieldset>		
+			
+				<div id="search-intro" class="section">
+					<h3>${message:technical-admin-manage-user-abstract-label}</h3>
+					<p>${message:technical-admin-manage-user-description-label}</p>
+					<ul> 
+						<li>${message:technical-admin-manage-user-step-1-label}</li>
+						<li>${message:technical-admin-manage-user-step-2-label}</li>
+						<li>${message:technical-admin-manage-user-step-3-label}</li>
+					</ul>
+					<ul class="links">
+						<li><a href="./user/search/">${message:technical-admin-search-user-label}</a></li>
+						<li><a href="./user/export/">${message:technical-admin-export-user}</a></li>
+					</ul>
+				</div>
+				
+				<div id="account-intro" class="section">
+					<h3>${message:technical-admin-manage-customer-label}</h3>
+					<p>${message:technical-admin-manage-customer-description-label}</p>
+					<ul> 
+						<li>${message:technical-admin-manage-customer-step-1-label}</li>
+						<li>${message:technical-admin-manage-customer-step-2-label}</li>
+						<li>${message:technical-admin-manage-customer-step-3-label}</li>
+					</ul>
+					<ul class="links">
+						<li><a href="./customer/listCustomers/">${message:technical-admin-display-customers-label}</a></li>
+						<li><a href="./customer/create/">${message:technical-admin-create-customer-label}</a></li>
+					</ul>
+				</div>
+				
+			</div>
+	    </t:block>
+	    
+	    <!-- Functionnal Administrator block -->
+		<t:block id="functionalAdminBlock">
+    		<div id="main-content">
+				<h2>${message:welcome-title-label}</h2>
+				<fieldset>
+					<legend>${message:functional-admin-welcome-description-label}</legend>
+					<!-- FIXME !! -->
+					<p style="margin-left:15px;margin-right:15px;">${message:functional-admin-welcome-abstract-label}</p>
+				</fieldset>
+
+				<div id="account-intro" class="section">
+					<h3>${message:functional-admin-create-organism-abstract-label}</h3>
+					<p>${message:functional-admin-manage-organism-create-3-steps-label}</p>
+					<ul> 
+						<li>${message:functional-admin-manage-organism-create-1-label}</li>
+						<li>${message:functional-admin-manage-organism-create-2-label}</li>
+						<li>${message:functional-admin-manage-organism-create-3-label}</li>
+					</ul>
+					<ul class="links">
+						<li><a href="./organism/create/">${message:functional-admin-init-account-label}</a></li>
+					</ul>
+				</div>
+				<div id="search-intro" class="section">
+					<h3>${message:functional-admin-manage-organism-description-label}</h3>
+					<p>${message:functional-admin-manage-organism-abstract-label}</p>
+					<ul>
+						<li>${message:functional-admin-manage-organism-1-label}</li>
+						<li>${message:functional-admin-manage-organism-2-label}</li>
+						<li>${message:functional-admin-manage-organism-3-label}</li>
+						<li>${message:functional-admin-manage-organism-4-label}</li>
+					</ul>
+					<ul class="links">
+						<li><a href="./organism/search/">${message:functional-admin-search-organism-abstract-label}</a></li>
+						<li><a href="./user/export/">${message:technical-admin-export-user}</a></li>
+					</ul>
+				</div>
+				<div id="search-intro" class="section">
+					<h3>${message:manager-manage-users}</h3>
+					<p>${message:technical-admin-manage-user-description-label}</p>
+					<ul> 
+						<li>${message:technical-admin-manage-user-step-1-label}</li>
+						<li>${message:technical-admin-manage-user-step-2-label}</li>
+						<li>${message:technical-admin-manage-user-step-3-label}</li>
+					</ul>
+					<ul class="links">
+						<li>
+							<a href="./user/search/">${message:manager-search-user}</a>
+						</li>
+					</ul>
+				</div>
+			</div>
+	    </t:block>
+	    
+	    <!-- Global Manager Agent block -->
+	    <t:block id="globalManagerAgentBlock">
+	    	<div id="main-content">
+				<h2>${message:welcome-title-label}</h2>
+				<fieldset>
+					<legend>${message:manager-welcome-description-label}</legend>
+					<p style="margin-left:15px;margin-right:15px;">${message:manager-welcome-information-label}  ${agentProfile?.organismDepartment?.organism?.label} ${message:manager-welcome-abstract-label}</p>
+				</fieldset>
+
+				<div id="search-intro" class="section">
+					<h3>${message:manager-agent-manage-organism-description-label} ${agentProfile?.organismDepartment?.organism?.label}</h3>
+					<p>${message:manager-agent-manage-organism-abstract-label}</p>
+					<ul class="links">
+						<li>
+							<t:pagelink page="organism/detail"
+							context="agentProfile.organismDepartment.organism.id">${message:manager-agent-manage-infos}
+							</t:pagelink>
+						</li>
+					</ul>
+				</div>
+
+				<div id="account-intro" class="section">
+					<h3>${message:manager-manage-users}</h3>
+					<p>${message:manager-agent-users-list}</p>
+					<ul class="links">
+						<li>
+							<t:pagelink page="organism/agent/listagents"
+							context="agentProfile.organismDepartment.organism.id">${message:manager-agent-organism-users-list}
+							</t:pagelink>
+						</li>
+						<li>
+							<t:pagelink page="organism/agent/export/import"
+							context="agentProfile.organismDepartment.organism.id">Importer des utilisateurs
+							</t:pagelink>
+						</li>
+						<li>
+							<a href="./user/search/">${message:manager-search-user}</a>
+						</li>
+					</ul>
+				</div>
+				<div id="search-intro" class="section">
+					<h3>${message:manager-agent-manage-organism-chart}</h3>
+					<p>${message:manager-agent-manage-organism-chart} de ${agentProfile?.organismDepartment?.organism?.article?.label} ${agentProfile?.organismDepartment?.organism?.label}.</p>
+					<ul class="links">
+						<li><t:pagelink page="organism/department/view"
+							context="agentProfile.organismDepartment.organism.id">${message:manager-agent-manage-organism-chart}
+							</t:pagelink>
+						</li>
+					</ul>
+				</div>
+				<div id="account-intro" class="section">
+					<h3>Créer un nouvel utilisateur</h3>
+					<p>En deux étapes, créer un nouvel agent à ${agentProfile?.organismDepartment?.organism?.label} en.</p>
+
+					<ul>
+						<li>renseignant ses coordonnées,</li>
+						<li>définissant son rôle pour chaque service</li>
+					</ul>
+
+					<ul class="links">
+						<li><t:pagelink page="organism/agent/create"
+								context="[agentProfile.organismDepartment.organism.id,agentProfile.organismDepartment.id]">
+								Créer un nouvel utilisateur</t:pagelink>
+						</li>
+					</ul>
+				</div>
+			</div>
+	    </t:block>
+
+        <!-- Application Manager Agent block -->
+        <t:block id="applicationManagerAgentBlock">
+            <div id="main-content">
+                <h2>${message:welcome-title-label}</h2>
+                <fieldset>
+                    <legend>${message:manager-welcome-description-label}</legend>
+                    <p style="margin-left:15px;margin-right:15px;">${message:manager-welcome-information-label}  ${agentProfile?.organismDepartment?.organism?.label} ${message:manager-welcome-abstract-label}</p>
+                </fieldset>
+
+                <div class="section">
+                    <h3>${message:manager-manage-users}</h3>
+                    <p>${message:manager-agent-users-list}</p>
+                    <ul class="links">
+                        <li>
+                            <t:pagelink page="organism/agent/listagents"
+                            context="agentProfile.organismDepartment.organism.id">${message:manager-agent-organism-users-list}
+                            </t:pagelink>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </t:block>
+	    
+	    <!-- Manager Employee block -->
+        <t:block id="managerEmployeeBlock">
+	    	<div id="main-content">	
+				<h2>${message:welcome-title-label}</h2>
+				<fieldset>
+					<legend>${message:manager-welcome-description-label}</legend>
+					<p style="margin-left:15px;margin-right:15px;">${message:manager-welcome-information-label}  ${employeeProfile?.companyDepartment?.company?.label} ${message:manager-welcome-abstract-label}</p>
+				</fieldset>
+
+				<div id="search-intro" class="section">
+					<h3>Gérer l'entreprise de ${employeeProfile?.companyDepartment?.company?.label}</h3>
+					<p>${message:manager-employee-manage-company-infos}</p>
+					<ul class="links">
+						<li>
+							<t:pagelink page="company/detail"
+							context="employeeProfile.companyDepartment.company.id">${message:manager-employee-manage-company}
+							</t:pagelink>
+						</li>
+					</ul>
+				</div>
+				
+				<div id="account-intro" class="section">
+					<h3>${message:manager-manage-users}</h3>
+					<p>${message:manager-employee-view-company-users}</p>
+					<ul class="links">
+						<li>
+							<t:pagelink page="company/employee/listemployees"
+							context="employeeProfile.companyDepartment.company.id">
+							${message:manager-employee-company-users-list}
+							</t:pagelink>
+						</li>
+						<li>
+							<a href="./user/search/">${message:manager-search-user}</a>
+						</li>
+					</ul>
+				</div>
+			</div>
+	    </t:block>
+		
+		<!--In case of the organism of the manager agent is no longer member on the platform -->
+		<t:block id="managerAgentLimitedBlock">
+			<div id="main-content">
+				<h2>${message:welcome-title-label}</h2>
+				<fieldset>
+					<legend>${message:manager-agent-limited-description-label}</legend>
+					<p style="margin-left:15px;margin-right:15px;">${message:manager-agent-limited-welcome-information-label}</p><br/><br/>
+				</fieldset>
+			</div>
+	    </t:block>
+		
+		<!-- Default Agent block -->
+	    <t:block id="agentBlock">	
+			<div id="main-content">    	
+				<h2>${message:welcome-title-label}</h2>
+				<fieldset>
+					<legend>${message:agent-welcome-description-label}</legend>
+					<p style="margin-left:15px;margin-right:15px;">${message:agent-welcome-information-label}</p><br/><br/>
+				</fieldset>
+			</div>
+	    </t:block>
+		
+		<!-- Default Employee block -->
+	    <t:block id="employeeBlock"> 
+			<div id="main-content">    	
+				<h2>${message:welcome-title-label}</h2>
+				<fieldset>
+					<legend>${message:agent-welcome-description-label}</legend>
+					<p style="margin-left:15px;margin-right:15px;">${message:agent-welcome-information-label}</p><br/><br/>
+				</fieldset>
+			</div>
+	    </t:block>
+		
+		<!-- Default block : no logged user -->
+	    <t:block id="defaultBlock">
+		    <div id="main-content">
+				<h2>${message:welcome-title-label}</h2>
+				<fieldset>
+					<legend>${message:error-login-label}</legend>
+					<p style="margin-left:15px;margin-right:15px;">${message:error-information-label} <a href="${webContext}${logoutUrl}">${message:login-label}</a></p><br/><br/>
+				</fieldset>
+			</div>
+	    </t:block>
+
+</html>

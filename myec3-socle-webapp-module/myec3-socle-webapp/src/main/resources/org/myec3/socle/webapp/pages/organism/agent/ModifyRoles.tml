@@ -1,0 +1,90 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html t:type="layout" xmlns:t="http://tapestry.apache.org/schema/tapestry_5_1_0.xsd" xmlns:p="tapestry:parameter">
+	<div id="main-content">
+        <h2>${agentProfile?.user?.firstname} ${agentProfile?.user?.lastname}</h2>
+        <t:if test="agentProfileCreation">
+            <div class="steps">
+                <ol>
+                    <li id="step1">
+                        ${message:info-label}
+                    </li>
+                    <li id="step2" class="active">
+                        ${message:service-label}
+                    </li>
+                </ol>
+            </div>
+            <p:else>
+                <ul class="tabs">
+                    <t:if test="isOrganismAdmin">
+                        <li>
+                            <t:pagelink page="organism/agent/modify" context="${agentProfile.id}">
+                                ${message:user-data-label}
+                            </t:pagelink>
+                        </li>
+                    </t:if>
+                    <li class="active">
+                        <strong>${message:user-services-label}</strong>
+                    </li>
+                </ul>
+            </p:else>
+        </t:if>
+        <div id="sectionContent">
+            <t:if test="successMessage">
+                <p class="success">
+                    ${successMessage}
+                </p>
+            </t:if>
+            <t:form t:id="modification_form">
+                <p t:banner="message:error-creation-agent-label" t:type="errors" t:clientClass="errorDialogue">
+                </p>
+                <fieldset>
+                    <legend>
+                        ${message:form-legend-label}
+                    </legend>
+                    <t:loop source="subscribedApplications" encoder="subscribedApplicationEncoder" value="applicationLoop">
+                        <div class="service">
+                            <t:if test="isCurrentApplicationEnabled" negate="true">
+                                <t:checkbox class="role_check" t:id="activeRole" value="activeRole" />
+                                <p:else>
+                                	<t:if test="isCurrentApplicationOC">
+                                    	<t:checkbox class="role_check" t:id="canDisableRole" value="activeRole" />
+	                                    <p:else>
+	                                    	<t:checkbox class="role_check" t:id="cantDisableRole" value="literal:true" disabled="literal:true"/>
+	                                    </p:else>
+                                   </t:if>
+                                </p:else>
+                            </t:if>
+                            <label class="role_form">
+                                ${applicationLoop.label}
+                            </label>
+                            <!-- Check if application authorized multiple roles -->
+                            <t:if test="isApplicationAllowingMultipleRoles" negate="true">
+                                <t:select t:id="role" t:validate="required" t:encoder="roleEncoder" t:model="rolesModel" t:value="roleSelected" />
+                                <p:else>                               	
+	                                	<ul id="multipleCheckbox">
+	                                		<t:loop source="multipleRolesModel" encoder="roleEncoder" t:value="multipleRolesLoop">
+													<li>
+														<t:checkbox t:id="multipleRolesCheckBox" value="activeMultipleRoles" />
+														<label>${multipleRolesLoop.label}</label>
+													</li>
+		                                    </t:loop>
+	                                	</ul>
+                                </p:else>
+                            </t:if>
+                        </div>
+                    </t:loop>
+                    <div class="form-actions">
+                        <p>
+                            <t:submit t:id="submit" class="button btnOk" value="message:save-label" /><input type="reset" value="${message:reset-label}" id="cancelButton" />
+                        </p>
+                    </div>&nbsp;
+                    <ul class="links">
+                        <li class="back">
+                            <a href="javascript:history.go(-1)">${message:back-label}</a>
+                        </li>
+                    </ul>
+                </fieldset>
+            </t:form>
+        </div>
+    </div>
+</html>

@@ -1,0 +1,80 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html t:type="layout" xmlns:t="http://tapestry.apache.org/schema/tapestry_5_1_0.xsd" xmlns:p="tapestry:parameter">
+	<div id="main-content">
+        <h2>
+            ${message:pageTitle-label} ${organism?.article?.label}
+            ${organism.label}
+        </h2>
+
+        <div class="tabbed-data">
+            <ul class="tabs">
+                <li><t:pagelink page="organism/detailOrganism" context="organism.id">${message:info-label}</t:pagelink></li>
+                <t:if test="isAdmin">
+                    <li><t:pagelink page="structure/relation/listRelations" context="organism.id">${message:relation-label}</t:pagelink></li>
+                    <li><t:pagelink page="organism/detailOrganismApplications" context="organism.id">${message:service-label}</t:pagelink></li>
+                    <li><t:pagelink page="organism/apiManagement" context="organism.id">${message:api-label}</t:pagelink></li>
+                </t:if>
+                <li><t:pagelink page="organism/department/view" context="organism.id">${message:oragnization-level-label}</t:pagelink></li>
+                <li><t:pagelink page="organism/agent/listAgents" context="organism.id">${message:User-label}</t:pagelink></li>
+                <li class="active"><strong>${message:AppAdmin-label}</strong></li>
+            </ul>
+        </div>
+
+        <div id="sectionContent">
+            <t:if test="successMessage">
+                <p class="success">
+                    ${successMessage}
+                </p>
+            </t:if>
+            <t:form t:id="modification_form">
+                <p t:banner="message:error-creation-agent-label" t:type="errors" t:clientClass="errorDialogue">
+                </p>
+                <fieldset>
+                    <legend>
+                        ${message:agentform-legend-label}
+                    </legend>
+
+                    <p class="summary">
+                        ${message:summary-agent-text}
+                    </p>
+
+                    <div class="app_service">
+                        <label class="app_form">${message:agent-label}:</label>
+                        <t:textfield t:id="agentSelect" t:minChars="3" t:mixins="autocomplete" t:value="agentSelect"/>
+                    </div>
+                </fieldset>
+
+                <fieldset>
+                    <legend>
+                        ${message:appsform-legend-label}
+                    </legend>
+
+                    <p class="summary">
+                        ${message:summary-app-text}
+                    </p>
+
+                    <t:loop source="subscribedApplications" encoder="subscribedApplicationEncoder" value="applicationLoop">
+                        <div class="service">
+                            <t:checkbox class="app_check" t:id="applicationValue" value="isManagedApplication" />
+                            <label class="app_form">
+                                ${applicationLoop.label}
+                            </label>
+                        </div>
+                    </t:loop>
+
+                    <div class="form-actions">
+                        <p>
+                            <t:submit t:id="submit" class="button btnOk" value="message:save-label" />
+                        </p>
+                    </div>&nbsp;
+                </fieldset>
+
+                <ul class="links">
+                    <li class="back">
+                        <a href="javascript:history.go(-1)">${message:back-label}</a>
+                    </li>
+                </ul>
+            </t:form>
+        </div>
+    </div>
+</html>

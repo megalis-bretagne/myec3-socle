@@ -1,0 +1,117 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html t:type="layout" xmlns:t="http://tapestry.apache.org/schema/tapestry_5_1_0.xsd" xmlns:p="tapestry:parameter">
+	<div id="main-content">
+		<h2>${message:pageTitle-label}</h2>
+		<t:if test="successMessage">
+			<p class="success">${successMessage}</p>
+		</t:if>
+		<div class="tabbed-data"> 
+			<t:if test="company">
+				<ul class="tabs"> 
+					<li><t:pagelink page="company/detailcompany" context="company.id">${message:info-label}</t:pagelink></li>
+					<li><t:pagelink page="company/establishment/listestablishments" context="company.id">${message:establishment-label}</t:pagelink></li>  
+					<li class="active"><strong>${message:User-label}</strong></li> 
+				</ul>
+			</t:if>
+			<div class="tabs-content">
+				<div class="actions-bar">
+					<p>${message:total-results-label} : <strong>${resultsNumber}</strong></p> 
+					<ul>
+						<li><t:if test="companyDepartment">
+							<t:pagelink page="company/employee/create"
+								context="[companyDepartment.company.id,companyDepartment.id]">
+								<img src="${context:static/images/agent_ajouter.png}"
+									alt="${message:addemployee-label}" title="${message:create-label}" /> ${message:create-label}
+									</t:pagelink>
+						</t:if> 
+						</li>
+						<li><a href="#" onclick="javascript:window.print()">
+								<img src="${context:static/images/printer.png}"
+									alt="${message:print-label}" title="${message:print-label}"/> ${message:print-label}
+							</a>
+						</li>
+					</ul>
+				</div>
+				<div class="caption">
+	        		<p>${message:result-label}</p>
+	        	</div>
+
+		
+	
+				<table t:id="employeeProfileGrid" model="gridModel" t:type="grid"
+					pagerPosition="bottom"
+					t:row="employeeProfileRow" t:source="employeeProfileList"
+					t:rowIndex="rowIndex" t:rowsPerPage="${message:rowsPerPage}"
+					t:inplace="true" t:empty="${message:empty-label}">
+                    <t:parameter name="userCell">
+						<t:if test="employeeProfileRow.user">
+							<t:pagelink page="company/employee/view" context="employeeProfileRow.id">
+								${employeeProfileRow?.user?.firstname}&nbsp;${employeeProfileRow?.user?.lastname}
+							</t:pagelink>
+						</t:if>
+					</t:parameter>
+					<t:parameter name="expirationDatePasswordCell">
+						<t:if test="belongsToEstablishment">
+							${employeeProfileRow?.user?.expirationDatePassword}
+							<p:else>
+								<div class="grey-cell">
+									&nbsp;
+								</div>
+							</p:else>
+						</t:if>
+					</t:parameter>
+					<t:parameter name="actionsCell">
+									
+						<t:pagelink page="company/employee/view"
+							context="employeeProfileRow.id">
+							<img src="${context:static/images/agent_voir.png}"
+								alt="${message:view-label}" title="${message:view-label}" /></t:pagelink>&nbsp;
+						
+
+					
+							<t:if test="belongsToEstablishment">
+								<t:if test="employeeProfileRow.user.enabled">
+									<t:pagelink page="company/employee/modify"
+									context="employeeProfileRow.id">
+									<img src="${context:static/images/agent_modifier.png}"
+										alt="${message:modify-label}" title="${message:modify-label}" /></t:pagelink>&nbsp;
+									<t:if test="isEmployeeRowLogged" negate="true">
+										<t:actionlink t:id="disable"
+											context="employeeProfileRow.id" t:mixins="confirm"
+											t:message="message:confirm-disabled-label"><img src="${context:static/images/agent_disable.png}"
+											alt="${message:disable-user-label}" title="${message:disable-user-label}"/></t:actionlink>&nbsp;
+									</t:if>
+								</t:if>
+								<t:if test="!employeeProfileRow.user.enabled">
+										<img src="${context:static/images/agent_modifier_disable.png}"
+											alt="${message:modify-user-label-disable}" title="${message:modify-user-label-disable}"/>&nbsp;					
+									<t:actionlink t:id="enable"
+											context="employeeProfileRow.id" t:mixins="confirm"
+											t:message="message:confirm-enabled-label"><img src="${context:static/images/agent_enable.png}"
+												alt="${message:enable-user-label}" title="${message:enable-user-label}"/></t:actionlink>&nbsp;
+								</t:if>
+								<t:if test="isEmployeeRowLogged" negate="true">
+									<t:actionlink t:id="delete"
+										context="employeeProfileRow.id" t:mixins="confirm"
+										t:message="message:confirm-delete-user-label">
+										<img src="${context:static/images/agent_supprimer.png}"
+											alt="${message:confirm-delete-user-label}" title="${message:delete-label}" /></t:actionlink>&nbsp;
+								</t:if>
+							</t:if>
+					</t:parameter>
+						
+				</table>
+				&nbsp;
+				<ul class="links">
+					<t:if test="isAdmin">
+						<li class="back"><t:pagelink page="company/searchresult">${message:back-searchresult-label}</t:pagelink></li>
+					</t:if>
+					<li class="back"><a href="javascript:history.go(-1)">${message:back-label}</a></li>
+				</ul>
+
+			</div>
+		</div>
+	</div>
+	
+
+</html>

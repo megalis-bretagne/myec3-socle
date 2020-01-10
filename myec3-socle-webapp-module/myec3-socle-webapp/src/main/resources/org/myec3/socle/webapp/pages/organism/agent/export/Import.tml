@@ -1,0 +1,201 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html t:type="layout"
+	xmlns:t="http://tapestry.apache.org/schema/tapestry_5_1_0.xsd"
+	xmlns:p="tapestry:parameter">
+
+<script type="text/javascript">
+	jQuery.noConflict();
+	jQuery(document).ready(function() {
+
+		<!-- Ajoute un effet sur le tableau d'information -->
+		jQuery("#clickMe").click(function() {
+			if(jQuery("#import_fields").is(":visible")){
+				jQuery("#import_fields").slideUp('slow');
+			}else{
+				jQuery("#import_fields").slideDown('slow');
+			}
+		});
+
+	});
+</script>
+
+<div id="main-content">
+	<h2>${message:page-title}</h2>
+
+	<t:form t:id="agent_import_form">
+
+		<!-- Error banner -->
+		<p t:banner="message:form-error" t:type="errors"
+			t:clientClass="errorDialogue"></p>
+
+		<!-- IMPORT NEW FILE -->
+		<fieldset class="import">
+			<legend>${message:import-new-file-label}</legend>
+			<div id="info">
+				<p class="first">
+					${message:info-1-message} <span id="clickMe">les champs
+						suivants</span> :
+				</p>
+
+				<div id="import_fields">
+					<table>
+						<tbody>
+							<tr>
+								<th>Nom du champ</th>
+								<th>Explications</th>
+								<th>Type</th>
+								<th>Contraintes - valeurs acceptées</th>
+							</tr>
+							<tr>
+								<td>Civilité</td>
+								<td>Si vide, la mention "non renseignée" apparaîtra à
+									l'import.</td>
+								<td>${message:text-type-label}</td>
+								<td><ul>
+										<li>NA</li>
+										<li>MR</li>
+										<li>MRS</li>
+									</ul>
+								</td>
+							</tr>
+							<tr>
+								<td><strong>Prénom*</strong>
+								</td>
+								<td></td>
+								<td>${message:text-type-label}</td>
+								<td>${message:max-text-lenght-message}</td>
+							</tr>
+							<tr>
+								<td><strong>Nom*</strong>
+								</td>
+								<td></td>
+								<td>${message:text-type-label}</td>
+								<td>${message:max-text-lenght-message}</td>
+							</tr>
+							<tr>
+								<td>Elu</td>
+								<td>Permet d'indiquer si l'utilisateur est un élu ou un
+									agent dans l'organisme, et d'adapter son rôle dans certains
+									services. Dans le cas où ce champ n'est pas renseigné la valeur
+									par défaut est NON.</td>
+								<td>Binaire</td>
+								<td><ul>
+										<li>OUI</li>
+										<li>NON</li>
+									</ul>
+								</td>
+							</tr>
+							<tr>
+								<td>Fonction</td>
+								<td>Désigne la fonction de l'utilisateur au sein de
+									l'organisme.</td>
+								<td>${message:text-type-label}</td>
+								<td>${message:max-text-lenght-message}</td>
+							</tr>
+							<tr>
+								<td>Adresse</td>
+								<td>Représente l'adresse de l'utilisateur. Ce champ doit
+									comporter le numéro, le type et le nom de la voie. (Exemple :
+									28 RUE VOLTAIRE). Si vide, la valeur sera héritée de celle de
+									son niveau de rattachement dans l'organigramme.</td>
+								<td>${message:text-type-label}</td>
+								<td>${message:max-text-lenght-message}</td>
+							</tr>
+							<tr>
+								<td>CodePostal</td>
+								<td>Si vide, la valeur sera héritée de celle de son niveau
+									de rattachement dans l'organigramme.</td>
+								<td>Numérique</td>
+								<td>5 chiffres, sans séparateurs ou espaces</td>
+							</tr>
+							<tr>
+								<td>Ville</td>
+								<td>Si vide, la valeur sera héritée de celle de son niveau
+									de rattachement dans l'organigramme.</td>
+								<td>${message:text-type-label}</td>
+								<td>${message:max-text-lenght-message}</td>
+							</tr>
+							<tr>
+								<td><strong>${message:email-label}*</strong>
+								</td>
+								<td>Désigne l'adresse électronique de l'utilisateur ainsi
+									que son identifiant au sein du référentiel d'identité sur
+									e-bourgogne. Par conséquent, la valeur renseignée doit être
+									unique. Ce champ constituera la clé de rapprochement entre les
+									utilisateurs e-bourgogne et ceux listés dans votre export.</td>
+								<td>${message:text-type-label}</td>
+								<td>255 caractères maximum, respectant l'expression
+									régulière (regex) suivante: <code>^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9-.]+\.[a-zA-Z.]{2,5}$</code>
+								</td>
+							</tr>
+							<tr>
+								<td>TéléphonePortable</td>
+								<td></td>
+								<td>${message:number-type-label}</td>
+								<td>${message:phone-rule-message}</td>
+							</tr>
+							<tr>
+								<td>TéléphoneFixe</td>
+								<td></td>
+								<td>${message:number-type-label}</td>
+								<td>${message:phone-rule-message}</td>
+							</tr>
+							<tr>
+								<td>${message:fax-label}</td>
+								<td></td>
+								<td>${message:number-type-label}</td>
+								<td>${message:phone-rule-message}</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+
+				<p>
+					${message:info-2-message} <a
+						href="${context:static/download/modele_import.csv}">${message:info-3-message}</a>
+				</p>
+
+				<p>${message:info-4-message}</p>
+
+				<p>
+					<input t:type="upload" t:id="uploadedFile" t:value="uploadedFile"
+						validate="required" />
+				</p>
+			</div>
+
+			<div class="form-actions">
+				<p>
+					<t:submit t:id="submit" value="message:import-label" />
+				</p>
+			</div>
+		</fieldset>
+	</t:form>
+
+	<!-- Check if an import already exists for this organism -->
+	<t:if test="isImportAlreadyExists">
+		<t:form t:id="last_import_form">
+			<fieldset class="import">
+				<legend>${message:use-last-import-label}</legend>
+				<p class="first">
+					${message:last-import-message} <strong>${fileDate}</strong>
+				</p>
+				<div class="form-actions">
+					<p>
+						<t:submit t:id="useLastImport" value="message:import-exists-label" />
+					</p>
+				</div>
+			</fieldset>
+		</t:form>
+	</t:if>
+
+
+	<ul class="links">
+		<li class="back"><t:pagelink page="organism/agent/listAgents"
+				context="organism.id">${message:back-users-list-label}</t:pagelink>
+		</li>
+		<li class="back"><t:pagelink page="organism/detail"
+				context="organism.id">${message:back-detailorganism-label}</t:pagelink>
+		</li>
+	</ul>
+</div>
+</html>

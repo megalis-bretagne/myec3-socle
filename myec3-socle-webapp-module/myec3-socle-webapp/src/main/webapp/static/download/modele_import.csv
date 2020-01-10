@@ -1,0 +1,6 @@
+Civilité;Prénom;Nom;Elu;Fonction;Adresse;CodePostal;Ville;Courriel;TéléphonePortable;TéléphoneFixe;Fax
+MR;Jean;Dupond;oui;Manager;11 rue paul berge;69000;Lyon;jean.dupond@exemple.com;0610203040;0478001020;0478001021
+NA;Jean;Dupond;oui;;;;;jean.dupond@exemple2.com;;;
+;Jean;Dupond;;Manager;;;;jean.dupond@exemple3.com;;;
+MRS;Emilie;Rivière;non;;20 rue du marais;00000;Grainville;emilie.riviere@exemple.com;0607080910;;
+MRS;Emilie;Rivière;;;;;;emilie.riviere@exemple2.com;;;

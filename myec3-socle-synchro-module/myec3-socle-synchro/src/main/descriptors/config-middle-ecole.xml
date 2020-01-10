@@ -1,0 +1,20 @@
+<assembly>
+	<id>config-middle-ecole</id>
+	<!-- This package should be extracted in /MIDDLE/customer/service on a middle server -->
+	<formats>
+		<format>zip</format>
+	</formats>
+	<includeBaseDirectory>false</includeBaseDirectory>
+	<fileSets>
+		<fileSet>
+			<directory>${main.config.directory}/filtered</directory>
+			<outputDirectory>/ROOT/WEB-INF/classes</outputDirectory>
+			<filtered>true</filtered>
+		</fileSet>
+		<fileSet>
+			<directory>${main.config.directory}/ecole</directory>
+			<outputDirectory>/ROOT/WEB-INF/classes</outputDirectory>
+			<filtered>false</filtered>
+		</fileSet>
+	</fileSets>
+</assembly>

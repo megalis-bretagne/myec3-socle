@@ -1,0 +1,36 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<artifactId>myec3-socle-synchro-scheduler</artifactId>
+	<packaging>jar</packaging>
+	<name>MyEc3 - Socle synchronization scheduler</name>
+
+	<description>
+        Scheduler module used by MyEc3 Synchronization. Define process/rules to synchronize resources
+        of MyEc3 Core to remote applications.
+  	</description>
+
+	<parent>
+		<groupId>org.myec3.socle</groupId>
+		<artifactId>myec3-socle-synchro-module</artifactId>
+		<version>5.6.2-MEGALIS-SNAPSHOT</version>
+	</parent>
+
+	<!-- DO NOT DECLARES DEPENDENCIES HERE THAT ARE NOT DECLARED AS MANAGED
+		IN PARENT POM ! -->
+
+	<dependencies>
+		<!-- Synchronization Core module (also contains myec3-socle-core) -->
+		<dependency>
+			<groupId>org.myec3.socle</groupId>
+			<artifactId>myec3-socle-synchro-core</artifactId>
+			<version>5.6.2-MEGALIS-SNAPSHOT</version>
+		</dependency>
+
+		<!-- REST WS client module -->
+		<dependency>
+			<groupId>org.myec3.socle</groupId>
+			<artifactId>myec3-socle-ws-client</artifactId>
+			<version>5.6.2-MEGALIS-SNAPSHOT</version>
+		</dependency>
+	</dependencies>
+</project>

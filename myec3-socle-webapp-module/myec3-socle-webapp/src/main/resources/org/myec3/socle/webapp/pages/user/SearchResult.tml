@@ -1,0 +1,87 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html t:type="layout" xmlns:t="http://tapestry.apache.org/schema/tapestry_5_1_0.xsd" xmlns:p="tapestry:parameter">
+    <div id="main-content">
+        <h2>${message:title}</h2>
+        <div class="actions-bar">
+            <p>
+                ${message:total-results-label} : <strong>${resultsNumber}</strong>
+            </p>
+        </div>
+        <div class="caption">
+            <p>
+                ${message:results-label}
+            </p>
+        </div>
+        <table t:id="profileGrid" t:empty="block:empty" pagerPosition="bottom" model="profileGridModel" t:type="grid" t:row="profileSearchRow" t:source="profileSearchResult" t:rowsPerPage="message:rowsPerPage" t:inplace="true">
+            <t:parameter name="sviProfileCell">
+                   ${profileSearchRow?.searchProfile?.user?.sviProfile?.id}
+            </t:parameter>
+			<t:parameter name="userCell">
+				<t:if test="profileSearchRow?.searchProfile?.user">
+					<t:if test="isAgent">
+						<t:pagelink page="organism/agent/view" context="profileSearchRow?.searchProfile?.id">
+								${profileSearchRow?.searchProfile?.user?.lastname} ${profileSearchRow?.searchProfile?.user?.firstname}
+						</t:pagelink>		
+					<p:else>
+						 <t:pagelink page="company/employee/view" context="profileSearchRow?.searchProfile?.id">
+						 	${profileSearchRow?.searchProfile?.user?.lastname} ${profileSearchRow?.searchProfile?.user?.firstname}
+						 </t:pagelink>
+					</p:else>
+					</t:if>
+				</t:if>
+			</t:parameter>
+            <t:parameter name="emailCell">
+                ${profileSearchRow?.searchProfile?.email}
+            </t:parameter>
+            <t:parameter name="loginCell">
+                ${profileSearchRow?.searchProfile?.user?.username}
+            </t:parameter>
+            <t:parameter name="structureCell">
+            	<t:if test="isAgent">
+            		<t:if test="profileSearchRow?.searchStructure?.label">
+                		${message:structure-organism-label} ${profileSearchRow?.searchStructure?.label}
+                	<p:else>
+                		${message:structure-unknown-label}
+                	</p:else>	
+                	</t:if>
+                <p:else>
+               		<t:if test="profileSearchRow?.searchStructure?.label">
+						${message:structure-company-label} ${profileSearchRow?.searchStructure?.label}
+					<p:else>
+						${message:structure-unknown-label}
+					</p:else>	
+                	</t:if>
+				</p:else>
+				</t:if>
+            </t:parameter>
+            <t:parameter name="actionsCell">
+                <t:if test="isAgent">
+                    <t:pagelink page="organism/agent/view" context="profileSearchRow.searchProfile.id">
+                        <img src="${context:static/images/agent_voir.png}" alt="${message:view-label}" title="${message:view-label}" />
+                    </t:pagelink>
+                    <t:pagelink page="organism/agent/modify" context="profileSearchRow.searchProfile.id">
+		        		<img src="${context:static/images/agent_modifier.png}" alt="${message:modify-label}" title="${message:modify-label}" />
+		        	</t:pagelink>
+                    <p:else>
+                        <t:pagelink page="company/employee/view" context="profileSearchRow.searchProfile.id">
+                            <img src="${context:static/images/agent_voir.png}" alt="${message:view-label}" title="${message:view-label}" />
+                        </t:pagelink>
+                        <t:pagelink page="company/employee/modify" context="profileSearchRow.searchProfile.id">
+		        			<img src="${context:static/images/agent_modifier.png}" alt="${message:modify-label}" title="${message:modify-label}" />
+		        		</t:pagelink>
+		             </p:else>
+                </t:if>
+            </t:parameter>
+        </table>
+        <ul class="navigational">
+            <li>
+                <t:pagelink page="user/search" class="back">
+                    ${message:back-to-search-label}
+                </t:pagelink>
+            </li>
+            <li>
+                <a href="#" class="top">${message:top-of-page-label}</a>
+            </li>
+        </ul>
+    </div>
+</html>

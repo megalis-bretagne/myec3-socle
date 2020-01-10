@@ -1,0 +1,94 @@
+<html t:type="layout" xmlns:t="http://tapestry.apache.org/schema/tapestry_5_1_0.xsd" >
+  		<t:form t:id="creation_role_form">
+		  <div id="main-content">
+				<h2>${message:pageTitle-label}</h2>
+				
+				<p class="intro">${message:abstract-label}</p>
+			
+			<div class="steps">
+				<ol>
+					<li id="step1" class="active">${message:step-role-label}</li>
+					<li id="step2">${message:step-role-default-status-label}</li>
+				</ol>
+			</div>
+			
+			<t:if test="errorMessage">
+				<p class="error">${errorMessage}</p>
+			</t:if>
+			
+			<p t:banner="message:form-error"  t:type="errors" t:clientClass="errorDialogue"></p>
+			
+			<p class="mandatory">${message:mandatory-label}</p>
+    
+        	<fieldset>
+        			<legend>${message:role-info-label}</legend>
+				<p>
+	            	<t:label for="applicationSelected">${message:applicationSelected-label} *:</t:label>
+	            	<t:select t:id="applicationSelected" t:encoder="applicationEncoder" t:model="applicationsList" 
+	            		t:value="role.application" t:validate="required" />	
+	            	<a href="#" title="${message:application-help}">
+	        			<img src="${context:static/images/pic_help.png}" class="picHelp" alt="${message:help-label}"/>
+	        		</a>	
+	            </p> 
+	
+	           	<p>
+	                <t:label for="profileTypeValue">${message:profileTypeSelected-label} *:</t:label>
+	                <t:select  t:id="profileTypeValue"   
+	                t:value="profileTypeValueSelected" t:blankLabel="TOUS" zone="defaultZone"/>	
+	        		<a href="#" title="${message:profileType-help}">
+	        			<img src="${context:static/images/pic_help.png}" class="picHelp" alt="${message:help-label}"/>
+	        		</a>
+				</p>
+				<!-- t:encoder="profileTypeValueEncoder" t:model="profileTypeValuesList" -->
+	            
+	           	<p>
+	                <t:label for="name">${message:name-label} *:</t:label>
+	                <t:textfield t:id="name" t:value="role.name" t:validate="required, maxlength=255"/>
+	            </p>
+	          	<p>
+	                <t:label for="label">${message:label-label} *:</t:label>
+	                <t:textfield t:id="label" t:value="role.label" t:validate="required, maxlength=255"/>
+	            </p>
+		       	
+	           	<p>
+	                <t:label for="description">${message:description-label} :</t:label>
+	                <t:textarea t:id="description" t:value="role.description" />
+				</p>
+				<!--
+				<p>
+					<t:label for="defaultBasic">${message:defaultBasic-label} : </t:label>
+					<t:checkbox t:id="defaultBasic" t:value="defaultBasicSelected" />
+					<a href="#" title="${message:defaultBasic-help-label}"><img
+						src="${context:static//images/pic_help.png}" class="picHelp"
+						alt="${message:help-label}" />
+					</a>
+				</p>
+				
+				<p>
+					<t:label for="defaultAdmin">${message:defaultAdmin-label} : </t:label>
+					<t:checkbox t:id="defaultAdmin" t:value="defaultAdminSelected" />
+					<a href="#" title="${message:defaultAdmin-help-label}"><img
+						src="${context:static//images/pic_help.png}" class="picHelp"
+						alt="${message:help-label}" />
+					</a>
+				</p>
+				-->
+				
+				
+				<!--
+		       	<p>
+	                <t:label for="label">${message:label-label} *:</t:label>
+	                <t:textfield t:id="label" t:value="role.label" t:validate="required, maxlength=255"/>
+	            </p>
+	            -->
+			
+			<div class="form-actions">
+						<p>
+							<t:submit t:id="submit" class="button btnOk" value="message:next-label" />
+							<input type="reset" value="${message:reset-label}" id="cancelButton" />
+						</p>
+			</div>
+			</fieldset>
+        </div>
+     </t:form>
+</html>

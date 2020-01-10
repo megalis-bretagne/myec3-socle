@@ -1,0 +1,46 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html t:type="layout" xmlns:t="http://tapestry.apache.org/schema/tapestry_5_1_0.xsd">
+    <div id="main-content">
+	    <h2>${employeeProfile?.user?.firstname} ${employeeProfile?.user?.lastname}</h2>
+	    <ul class="tabs"> 
+			<li><t:pagelink page="company/employee/modify" context="${employeeProfile.id}">${message:user-data-label}</t:pagelink></li> 
+			<li class="active"><strong>${message:user-services-label}</strong></li> 
+		</ul> 
+		<div id="sectionContent">
+			<t:if test="successMessage">
+		            <p class="success">${successMessage}</p>
+		    </t:if>
+			<t:if test="errorMessage">
+	            <p class="error">${errorMessage}</p>
+	        </t:if>
+	        
+	        <t:form t:id="modification_form">
+	      		<p t:banner="message:error-creation-employee-label"  t:type="errors" t:clientClass="errorDialogue"></p>
+	    		<fieldset>
+	    			<legend>${message:form-legend-label}</legend>
+			        <t:loop source="employeeRoles"  encoder="employeeRolesEncoder" value="roleLoop">
+			        	<t:if test="displayedApplication">
+			            	<p>
+			                	<label>${roleLoop?.application?.label}</label>
+			                	<t:select t:id="role" t:validate="required" t:encoder="roleEncoder" t:model="rolesModel" t:value="roleSelected" />
+			            	</p>
+			            	<t:parameter name="else">
+		                		<t:hidden t:encoder="roleEncoder" value="roleSelected" />
+		                	</t:parameter>
+			            </t:if>
+		            </t:loop>
+		            <div class="form-actions"> 
+			    		<p>
+			        		<t:submit t:id="submit" class="button btnOk" value="message:save-label" />
+			        		<input type="reset" value="${message:reset-label}" id="cancelButton" />
+			        	</p>
+			        </div>
+			        &nbsp;
+					<ul class="links">
+						<li class="back"><a href="javascript:history.go(-1)">${message:back-label}</a></li>
+					</ul>
+		        </fieldset>
+			</t:form>
+    	</div>
+	</div>
+</html>

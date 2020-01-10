@@ -1,0 +1,201 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html t:type="layout" xmlns:t="http://tapestry.apache.org/schema/tapestry_5_1_0.xsd">
+	<div id="main-content">
+		<h2>${employeeProfile?.user?.firstname} ${employeeProfile?.user?.lastname}</h2>
+		<div class="tabbed-data">
+			<ul class="tabs">
+				<li class="active">
+					<strong>${message:user-data-label}</strong>
+				</li>
+				<t:if test="!isHimselfAndNotAdmin">
+					<li>
+						<t:pagelink page="company/employee/viewRoles" context="${employeeProfile.id}">
+							${message:user-services-label}
+						</t:pagelink>
+					</li>
+				</t:if>
+			</ul>
+			<div class="tabs-content">
+				<t:if test="successMessage">
+					<p class="success">
+						${successMessage}
+					</p>
+				</t:if>
+				<t:if test="errorMessage">
+					<p class="error">
+						${errorMessage}
+					</p>
+				</t:if>
+				<p class="mandatory">
+					&nbsp;
+				</p>
+				<t:if test="modifyDisplay">
+					<div class="actions-bar">
+						<ul>
+						<t:if test="employeeProfile.user.enabled">
+							<t:if test="isAdmin">
+								<li>
+									<t:actionlink t:id="regeneratePassword" t:mixins="confirm" t:message="message:confirm-regenerate-password-label">
+										<img src="${context:static/images/regenerate_password.png}" alt="${message:regenerate-password-label}" title="${message:regenerate-password-label}" />  ${message:regenerate-password-label}
+									</t:actionlink>
+								</li>
+							</t:if>
+
+							<li>
+								<t:pagelink page="company/employee/modify" context="employeeProfile.id">
+									<img src="${context:static/images/agent_modifier.png}" alt="${message:modify-label}" title="${message:modify-label}" />  ${message:modify-label}
+								</t:pagelink>
+							</li>
+
+							</t:if>
+							<t:if test="!employeeProfile.user.enabled">
+								<li>
+									<a class="disable" >
+											<img src="${context:static/images/regenerate_password.png}" alt="${message:regenerate-password-label}" title="${message:modify-user-label-disable}" /> <span title="${message:modify-user-label-disable}">${message:regenerate-password-label}</span>
+									</a>
+								</li>
+								<li>
+									 <a class="disable" >
+											<img src="${context:static/images/agent_modifier.png}" alt="${message:modify-user-label}" title="${message:modify-user-label-disable}"  />  <span title="${message:modify-user-label-disable}">${message:modify-user-label}</span>
+									  </a>
+								 </li>
+							</t:if>
+						</ul>
+					</div>
+				</t:if>
+				<fieldset>
+					<legend>
+						${message:form-legend-label}
+					</legend>
+					<p>
+						<label>
+							${message:username-label} :
+						</label>
+						${employeeProfile?.user?.username}
+					</p>
+					<t:if test="modifyDisplay">
+						<p>
+							<label>
+								 ${message:modificationDatePassword-label} :
+							</label>
+							<t:output format="timestampFormat" t:value="employeeProfile.user.modifDatePassword"/>
+						</p>
+						<p>
+							<label>
+								 ${message:expirationDatePassword-label} :
+							</label>
+							<t:output format="dateFormat" t:value="employeeProfile.user.expirationDatePassword"/>
+						</p>
+					</t:if>
+					 <p>
+						<label>
+							${message:establishment-label} :
+						</label>
+							${employeeProfile?.establishment?.label}
+					</p>
+					<p>
+						<label>
+							${message:civility-label} :
+						</label>
+							${employeeProfile?.user?.civility?.label}
+					</p>
+					<p>
+						<label>
+							${message:firstname-label} :
+						</label>
+						${employeeProfile?.user?.firstname}
+					</p>
+					<p>
+						<label>
+							${message:lastname-label} :
+						</label>
+						${employeeProfile?.user?.lastname}
+					</p>
+					<p>
+						<label>${message:grade-label} : </label>
+						${employeeProfile?.grade?.label}
+					</p>
+					<p>
+						<label>
+							${message:function-label} :
+						</label>
+						${employeeProfile.function}
+					</p>
+					<p>
+						<label>
+							${message:postalAddress-label} :
+						</label>
+							${employeeProfile?.address?.postalAddress}
+					</p>
+					<p>
+						<label>
+							${message:postalCode-label} :
+						</label>
+							${employeeProfile?.address?.postalCode}
+					</p>
+					<p>
+						<label>
+							${message:city-label} :
+						</label>
+							${employeeProfile?.address?.city}
+					</p>
+					 <p>
+						<label>
+							${message:canton-label} :
+						</label>
+							${employeeProfile?.address?.canton}
+					</p>
+					<p>
+						<label>
+							${message:country-label} :
+						</label>
+							${employeeProfile?.address?.country?.label}
+					</p>
+					<p>
+						<label>
+							${message:email-label} :
+						</label>
+						${employeeProfile.email}
+					</p>
+					<p>
+						<label>
+							${message:cellPhone-label} :
+						</label>
+						${employeeProfile.cellPhone}
+					</p>
+					<p>
+						<label>
+							${message:phone-label} :
+						</label>
+						${employeeProfile.phone}
+					</p>
+					<p>
+						<label>
+							${message:fax-label} :
+						</label>
+						${employeeProfile.fax}
+					</p>
+					<p>
+						<label>
+							${message:prefComMedia-label} :
+						</label>
+						${employeeProfile?.prefComMedia?.label}
+					</p>
+					 &nbsp;
+					<ul class="links">
+						<t:if test="!isHimselfAndNotAdmin">
+							<li class="back">
+								<t:pagelink page="company/detail" context="employeeProfile.companyDepartment.company.id">
+									${message:back-detailcompany-label}
+								</t:pagelink>
+							</li>
+						   </t:if>
+						<li class="back">
+							<a href="javascript:history.go(-1)">${message:back-label}</a>
+						</li>
+					</ul>
+				</fieldset>
+			</div>
+		</div>
+	</div>
+</html>

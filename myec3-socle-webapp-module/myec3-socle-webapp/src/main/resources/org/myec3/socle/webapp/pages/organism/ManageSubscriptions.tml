@@ -1,0 +1,71 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html t:type="layout"
+	xmlns:t="http://tapestry.apache.org/schema/tapestry_5_1_0.xsd">
+	
+<script type="text/javascript">
+	jQuery.noConflict();
+	jQuery(document).ready(function() {
+		initPage();
+	});
+</script>
+
+<div id="main-content">
+	<h2>${message:pageTitle-label} ${organism?.article?.label}
+		${organism.label}</h2>
+	<t:if test="errorMessage">
+		<p class="errorDialogue">${errorMessage}</p>
+	</t:if>
+
+	<t:form t:id="modification_form">
+		<fieldset>
+			<legend>${message:subscriptions-label}</legend>
+			<p>
+				&nbsp; ${message:access-label} :
+				<t:checkbox t:id="member" t:value="organism.member" />
+				&nbsp;<a href="#" title="${message:access-platform-label}"><img
+					src="${context:static//images/pic_help.png}" class="picHelp"
+					alt="${message:help-label}" />
+				</a>
+			</p>
+			<br /> <br />
+
+			<p>
+				&nbsp;&nbsp;${message:subscription-1-label} : <a href="#"
+					title="${message:subscription-application-label}"><img
+					src="${context:static//images/pic_help.png}" class="picHelp"
+					alt="${message:help-label}" />
+				</a> <br /> <br />
+
+				<t:loop source="availableApplications" encoder="applicationEncoder"
+					value="applicationLoop" empty="block:empty">
+					<p>
+						<label class="service">${applicationLoop.label}</label>
+						<t:checkbox t:id="selected" t:value="selected" />
+					</p>
+				</t:loop>
+				<t:block t:id="empty">
+	                 <p class="empty">
+	        			${message:empty-message}
+	        		</p>
+	    		</t:block>
+			</p>
+			<t:if test="idDouble">
+				<t:hidden t:id="idDouble" t:value="idDouble" />
+			</t:if>
+			<div class="form-actions">
+				<p>
+					<t:submit t:id="submit" id="submit" class="button btnOk"
+						value="message:save-label" />
+					<input type="reset" value="${message:reset-label}"
+						id="cancelButton" />
+				</p>
+			</div>
+			&nbsp;
+			<ul class="links">
+				<li class="back"><a href="javascript:history.go(-1)">${message:back-label}</a>
+				</li>
+			</ul>
+		</fieldset>
+	</t:form>
+</div>
+</html>

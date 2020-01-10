@@ -1,0 +1,86 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html t:type="layout"
+	xmlns:t="http://tapestry.apache.org/schema/tapestry_5_1_0.xsd"
+	xmlns:p="tapestry:parameter">
+
+<div id="main-content">
+	<h2>${message:page-title}</h2>
+
+	<!-- DISPLAY SUCCESS MESSAGE IF EXISTS -->
+	<t:if test="successMessage">
+		<p class="success">${successMessage}</p>
+	</t:if>
+
+	<!-- DISPLAY ERROR MESSAGE IF EXISTS -->
+	<t:if test="errorMessage">
+		<p class="error">${errorMessage}</p>
+	</t:if>
+
+	<div class="tabbed-data">
+
+		<!-- MENU -->
+		<ul class="tabs">
+			<li><t:pagelink page="organism/agent/export/report"
+					context="organism.id">${message:report-label}</t:pagelink>
+			</li>
+
+			<li class="active"><strong>${message:create-users-label}
+					( ${numberOfAgentsToCreate} )</strong>
+			</li>
+
+			<t:if test="displayModifyMenu">
+				<li><t:pagelink page="organism/agent/export/modifyList"
+						context="organism.id">${message:modify-users-label} ( ${numberOfAgentsToModify} )</t:pagelink>
+				</li>
+			</t:if>
+
+			<t:if test="displayDeleteMenu">
+				<li><t:pagelink page="organism/agent/export/deleteList"
+						context="organism.id">${message:delete-users-label}
+					( ${numberOfAgentsToDelete} )</t:pagelink>
+				</li>
+			</t:if>
+		</ul>
+
+		<div class="tabs-content">
+			<div class="actions-bar">
+				<ul>
+					<li><t:pagelink page="organism/agent/export/import"
+							context="organism.id"> 
+							<img src="${context:static/images/file_import.png}"
+									alt="${message:import-new-file-label}" title="${message:import-new-file-label}" /> 
+									${message:import-new-file-label}
+							</t:pagelink>
+					</li>
+					<li><t:pagelink page="organism/agent/create"
+							context="[organism.id,organismDepartment.id]"> 
+							<img src="${context:static/images/agent_ajouter.png}"
+									alt="${message:create-new-user-label}" title="${message:create-new-user-label}" />
+									${message:create-new-user-label}
+							</t:pagelink>
+					</li>
+				</ul>
+			</div>
+
+			<div t:id="filter_form" t:type="agentListFilter"
+				agentProfileList="agentsToCreate" />
+
+			<t:form t:id="list_agents_form">
+				<table t:id="list_agents_grid" model="gridModel" t:type="grid"
+					pagerPosition="bottom" t:row="currentRow"
+					t:source="AgentProfileList" t:rowIndex="rowIndex"
+					t:rowsPerPage="${message:rowsPerPage}" t:inplace="false"
+					t:empty="${message:empty-label}">
+
+					<t:parameter name="actionCell">
+						<t:actionlink t:id="create" context="rowIndex">${message:create-user-label}</t:actionlink>
+					</t:parameter>
+
+				</table>
+
+			</t:form>
+		</div>
+
+	</div>
+</div>
+</html>

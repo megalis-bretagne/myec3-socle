@@ -1,0 +1,69 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html t:type="layout" xmlns:t="http://tapestry.apache.org/schema/tapestry_5_1_0.xsd">
+	<div id="main-content">
+		<h2>${message:page-title}</h2>
+	
+		<t:form t:id="organism_import_form">
+	
+			<!-- Error banner -->
+			<p t:banner="message:form-error" t:type="errors"
+				t:clientClass="errorDialogue"></p>
+	
+			<!-- IMPORT NEW FILE -->
+			<fieldset class="import">
+				<legend>${message:import-new-file-label}</legend>
+				<div id="info">
+					<p class="first">
+						${message:info-1-message}
+					</p>
+	
+					<p>
+						${message:info-2-message}
+					</p>
+	
+					<p>${message:info-4-message}</p>
+	
+					<p>
+						<input t:type="upload" t:id="uploadedFile" t:value="uploadedFile"
+							validate="required" />
+					</p>
+				</div>
+	
+				<div class="form-actions">
+					<p>
+						<t:submit t:id="submit" value="message:import-label" />
+					</p>
+				</div>
+			</fieldset>
+		</t:form>
+	
+		<!-- Check if an import already exists for this organism -->
+		<!--  
+		<t:if test="isImportAlreadyExists">
+			<t:form t:id="last_import_form">
+				<fieldset class="import">
+					<legend>${message:use-last-import-label}</legend>
+					<p class="first">
+						${message:last-import-message} <strong>${fileDate}</strong>
+					</p>
+					<div class="form-actions">
+						<p>
+							<t:submit t:id="useLastImport" value="message:import-exists-label" />
+						</p>
+					</div>
+				</fieldset>
+			</t:form>
+		</t:if>
+		-->
+		<!--  
+		<ul class="links">
+			<li class="back"><t:pagelink page="organism/agent/listAgents"
+					context="organism.id">${message:back-users-list-label}</t:pagelink>
+			</li>
+			<li class="back"><t:pagelink page="organism/detail"
+					context="organism.id">${message:back-detailorganism-label}</t:pagelink>
+			</li>
+		</ul>
+		-->
+	</div>
+</html>

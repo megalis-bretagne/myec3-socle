@@ -1,0 +1,59 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html t:type="layout" xmlns:t="http://tapestry.apache.org/schema/tapestry_5_1_0.xsd" xmlns:p="tapestry:parameter">
+    <div id="main-content">
+        <h2>${message:title}</h2>
+        <t:if test="successMessage">
+			<p class="success">${successMessage}</p>
+		</t:if>
+        <div class="actions-bar"> 
+       		<p>${message:total-results-label}<strong>${resultsNumber}</strong></p> 
+	     	<ul>  
+          		<li><a href="#" onclick="javascript:window.print()">
+								<img src="${context:static/images/printer.png}"
+									alt="${message:print-label}" title="${message:print-label}"/> ${message:print-label}
+					</a>
+				</li>
+			</ul> 
+		</div> 
+        
+        <div class="caption">
+        	<p>${message:results-label}</p>
+        </div>
+    	<table t:id="synchronizationLogGrid" t:rowClass="rowClass" t:empty="block:empty" pagerPosition="bottom" model="gridModel" t:type="grid" t:row="synchronizationLogRow" t:rowIndex="rowIndex" t:source="synchronizationLogResult" t:rowsPerPage="${message:rowsPerPage}" t:inplace="true">
+			<t:parameter name="applicationCell">
+				${synchronizationLogRow.synchronizationSubscription.application.name}
+			</t:parameter>
+			
+			<t:parameter name="synchronizationInitialCell">
+				<t:pagelink page="synchroman/synchronization/DetailSynchronization" context="synchronizationInitialValue"><t:textoutput t:value="synchronizationInitialValue" /></t:pagelink>
+			</t:parameter>
+			
+			<t:parameter name="isFinalCell">
+				<t:textoutput t:value="isFinalLabel" />
+			</t:parameter>
+			
+			<t:parameter name="synchronizationDateCell">
+				<t:output format="dateFormat" t:value="synchronizationLogRow.synchronizationDate"/>
+	        </t:parameter>
+	        
+			<t:parameter name="actionsCell">
+				<t:pagelink page="synchroman/synchronization/DetailSynchronization" context="synchronizationLogRow.id">
+		        	 <img src="${context:static/images/synchronization_view.png}" alt="${message:view-label}" title="${message:view-label}" />
+	        	</t:pagelink>
+	        	
+				<t:actionlink t:id="replay" context="synchronizationLogRow.id" t:mixins="confirm" t:message="message:confirm-label">
+					<img src="${context:static/images/replay.png}" alt="${message:replay-label}" title="${message:replay-label}" />
+				</t:actionlink>
+	        </t:parameter>
+  		</table>
+  		
+	    <t:block t:id="empty">
+	        ${message:empty-message}
+	    </t:block>
+	    
+	    <ul class="navigational"> 
+			<li><t:pagelink page="synchroman/synchronization/Search" class="back">${message:back-to-search-label}</t:pagelink></li>
+			<li><a href="#" class="top">${message:top-of-page-label}</a></li> 
+		</ul> 
+	</div>
+</html>

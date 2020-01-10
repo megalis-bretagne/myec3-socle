@@ -1,0 +1,145 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<artifactId>myec3-socle-contract</artifactId>
+	<packaging>jar</packaging>
+	<name>MyEc3 - Socle contract</name>
+
+
+	<description>
+		Contract module for MyEc3 Socle. Defines model of Myec3 socle core and synchronization objects used during the exchange between socle and external applications.
+  </description>
+
+	<parent>
+		<groupId>org.myec3.socle</groupId>
+		<artifactId>myec3-socle</artifactId>
+		<version>5.6.2-MEGALIS-SNAPSHOT</version>
+	</parent>
+
+<build>
+	<plugins>
+		<!-- Plugin used to generate XSD schema of myec3 socle model. To use it
+				decomment the plugin and write the command "mvn generate-sources" into a
+				command console -->
+		<!--
+		<plugin>
+			<groupId>com.sun.tools.jxc.maven2</groupId>
+			<artifactId>maven-jaxb-schemagen-plugin</artifactId>
+			<version>1.2</version>
+			<dependencies>
+				<dependency>
+					<groupId>com.sun.xml.bind</groupId>
+					<artifactId>jaxb-impl</artifactId>
+					<version>2.1.9</version>
+				</dependency>
+				<dependency>
+					<groupId>javax.xml.bind</groupId>
+					<artifactId>jaxb-api</artifactId>
+					<version>2.2</version>
+				</dependency>
+				<dependency>
+					<groupId>com.sun.xml.bind</groupId>
+					<artifactId>jaxb-xjc</artifactId>
+					<version>2.1.9</version>
+				</dependency>
+			</dependencies>
+			<executions>
+				<execution>
+					<phase>generate-sources</phase>
+					<configuration>
+						<project> ${project} </project>
+						<schemas>
+							<schema>
+								<namespace>noName</namespace>
+								<file>schema.xsd</file>
+							</schema>
+						</schemas>
+						<srcdir>src/main/java/org/myec3/socle/core/domain/model</srcdir>
+						<verbose>true</verbose>
+					</configuration>
+					<goals>
+						<goal>generate</goal>
+					</goals>
+				</execution>
+			</executions>
+		</plugin>
+		-->
+	</plugins>
+</build>
+
+	<!-- ALL DEPENDENCIES ARE DEFINED AS OPTIONAL ! TO ENBALE ALL FUNCTIONNALITIES
+		OF THIS MODULE, YOU HAVE TO REDECLARE THESE OPTIONAL DEPENCIES IN YOUR OWN
+		PROJECT. MORE INFO AT http://maven.apache.org/guides/introduction/introduction-to-optional-and-excludes-dependencies.html -->
+	<dependencies>
+		<!-- Spring -->
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-beans</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-core</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-context</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-context-support</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-tx</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-orm</artifactId>
+		</dependency>
+		
+		<!-- Javax -->
+		<dependency>
+		    <groupId>javax.validation</groupId>
+		    <artifactId>validation-api</artifactId>
+		</dependency>
+		
+		<dependency>
+		    <groupId>javax.ws.rs</groupId>
+		    <artifactId>javax.ws.rs-api</artifactId>
+		</dependency>
+
+		<!-- AUDIT -->
+		<dependency>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-envers</artifactId>
+			<optional>true</optional>
+		</dependency>
+
+		<!-- Spring Security dependencies -->
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-core</artifactId>
+			<optional>true</optional>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-config</artifactId>
+			<optional>true</optional>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-acl</artifactId>
+			<optional>true</optional>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-web</artifactId>
+			<optional>true</optional>
+		</dependency>
+
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-annotations</artifactId>
+			<version>2.7.4</version>
+		</dependency>
+	</dependencies>
+</project>

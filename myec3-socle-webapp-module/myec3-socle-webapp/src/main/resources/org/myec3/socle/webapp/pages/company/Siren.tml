@@ -1,0 +1,77 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html t:type="layout" xmlns:t="http://tapestry.apache.org/schema/tapestry_5_1_0.xsd">
+
+<t:if test="isLocHallesTheme">	
+	<link href="${context:static/css/loc-halles.css}" rel="stylesheet" type="text/css" />
+</t:if>
+
+<div id="main-content">
+	<h2>${message:pageTitle-label}</h2>
+
+	<p class="intro">${message:help-label}</p>
+	
+	<div class="steps">
+		<ol>
+			<li id="step1" class="active">${message:step-siren-label}</li>
+			<li id="step2">${message:step-info-company-label}</li>
+			<li id="step3">${message:step-info-establishment-label}</li>
+			<li id="step4">${message:step-info-account-label}</li>
+		</ol>
+	</div>
+	
+	<t:form t:id="modification_form">
+		<t:if test="errorMessage">
+			<p class="error">${errorMessage}</p>
+		</t:if>
+		<p t:banner="message:form-error"  t:type="errors" t:clientClass="errorDialogue"></p>
+		<p class="mandatory">${message:mandatory-label}</p>
+
+	<fieldset>
+		<legend>${message:company-in-france-label}</legend>
+		<p>
+				<t:label for="siren">${message:siret-label} 
+					<t:if test="isLocHallesTheme">
+						<a href="#" title="${message:help-label}"><img src="${context:static/images/locHalles/pic_help.png}" class="picHelp" alt="${message:siret-help}"/></a> * :
+						<t:parameter name="else">
+							<a href="#" title="${message:help-label}"><img src="${context:static/images/pic_help.png}" class="picHelp" alt="${message:siret-help}"/></a> * :
+						</t:parameter>						
+					</t:if>
+				</t:label>
+               <t:textfield t:id="siren" t:value="company.siren" t:maxlength="9" t:validate="required,regexp,minlength=9,maxlength=9" />&nbsp;
+               <t:textfield t:id="siret" t:value="company.nic" t:maxlength="5" t:validate="regexp,minlength=5,maxlength=5" />
+        </p>
+				<div class="form-actions">
+						<p>
+							<t:submit t:id="submitFrenchCompany" class="button btnOk" value="message:valid-label" />
+							<input type="reset" value="${message:reset-label}" id="cancelButton" />
+						</p>
+				</div>
+	</fieldset>
+	</t:form>
+	<t:form t:id="modification_foreign_form">
+		<fieldset>
+			<legend>${message:company-in-foreign-country-label}
+				<a href="#" title="${message:foreign-company-help}">
+					<t:if test="isLocHallesTheme">
+						<img src="${context:static/images/locHalles/pic_help.png}" class="picHelp" alt="${message:foreign-company-help}"/>
+						<t:parameter name="else">
+							<img src="${context:static/images/pic_help.png}" class="picHelp" alt="${message:foreign-company-help}"/>
+						</t:parameter>
+					</t:if>						      			
+			    </a>
+			</legend>
+		<p>
+				<t:label for="nationalID">${message:nationalID-label} :</t:label>
+               <t:textfield t:id="nationalID" t:value="company.nationalID"/>&nbsp;
+        </p>
+		<p class="foreign">${message:nationalID-exemple-label}</p>
+	            <div class="form-actions">
+						<p>
+							<t:submit t:id="submitForeignCompany" class="button btnOk" value="message:valid-label" />
+							<input type="reset" value="${message:reset-label}" id="cancelButton" />
+						</p>
+				</div>
+	</fieldset>
+	</t:form>
+	</div>
+</html>

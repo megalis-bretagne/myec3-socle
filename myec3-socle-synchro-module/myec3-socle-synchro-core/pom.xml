@@ -1,0 +1,64 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<artifactId>myec3-socle-synchro-core</artifactId>
+
+	<packaging>jar</packaging>
+	<name>MyEc3 - Socle synchronization core</name>
+
+	<description>
+        Core module for MyEc3 Socle Synchronization. Define model, services and dao in order
+		to provide these functionalities to others applications and services.
+    </description>
+
+	<parent>
+		<groupId>org.myec3.socle</groupId>
+		<artifactId>myec3-socle-synchro-module</artifactId>
+		<version>5.6.2-MEGALIS-SNAPSHOT</version>
+		<relativePath>../pom.xml</relativePath>
+	</parent>
+
+	<!-- DO NOT DECLARES DEPENDENCIES HERE THAT ARE NOT DECLARED AS MANAGED
+		IN PARENT POM ! -->
+
+	<dependencies>
+
+		<!-- Myec3 Socle core : we don't need to declare an applicationContext
+			for synchronization core module because coreMyec3Context.xml scan all our
+			entities and services by using RESThub -->
+		<dependency>
+			<groupId>org.myec3.socle</groupId>
+			<artifactId>myec3-socle-core</artifactId>
+			<version>5.6.2-MEGALIS-SNAPSHOT</version>
+		</dependency>
+
+		<!-- Tests -->
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-test</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-jdbc</artifactId>
+		</dependency>
+
+		
+		<!-- Tests -->
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+		</dependency>
+		
+		<dependency>
+		    <groupId>com.h2database</groupId>
+		    <artifactId>h2</artifactId>
+		    <scope>test</scope>
+		</dependency>
+	</dependencies>
+
+</project>

@@ -1,0 +1,88 @@
+/**
+ * Copyright (c) 2011 Atos Bourgogne
+ * 
+ * This file is part of MyEc3.
+ * 
+ * MyEc3 is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License version 3 as published by
+ * the Free Software Foundation.
+ * 
+ * MyEc3 is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with MyEc3. If not, see <http://www.gnu.org/licenses/>.
+ */
+ 
+/* Page de creation d'un organisme */
+
+ .datePickerButtonLeft{
+ 	width: 14px;
+    height: 14px;
+    background: buttonface url("../images/arrow_left.png") no-repeat center center;
+ }
+ 
+  .datePickerButtonRight{
+ 	width: 14px;
+    height: 14px;
+    background: buttonface url("../images/arrow_right.png") no-repeat center center;
+ }
+
+div.t-data-grid-pager {
+	text-align: center;
+}
+
+div.t-data-grid-pager span.current {
+	background: #FF4F07;	
+}
+
+table.t-data-grid {
+	margin-top: 20px;
+}
+	
+table.t-data-grid thead tr th {
+	background: #666;
+	border-left: 1px solid white;
+	color: white;
+	font-size: 0.75em;
+	padding: 3px 5px 3px 8px;
+	text-align: left;
+}
+
+table.t-data-grid thead tr th.checkBoxField {
+	width: 30px;
+	text-align: center;
+	padding-left: 2px;
+	padding-right: 2px;
+}
+
+TABLE.t-data-grid TBODY TR TD.checkBoxField{
+	width: 30px;
+	text-align: center;
+	padding-left: 2px;
+	padding-right: 2px;
+}
+
+html > body div.t-error li {
+	margin-left: 0px;
+}
+
+img.ck-kaptcha {
+	clear:left;
+	display:block;
+	margin-left:12.4em;
+}
+
+input.ck-kaptcha {
+	clear:left;
+	display:block;
+	margin-left:12.4em;
+	margin-top:5px;
+}
+
+div.t-error {
+	clear: left;
+}
+	

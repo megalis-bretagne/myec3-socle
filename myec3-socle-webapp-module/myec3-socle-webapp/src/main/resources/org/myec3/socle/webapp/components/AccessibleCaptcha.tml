@@ -1,0 +1,7 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"> 
+<t:container xmlns:t="http://tapestry.apache.org/schema/tapestry_5_1_0.xsd">
+	<p>
+		<t:label for="answer">${question} * : </t:label>
+		<t:textfield t:id="answer" t:value="answer" t:validate="regexp,required"/>
+	</p>
+</t:container>

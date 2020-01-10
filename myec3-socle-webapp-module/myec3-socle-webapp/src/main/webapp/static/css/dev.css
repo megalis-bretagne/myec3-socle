@@ -1,0 +1,612 @@
+/**
+ * Copyright (c) 2011 Atos Bourgogne
+ * 
+ * This file is part of MyEc3.
+ * 
+ * MyEc3 is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License version 3 as published by
+ * the Free Software Foundation.
+ * 
+ * MyEc3 is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with MyEc3. If not, see <http://www.gnu.org/licenses/>.
+*/
+
+/**
+ --------------------------------------------------------------------
+ ---- Technical team stylesheet ----
+ To be used in combination with "main.css"
+ -------------------------------------------------------------------- 
+/* Please, be sure to have here ONLY the styles that
+ have different properties as defined in the main CSS.
+ Do not duplicate the original main CSS in a whole */
+/* Examples of application specific styles: width of specific fieldset
+ labels or form fields */ /* Search form 
+ */
+ div#header h1{
+ 	margin-left: 5px;
+ }
+ 
+ div#header span#logo{
+ 	display: block;
+    float: left;
+    padding:5px;
+ }
+ 
+ div#container span#logo img{
+	max-height: 120px;
+    max-width: 250px;
+ }
+ 
+#fsSearch label, #fsRemise label {
+    width: 10em;
+}
+
+#fsSearch .lblike {
+    width: 10em;
+}
+
+/* Form fields widths */
+#ipEmail {
+    width: 20em;
+}
+
+#ipName, #ipFirstName, #ipTown {
+    width: 15em;
+}
+
+#ipFunction {
+    width: 20em;
+}
+
+#ipAddress {
+    width: 30em;
+}
+
+#ipZip {
+    width: 4em;
+}
+
+div.caption p {
+    background-image: url(../images/bg_caption.png);
+    background-repeat-x: repeat;
+    background-repeat-y: no-repeat;
+    background-attachment: initial;
+    background-position-x: initial;
+    background-position-y: initial;
+    background-origin: initial;
+    background-clip: initial;
+    background-color: #1B1B1B;
+    border-bottom-width: 1px;
+    border-bottom-style: solid;
+    border-bottom-color: white;
+    color: white;
+    font-size: 0.75em;
+    font-weight: bold;
+    line-height: 28px;
+    margin: 0px 0px 1px;
+    min-height: 24px;
+    text-align: center;
+    text-transform: uppercase;
+    clear: left;
+}
+
+div.steps li {
+    list-style-type: none;
+    width: auto;
+}
+
+p.success {
+    border: 1px solid #00AA00;
+    clear: both;
+    color: #00AA00;
+    font-weight: normal;
+    margin: 5px 0;
+    padding: 5px 10px;
+}
+
+p.error {
+    border: 1px solid #AA0000;
+    clear: both;
+    color: #AA0000;
+    font-weight: normal;
+    margin: 5px 0;
+    padding: 5px 10px;
+}
+
+p.info {
+    border: 1px solid #0000AA;
+    clear: both;
+    color: #AA0000;
+    font-weight: normal;
+    margin: 5px 0;
+    padding: 5px 10px;
+}
+
+p.instructions {
+    padding-bottom: 10px;
+    padding-left: 10px;
+}
+
+.notes {
+    padding: 0;
+    margin: 0 20px 0 20px;
+	width:100%;
+}
+
+li.rootNoPoint {
+    list-style: none outside none;
+    font-size: 1.1em;
+}
+
+.rootNoPoint p {
+    float: none;
+}
+
+li.note_children {
+    border-left: 1px dotted;
+    border-color: #FF4D07;
+    font-size: 1em;
+    list-style: none outside none;
+    padding-left: 0.8em;
+    padding-top: 2px;
+    padding-bottom: 1px;
+    zoom: 1;
+    display: block-inline;
+}
+
+li.note {
+    border-left: 1px dotted;
+    border-color: #FF4D07;
+    font-size: 1em;
+    list-style: none outside none;
+    padding-left: 0.8em;
+    padding-top: 2px;
+    padding-bottom: 1px;
+    zoom: 1;
+    display: block-inline;
+	max-width:460px;
+}
+
+li.note img {
+    margin-top: -8px;
+    margin-bottom: 0;
+    float: left;
+}
+
+.note a {
+    float: left;
+}
+
+.almostCenter a {
+    font-size: 1em;
+    text-decoration: none;
+}
+
+.almostCenter img {
+    padding: 2px;
+}
+
+.almostCenter p {
+    font-size: 1em;
+}
+
+.note_controls {
+    display: none;
+    float: left;
+    padding: 2px;
+    font-size: 12px;
+    font-weight: bold;
+    color: #003B99;
+}
+
+.note_controls img {
+    padding: 2px;
+}
+
+li.note:hover .note_controls {
+    display: block;
+}
+
+.imgOrganism {
+    float: right;
+    margin-top: -190px;
+    margin-right: 60px;
+    width: 180px;
+}
+
+.imgCustomer {
+    float: right;
+    margin-right: 80px;
+    margin-top: -245px;
+    width: 180px;
+    max-height: 150px;
+}
+
+.imgCustomer.mainLogo {
+	max-height: 150px;	
+}
+
+#siren {
+    width: 100px;
+}
+
+#siret {
+    width: 60px;
+}
+
+#infosOrganism select {
+    overflow: auto;
+    width: auto;
+}
+
+#infosOrganism #organismNafCode, #infosOrganism #organismNafCodeEnabled, #infosOrganism #organismNafCodeDisabled {
+overflow: auto;
+width:611px;
+}
+
+select {
+    overflow: auto;
+    width: 255px;
+}
+
+#companyNafCode {
+    width: 700px;
+}
+
+#acronym {
+    width: 60px;
+}
+
+textarea {
+    width: 249px;
+}
+
+input[type = text] {
+    width: 250px;
+}
+
+input.personArray {
+	 width: 150px;
+}
+
+.mainLogo {
+    max-width: 250px;
+    max-height: 250px;
+    width: expression(this.width > 250 ? "250px" : true);
+  height: expression(this.height > 250 ? "250px" : true);
+}
+
+td .civility{
+width:50px;
+}
+
+label.service{
+	width: 25em;
+}
+
+input.role_check{
+	float: left;
+	margin-left: 20px;
+}
+
+label.role_form{
+	width: 23em;
+}
+
+
+p.create {
+	background:url("../images/bullet.png") no-repeat scroll 170px transparent;
+	font-weight:bold;
+	margin-top: 15px;
+	width:25em;
+	text-align : right;
+}
+
+p.foreign {
+	font-weight:bold;
+	width:32.5em;
+	text-align : right;
+}
+
+#inseeContainer {
+	margin:0 auto;
+	text-align:left;
+	width:600px;
+}
+
+.listChef tbody tr td {
+  padding: 4px 4px 4px 4px;
+}
+
+p.infoPostalCode {
+	font-size: 0.7em;
+	text-align: left;
+	color: #FF4F07;
+	padding-right: 5px;
+	margin-bottom: 10px;
+	margin-left:200px;
+} 
+
+/* -- Custom Datepicker --*/
+.todayButtonCustom{
+	width:60px;
+}
+
+/* -- Create a relation --*/
+div #relation{
+	margin-top:20px;
+	margin-left:25px;
+}
+
+p.form-relations{
+	width:82%;
+}
+
+p.form-relations select{
+	width:110px;
+	margin:0 5px;
+	display:inline;
+}
+
+p.form-relations input[type="text"]{
+	width:350px;
+	padding-top:3px;
+}
+
+#relation_form input[type="reset"] {
+	padding:0 5px 2px;
+	display:none;
+}
+
+#relation_form ul.links li.back {
+	position:absolute;
+}
+
+#relation_form fieldset ul.links {
+	margin:100px 27px;
+}
+
+#relation_form input[type="submit"] {
+	font-size:0.7em;
+	display:none;
+}
+
+#relation_form label.relation {
+	font-weight:normal;
+	text-align:left;
+	max-width:16em;
+	width:auto;
+	margin-top:2px;
+}
+
+#relation_form fieldset{
+	padding:20px 0 35px;
+}
+
+/* --Override autocomplite of tapestry -- */
+div.t-autocomplete-menu ul {
+background-color:#FFFFFF;
+border:1px outset #CC9933;
+height:auto;
+max-height:180px;
+overflow:auto;
+padding:4px 6px;
+margin:0 0 0 0;
+}
+
+div.t-autocomplete-menu li {
+border-bottom:1px solid black;
+color:black;
+}
+
+/* -- creation of organism -- */
+div.actions-bar div.infos-message{
+padding-bottom:25px;
+padding-left:5px;
+padding-right:5px;
+padding-top:15px;
+}
+
+
+/* -- modify and create roles -- */
+div.service {
+ 	overflow: auto;
+	width:100%;
+	font-size:0.8em;
+}
+
+div.service #multipleCheckbox{
+	width: 252px;
+    list-style: none ; 
+    padding: 5px 0 ; 
+	margin: 5px 0 ; 
+	border-style:inset;
+  	border-width:1px;
+	display:inline-block;
+	position:relative;
+	float:none;
+	max-height:50px;
+	overflow-y:scroll;
+}
+
+#multipleCheckbox li{
+	width: 200px ; 
+    list-style: none ; 
+    margin: 0 ; 
+    padding: 0 ; 
+}
+
+#multipleCheckbox label{
+	float:none;
+}
+
+#multipleCheckbox input{
+	margin-left:5px;
+}
+
+/* -- view roles -- */
+ul .sub-role-list{
+	width: 252px;
+	padding-top:5px;
+	display:block;
+}
+
+ul.sub-role-list li{
+	width: 252px;
+	border-style:none;
+	font-size: 0.9em;
+	padding-bottom:0px;
+}
+
+ul.role-list li{
+	margin-bottom:5px;
+}
+
+input[type="file"]#uploadedFile {
+	margin: 10px 10px 30px 32px;
+}
+
+DIV.t-data-grid {
+	margin-bottom: 20px;
+}
+
+div.form-actions a.actionButton {
+	margin-right: 10px;
+	text-decoration: none;
+}
+
+#report-error {
+	border-style: solid;
+	border-width: 1px;
+	margin: 15px auto 25px auto;
+	max-height: 500px;
+	overflow-x: hidden;
+	overflow-y: scroll;
+	width: 80%;
+	margin-top: 10px;
+}
+
+#report-success {
+	margin-top: 10px;
+}
+
+#report-success p {
+	margin-left: 25px;
+}
+
+p.empty{
+	font-weight: bold;
+    margin-left: 20px;
+}
+
+fieldset#infosCustomer label{
+	width: 21em;
+}
+
+/*IMPORT AGENTS PAGE*/
+#agent_import_form fieldset p{
+	vertical-align: top;
+}
+
+p.import {
+	margin-left: 30px;
+	margin-top: 10px;
+}
+
+DIV#import_fields{
+	display: none;
+	margin-bottom: 15px;
+}
+
+#import_fields ul{
+	margin-top: 5px;
+	margin-left: 0px;
+	margin-bottom: 5px;
+	padding-left: 16px;
+}
+
+#import_fields td{
+	text-align: justify;
+}
+
+#clickMe{
+	cursor: help;
+	color: #000;
+	text-decoration: underline;
+}
+
+#clickMe:hover{
+	text-decoration: none;
+}
+
+/*Filter form*/
+DIV.filter-fields {
+	float: left;
+	width: 65%;
+	margin-bottom: 10px;
+}
+
+#filter_form fieldset {
+	width: 80%;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+fieldset.import {
+	padding-left: 15px;
+	padding-right: 20px;
+}
+
+fieldset.import p {
+	padding-bottom: 10px;
+}
+
+fieldset.import DIV.info p {
+  text-align: justify;	
+}
+
+fieldset p.first {
+	margin-top: 10px;
+}
+
+#filter_form fieldset div.form-actions {
+	float: right;
+	margin-bottom: 20px;
+	margin-top: 32px;
+	margin-right: 100px;
+	clear: none;
+}
+
+fieldset#report {
+	margin-bottom: 10px;
+}
+
+fieldset#report h3 {
+	margin-left: 15px;
+}
+
+fieldset#report p.info {
+	margin-left: 15px;
+	border-style: none;
+	margin: 15px 0 15px 5px;
+}
+
+fieldset#report a.actionButton {
+	margin-left: auto;
+	margin-right: auto;
+	display: block;
+	width: 190px;
+	text-align: center;
+	text-decoration: none;
+}
+
+/*Page createlist*/
+#list_agents_form TABLE.t-data-grid TBODY TR TD.action {
+	width: 100px;
+	padding-right: 0;
+}

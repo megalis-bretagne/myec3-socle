@@ -1,0 +1,94 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html t:type="layout" xmlns:t="http://tapestry.apache.org/schema/tapestry_5_1_0.xsd">
+
+<t:if test="isLocHallesTheme">	
+	<link href="${context:static/css/loc-halles.css}" rel="stylesheet" type="text/css" />
+</t:if>
+
+  		<t:form t:id="modification_form">
+			<div id="main-content">
+				<h2>${message:pageTitle-label}</h2>
+		  	
+		  	<p class="intro">${message:abstract-label}</p>
+		  	
+		  	<div class="steps">
+				<ol>
+					<li id="step1">${message:step-siren-label}</li>
+					<li id="step2">${message:step-info-company-label}</li>
+					<li id="step3">${message:step-info-establishment-label}</li>
+					<li id="step4" class="active">${message:step-info-account-label}</li>
+				</ol>
+			</div>
+		
+			<t:if test="errorMessage">
+				<p class="error">${errorMessage}</p>
+			</t:if>
+			<p t:banner="message:form-error"  t:type="errors" t:clientClass="errorDialogue"></p>
+			<p class="mandatory">${message:mandatory-label}</p>
+
+				<fieldset>
+					<legend>${message:info-account-label}</legend>
+	            	<p>
+		            	<t:label for="civility">${message:civility-label} :</t:label>
+		            	<t:select t:id="civility" t:value="user.civility" t:validate="required"/>
+		            </p>
+  	       			<p>
+	                	<t:label for="lastname">${message:lastname-label} *:</t:label>
+	               		<t:textfield t:id="lastname" t:value="user.lastname" t:validate="required, maxlength=255"/>
+	            	</p>	
+  	       			<p>
+	                	<t:label for="firstname">${message:firstname-label} *:</t:label>
+	               		<t:textfield t:id="firstname" t:value="user.firstname" t:validate="required, maxlength=255"/>
+	            	</p>
+
+                    <t:if test="company.siren" negate="true">
+                        <p>
+                            <t:label for="foreignCellPhone">${message:cellPhone-label} :</t:label>
+                            <t:textfield t:id="foreignCellPhone" t:value="cellPhone" t:validate="regexp" placeholder="Exemple : +33123456789"/>
+                        </p>
+                        <p>
+                            <t:label for="foreignPhone">${message:phone-label} :</t:label>
+                            <t:textfield t:id="foreignPhone" t:value="phone" t:validate="regexp" placeholder="Exemple : +33123456789"/>
+                        </p>
+
+                        <p>
+                            <t:label for="foreignFax">${message:fax-label} :</t:label>
+                            <t:textfield t:id="foreignFax" t:value="fax" t:validate="regexp" placeholder="Exemple : +33123456789"/>
+                        </p>
+                    </t:if>
+
+                    <t:if test="company.siren" negate="false">
+                        <p>
+                            <t:label for="cellPhone">${message:cellPhone-label} :</t:label>
+                            <t:textfield t:id="cellPhone" t:value="cellPhone" t:validate="regexp"/>
+                        </p>
+                        <p>
+                            <t:label for="phone">${message:phone-label} :</t:label>
+                            <t:textfield t:id="phone" t:value="phone" t:validate="regexp"/>
+                        </p>
+
+                        <p>
+                            <t:label for="fax">${message:fax-label} :</t:label>
+                            <t:textfield t:id="fax" t:value="fax" t:validate="regexp"/>
+                        </p>
+                    </t:if>
+
+
+  	       			<p>
+	                	<t:label for="email">${message:email-label} *:</t:label>
+	               		<t:textfield t:id="email" t:value="email" t:validate="required,regexp"/>
+	            	</p>	
+	            		            			
+		            <div class="form-actions">
+							<p>
+								<t:submit t:id="submit" class="button btnOk" value="message:save-label" />
+								<input type="reset" value="${message:reset-label}" id="cancelButton" />
+							</p>
+					</div>
+	            </fieldset>
+	            <ul class="links">
+					<li class="back"><a href="javascript:history.go(-1)">${message:back-label}</a></li>
+				</ul>
+            </div>
+        </t:form>
+</html>

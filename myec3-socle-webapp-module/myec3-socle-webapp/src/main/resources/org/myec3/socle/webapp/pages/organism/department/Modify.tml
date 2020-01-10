@@ -1,0 +1,10 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html t:type="layout" xmlns:t="http://tapestry.apache.org/schema/tapestry_5_1_0.xsd">    
+	<div id="main-content">
+		<h2>${message:pageTitle-label} : ${organismDepartment?.label}</h2>
+		<t:if test="errorMessage">
+            <p class="error">${errorMessage}</p>
+        </t:if>
+        <div t:type="organismDepartmentForm" t:id="organism_department_form" organismDepartment="organismDepartment" cancelRedirect="detailPage"/>
+      </div>
+</html>

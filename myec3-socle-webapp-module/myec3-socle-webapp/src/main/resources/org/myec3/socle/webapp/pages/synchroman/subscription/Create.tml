@@ -1,0 +1,51 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html t:type="layout" xmlns:t="http://tapestry.apache.org/schema/tapestry_5_1_0.xsd">
+  		<t:form t:id="creation_subscription_form">
+		  <div id="main-content">
+				<h2>${message:pageTitle-label}</h2>
+				
+				<p class="intro">${message:abstract-label}</p>
+				
+			<t:if test="errorMessage">
+				<p class="error">${errorMessage}</p>
+			</t:if>
+			
+			<p t:banner="message:form-error"  t:type="errors" t:clientClass="errorDialogue"></p>
+			
+			<p class="mandatory">${message:mandatory-label}</p>
+
+				<fieldset>
+					<legend>${message:subscription-info-label}</legend>
+        		
+        		<p>
+	            	<t:label for="application">${message:application-label} *:</t:label>
+	            	<t:select t:id="application" t:encoder="applicationEncoder" t:model="applicationsList" t:value="applicationSelected" t:validate="required" />	
+	            	<a href="#" title="${message:application-help}">
+	        			<img src="${context:static/images/pic_help.png}" class="picHelp" alt="${message:help-label}"/>
+	        		</a>	
+	            </p> 
+	            <p>
+	                <t:label for="resourceType">${message:resourceType-label} *:</t:label>
+	                <t:select  t:id="resourceType" t:model="resourceTypeModel" t:encoder="resourceTypeEncoder" t:value="resourceTypeSelected" t:validate="required"/>	
+	        		<a href="#" title="${message:resourceType-help}">
+	        			<img src="${context:static/images/pic_help.png}" class="picHelp" alt="${message:help-label}"/>
+	        		</a>
+				</p>
+        		<p>
+	            	<t:label for="uri">${message:uri-label} *:</t:label>
+	            	<t:textfield t:id="uri" t:value="synchronizationSubscription.uri" t:validate="required, maxlength=255"/>
+	            	<a href="#" title="${message:uri-help}">
+	        			<img src="${context:static/images/pic_help.png}" class="picHelp" alt="${message:help-label}"/>
+	        		</a>
+	            </p>
+	           
+	            <div class="form-actions">
+						<p>
+							<t:submit t:id="submit" class="button btnOk" value="message:save-label" />
+							<input type="reset" value="${message:reset-label}" id="cancelButton" />
+						</p>
+				</div>
+			</fieldset>
+        </div>
+       </t:form>
+ </html>

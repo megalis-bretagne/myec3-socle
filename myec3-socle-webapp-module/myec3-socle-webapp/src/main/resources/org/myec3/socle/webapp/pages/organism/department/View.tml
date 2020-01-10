@@ -1,0 +1,53 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"> 
+<html t:type="layout" xmlns:t="http://tapestry.apache.org/schema/tapestry_5_1_0.xsd" xmlns:p="tapestry:parameter">
+	<div id="main-content">
+		<h2>Organigramme de ${organism?.article?.label} ${organism?.label}</h2>
+		<t:if test="successMessage">
+			<p class="success">${successMessage}</p>
+		</t:if>
+		<t:if test="errorMessage">
+			<p class="error">${errorMessage}</p>
+		</t:if>
+		<div class="tabbed-data"> 
+			<ul class="tabs"> 
+				<li><t:pagelink page="organism/detailOrganism" context="organism.id">${message:info-label}</t:pagelink></li> 
+				<t:if test="isAdmin">
+					<li><t:pagelink page="structure/relation/listRelations" context="organism.id">${message:relation-label}</t:pagelink></li> 	
+					<li><t:pagelink page="organism/detailOrganismApplications" context="organism.id">${message:service-label}</t:pagelink></li>
+					<li><t:pagelink page="organism/apiManagement" context="organism.id">${message:api-label}</t:pagelink></li>
+				</t:if>				
+				<li class="active"><strong>${message:oragnization-level-label}</strong></li> 
+				<li><t:pagelink page="organism/agent/listAgents" context="organism.id">${message:User-label}</t:pagelink></li>
+				<t:if test="isAppManagerActive">
+                    <li><t:pagelink page="organism/appmanager/listAppManagers" context="organism.id">${message:AppAdmin-label}</t:pagelink></li>
+                </t:if>
+			</ul>
+			<div class="tabs-content">	
+					<div class="actions-bar">
+						<ul>
+							<li>	
+							<t:pagelink page="organism/agent/listagents"
+								context="organism.id">
+										<img src="${context:static/images/agent_voir.png}"
+											alt="${message:viewAgent-label}" title="${message:viewAgent-label}" />
+									 		${message:view-all-users-label}
+							</t:pagelink>
+							</li>
+						</ul>
+					</div>
+					
+					<fieldset>
+						<legend>${message:details-label}</legend>			
+						<div t:type="tree" t:id="tree" t:currentOrganism="organism"></div>       			
+						&nbsp;
+						<ul class="links">
+							<t:if test="isAdmin">
+								<li class="back"><t:pagelink page="organism/searchresult">${message:back-searchresult-label}</t:pagelink></li>
+							</t:if>
+							<li class="back"><a href="javascript:history.go(-1)">${message:back-label}</a></li>
+						</ul>
+			        </fieldset>
+			</div>
+		</div>
+	</div>
+</html>

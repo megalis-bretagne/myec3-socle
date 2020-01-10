@@ -1,0 +1,20 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html t:type="layout" xmlns:t="http://tapestry.apache.org/schema/tapestry_5_1_0.xsd">
+    <div id="main-content">
+ 	    <h2>${customer.label}</h2>
+		<div id="sectionContent">
+			<t:if test="errorMessage">
+          	 	<p class="error">${errorMessage}</p>
+       		</t:if>		
+	       
+	        <div t:id="customer_form" t:type="customerForm" customer="customer" cancelRedirect="listCustomerPage"/>
+    	
+    		<t:if test="customer.logoUrl">
+					<img class="imgCustomer mainLogo" src="${customer.logoUrl}" alt="${message:customer-logo-label}" />
+				<t:parameter name="else">
+					<img class="imgCustomer" src="${context:static/images/noImageAvailable.jpg}" alt="${message:noImage-label}" />
+				</t:parameter>
+			</t:if>
+    	</div>
+	</div>
+</html>

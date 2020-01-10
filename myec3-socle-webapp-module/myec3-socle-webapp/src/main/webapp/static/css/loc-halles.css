@@ -1,0 +1,29 @@
+#main-content {background-color: #FFFFFF;}
+#breadcrumbs {border-top-left-radius: 0; border-top-right-radius: 0;}
+#header {
+ background: url("../images/locHalles/logo_loc-halles.jpg") no-repeat scroll center top #7DA10B;
+ border: 0 none; height: 203px; width: 1050px; margin: -10px 0 10px -40px; padding: 0; border-radius : 0; box-shadow : none;
+}
+#header h1 img {display: none;}
+legend {background: url("../images/locHalles/bg_legend.png") no-repeat scroll 7px 5px #FFFFFF;}
+p.mandatory {color: #7DA10B;}
+body {background: url("../images/locHalles/crb-bg.gif") repeat-x scroll left top;}
+#wrapper {margin-top : -50px; border-radius : 0; box-shadow: 0 -0.3em 0.8em #444444;}
+h2 {color: #7DA10B;}
+fieldset legend {color: #7DA10B;}
+input[type="submit"] {background: none repeat scroll 0 0 #7DA10B; border: 1px solid #7DA10B;}
+input[type=submit]:hover {color: #FFF; background: #577007;}
+#step1 {background: transparent url(../images/locHalles/bg_step.png) left 0 no-repeat;}
+#step1.active {color: #7DA10B; background: transparent url(../images/locHalles/bg_step.png) left -200px no-repeat;}
+#step2 {background: transparent url(../images/locHalles/bg_step.png) left -50px no-repeat;}
+#step2.active {color: #7DA10B; background: transparent url(../images/locHalles/bg_step.png) left -250px no-repeat;}
+#step3 {background: transparent url(../images/locHalles/bg_step.png) left -100px no-repeat;}
+#step3.active {color: #7DA10B; background: transparent url(../images/locHalles/bg_step.png) left -300px no-repeat;}
+#step4 {background: transparent url(../images/locHalles/bg_step.png) left -150px no-repeat;}
+#step4.active {color: #7DA10B; background: transparent url(../images/locHalles/bg_step.png) left -350px no-repeat;}
+div.t-error {border: 1px solid #7DA10B;}
+DIV.t-error DIV {background-color: #04B404;}
+DIV.t-error UL {color: #04B404;}
+p.infoPostalCode {color: #7DA10B;}
+ul.links a, ul.links a:link {color: #7DA10B;}
+ul.links li.back {list-style-image: url("../images/locHalles/pic_back.png");}

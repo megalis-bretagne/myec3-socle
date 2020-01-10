@@ -1,0 +1,29 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html t:type="layout" xmlns:t="http://tapestry.apache.org/schema/tapestry_5_1_0.xsd">
+	<div id="main-content">
+			<h2>${message:page-title}</h2>
+		<t:if test="successMessage">
+			<p class="success">${successMessage}</p>
+		</t:if>
+		<div class="tabbed-data"> 
+			<div class="tabs-content">
+				<div class="caption">
+	        		<p>${message:result-label}</p>
+	        	</div>
+
+				<table t:id="customerGrid" model="gridModel" t:type="grid"
+					pagerPosition="bottom"
+					t:row="customerRow" t:source="customerList"
+					t:rowIndex="rowIndex" t:rowsPerPage="${message:rowsPerPage}"
+					t:inplace="true" t:empty="${message:empty-label}">
+					<t:parameter name="actionsCell">
+						<t:pagelink page="customer/modify"
+							context="customerRow.id"><img src="${context:static/images/agent_modifier.png}"
+								alt="${message:modify-label}" title="${message:modify-label}"/></t:pagelink>&nbsp;
+					</t:parameter>
+						
+				</table>
+			</div>
+		</div>
+	</div>
+</html>

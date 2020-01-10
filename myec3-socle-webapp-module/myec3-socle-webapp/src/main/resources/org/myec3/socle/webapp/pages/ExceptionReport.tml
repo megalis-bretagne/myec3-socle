@@ -1,0 +1,18 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html t:type="layout" pageTitle="${message:title}" xmlns:t="http://tapestry.apache.org/schema/tapestry_5_1_0.xsd">
+      <div id="main-content">
+        <div>
+	        <h2> 
+		        <p class="error">	
+		        ${message:error-message}
+		        </p>
+        	</h2>
+	         <h5>
+	         	${message:email-message}
+	         </h5>
+		</div> 
+		<ul class="links">
+			<li class="back"><a href="javascript:history.go(-1)">${message:back-label}</a></li>
+		</ul>
+     </div>
+</html>

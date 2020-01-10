@@ -1,0 +1,176 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"> 
+<html t:type="layout" xmlns:t="http://tapestry.apache.org/schema/tapestry_5_1_0.xsd" xmlns:p="tapestry:parameter">
+	<div id="main-content">
+		<h2>${message:pageTitle-label} : ${company?.label}</h2>
+		<t:if test="errorMessage">
+            <p class="error">${errorMessage}</p>
+        </t:if>
+		<t:form t:id="modification_form">
+			<p t:banner="message:form-error"  t:type="errors" t:clientClass="errorDialogue"></p>
+		
+			<p class="mandatory">${message:mandatory-label}</p>
+
+				<fieldset>
+					<legend>${message:info-company-label}</legend>
+		       	<p>
+	                <t:label for="label">${message:label-label} *:</t:label>
+	                <t:textfield t:id="label" t:value="company.label" t:validate="required, maxlength=255" t:disabled="true"/>
+	            </p>
+				<p>			
+	                <t:label for="acronym">${message:acronym-label} :</t:label>
+	                <t:textfield t:id="acronym" t:value="company.companyAcronym"/>         
+				</p>
+				<p>
+	                <t:if test="company.siren">
+	                	<t:label for="siren">${message:siren-label} :</t:label>
+	                	<t:textfield t:id="siren" t:value="company.siren" t:validate="regexp" disabled="literal:disabled" />
+	                </t:if>
+	            </p>
+				<p>
+					<t:if test ="company.nic">
+						<t:label for="nic">${message:headOfficeNic-label} :</t:label>
+						<t:textfield t:id="nic" t:value="company.nic" t:disabled="nicDisplay"></t:textfield>
+					</t:if>
+				</p>
+				<p>			
+	                <t:label for="companyCategory">${message:company-category-label} :</t:label>
+	                <t:select t:id="companyCategory" t:blankOption="NEVER" t:value="company.companyCategory"/>         
+				</p>
+	            <p>
+	            	<t:label for="legalCategory">${message:legal-category-label} :</t:label>
+	            	<t:select t:id="legalCategory" t:value="company.legalCategory" t:validate="required" t:disabled="legalCategoryDisplay" />
+	            </p>
+	            <p>
+	            	<t:label for="RM">${message:subscribe-label} ${message:RM-label} 
+	            	<a href="#" title="${message:RM-help}"><img src="${context:static/images/pic_help.png}" class="picHelp" alt="${message:help-label}"/></a> :
+	            	</t:label><t:checkbox  t:id="RM" t:value="company.RM"  />
+	            </p>
+	            <p>
+	            	<t:label for="RCS"> ${message:RCS-label} 
+	            	<a href="#" title="${message:RCS-help}"><img src="${context:static/images/pic_help.png}" class="picHelp" alt="${message:help-label}"/></a> :
+	        		</t:label><t:checkbox  t:id="RCS" t:value="company.RCS"  />
+	            </p>
+			   <p>
+	            	<t:label for="companyNafCode">${message:apeNafLabel-label} *
+	            	<a href="#" title="${message:apeNafLabel-help}"><img src="${context:static/images/pic_help.png}" class="picHelp" alt="${message:help-label}"/></a> :
+	        		</t:label>
+	        		<t:select t:id="companyNafCode" t:encoder="nafCodeEncoder" t:model="listOfCompanyNafCode" t:value="companyNafCode" t:validate="required" t:disabled="apeCodeDisplay" />
+				</p>
+	            <p>
+	            	<t:label for="description">
+	                    ${message:description-label}
+	                </t:label>
+	                <input t:type="TextArea" t:id="description" t:value="company.description" cols="17" rows="5" t:validate="maxlength=250"/>
+	            </p>
+	           	
+	            <p>
+	                <t:label for="postalAddress">${message:postalAddress-label} *:</t:label>
+	                <t:textfield t:id="postalAddress" t:value="company.address.postalAddress" t:validate="required" t:disabled="postalAddressDisplay"/>
+	            </p>      
+	            <p>
+	                <t:label for="postalCode">${message:postalCode-label} *:</t:label>
+	                <t:textfield t:id="postalCode" t:value="company.address.postalCode" t:validate="required" t:disabled="postalCodeDisplay"/>
+	            </p>	 
+	            <p>
+	                <t:label for="city">${message:city-label} *:</t:label>
+	                <t:textfield t:id="city" t:value="company.address.city" t:validate="required" t:disabled="cityDisplay"/>
+	            </p>
+	            <p>
+	                <t:label for="canton">${message:canton-label} :</t:label>
+	                <t:textfield t:id="canton" t:value="company.address.canton" t:disabled="cantonDisplay"/>
+	            </p>
+	            <p>
+	                <t:label for="email">${message:email-label} *:</t:label>
+	                <t:textfield t:id="email" t:value="company.email" t:validate="email,required"/>
+	            </p>	         
+	            <p>
+	                <t:label for="website">${message:website-label} :</t:label>
+	                <t:textfield t:id="website" t:value="company.website" t:validate="regexp, maxlength=255"/>
+					<a href="#" title="${message:website-help}">
+	        				<img src="${context:static/images/pic_help.png}" class="picHelp" alt="${message:website-help}"/>
+	        		</a>
+	            </p>
+	            
+            	<p>
+					<br/>
+				</p>
+	            
+	            <p>
+	            	<label for="adminStateValue">${message:administrativeState-label} :</label> 
+					<t:textfield t:id="adminStateValue" t:value="company.administrativeState.adminStateValue.label" t:disabled="administrativeStateValueDisplay"/>
+				</p>
+
+				<div class="datePicker-div">
+					<t:label class="datePicker-label" for="creationDate" >${message:creation-date-label} :</t:label>
+					<t:datefield class="datePicker-input" t:id="creationDate" t:value="company.creationDate" t:validate="regexp" t:disabled="creationDateDisplay"/>
+					<a href="#" title="${message:creationDate-help}">
+						<img src="${context:static/images/pic_help.png}" class="picHelp" alt="${message:creationDate-help}"/>
+					</a>
+				</div>
+			
+				<div class="datePicker-div">
+					<t:label class="datePicker-label" for="radiationDate">${message:radiation-date-label} :</t:label>
+					<t:datefield class="datePicker-input" t:id="radiationDate" t:value="company.radiationDate" t:validate="regexp" t:disabled="radiationDateDisplay"/>
+					<a href="#" title="${message:creationDate-help}">
+						<img src="${context:static/images/pic_help.png}" class="picHelp" alt="${message:creationDate-help}"/>
+					</a>
+				</div>
+
+			<fieldset>
+				
+					<legend>${message:info-responsible-label}</legend>    
+		            <table class="listChef">
+						<thead>
+							<tr>
+								<th>${message:civility-label}</th>
+								<th>${message:firstname-label}</th>
+								<th>${message:lastname-label}</th>
+								<th>${message:function-label}</th>
+								<th>${message:email-label}</th>
+								<th>${message:phone-label}</th>
+								<th>Action</th>
+							</tr>
+						</thead>
+							<tbody>	
+								<tr t:id="person_list" t:type="AjaxFormLoop" t:source="personHolders" t:value="personHolder" t:encoder="encoder">
+									<t:unless t:test="personHolder.deleted">
+										<t:submitnotifier>	
+											<td><input t:type="select" class="civility" t:id="civility" t:value="personHolder?.person?.civility" t:validate="required, maxlength=100" /></td>
+											<td><input t:type="TextField" t:id="personFirstName" t:class="personArray" t:value="personHolder?.person?.firstName" t:disabled="responsablesDisplay" t:validate="required, maxlength=100" /></td>
+											<td><input t:type="TextField" t:id="personLastName" t:class="personArray" t:value="personHolder?.person?.lastName" t:disabled="responsablesDisplay" t:validate="required, maxlength=100" /></td>
+											<td><input t:type="TextField" t:id="personFunction" t:class="personArray" t:value="personHolder?.person?.function" t:disabled="responsablesDisplay" t:validate="required, maxlength=255" /></td>
+											<td><input t:type="TextField" t:id="personEmail" t:class="personArray" t:value="personHolder?.person?.email" t:validate="email" /></td>
+											<td><input t:type="TextField" t:id="personPhone" t:class="personArray" t:value="personHolder?.person?.phone" t:validate="regexp" /></td>
+											<td>
+												<t:if negate="true" test="responsablesDisplay">
+													<t:removerowlink>${message:delete-label}</t:removerowlink>
+												</t:if>	
+											</td>
+										</t:submitnotifier>
+									</t:unless>
+									<t:parameter name="addRow">												
+										<td colspan="7" style="text-align: right">
+											<t:if negate="true" test="responsablesDisplay">
+												<t:addrowlink>${message:add-responsible-label}</t:addrowlink>
+											</t:if>
+										</td>
+									</t:parameter>	
+								</tr>
+						   </tbody>
+				 	</table>
+				</fieldset>
+				
+	        <div class="form-actions">
+				<p>
+					<t:submit t:id="submit" class="button btnOk" value="message:save-label" />
+					<input type="reset" value="${message:reset-label}" id="cancelButton" />
+				</p>
+			</div>
+			&nbsp;
+			<ul class="links">
+				<li class="back"><a href="javascript:history.go(-1)">${message:back-label}</a></li>
+			</ul>
+		</fieldset>
+		</t:form>
+	</div>
+</html>

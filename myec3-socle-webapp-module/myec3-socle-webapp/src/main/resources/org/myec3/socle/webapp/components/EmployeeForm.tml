@@ -1,0 +1,103 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"> 
+<t:container xmlns:t="http://tapestry.apache.org/schema/tapestry_5_1_0.xsd">
+
+		<p class="mandatory">${message:mandatory-label}</p>
+		
+	    <t:form t:id="modification_form">
+	     <t:if test="newEmployeeProfile">
+	      <p t:banner="message:error-creation-employee-label"  t:type="errors" t:clientClass="errorDialogue"></p>
+	    	<t:parameter name="else">
+	             <p t:banner="message:error-modification-employee-label"  t:type="errors" t:clientClass="errorDialogue"></p>
+	        </t:parameter>
+	     </t:if>
+	    	<fieldset>
+	    		<legend>${message:form-legend-label}</legend>
+	    		
+	    		<t:if test="newEmployeeProfile" negate="true">
+	    			<p>
+	    				<t:label for="username">${message:username-label} :</t:label>
+	            		<t:textfield t:id="username" t:value="employeeProfile.user.username" t:disabled="true"/>
+	            	</p>
+	    		</t:if>
+				<p>
+					<t:label for="civility">${message:civility-label} *:</t:label>
+					<t:select t:id="civility" t:value="employeeProfile.user.civility" t:validate="required"/>
+				</p>
+	            <p>
+	            	<t:label for="firstname">${message:firstname-label} *:</t:label>
+	            	<t:textfield t:id="firstname" t:value="employeeProfile.user.firstname" t:validate="required"/>
+	            </p>
+	            <p>
+	            	<t:label for="lastname">${message:lastname-label} *:</t:label>
+	            	<t:textfield t:id="lastname" t:value="employeeProfile.user.lastname" t:validate="required"/>
+	            </p>        
+				<p>
+                    <t:label for="grade">${message:grade-label} :</t:label>
+                    <t:select t:id="grade" t:value="employeeProfile.grade" t:blankLabel="message:unspecified-label"/>
+                </p>
+
+				<p>
+					<t:label for="establishment">${message:establishment-view-label} :</t:label>
+					<t:select t:id="establishment" t:encoder="establishmentEncoder" t:model="establishments" t:value="employeeProfile.establishment" t:validate="required" />
+				</p>
+
+	            <p>
+	                <t:label for="function">${message:function-label} :</t:label>
+	                <t:textfield t:id="function" t:value="employeeProfile.function" t:validate="maxlength=255"/>
+	            </p>
+	            
+				<p>
+					<label for="postalAddress">${message:postalAddress-label} *:</label> 
+		    		<t:textfield t:id="postalAddress" t:value="employeeProfile?.address?.postalAddress" t:validate="required"/>
+		        </p>        
+				<p>
+					<label for="postalCode">${message:postalCode-label} *:</label> 
+		    		<t:textfield t:id="postalCode" t:value="employeeProfile?.address?.postalCode" t:validate="required"/>
+		        </p>
+		        <p>
+		        	<label for="city">${message:city-label} *:</label> 
+		    		<t:textfield t:id="city" t:value="employeeProfile?.address?.city" t:validate="required"/>
+		        </p>
+		        <p>
+		        	<label for="country">${message:country-label} *:</label> 
+		    		<t:select t:id="country" t:value="employeeProfile?.address?.country" t:validate="required"/>
+		        </p>		       
+		         <p>
+		         	<label for="canton">${message:canton-label} :</label>
+		    		<t:textfield t:id="canton" t:value="employeeProfile?.address?.canton"/>
+		        </p> 
+	            
+	            <p>
+	                <t:label for="email">${message:email-label} *:</t:label>
+	                <t:textfield t:id="email" t:value="employeeProfile.email" t:validate="required,regexp"/>
+	            </p>
+				<p>
+	                <t:label for="cellPhone">${message:cellPhone-label} :</t:label>
+	                <t:textfield t:id="cellPhone" t:value="employeeProfile.cellPhone" t:validate="regexp"/>
+	            </p>
+	            <p>
+	                <t:label for="phone">${message:phone-label} :</t:label>
+	                <t:textfield t:id="phone" t:value="employeeProfile.phone" t:validate="regexp"/>
+	            </p>
+	            <p>
+	                <t:label for="fax">${message:fax-label} :</t:label>
+	                <t:textfield t:id="fax" t:value="employeeProfile.fax" t:validate="regexp"/>
+	            </p>
+	            <p>
+	            	<t:label for="prefComMedia">${message:prefComMedia-label} :</t:label>
+	            	<t:select t:id="prefComMedia" t:blankOption="never" t:value="employeeProfile.prefComMedia"/>
+	            </p>                       
+		    	<div class="form-actions"> 
+		    		<p>
+		        		<t:submit t:id="submit" class="button btnOk" value="message:save-label" />
+		        		<input type="reset" value="${message:reset-label}" id="cancelButton" />
+		        	</p>
+		        </div>
+		        &nbsp;
+				<ul class="links">
+					<li class="back"><a href="javascript:history.go(-1)">${message:back-label}</a></li>
+				</ul>
+	        </fieldset>
+	    </t:form>
+    
+</t:container>

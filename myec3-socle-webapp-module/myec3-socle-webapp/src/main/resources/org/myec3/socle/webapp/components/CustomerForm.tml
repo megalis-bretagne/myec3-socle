@@ -1,0 +1,101 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<t:container xmlns:t="http://tapestry.apache.org/schema/tapestry_5_1_0.xsd" xmlns:p="tapestry:parameter">
+	<t:form t:id="modification_form">
+		<p t:banner="message:form-error" t:type="errors"
+			t:clientClass="errorDialogue"></p>
+		<p class="mandatory">${message:mandatory-label}</p>
+
+		<fieldset id="infosCustomer">
+			<legend> ${message:customer-info-label} </legend>
+
+			<!-- Checked if customer has right to manage companies -->
+			<p>
+				<label>${message:manage-companies-label} :</label>
+				<t:checkbox t:id="authorizedToManageCompanies"
+					t:value="manageCompanies" />
+			</p>
+
+			<!-- Label -->
+			<p>
+				<t:label for="label">
+                        ${message:label-label} *:
+                    </t:label>
+				<t:textfield t:id="label" t:value="customer.label" t:maxlength="255"
+					t:validate="required" />
+			</p>
+
+			<!-- Technical name -->
+			<p>
+				<t:label for="name">
+                        ${message:name-label} *:
+                    </t:label>
+				<t:textfield t:id="name" t:value="customer.name" t:maxlength="255"
+					t:validate="required" />
+			</p>
+
+			<!-- Email -->
+			<p>
+				<t:label for="email">
+                        ${message:email-label} *:
+                    </t:label>
+				<t:textfield t:id="email" t:value="customer.email"
+					t:validate="regexp,required" />
+			</p>
+
+			<!-- Hotline phone number -->
+			<p>
+				<t:label for="hotlinePhone">
+                        ${message:customer-hotlinePhone-label} :
+                    </t:label>
+				<t:textfield t:id="hotlinePhone" t:value="customer.hotlinePhone" />
+			</p>
+
+			<!-- Assistance Url -->
+			<p>
+				<t:label for="assistanceUrl">
+                        ${message:customer-assistanceUrl-label} :
+                    </t:label>
+				<t:textfield t:id="assistanceUrl" t:value="customer.assistanceUrl" />
+			</p>
+
+			<!-- Customer portal Url -->
+			<p>
+				<t:label for="portalUrl">
+                        ${message:customer-portalUrl-label} :
+                    </t:label>
+				<t:textfield t:id="portalUrl" t:value="customer.portalUrl" />
+			</p>
+
+			<!-- Customer documentation Url -->
+			<p>
+				<t:label for="documentationUrl">
+                        ${message:customer-documentationUrl-label} :
+                    </t:label>
+				<t:textfield t:id="documentationUrl"
+					t:value="customer.documentationUrl" />
+			</p>
+
+			<!-- Logo of the customer to display in the header -->
+			<p>
+				<t:label for="logo">
+                        ${message:logo-label} :
+                    </t:label>
+				<t:upload t:id="logo" t:value="logo" />
+			</p>
+			<div class="form-actions">
+				<p>
+					<t:if test="isNewCustomer">
+						<t:submit t:id="submit" class="button btnOk"
+							value="message:next-label" />
+						<p:else>
+							<t:submit t:id="submitModify" class="button btnOk"
+								value="message:valid-label" />
+						</p:else>
+					</t:if>
+					<input type="reset" value="${message:reset-label}"
+						id="cancelButton" />
+				</p>
+			</div>
+		</fieldset>
+	</t:form>
+</t:container>

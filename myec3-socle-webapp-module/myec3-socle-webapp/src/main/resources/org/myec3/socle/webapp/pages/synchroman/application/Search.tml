@@ -1,0 +1,48 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html t:type="layout"
+	xmlns:t="http://tapestry.apache.org/schema/tapestry_5_1_0.xsd"
+	xmlns:p="tapestry:parameter">
+<div id="main-content">
+	<h2>${message:title}</h2>
+    
+    <t:if test="infoMessage">
+    	<p class="infoDialogue">${infoMessage}</p>
+	</t:if>
+        
+    <t:form t:id="application_search_form">
+        <fieldset>
+        	<legend>${message:legend-label}</legend>
+
+        	<p>
+				<t:label for="label">${message:label-label} : </t:label>
+				<t:textfield t:id="label" t:value="searchLabel" />
+				<a href="#" title="${message:label-help-label}"> <img
+					src="${context:static/images/pic_help.png}" class="picHelp"
+					alt="${message:name-help-label}" /> </a>
+			</p>
+
+			<p>
+				<t:label for="name">${message:name-label} : </t:label>
+				<t:textfield t:id="name" t:value="searchName" />
+				<a href="#" title="${message:name-help-label}"> <img
+					src="${context:static/images/pic_help.png}" class="picHelp"
+					alt="${message:name-help-label}" /> </a>
+			</p>
+
+		    <p>
+                <t:label for="structureTypeValue">${message:structureType-label} :</t:label>
+                <t:select  t:id="structureTypeValue" t:value="structureTypeValueSelected" t:blankLabel="TOUS" zone="defaultZone"/>	
+        		<a href="#" title="${message:structureTypeSubscription-help}">
+        			<img src="${context:static/images/pic_help.png}" class="picHelp" alt="${message:help-label}"/>
+        		</a>
+			</p>		
+	
+			<div class="form-actions">
+				<p>
+				<t:submit t:id="submit" value="message:search-label" />
+				</p>
+			</div>
+        </fieldset>
+    </t:form>
+</div>
+</html>

@@ -1,0 +1,119 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"> 
+<html t:type="layout" xmlns:t="http://tapestry.apache.org/schema/tapestry_5_1_0.xsd">
+    <div id="main-content">
+    	<h2>${establishment?.label}</h2>
+		<t:if test="successMessage">
+			<p class="success">${successMessage}</p>
+		</t:if>
+		<t:if test="errorMessage">
+			<p class="error">${errorMessage}</p>
+		</t:if>
+  		<div class="tabbed-data"> 
+			<ul class="tabs"> 
+				<li class="active"><strong>${message:info-label}</strong></li> 
+				<t:if test="hasRightOnEstablishment">
+					<li><t:pagelink page="company/establishment/listemployees" context="establishment.id">${message:User-label}</t:pagelink></li>
+				</t:if> 
+			</ul> 
+			<div class="tabs-content">
+
+				<p class="mandatory">&nbsp;</p>
+				
+				
+				<t:if test="hasRightOnEstablishment">
+					<div class="actions-bar">
+						<ul>				
+							<li><t:pagelink page="company/establishment/modify" context="establishment.id">
+							<img src="${context:static/images/organisme_modifier.png}"
+										alt="${message:modify-label}" title="${message:modify-info-label}" /> ${message:modify-info-label}
+										</t:pagelink>
+							</li>
+							
+							<t:if test="deleteButton">
+								<li><t:actionlink t:id="delete"
+											context="establishment.id" t:mixins="confirm"
+											t:message="message:establishmentDelete-confirmation-label">
+											<img src="${context:static/images/bt_delete_sml.png}"
+												alt="${message:establishmentDelete-label}" title="${message:delete-label}" />
+												${message:establishmentDelete-label}</t:actionlink>
+								</li>
+							</t:if>
+										
+						</ul>
+					</div>
+				</t:if>
+				<fieldset>
+					<legend>${message:establishment-info-label}</legend>
+					<p><label for="label">${message:establishment-view-label} </label> :
+						${establishment?.label}
+					</p>
+					<p>
+	               		<label for="siret">${message:siret-label} </label> :
+	                	${establishment?.siret}
+	           		</p>		
+					<p>
+						<label for="apeNafLabel">${message:apeNafLabel-label}</label> :
+						${establishment.apeNafLabel}
+					</p>
+					<t:if test="establishment.address.insee">
+						<p><label for="inseeCode-label">${message:inseeCode-label}</label> :
+				    		${inseeCode}
+				        </p>
+			        </t:if>					        
+					<p><label for="postalAddress">${message:postalAddress-label}</label> :
+			    		${establishment?.address?.postalAddress}
+			        </p>        
+					<p><label for="postalCode">${message:postalCode-label}</label> :
+			    		${establishment?.address?.postalCode}
+			        </p>
+			        <p><label for="city">${message:city-label}</label> :
+			    		${establishment?.address?.city}
+			        </p>
+			        <t:if test="establishment.address.insee">
+				        <p><label for="canton">${message:canton-label}</label> :
+				    		${inseeCantonLabel}
+				        </p> 
+				        <p><label for="borough">${message:borough-label}</label> :
+				    		${inseeBoroughLabel}
+				        </p> 
+				        <p><label for="county">${message:county-label}</label> :
+				    		${inseeCountyLabel}
+				        </p> 		   
+				        <p><label for="region">${message:region-label}</label> :
+				    		${inseeRegionLabel}
+				        </p>  
+			        </t:if>
+			        <p><label for="country">${message:country-label}</label> :
+			    		${establishment?.address?.country?.label}
+			        </p>
+					<p><label for="email">${message:email-label}</label> :
+						${establishment.email}
+					</p>
+					<p><label for="phone">${message:company-phone-label}</label> :
+						${establishment.phone}
+					</p>
+					<p><label for="fax">${message:fax-label}</label> :
+						${establishment.fax}
+					</p>
+					
+					<p>
+						<br/>
+					</p>
+
+					<p>
+						<br/>
+					</p>
+				</fieldset>
+					
+				<ul class="links">
+					<t:if test="hasRightOnEstablishment">
+						<li class="back"><t:pagelink page="company/establishment/listestablishments" context="establishment.company.id">${message:back-establishments-list-label}</t:pagelink></li>
+					</t:if>
+				</ul>
+				
+			</div>
+		</div>
+	</div>
+</html>
+				
+    	

@@ -1,0 +1,50 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"> 
+<html t:type="layout" xmlns:t="http://tapestry.apache.org/schema/tapestry_5_1_0.xsd" xmlns:p="tapestry:parameter">
+    <div id="main-content">
+    	<h2>${message:pageTitle-label}</h2>
+    	<div class="steps">
+			<ol>
+				<li id="step1">${message:step-organism-label}</li>
+				<li id="step2">${message:step-subscriptions-label}</li>
+				<li id="step3">${message:step-agent-label}</li>
+			</ol>
+		</div>
+    	<t:if test="successMessage">
+            <p class="success">${successMessage}</p>
+        </t:if>
+		<div class="actions-bar">
+			<div class="infos-message">
+				<h5>L'organisme ${organism?.article?.label} ${organism?.label} et l'utilisateur ${agentProfile?.user?.firstname} ${agentProfile?.user?.lastname} ont été créés...</h5><br/>
+	
+				<h5>
+					<t:if test="isAuthorizedMail">		
+						${message:notification-label}	
+					<p:else>
+						${message:notification-no-mail-label}		
+					</p:else>	
+					</t:if>
+				</h5>
+			</div>
+			
+			<ul>
+				<li>
+		            <t:pagelink page="index">
+			        	${message:continue-label}
+			    	</t:pagelink>
+		    	</li>
+		    	<li>
+			    	<t:pagelink page="organism/modify" context="organism.id" class="button btnOk">
+			        	${message:modify-label}
+		        	</t:pagelink>
+	       	    </li>
+	       	    <t:if test="isAdmin">
+		       	    <li>   	
+				        <t:pagelink page="organism/managesubscriptions" context="organism.id" class="button btnOk">
+				        	${message:subscriptions-label}
+				        </t:pagelink>
+			        </li>
+        		</t:if>
+        	</ul>
+		</div>
+	</div>
+</html>

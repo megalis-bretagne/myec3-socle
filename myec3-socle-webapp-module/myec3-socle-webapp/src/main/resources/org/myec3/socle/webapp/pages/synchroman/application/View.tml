@@ -1,0 +1,47 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"> 
+<html t:type="layout" xmlns:t="http://tapestry.apache.org/schema/tapestry_5_1_0.xsd">
+    <div id="main-content">
+    	<h2>${message:pageTitle-label}</h2>
+    	
+    	<div class="steps">
+				<ol>
+					<li id="step1">${message:step-application-label}</li>
+					<li id="step2">${message:step-application-subscriptions-label}</li>
+				</ol>
+		</div>
+			
+        <div class="actions-bar">
+		<h5>&nbsp;L'application ${application.name} a été créée avec succès</h5>
+		<br/>
+					<li><label for="id"> ${message:application-id-label}</label> :
+						${application.id}
+					</li>
+					
+					<li><label for="name"> ${message:application-name-label}</label> :
+						${application.name}
+					</li>
+					
+					<li><label for="label"> ${message:application-label-label}</label> : 
+						${application.label}
+					</li>	
+					
+					<li><label for="url"> ${message:application-url-label}</label> :
+						${application.url}
+					</li>		
+			<ul>
+					<li>
+            		<t:pagelink page="index">
+	        			${message:continue-label}
+	    			</t:pagelink>
+	    			</li>
+	    			
+	    			<li>
+	    			<t:pagelink page="synchroman/application/modify" context="application.id" class="button btnOk">
+	        			${message:modify-label}
+        			</t:pagelink>
+       	   	 		</li>		
+
+        	</ul>
+		</div>
+	</div>
+</html>

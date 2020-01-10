@@ -1,0 +1,259 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html t:type="layout"  xmlns:t="http://tapestry.apache.org/schema/tapestry_5_1_0.xsd" xmlns:p="tapestry:parameter">
+
+<t:if test="isLocHallesTheme">	
+	<link href="${context:static/css/loc-halles.css}" rel="stylesheet" type="text/css" />
+</t:if>
+
+<t:form t:id="modification_form">
+<div id="main-content">
+	<h2>${message:pageTitle-label}</h2>
+	
+	<t:if test="company.foreignIdentifier" negate="true">
+	   <t:if test="companyNotExists">
+			<p class="intro">${message:abstract-label} ${company.siren} ${company.nic}</p>
+		<p:else>
+			<p class="intro">${message:employee-label} ${company.siren} ${company.nic}. ${message:notification-admin-label}</p>
+		</p:else> 
+	   </t:if>
+		<p:else>
+			<p class="intro">${message:abstract-label-foreign} ${company.nationalID}</p>
+		</p:else>           
+	</t:if>
+	
+	<t:if test="companyNotExists">
+		<p class="intro">${message:admin-label}</p>
+	</t:if>
+	
+  	<div class="steps">
+		<ol>
+			<li id="step1">${message:step-siren-label}</li>
+			<li id="step2" class="active">${message:step-info-company-label}</li>
+			<li id="step3">${message:step-info-establishment-label}</li>
+			<li id="step4">${message:step-info-account-label}</li>
+		</ol>
+	</div>
+		
+			
+			<t:if test="errorMessage">
+				<p class="error">${errorMessage}</p>
+			</t:if>
+			<p t:banner="message:form-error"  t:type="errors" t:clientClass="errorDialogue"></p>
+			<p class="mandatory">${message:mandatory-label}</p>
+
+				<fieldset>
+					<legend>${message:info-company-label}</legend>
+  	       			
+  	       		 <t:if test="labelDisplay">	
+  	       			<p>
+	                	<t:label for="label">${message:label-label} *:</t:label>
+	                	<t:textfield t:id="label" t:disabled="isEditionDisabled" t:value="company.label" t:maxlength="255" t:validate="required"/>
+	            	</p>
+	            </t:if>
+	            
+	             <t:if negate="true" test="labelDisplay">	
+  	       			<p>
+	                	<t:label for="label">${message:label-label} *:</t:label>
+	                	<t:textfield t:id="labelDisabled" t:disabled="literal:disabled" t:value="company.label" t:maxlength="255" t:validate="required"/>
+	            	</p>
+	            </t:if>	 	            
+				
+				<t:if negate="true" test="company.foreignIdentifier">
+	            	<p>
+	                	<t:label for="siren">${message:siren-label} *:</t:label>
+	                	<t:textfield t:id="siren" t:value="company.siren" disabled="literal:disabled"/>
+	            	</p>	              
+				<p:else>
+		            <p>
+		                <t:label for="nationalID">${message:nationalID-label} *:</t:label>
+		                <t:textfield t:id="nationalID" t:value="company.nationalID" disabled="literal:disabled"/>
+		            </p>	
+				</p:else>           
+				</t:if>
+				
+				<p>
+					<t:label for="companyAcronym">${message:acronym-label} :</t:label>
+	                <t:textfield t:id="companyAcronym"  t:disabled="isEditionDisabled" t:value="company.companyAcronym"/>          
+	            </p>
+	            
+	            <p>
+					<t:label for="companyCategory">${message:company-category-label} :</t:label>
+					<t:select t:id="companyCategory"
+						t:value="company.companyCategory" t:disabled="isEditionDisabled" t:validate="required" />
+				</p>            
+	            
+	            <t:if test="legalCategoryDisplay">	
+		            <p>
+		            	<t:label for="legalCategory">${message:legal-category-label} *:</t:label>
+		            	<t:select t:id="legalCategory"  t:disabled="isEditionDisabled"  t:value="company.legalCategory" t:validate="required" />
+		            </p>
+	            </t:if>
+	            
+	            <t:if test="legalCategoryDisplay" negate="true">	
+		            <p>
+		            	<t:label for="legalCategory">${message:legal-category-label} *:</t:label>
+		            	<t:select t:id="legalCategoryDisabled"  t:disabled="nafLabelDisplay"  t:value="company.legalCategory" t:validate="required" />
+		            </p>
+	            </t:if>
+	            
+	            <p>
+	            	<t:label for="RM">${message:subscribe-label} ${message:RM-label} 
+		            	<t:if test="isLocHallesTheme">
+		            			<a href="#" title="${message:RM-help}"><img src="${context:static/images/locHalles/pic_help.png}" class="picHelp" alt="${message:help-label}"/></a> :
+		            		<t:parameter name="else">
+		            			<a href="#" title="${message:RM-help}"><img src="${context:static/images/pic_help.png}" class="picHelp" alt="${message:help-label}"/></a> :
+		            		</t:parameter>
+		            	</t:if>
+	            	</t:label>
+	            		            	
+	            	<t:checkbox  t:disabled="isEditionDisabled"  t:id="RM" t:value="company.RM"  />
+	            </p>
+	            <p>
+	            	<t:label for="RCS"> ${message:RCS-label}
+	            		<t:if test="isLocHallesTheme">
+		            			<a href="#" title="${message:RCS-help}"><img src="${context:static/images/locHalles/pic_help.png}" class="picHelp" alt="${message:help-label}"/></a> :
+		            		<t:parameter name="else">
+		            			<a href="#" title="${message:RCS-help}"><img src="${context:static/images/pic_help.png}" class="picHelp" alt="${message:help-label}"/></a> :
+		            		</t:parameter>
+		            	</t:if> 	 
+	            	</t:label>
+	            		            	
+	            	<t:checkbox  t:disabled="isEditionDisabled"  t:id="RCS" t:value="company.RCS"  />
+	            </p>
+	            <p>
+	            	<t:label for="companyNafCode">${message:apeNafLabel-label} *
+	            		<t:if test="isLocHallesTheme">
+		            			<a href="#" title="${message:apeNafLabel-help}"><img src="${context:static/images/locHalles/pic_help.png}" class="picHelp" alt="${message:help-label}"/></a> :
+		            		<t:parameter name="else">
+		            			<a href="#" title="${message:apeNafLabel-help}"><img src="${context:static/images/pic_help.png}" class="picHelp" alt="${message:help-label}"/></a> :
+		            		</t:parameter>
+		            	</t:if>	            	
+	            	</t:label>
+	        		<t:select t:id="companyNafCode" t:encoder="nafCodeEncoder" t:disabled="nafLabelDisplay"  t:model="listOfCompanyNafCode" t:value="companyNafCode" t:validate="required" />
+				</p>
+	            <p>
+	            	<t:label for="description">
+	                    ${message:description-label} :
+	                </t:label>
+	                <input t:type="TextArea"  t:disabled="isEditionDisabled"  t:id="description" t:value="company.description" cols="17" rows="5" t:validate="maxlength=250"/>
+	            </p>        
+		
+				<t:if test="company.foreignIdentifier" negate="false">
+					<p>
+							<t:label for="country">${message:country-label} *:</t:label> 
+							<t:select
+								t:id="country" 
+								t:value="company.address.country" 
+								t:validate="required" />
+					</p>
+				</t:if>
+		
+	            <p>
+	                <t:label for="email">${message:email-label} *:</t:label>
+	                <t:textfield t:id="email"  t:disabled="isEditionDisabled"  t:value="company.email" t:validate="required, regexp"/>
+	            </p>
+
+	            <p>
+	                <t:label for="website">${message:website-label} :</t:label>
+	                <t:textfield t:id="website"  t:disabled="isEditionDisabled" t:value="company.website" t:validate="regexp, maxlength=255"/>
+	                <t:if test="isLocHallesTheme">
+						<a href="#" title="${message:website-help}"><img src="${context:static/images/locHalles/pic_help.png}" class="picHelp" alt="${message:website-help}"/></a>
+						<t:parameter name="else">
+							<a href="#" title="${message:website-help}"><img src="${context:static/images/pic_help.png}" class="picHelp" alt="${message:website-help}"/></a>
+						</t:parameter>
+	                </t:if>
+					
+	            </p>
+
+			<t:if test="creationDateDisplay">
+				<div class="datePicker-div">
+					<t:label class="datePicker-label" for="creationDate">${message:creation-date-label} *:</t:label>
+					<t:datefield class="datePicker-input" t:id="creationDate" t:disabled="isEditionDisabled"
+						t:value="company.creationDate"/>
+					<a href="#" title="${message:creationDate-help}"><img
+						src="${context:static/images/pic_help.png}" class="picHelp"
+						alt="${message:creationDate-help}" /></a>
+				</div>
+			</t:if>
+
+			<t:if test="creationDateDisplay" negate="true">
+				<div class="datePicker-div">
+					<t:label class="datePicker-label" for="creationDateDisabled">${message:creation-date-label} *:</t:label>
+					<t:datefield class="datePicker-input" t:id="creationDateDisabled"
+						t:disabled="literal:disabled" t:value="company.creationDate" />
+					<a href="#" title="${message:creationDate-help}"><img
+						src="${context:static/images/pic_help.png}" class="picHelp"
+						alt="${message:creationDate-help}" /></a>
+				</div>
+			</t:if>
+			
+			<t:if test="radiationDateDisplay" negate="true">
+				<div class="datePicker-div">
+					<t:label class="datePicker-label" for="radiationDate">${message:radiation-date-label} :</t:label>
+					<t:datefield class="datePicker-input" t:id="radiationDate" t:disabled="literal:disabled"
+						t:value="company.radiationDate"/>
+				</div>
+			</t:if>
+		</fieldset>
+						
+				<fieldset>
+				
+					<legend>${message:info-responsible-label}</legend>    
+		            <table class="listChef">
+						<thead>
+							<tr>
+								<th>${message:civility-label}</th>
+								<th>${message:firstname-label}</th>
+								<th>${message:lastname-label}</th>
+								<th>${message:function-label}</th>
+								<th>${message:email-label}</th>
+								<th>${message:phone-label}</th>
+								<th>Action</th>
+							</tr>
+						</thead>
+							<tbody>	
+								<tr t:id="person_list" t:type="AjaxFormLoop" t:source="personHolders" t:value="personHolder" t:encoder="encoder">
+									<t:unless t:test="personHolder.deleted">
+										<t:submitnotifier>	
+											<td><input t:type="select" class="civility" t:id="civility" t:value="personHolder?.person?.civility" t:disabled="isEditionDisabled" t:validate="required, maxlength=100" /></td>
+											<td><input t:type="TextField" t:id="personFirstName" t:class="personArray" t:value="personHolder?.person?.firstName" t:disabled="responsablesDisplay" t:validate="required, maxlength=100" /></td>
+											<td><input t:type="TextField" t:id="personLastName" t:class="personArray" t:value="personHolder?.person?.lastName" t:disabled="responsablesDisplay" t:validate="required, maxlength=100" /></td>
+											<td><input t:type="TextField" t:id="personFunction" t:class="personArray" t:value="personHolder?.person?.function" t:disabled="responsablesDisplay" t:validate="required, maxlength=255" /></td>
+											<td><input t:type="TextField" t:id="personEmail" t:class="personArray" t:value="personHolder?.person?.email" t:disabled="personEmailDisplay" t:validate="email" /></td>
+											<td><input t:type="TextField" t:id="personPhone" t:class="personArray" t:value="personHolder?.person?.phone" t:disabled="personPhoneDisplay" t:validate="regexp" /></td>
+											<td>
+												<t:if negate="true" test="responsablesDisplay">
+													<t:removerowlink>${message:delete-label}</t:removerowlink>
+												</t:if>	
+											</td>
+										</t:submitnotifier>
+									</t:unless>
+									<t:parameter name="addRow">												
+										<td colspan="7" style="text-align: right">
+											<t:if test="isEditionDisabled" negate="true">
+												<t:if negate="true" test="responsablesDisplay">
+													<t:addrowlink>${message:add-responsible}</t:addrowlink>
+												</t:if>
+											</t:if>
+										</td>
+									</t:parameter>	
+								</tr>
+						   </tbody>
+				 	</table>
+				</fieldset>
+			
+		
+		 <div class="form-actions">
+			<p>	
+				<t:submit t:id="submit" class="button btnOk" value="message:save-label" />
+				<input type="reset" value="${message:reset-label}" id="cancelButton" />
+			</p>
+		 </div>
+		
+				<ul class="links">
+					<li class="back"><a href="javascript:history.go(-1)">${message:back-label}</a></li>
+				</ul>
+        </div>
+       </t:form>
+
+</html>

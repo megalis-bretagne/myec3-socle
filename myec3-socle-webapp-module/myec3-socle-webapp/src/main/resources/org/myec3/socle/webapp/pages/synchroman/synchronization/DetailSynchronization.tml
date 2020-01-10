@@ -1,0 +1,128 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"> 
+<html t:type="layout" xmlns:t="http://tapestry.apache.org/schema/tapestry_5_1_0.xsd">
+    <div id="main-content">
+    	<h2>Synchronisation numéro ${synchronizationLog.id}</h2>
+		<t:if test="successMessage">
+			<p class="success">${successMessage}</p>
+		</t:if>
+  		<div class="tabbed-data"> 
+			<div class="tabs-content">
+				<fieldset>
+					<legend>Details de la synchronisation</legend>
+					&nbsp;
+					<p><label for="id">Id</label> :
+						<t:if test="synchronizationLog.id">
+						${synchronizationLog.id}
+						</t:if>
+					</p>
+					<p><label for="applicationName">Application</label> :
+						<t:if test="synchronizationLog.applicationName">
+						${synchronizationLog.applicationName}
+						</t:if>
+					</p>
+					<p><label for="methodType">Methode</label> :
+						<t:if test="synchronizationLog.methodType">
+						${synchronizationLog.methodType}
+						</t:if>
+					</p>
+					<p><label for="synchronizationType">Mécanisme</label> :
+						<t:if test="synchronizationLog.synchronizationType">
+							${synchronizationLog.synchronizationType} - ${synchronizationLog.synchronizationType.value}
+						</t:if>
+					</p>
+					<p><label for="resourceType">Type resource</label> :
+						<t:if test="synchronizationLog.resourceType">
+						${synchronizationLog.resourceType}
+						</t:if>
+					</p>
+					<p><label for="httpCode">Code HTTP</label> :
+						<t:if test="synchronizationLog.httpCode">
+						${synchronizationLog.httpCode}
+						</t:if>
+					</p>
+					<p><label for="httpStatus">Statut HTTP</label> :
+						<t:if test="synchronizationLog.httpStatus">
+						${synchronizationLog.httpStatus}
+						</t:if>
+					</p>
+					<p><label for="errorCodeType">Type code erreur</label> :
+						<t:if test="synchronizationLog.errorCodeType">
+						${synchronizationLog.errorCodeType}
+						</t:if>
+					</p>
+					<p><label for="errorLabel">Code erreur</label> :
+						<t:if test="synchronizationLog.errorLabel">
+						${synchronizationLog.errorLabel}
+						</t:if>
+					</p>
+					<p><label for="errorMessage">Message d'erreur</label> :
+						<t:if test="synchronizationLog.errorMessage">
+						${synchronizationLog.errorMessage}
+						</t:if>
+					</p>
+					<p><label for="synchronizationDate">Date</label> :
+						<t:if test="synchronizationLog.synchronizationDate">
+						${synchronizationLog.synchronizationDate}
+						</t:if>
+					</p>
+					<p><label for="nbAttempts">Tentatives</label> :	
+						${synchronizationLog.nbAttempts}
+					</p>
+					<p><label for="uri">URI</label> :
+						<t:if test="synchronizationLog.synchronizationSubscription.uri">
+						<a href="${synchronizationLog.synchronizationSubscription.uri}" target="_blank">${synchronizationLog.synchronizationSubscription.uri}</a>
+						</t:if>
+					</p>
+					<p><label for="isFinal">Etat</label> :
+						<t:if test="synchronizationLog.isFinal">
+						TERMINÉE
+							<t:parameter name="else">
+								EN COURS
+							</t:parameter>
+						</t:if>
+					</p>
+					<p><label for="statut">Résultat</label> :
+						<t:if test="synchronizationLog.statut">
+						${synchronizationLog.statut}
+						</t:if>
+					</p>
+					&nbsp;
+				</fieldset>
+				
+				<fieldset>
+					<legend>Synchronisations liées</legend>
+					&nbsp;
+					<table t:id="synchronizationLogGrid" t:rowClass="rowClass" pagerPosition="bottom" model="gridModel" t:type="grid" t:row="synchronizationLogRow" t:rowIndex="rowIndex" t:source="synchronizationLogResult" t:rowsPerPage="${message:rowsPerPage}" t:inplace="true">
+						<t:parameter name="applicationCell">
+							${synchronizationLogRow.synchronizationSubscription.application.name}
+						</t:parameter>
+			
+						<t:parameter name="isFinalCell">
+							<t:textoutput t:value="isFinalLabel" />
+						</t:parameter>
+			
+						<t:parameter name="synchronizationDateCell">
+							<t:output format="dateFormat" t:value="synchronizationLogRow.synchronizationDate"/>
+	        			</t:parameter>
+	        
+						<t:parameter name="actionsCell">
+							<t:pagelink page="synchroman/synchronization/DetailSynchronization" context="synchronizationLogRow.id">
+		        	 			<img src="${context:static/images/synchronization_view.png}" alt="${message:view-label}" title="${message:view-label}" />
+	        				</t:pagelink>
+	        	
+						<t:actionlink t:id="replay" context="synchronizationLogRow.id" t:mixins="confirm" t:message="message:confirm-label">
+								<img src="${context:static/images/replay.png}" alt="${message:replay-label}" title="${message:replay-label}" />
+							</t:actionlink>
+	        			</t:parameter>
+  					</table>
+				</fieldset>
+				
+				<ul class="links">
+						<li class="back"><t:pagelink page="synchroman/synchronization/SearchResult">${message:back-searchresult-label}</t:pagelink></li>
+				</ul>
+			</div>
+		</div>
+	</div>
+</html>
+				
+    	

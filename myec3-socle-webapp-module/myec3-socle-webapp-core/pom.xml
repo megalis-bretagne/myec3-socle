@@ -1,0 +1,103 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+	<modelVersion>4.0.0</modelVersion>
+	<artifactId>myec3-socle-webapp-core</artifactId>
+	<packaging>jar</packaging>
+	<name>MyEc3 - Socle webapp core</name>
+
+	<description>
+		Web application providing GUI to access to all data from core project.
+	</description>
+
+	<!-- DO NOT DECLARES DEPENDENCIES HERE THAT ARE NOT DECLARED AS MANAGED
+	IN PARENT POM ! -->
+
+	<parent>
+		<groupId>org.myec3.socle</groupId>
+		<artifactId>myec3-socle-webapp-module</artifactId>
+		<version>5.6.2-MEGALIS-SNAPSHOT</version>
+		<relativePath>../pom.xml</relativePath>
+	</parent>
+
+	<dependencies>
+
+		<!-- Socle Core -->
+		<dependency>
+			<groupId>org.myec3.socle</groupId>
+			<artifactId>myec3-socle-core</artifactId>
+			<version>5.6.2-MEGALIS-SNAPSHOT</version>
+		</dependency>
+
+		<!-- Socle synchronization core -->
+		<dependency>
+			<groupId>org.myec3.socle</groupId>
+			<artifactId>myec3-socle-synchro-core</artifactId>
+			<version>5.6.2-MEGALIS-SNAPSHOT</version>
+		</dependency>
+
+		<!-- Socle WS Client -->
+		<dependency>
+			<groupId>org.myec3.socle</groupId>
+			<artifactId>myec3-socle-ws-client</artifactId>
+			<version>5.6.2-MEGALIS-SNAPSHOT</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+    		<artifactId>commons-lang3</artifactId>
+		</dependency>
+
+        <dependency>
+            <groupId>javax.servlet</groupId>
+    		<artifactId>javax.servlet-api</artifactId>
+        </dependency>
+
+		<!-- Tapestry -->
+		<dependency>
+			<groupId>org.apache.tapestry</groupId>
+			<artifactId>tapestry-core</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.tapestry</groupId>
+			<artifactId>tapestry-spring</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.tapestry</groupId>
+			<artifactId>tapestry-upload</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.tapestry</groupId>
+			<artifactId>tapestry-ioc</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.tapestry</groupId>
+			<artifactId>tapestry-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+
+		<!-- Spring Web -->
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-web</artifactId>
+		</dependency>
+		
+		<!-- Logging -->
+		<dependency>
+		    <groupId>org.apache.logging.log4j</groupId>
+		    <artifactId>log4j-core</artifactId>
+		</dependency>
+		<dependency>
+		    <groupId>org.apache.logging.log4j</groupId>
+		    <artifactId>log4j-api</artifactId>
+		</dependency>
+
+
+		<!-- Tests -->
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+		</dependency>
+
+</dependencies>
+
+</project>

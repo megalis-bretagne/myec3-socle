@@ -1,0 +1,93 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"> 
+<html t:type="layout" xmlns:t="http://tapestry.apache.org/schema/tapestry_5_1_0.xsd">
+    <div id="main-content">
+    	<h2>${organismDepartment?.label}</h2>
+		<t:if test="successMessage">
+			<p class="success">${successMessage}</p>
+		</t:if>
+  		<div class="tabbed-data"> 
+			<ul class="tabs"> 
+				<li class="active"><strong>${message:info-label}</strong></li> 
+				<li><t:pagelink page="organism/department/listAgents" context="organismDepartment.id">${message:User-label}</t:pagelink></li> 
+			</ul> 
+			<div class="tabs-content">
+
+				<p class="mandatory">&nbsp;</p>
+				
+				<div class="actions-bar">
+						<ul>
+							<li><t:pagelink page="organism/department/modify" context="organismDepartment.id">
+							<img src="${context:static/images/organisme_modifier.png}"
+										alt="${message:modify-label}" title="${message:modify-organism-label}" /> ${message:modify-organism-label}
+										</t:pagelink>
+							</li>
+						</ul>
+				</div>
+				<fieldset>
+					<legend>${message:organization-info-label}</legend>
+					<p><label for="label">${message:level-name-label} :</label>
+						${organismDepartment?.label}
+					</p>
+					<p>
+	               		<label for="sigle">${message:sigle-label} :</label>
+	                	${organismDepartment?.abbreviation}
+	           		</p>		
+					<p><label for="siren"> ${message:siren-label} :</label>
+						${organismDepartment.siren}
+					</p>
+					<p><label for="description"> ${message:description-label} :</label>
+						${organismDepartment.description}
+					</p>		
+					<p><label for="description"> Niveau parent :</label>
+						${organismDepartment?.parentDepartment?.label}
+					</p>	        
+					<p><label for="postalAddress"> ${message:postalAddress-label} :</label>
+			       		<t:if test="organismDepartment.address">
+			    			${organismDepartment?.address?.postalAddress}
+			        	</t:if>
+			        </p>        
+					<p><label for="postalCode"> ${message:postalCode-label} :</label>
+			       		<t:if test="organismDepartment.address">
+			    			${organismDepartment?.address?.postalCode}
+			        	</t:if>
+			        </p>
+			        <p><label for="city"> ${message:city-label} :</label>
+			       		<t:if test="organismDepartment.address">
+			    			${organismDepartment?.address?.city}
+			        	</t:if>
+			        </p>
+			        <p><label for="canton"> ${message:canton-label} :</label>
+			       		<t:if test="organismDepartment.address">
+			    			${organismDepartment?.address?.canton}
+			        	</t:if>
+			        </p>
+			        <p><label for="country"> ${message:country-label} :</label>
+			       		<t:if test="organismDepartment.address.country">
+			    			${organismDepartment?.address?.country?.label}
+			        	</t:if>
+			        </p>
+					<p><label for="email"> ${message:email-label} :</label>
+						${organismDepartment.email}
+					</p>
+					<p><label for="phone"> ${message:phone-label} :</label>
+						${organismDepartment.phone}
+					</p>
+					<p><label for="fax"> ${message:fax-label} :</label>
+						${organismDepartment.fax}
+					</p>
+
+					<p><label for="website"> ${message:website-label} :</label>
+						${organismDepartment.website}
+					</p>
+					&nbsp;
+					
+					<ul class="links">
+						<li class="back"><t:pagelink page="organism/department/view" context="organismDepartment.organism.id">${message:back-organisgram-label}</t:pagelink></li>
+					</ul>
+				</fieldset>
+			</div>
+		</div>
+	</div>
+</html>
+				
+    	

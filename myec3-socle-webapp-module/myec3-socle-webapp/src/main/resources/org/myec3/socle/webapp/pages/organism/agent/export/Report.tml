@@ -1,0 +1,129 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html t:type="layout"
+	xmlns:t="http://tapestry.apache.org/schema/tapestry_5_1_0.xsd"
+	xmlns:p="tapestry:parameter">
+
+<div id="main-content">
+	<h2>${message:page-title}</h2>
+
+	<!-- DISPLAY SUCCESS MESAGE IF EXISTS -->
+	<t:if test="successMessage">
+		<p class="success">${successMessage}</p>
+	</t:if>
+
+	<div class="tabbed-data">
+
+		<!-- MENU -->
+		<ul class="tabs">
+			<li class="active"><strong>${message:report-label}</strong>
+			</li>
+			<t:if test="displayCreateMenu">
+				<li><t:pagelink page="organism/agent/export/createList"
+						context="organism.id">${message:create-users-label} ( ${numberOfAgentsToCreate} )</t:pagelink>
+				</li>
+			</t:if>
+			<t:if test="displayModifyMenu">
+				<li><t:pagelink page="organism/agent/export/modifyList"
+						context="organism.id">${message:modify-users-label} ( ${numberOfAgentsToModify} )</t:pagelink>
+				</li>
+			</t:if>
+			<t:if test="displayDeleteMenu">
+				<li><t:pagelink page="organism/agent/export/deleteList"
+						context="organism.id">${message:delete-users-label} ( ${numberOfAgentsToDelete} )</t:pagelink>
+				</li>
+			</t:if>
+		</ul>
+
+		<div class="tabs-content">
+			<!-- Error banner -->
+			<fieldset id="report">
+				<legend>${message:legend-label} ${fileDate} à ${fileTime}</legend>
+
+				<!-- CHOOSE CORRECT BLOCK TO DISPLAY -->
+				<t:delegate to="chooseBlock" />
+
+				<!-- BLOCK TO DISPLAY IN CASE OF SUCCESS -->
+				<t:block id="successBlock">
+					<div id="report-success">
+
+						<t:if test="isAllDataUpdated">
+							<!-- MESSAGE TO DISPLAY IF THERE IS NOTHING TO DO -->
+							<p>
+								<img src="${context:static/images/tick.png}"
+									alt="${message:all-data-updated-message}"
+									title="${message:all-data-updated-message}" />
+								${message:all-data-updated-message}
+							</p>
+							<p:else>
+								<ul>
+									<t:if test="displayCreateMenu">
+										<li>${numberOfAgentsToCreate}
+											${message:agents-to-create-message} <t:pagelink
+												page="organism/agent/export/createList"
+												context="organism.id">${message:agents-to-create-link-message}</t:pagelink>
+										</li>
+									</t:if>
+									<t:if test="displayModifyMenu">
+										<li>${numberOfAgentsToModify}
+											${message:agents-to-modify-message} <t:pagelink
+												page="organism/agent/export/modifyList"
+												context="organism.id">${message:agents-to-modify-link-message}</t:pagelink>
+										</li>
+									</t:if>
+									<t:if test="displayDeleteMenu">
+										<li>${numberOfAgentsToDelete}
+											${message:agents-to-delete-message} <t:pagelink
+												page="organism/agent/export/deleteList"
+												context="organism.id"> ${message:agents-to-delete-link-message}</t:pagelink>
+										</li>
+									</t:if>
+								</ul>
+							</p:else>
+						</t:if>
+					</div>
+				</t:block>
+
+
+				<!-- BLOCK TO DISPLAY IN CASE OF ERRORS IN FILE IMPORTED -->
+				<t:block id="errorBlock">
+					<h3>${message:report-error-label}</h3>
+
+					<p class="info">${message:report-error-message-1} ${nbOfErrors}
+						${message:report-error-message-2}</p>
+
+					<div id="report-error">
+						<ul>
+							<t:loop source="listOfErrorsLine" value="errorLineLoop">
+								<li>ligne ${errorLineLoop}
+									<ul>
+										<t:loop source="errorsLine" value="errorLoop"
+											t:empty="${message:empty-roles-label}">
+											<li>${errorLoop}</li>
+										</t:loop>
+									</ul></li>
+							</t:loop>
+						</ul>
+					</div>
+
+					<p>
+						<t:pagelink class="actionButton"
+							page="organism/agent/export/import" context="organism.id">
+									${message:import-new-file-label}
+						</t:pagelink>
+					</p>
+				</t:block>
+			</fieldset>
+
+			<!-- LINKS -->
+			<ul class="links">
+				<li class="back"><t:pagelink
+						page="organism/agent/export/import" context="organism.id"
+						class="back">${message:back-to-import-label}</t:pagelink></li>
+				<li class="back"><t:pagelink page="organism/detail"
+						context="organism.id">${message:back-detailorganism-label}</t:pagelink>
+				</li>
+			</ul>
+		</div>
+	</div>
+</div>
+</html>

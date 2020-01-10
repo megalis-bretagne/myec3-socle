@@ -1,0 +1,69 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html t:type="layout"  xmlns:t="http://tapestry.apache.org/schema/tapestry_5_1_0.xsd" xmlns:p="tapestry:parameter">
+	<div id="main-content">
+		<h2>${message:pageTitle-label}</h2>
+   		
+   		<p class="intro">${message:abstract-label}</p>
+   		 
+   		 <div class="steps">
+                <ol>
+                    <li id="step1">
+                        ${message:step-create-customer-label}
+                    </li>
+                    <li id="step2" class="active">
+                        ${message:step-subscriptions-label}
+                    </li>
+                    <li id="step3">
+                        ${message:step-admin-label}
+                    </li>
+                </ol>
+            </div>
+			
+				<t:if test="successMessage">
+		            <p class="success">${successMessage}</p>
+		        </t:if>
+				<t:if test="errorMessage">
+		            <p class="error">${errorMessage}</p>
+		        </t:if>
+		
+       <p class="mandatory">${message:mandatory-label}</p>
+		
+	    <t:form t:id="creation_form">
+	      	<p t:banner="message:error-create-subscriptions-customer-label"  t:type="errors" t:clientClass="errorDialogue"></p>
+    
+	    	<fieldset>
+	    		<legend>${message:form-legend-label}</legend>
+
+	            <p>		
+			       &nbsp;&nbsp;${message:subscription-1-label}
+			        <br/>
+			        <br/>
+			        
+			        <t:loop source="availableApplications"  encoder="applicationEncoder" value="applicationLoop" empty="block:empty">
+	                	<p>           		
+		                	<label class="form-subscription">${applicationLoop.label}</label>
+							<t:checkbox t:id="id" t:value="selected"/>         	
+	                	</p>
+	                </t:loop>
+	                
+	                <t:block t:id="empty">
+	                 	<p class="empty">
+	        				${message:empty-message}
+	        			</p>
+	    			</t:block>
+			    </p>
+	
+		    	<div class="form-actions"> 
+		    		<p>
+		        		<t:submit t:id="submit" class="button btnOk" value="message:next-label" />
+		        		<input type="reset" value="${message:reset-label}" id="cancelButton" />
+		        	</p>
+		        </div>
+	        </fieldset>
+	        <ul class="links">
+					<li class="back"><a href="javascript:history.go(-1)">${message:back-label}</a></li>
+			</ul>
+	    </t:form>
+	    
+        </div>
+</html>

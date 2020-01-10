@@ -1,0 +1,51 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"> 
+<html t:type="layout" xmlns:t="http://tapestry.apache.org/schema/tapestry_5_1_0.xsd">
+    <t:if test="successMessage">
+		<p class="success">${successMessage}</p>
+	</t:if>
+	    <div id="main-content">
+  		<h2></h2>	
+		
+  		<div class="tabbed-data"> 
+			<div class="tabs-content">
+				<p class="mandatory">&nbsp;</p>	
+				
+				<div class="actions-bar">
+						<ul>
+							<li><t:pagelink page="synchroman/subscription/Modify" context="synchronizationSubscription.id">
+							<img src="${context:static/images/modifier.png}"
+										alt="${message:modify-label}" title="${message:modify-subscription-label}" /> ${message:modify-subscription-label}
+										</t:pagelink>
+							</li>
+						</ul>
+				</div>
+				
+				<fieldset>
+					<legend>${message:subscription-info-label}</legend>
+					
+					<p><label for="id"> ${message:id-label} : </label>
+						${synchronizationSubscription.id}
+					</p>
+					
+					<p><label for="application"> ${message:application-label} : </label>
+						${synchronizationSubscription.application.name}
+					</p>
+					
+					<p><label for="resourceLabel"> ${message:resourceLabel-label} : </label> 
+						${synchronizationSubscription.resourceLabel}
+					</p>	
+					
+					<p><label for="uri"> ${message:uri-label} : </label>
+						${synchronizationSubscription.uri}
+					</p>		
+				</fieldset>
+				
+				<ul class="links">
+					<li class="back"><t:pagelink page="synchroman/subscription/Searchresult">${message:back-searchresult-label}</t:pagelink></li>
+				</ul>
+			</div>
+		</div>
+	</div>
+</html>
+				
+    	

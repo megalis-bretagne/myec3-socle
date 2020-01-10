@@ -1,0 +1,60 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html t:type="layout" xmlns:t="http://tapestry.apache.org/schema/tapestry_5_1_0.xsd" xmlns:p="tapestry:parameter">
+    <div id="main-content">
+        <h2>${message:title}</h2>
+        
+        <div class="actions-bar"> 
+       		<p>${message:total-results-label} : <strong>${resultsNumber}</strong></p> 
+	     	<ul>  
+          		<li><a href="#" onclick="javascript:window.print()">
+								<img src="${context:static/images/printer.png}"
+									alt="${message:print-label}" title="${message:print-label}"/> ${message:print-label}
+					</a>
+				</li>
+			</ul> 
+		</div> 
+        
+        <div class="caption">
+        	<p>${message:results-label}</p>
+        </div>
+    	<table t:id="companiesGrid" t:empty="block:empty" pagerPosition="bottom" model="gridModel" t:type="grid" t:row="companyRow" t:rowIndex="rowIndex" t:source="companiesResult" t:rowsPerPage="${message:rowsPerPage}" t:inplace="true">
+			<t:parameter name="labelCell">
+				<t:pagelink page="company/detailcompany" context="companyRow.id">
+					${companyRow?.label}
+				</t:pagelink>
+			</t:parameter>
+			<t:parameter name="companyAcronymCell">
+				<t:if test="companyRow.companyAcronym">
+		        	${companyRow?.companyAcronym}
+		        </t:if>
+			</t:parameter>
+			<t:parameter name="postalCodeCell">
+	        	<t:if test="companyRow.address">
+		        	${companyRow?.address?.postalCode}
+		        </t:if>
+	        </t:parameter>
+			<t:parameter name="cityCell">
+	        	<t:if test="companyRow.address">
+		        	${companyRow?.address?.city}
+		        </t:if>
+	        </t:parameter>
+			<t:parameter name="nicCell">
+				<t:if test="companyRow.nic">
+					${companyRow?.nic}
+				</t:if>
+			</t:parameter>
+        	<t:parameter name="actionsCell">
+		        <t:pagelink page="company/detailcompany" context="companyRow.id"><img src="${context:static/images/organisme_voir.png}" alt="${message:view-label}" title="${message:view-label}" /></t:pagelink>
+		        <t:pagelink page="company/modify" context="companyRow.id"><img src="${context:static/images/organisme_modifier.png}" alt="${message:modify-label}" title="${message:modify-label}" /></t:pagelink>
+			</t:parameter>
+  		</table>
+	    <t:block t:id="empty">
+	        ${message:empty-message}
+	    </t:block>
+	    
+	    <ul class="navigational"> 
+			<li><t:pagelink page="company/search" class="back">${message:back-to-search-label}</t:pagelink></li> 
+			<li><a href="#" class="top">${message:top-of-page-label}</a></li> 
+		</ul> 
+	</div>
+</html>

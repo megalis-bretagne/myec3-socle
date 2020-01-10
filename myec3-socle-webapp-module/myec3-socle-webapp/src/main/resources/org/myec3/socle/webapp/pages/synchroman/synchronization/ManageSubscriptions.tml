@@ -1,0 +1,57 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html t:type="layout" xmlns:t="http://tapestry.apache.org/schema/tapestry_5_1_0.xsd">
+	<div id="main-content">
+		<div class="steps">
+			<ol>
+				<li id="step1">${message:step-resource-label}</li>
+				<li id="step2" class="active">${message:step-subscription-label}</li>
+			</ol>
+		</div>
+		
+		<t:if test="successMessage">
+		    <p class="success">${successMessage}</p>
+		</t:if>
+		<t:if test="errorMessage">
+            <p class="error">${errorMessage}</p>
+        </t:if>
+		
+        <t:form t:id="application_subscription_form">
+        	<fieldset>
+        			<legend>${message:info-subscriptions-label}</legend>
+	            <p>		
+			        ${message:subscription-1-label}
+			        <br/>
+			        <br/>
+			        
+			         <t:loop source="availableApplications"  encoder="applicationEncoder" value="applicationLoop">
+	                	<p>
+		                	<label class="form-subscription">${applicationLoop.label}</label>
+		                	<t:checkbox t:id="selected" t:value="selected"/>
+	                	</p>
+	                </t:loop>
+			    </p>
+			    </fieldset>
+			    
+			    <fieldset>
+        			<legend>${message:info-action-label}</legend>
+				<p>
+	                <t:label class="form-subscription" for="methodType">${message:methodType-label}</t:label>
+	                <t:select  t:id="methodType" model="literal:POST,PUT,DELETE" t:value="selectedMethodType" t:validate="required"/>
+	        		<a href="#" title="${message:methodType-help}">
+	        			<img src="${context:static/images/pic_help.png}" class="picHelp" alt="${message:help-label}"/>
+	        		</a>
+				</p>
+				<div class="form-actions">
+					<p>
+						<t:submit t:id="submit" class="button btnOk" value="message:save-label" />
+						<input type="reset" value="${message:reset-label}" id="cancelButton" />
+					</p>
+				</div>
+			</fieldset>	
+			&nbsp;
+				<ul class="links">
+					<li class="back"><a href="javascript:history.go(-1)">${message:back-label}</a></li>
+				</ul>
+        </t:form>
+	</div>
+</html>

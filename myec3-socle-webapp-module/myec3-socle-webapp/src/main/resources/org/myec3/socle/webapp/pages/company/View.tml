@@ -1,0 +1,43 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html t:type="layout" xmlns:t="http://tapestry.apache.org/schema/tapestry_5_1_0.xsd">
+
+<t:if test="isLocHallesTheme">	
+	<link href="${context:static/css/loc-halles.css}" rel="stylesheet" type="text/css" />
+</t:if>
+
+<div id="main-content">
+	<h2>${message:pageTitle-label}</h2>
+	
+  	<div class="steps">
+		<ol>
+			<li id="step1">${message:step-siren-label}</li>
+			<li id="step2">${message:step-info-company-label}</li>
+			<li id="step3">${message:step-info-establishment-label}</li>
+			<li id="step4">${message:step-info-account-label}</li>
+		</ol>
+	</div>
+	<t:if test="successMessage">
+            <p class="success">${successMessage}</p>
+        </t:if>
+        <div class="actions-bar">
+		<h5>&nbsp;${message:creation-info-success-label}</h5><br/>
+	
+			<h5>
+				&nbsp;${message:creation-info-label}<br />
+				&nbsp;
+			</h5>
+
+			<ul>
+				<li>								
+					<t:if test="isLocHallesTheme">							
+			            	<a href="${locHallesLoginUrl}">${message:login-label}</a>
+			            <t:parameter name="else">			            	
+			            	<a href="${webContext}${logoutUrl}">${message:login-label}</a>
+			            </t:parameter>
+		            </t:if>					
+		    	</li>
+	        </ul>
+		</div>
+	</div>
+</html>
+	

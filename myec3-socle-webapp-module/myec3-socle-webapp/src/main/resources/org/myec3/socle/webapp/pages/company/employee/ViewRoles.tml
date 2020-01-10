@@ -1,0 +1,62 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"> 
+<html t:type="layout" xmlns:t="http://tapestry.apache.org/schema/tapestry_5_1_0.xsd">
+	<div id="main-content">
+	    <h2>${employeeProfile?.user?.firstname} ${employeeProfile?.user?.lastname}</h2>
+	    <div class="tabbed-data"> 
+			<ul class="tabs">
+				<li><t:pagelink page="company/employee/view" context="${employeeProfile.id}">${message:user-data-label}</t:pagelink></li>
+				<li class="active"><strong>${message:user-services-label}</strong></li> 
+				 
+			</ul> 
+			<div class="tabs-content"> 
+				<t:if test="successMessage">
+		            <p class="success">${successMessage}</p>
+		        </t:if>
+				<t:if test="errorMessage">
+		            <p class="error">${errorMessage}</p>
+		        </t:if>
+		        
+				<div class="tabs-content">
+					<p class="mandatory">&nbsp;</p>
+					
+					<t:if test="modifyDisplay">
+						<div class="actions-bar">
+							<ul>
+							<t:if test="employeeProfile.user.enabled">
+								<li><t:pagelink page="company/employee/modifyroles" context="employeeProfile.id">
+								<img src="${context:static/images/organisme_modifier.png}"
+											alt="${message:modify-label}" title="${message:modify-roles-label}" /> ${message:modify-roles-label}
+											</t:pagelink>
+								</li>
+							</t:if>
+							<t:if test="!employeeProfile.user.enabled">	
+								   <li>
+					                      <a class="disable" >
+					                      	<img src="${context:static/images/organisme_modifier.png}" alt="${message:modify-roles-label}" title="${message:modify-role-label-disable}" />&nbsp;<span title="${message:modify-role-label-disable}">${message:modify-roles-label}</span>
+					                      </a>
+		                           </li>
+							</t:if>
+							</ul>
+						</div>
+					</t:if>
+					<fieldset>
+						<legend>${message:legend-label}</legend>
+						<ul class="role-list">
+							<t:loop source="roles"  value="roleLoop" t:empty="${message:empty-roles-label}">
+								<t:if test="displayedApplication">
+				            		<li>
+					                	<strong>${roleLoop?.application?.label}&nbsp;:&nbsp;</strong>${roleLoop?.label}
+				                	</li>
+				            	</t:if>
+	               			</t:loop>
+	                	</ul>
+	               		<ul class="links">
+	               			<li class="back"><t:pagelink page="company/detail" context="employeeProfile.companyDepartment.company.id">${message:back-detailcompany-label}</t:pagelink></li>
+							<li class="back"><a href="javascript:history.go(-1)">${message:back-label}</a></li>
+						</ul>
+					</fieldset>
+				</div>
+			</div>
+		</div>
+	</div>
+</html>

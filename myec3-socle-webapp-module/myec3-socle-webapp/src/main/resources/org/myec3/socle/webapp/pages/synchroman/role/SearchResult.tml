@@ -1,0 +1,62 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html t:type="layout" xmlns:t="http://tapestry.apache.org/schema/tapestry_5_1_0.xsd" xmlns:p="tapestry:parameter">
+    <div id="main-content">
+        <h2>${message:title}</h2>
+        
+        <div class="actions-bar"> 
+       		<p>${message:total-results-label} : <strong>${resultsNumber}</strong></p> 
+	     	<ul>  
+          		<li><a href="#" onclick="javascript:window.print()">
+								<img src="${context:static/images/printer.png}"
+									alt="${message:print-label}" title="${message:print-label}"/>
+									${message:print-label}
+					</a>
+				</li>
+			</ul> 
+		</div> 
+        
+        <div class="caption">
+        	<p>${message:results-label}</p>
+        </div>
+    	<table t:id="rolesGrid" t:empty="block:empty" pagerPosition="bottom" model="gridModel" 
+    	t:type="grid" t:row="roleRow" t:rowIndex="rowIndex" t:source="rolesResult" 
+    	t:rowsPerPage="${message:rowsPerPage}" t:inplace="true">
+			
+			<t:parameter name="nameCell">
+				<t:pagelink page="synchroman/role/detailRole" context="roleRow.id">
+					${roleRow.name}
+				</t:pagelink>
+			</t:parameter>
+
+	        <t:parameter name="labelCell">
+	        	${roleRow.label}
+			</t:parameter>
+			
+			<t:parameter name="applicationCell">
+				${roleRow?.application?.name}
+			</t:parameter>
+			
+        	<t:parameter name="actionsCell">
+		        <t:pagelink page="synchroman/role/detailRole" context="roleRow.id">
+		        	 <img src="${context:static/images/role_voir.png}" 
+		        	 alt="${message:view-label}" title="${message:view-label}" /></t:pagelink>
+	        
+		        <t:pagelink page="synchroman/role/modify" context="roleRow.id">
+		        	<img src="${context:static/images/role_modifier.png}" 
+		        	alt="${message:modify-label}" title="${message:modify-label}" /></t:pagelink>
+	        </t:parameter>
+  		</table>
+  		
+	    <t:block t:id="empty">
+	        ${message:empty-message}
+	    </t:block>
+	    
+	    <ul class="navigational"> 
+			<li><t:pagelink page="synchroman/role/search" class="back">
+				${message:back-to-search-label}</t:pagelink></li> 
+			<li><a href="#" class="top">${message:top-of-page-label}</a></li> 
+		</ul> 
+		
+	</div>
+</html>

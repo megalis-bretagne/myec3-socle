@@ -1,0 +1,55 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"> 
+<html t:type="layout" xmlns:t="http://tapestry.apache.org/schema/tapestry_5_1_0.xsd">
+    <t:if test="successMessage">
+		<p class="success">${successMessage}</p>
+	</t:if>
+    
+    <div id="main-content">
+  		<h2></h2>	
+		
+  		<div class="tabbed-data"> 
+			<div class="tabs-content">
+				<p class="mandatory">&nbsp;</p>	
+				
+				<div class="actions-bar">
+						<ul>
+							<li>								
+								<t:pagelink page="synchroman/role/Modify" context="role.id">
+								<img src="${context:static/images/modifier.png}"
+										alt="${message:modify-label}" title="${message:modify-role-label}" /> ${message:modify-role-label}
+								</t:pagelink>
+							</li>
+						</ul>
+				</div>
+				
+				<fieldset>
+
+					<legend>${message:role-info-label}</legend>
+					<p><label for="id"> ${message:role-id-label}</label> :
+						${role.id}
+					</p>
+					
+					<p><label for="name"> ${message:role-name-label}</label> :
+						${role.name}
+					</p>
+					<p><label for="label"> ${message:role-label-label}</label> :
+						${role.label}
+					</p>
+					<p><label for="application_name"> ${message:role-application_name-label}</label> :
+						${role.application?.name}
+					</p>	
+					
+					<p><label for="description"> ${message:role-description-label}</label> :
+						${role.description}
+					</p>
+							
+				</fieldset>
+
+				<ul class="links">
+					<li class="back"><t:pagelink page="synchroman/role/Searchresult">${message:back-searchresult-label}</t:pagelink></li>
+				</ul>
+
+			</div>
+		</div>
+	</div>
+</html>

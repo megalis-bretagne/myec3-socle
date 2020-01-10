@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+	<parent>
+		<groupId>org.myec3.socle</groupId>
+		<artifactId>myec3-socle-parent</artifactId>
+		<version>5.6.2-MEGALIS-SNAPSHOT</version>
+		<relativePath>./myec3-socle-parent/pom.xml</relativePath>
+	</parent>
+
+	<modelVersion>4.0.0</modelVersion>
+	<artifactId>myec3-socle</artifactId>
+	<packaging>pom</packaging>
+	<name>Myec3 - Socle</name>
+
+	<description>
+		MyEc3 is an Open Source project designed to allow you to
+		quickly implements
+		a platform on your territory which provides services
+		for citizens.
+	</description>
+
+	<modules>
+		<module>myec3-socle-parent</module>
+		<module>myec3-socle-contract</module>
+		<module>myec3-socle-core</module>
+		<module>myec3-socle-ws-client</module>
+		<module>myec3-socle-ws-server-module</module>
+		<module>myec3-socle-synchro-module</module>
+		<module>myec3-socle-webapp-module</module>
+		<module>myec3-socle-esb</module>
+	</modules>
+
+	<licenses>
+		<license>
+			<name>Lesser General Public License (LGPL v3)</name>
+			<url>http://www.gnu.org/licenses/lgpl.html</url>
+		</license>
+	</licenses>
+	<inceptionYear>2009</inceptionYear>
+
+	<scm>
+		<developerConnection></developerConnection>
+		<!-- <connection>scm:hg:https://url-to-define/hg/myec3-socle/</connection>  -->
+	  	<tag>5.4</tag>
+  	</scm>
+
+
+	<!-- distributionManagement> <repository> <id>myec3-repo</id> <url>http://url-to-define/nexus/content/repositories/releases</url>
+		</repository> <snapshotRepository> <id>myec3-repo-snapshot</id> <url>http://url-to-define/nexus/content/repositories/snapshots</url>
+		</snapshotRepository> </distributionManagement -->
+</project>

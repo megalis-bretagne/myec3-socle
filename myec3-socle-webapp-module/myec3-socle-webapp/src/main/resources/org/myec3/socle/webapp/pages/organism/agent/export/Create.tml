@@ -1,0 +1,120 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html t:type="layout"
+	xmlns:t="http://tapestry.apache.org/schema/tapestry_5_1_0.xsd"
+	xmlns:p="tapestry:parameter">
+
+<div id="main-content">
+	<h2>${message:page-title}</h2>
+
+	<div class="tabbed-data">
+		<!-- MENU -->
+		<ul class="tabs">
+			<li><t:pagelink page="organism/agent/export/report"
+					context="organism.id">${message:report-label}</t:pagelink>
+			</li>
+
+			<li class="active"><strong>${message:create-users-label}
+					( ${numberOfAgentsToCreate} )</strong>
+			</li>
+
+			<t:if test="displayModifyMenu">
+				<li><t:pagelink page="organism/agent/export/modifyList"
+						context="organism.id">${message:modify-users-label} ( ${numberOfAgentsToModify} )</t:pagelink>
+				</li>
+			</t:if>
+
+			<t:if test="displayDeleteMenu">
+				<li><t:pagelink page="organism/agent/export/deleteList"
+						context="organism.id">${message:delete-users-label}
+					( ${numberOfAgentsToDelete} )</t:pagelink>
+				</li>
+			</t:if>
+		</ul>
+		<t:form t:id="agent_create_form">
+
+			<!-- Error banner -->
+			<p t:banner="message:form-error" t:type="errors"
+				t:clientClass="errorDialogue"></p>
+
+			<fieldset>
+				<legend>${message:display-infos-label}</legend>
+				<p class="first">
+					<label for="civility">${message:civility-label} : </label>
+					${civilityOfAgent}
+				</p>
+				<p>
+					<label for="firstname">${message:firstname-label} : </label>
+					${agentToCreate?.user?.firstname}
+				</p>
+				<p>
+					<label for="lastname">${message:lastname-label} : </label>
+					${agentToCreate?.user?.lastname}
+				</p>
+				<p>
+					<label for="email">${message:email-label} : </label>
+					${agentToCreate?.email}
+				</p>
+				<p>
+					<label for="phone">${message:phone-label} : </label>
+					${agentToCreate?.phone}
+				</p>
+			</fieldset>
+
+
+			<fieldset>
+				<legend>${message:params-label}</legend>
+				<p>
+					<label class="service">${message:department-label} :</label>
+					<t:select t:id="organismDepartment" t:validate="required"
+						t:encoder="departmentEncoder" t:model="departments"
+						t:value="agentToCreate.organismDepartment" />
+				</p>
+				<t:loop source="availableApplications" encoder="applicationEncoder"
+					value="applicationLoop">
+					<p>
+						<!-- DISPLAY APPLICATION NAME -->
+						<label class="service">${applicationLoop.label} : </label>
+
+
+						<!-- Check if application authorized multiple roles -->
+						<t:if test="isApplicationAllowingMultipleRoles" negate="true">
+
+							<!-- DISPLAY AVAILABLE ROLES FOR THIS APPLICATION -->
+							<t:select t:id="role" t:encoder="roleEncoder"
+								t:model="rolesModel" t:value="roleSelected"
+								t:blankOption="never" />
+
+							<p:else>
+								<!-- IN CASE OF APPLICATION ALLOWS TO SELECT SEVERAL ROLES -->
+								<t:MultipleSelect value="multipleRoleSelected"
+									model="rolesModel" encoder="multipleRolesEncoder" />
+								<!-- 								<t:select t:id="multipleRoles" t:encoder="roleEncoder" -->
+								<!-- 									t:model="rolesModel" t:value="multipleRoleSelected" -->
+								<!-- 									t:blankOption="never" t:multiple="true" /> -->
+							</p:else>
+						</t:if>
+					</p>
+				</t:loop>
+				<br />
+				<p class="first">
+				<label class="service">${message:enable-email-label} :</label>
+					<t:checkbox t:id="sendMail" t:value="sendMailEnabled" />		
+				</p>
+			</fieldset>
+
+			<div class="form-actions">
+				<p>
+					<t:submit t:id="submit" class="button btnOk"
+						value="message:create-user-account-label" />
+				</p>
+			</div>
+
+			<ul class="links">
+				<li class="back"><a href="javascript:history.go(-1)">${message:back-label}</a>
+				</li>
+			</ul>
+
+		</t:form>
+	</div>
+</div>
+</html>

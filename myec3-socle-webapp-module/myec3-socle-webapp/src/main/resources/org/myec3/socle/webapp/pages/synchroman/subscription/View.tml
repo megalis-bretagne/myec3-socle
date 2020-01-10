@@ -1,0 +1,25 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"> 
+<html t:type="layout" xmlns:t="http://tapestry.apache.org/schema/tapestry_5_1_0.xsd">
+    <div id="main-content">
+    	<h2>${message:pageTitle-label}</h2>
+    	<t:if test="successMessage">
+            <p class="success">${successMessage}</p>
+        </t:if>
+        <div class="actions-bar">
+		<h5>L'abonnement a été créé avec succès</h5>
+		<br/>
+			<ul>
+				<li>
+            		<t:pagelink page="index">
+	        			${message:continue-label}
+	    			</t:pagelink>
+	    		</li>
+	    		<li>
+	    			<t:pagelink page="synchroman/subscription/Modify" context="synchronizationSubscription.id" class="button btnOk">
+	        			${message:modify-label}
+        			</t:pagelink>
+       	   	 	</li>		
+        	</ul>
+		</div>
+	</div>
+</html>

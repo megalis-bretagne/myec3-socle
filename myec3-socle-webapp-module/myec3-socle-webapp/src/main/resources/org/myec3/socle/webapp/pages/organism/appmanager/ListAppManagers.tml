@@ -1,0 +1,72 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html t:type="layout" xmlns:t="http://tapestry.apache.org/schema/tapestry_5_1_0.xsd">
+    <div id="main-content">
+        <h2>
+            ${message:pageTitle-label} ${organism?.article?.label}
+            ${organism.label}
+        </h2>
+        <div class="tabbed-data">
+            <ul class="tabs">
+                <li><t:pagelink page="organism/detailOrganism" context="organism.id">${message:info-label}</t:pagelink></li>
+                <t:if test="isAdmin">
+                    <li><t:pagelink page="structure/relation/listRelations" context="organism.id">${message:relation-label}</t:pagelink></li>
+                    <li><t:pagelink page="organism/detailOrganismApplications" context="organism.id">${message:service-label}</t:pagelink></li>
+                    <li><t:pagelink page="organism/apiManagement" context="organism.id">${message:api-label}</t:pagelink></li>
+                </t:if>
+                <li><t:pagelink page="organism/department/view" context="organism.id">${message:oragnization-level-label}</t:pagelink></li>
+                <li><t:pagelink page="organism/agent/listAgents" context="organism.id">${message:User-label}</t:pagelink></li>
+                <li class="active"><strong>${message:AppAdmin-label}</strong></li>
+            </ul>
+        </div>
+
+        <t:if test="successMessage">
+            <p class="success">${successMessage}</p>
+        </t:if>
+
+        <t:if test="errorMessage">
+            <p class="error">${errorMessage}</p>
+        </t:if>
+
+        <div class="tabs-content">
+            <div class="actions-bar">
+                <ul>
+                    <li>
+                        <t:pagelink page="organism/appmanager/modifyAppManagers"
+                            context="organism.id">
+                            <img src="${context:static/images/agent_ajouter.png}"
+                                alt="${message:addAgent-label}" title="${message:addAgent-label}" />
+                            ${message:addAgent-label}
+                        </t:pagelink>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <fieldset>
+            <legend>${message:details-label}</legend>
+                <ul class="role-list">
+                    <t:loop source="subscribedApplications" encoder="subscribedApplicationEncoder" value="applicationLoop">
+                        <li>
+                            <strong>${applicationLoop.label}</strong>
+
+                            <ul class="sub-role-list">
+                                <t:loop source="getAppManagers(applicationLoop)" encoder="appManagersEncoder" value="appManagerLoop">
+                                    <li>
+                                        <t:pagelink page="organism/agent/view" context="appManagerLoop.agentProfile.id">
+                                            ${appManagerLoop.agentProfile.user?.firstname}&nbsp; ${appManagerLoop.agentProfile.user?.lastname}</t:pagelink>&nbsp;
+
+                                        <t:actionlink t:id="delete"
+                                            context="appManagerLoop.id" t:mixins="confirm"
+                                            t:message="message:confirm-delete-label">
+                                            <img src="${context:static/images/agent_supprimer.png}"
+                                                alt="${message:removeAgent-label}" title="${message:removeAgent-label}" /></t:actionlink>&nbsp;
+                                    </li>
+                                </t:loop>
+                            </ul>
+                        </li>
+                    </t:loop>
+                </ul>
+        </fieldset>
+
+	</div>
+</html>

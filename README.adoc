@@ -1,0 +1,37 @@
+# Getting Started
+
+## Requirements
+Java 8, Maven, MySQL Server 5.6
+
+### MySQL
+Create user _root_ with password _root_
+
+## Build Project
+During developpement, use at the project root: 
+
+ mvn clean install -Denv=local
+
+## Run web-app project : 
+
+In MySQL create database/schema __ebou_socle__ and __ebou_synchro__.
+ 
+ CREATE DATABASE ebou_socle;
+ CREATE DATABASE ebou_synchro;
+
+Populate this two database with dumps.
+
+ cd {project_root}\eb-socle-webapp-module\eb-socle-webapp
+ mvn jetty:run -Denv=local
+
+TIP: You can configure Run Configurations inside Eclipse or Intellij
+
+To test the application you need to install on Google Chrome the _Modify Headers_ plugin.
+Add the following modifiers :
+
+|===
+|Order | Action | Name | Value | Description | State | Actions 
+| 1 | Add | uid | 67231 | uid | Super Admin | ENABLED 
+| 2 | Add | userType | ADMIN | userType | Admin | ENABLED 
+|===
+
+You can access the application on localhost:8080

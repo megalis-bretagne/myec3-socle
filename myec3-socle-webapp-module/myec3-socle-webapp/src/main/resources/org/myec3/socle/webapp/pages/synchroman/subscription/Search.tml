@@ -1,0 +1,38 @@
+<html t:type="layout" xmlns:t="http://tapestry.apache.org/schema/tapestry_5_1_0.xsd" xmlns:p="tapestry:parameter">
+	<div id="main-content">
+        <h2>${message:title}</h2>
+        
+        <t:if test="infoMessage">
+            <p class="infoDialogue">${infoMessage}</p>
+        </t:if>
+        
+        <t:form t:id="synchronization_subscription_search_form">
+            <fieldset>
+            	<legend>${message:legend-label}</legend>
+	        	
+	        	<p>
+	            	<t:label for="application">${message:application-label} :</t:label>
+	            	<t:select t:id="application" t:encoder="applicationEncoder" t:model="applicationsList" t:value="applicationSelected" t:blankLabel="TOUTES"/>	
+	            	<a href="#" title="${message:application-help}">
+	        			<img src="${context:static/images/pic_help.png}" class="picHelp" alt="${message:help-label}"/>
+	        		</a>	
+	            </p> 
+				
+				<p>
+	                <t:label for="resourceType">${message:resourceType-label} :</t:label>
+	                <t:select  t:id="resourceType" t:model="resourceTypeModel" t:encoder="resourceTypeEncoder" t:value="resourceTypeSelected" t:blankLabel="TOUS"/>	
+	        		<a href="#" title="${message:resourceType-help}">
+	        			<img src="${context:static/images/pic_help.png}" class="picHelp" alt="${message:help-label}"/>
+	        		</a>
+				</p>
+				
+				<div class="form-actions">
+					<p>
+						<t:submit t:id="submit" value="message:search-label" />
+					</p>
+				</div>
+				
+            </fieldset>
+        </t:form>
+	</div>
+</html>

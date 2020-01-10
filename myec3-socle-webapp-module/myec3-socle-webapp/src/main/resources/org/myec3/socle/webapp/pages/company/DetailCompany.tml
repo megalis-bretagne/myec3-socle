@@ -1,0 +1,136 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"> 
+<html t:type="layout" xmlns:t="http://tapestry.apache.org/schema/tapestry_5_1_0.xsd">
+    <div id="main-content">
+    	<h2>${company?.label}</h2>
+		<t:if test="successMessage">
+			<p class="success">${successMessage}</p>
+		</t:if>
+  		<div class="tabbed-data"> 
+			<ul class="tabs"> 
+				<li class="active"><strong>${message:info-label}</strong></li>
+				<li><t:pagelink page="company/establishment/listestablishments" context="company.id">${message:establishment-label}</t:pagelink></li> 
+				<li><t:pagelink page="company/employee/listemployees" context="company.id">${message:User-label}</t:pagelink></li> 
+			</ul> 
+			<div class="tabs-content">
+				<p class="mandatory">&nbsp;</p>
+				<div class="actions-bar">
+					<ul>
+						<t:if test="updateButton">
+							<li><t:actionlink t:id="update"
+										context="company.id"> 									
+											${message:companyUpdate-label}</t:actionlink>
+							</li>
+						</t:if>
+						<li><t:pagelink page="company/modify" context="company.id">
+						<img src="${context:static/images/organisme_modifier.png}"
+									alt="${message:modify-label}" title="${message:modify-info-label}" /> ${message:modify-info-label}
+									</t:pagelink>
+						</li>
+					</ul>
+				</div>
+				<fieldset>
+					<legend>${message:company-infos-label}</legend>
+					<p><label for="label">${message:company-label}</label> :
+						${company.label}
+					</p>
+					<p><label for="label">${message:acronym-label}</label> :
+						${company.companyAcronym}
+					</p>
+					<p><label for="siren">${message:siren-label}</label> :
+						${company.siren}
+					</p>
+					<p><label for="nic">${message:headOfficeNic-label}</label> :
+						${company.nic}
+					</p>
+					<p><label for="companyCategory">${message:company-category-label}</label> :
+						${companyCategoryLabel}
+					</p>
+					<p>
+						<label for="">${message:legal-category-label}</label> :
+						${company?.legalCategory?.label}
+					</p>
+					<p>
+						<label for="">${message:apeNafLabel-label}</label> :
+						${company.apeNafLabel}
+					</p>
+					<p><label for="description">${message:description-label}</label> :
+						${company.description}
+					</p>
+					<t:if test="company.insee">
+						<p><label for="inseeCode-label">${message:inseeCode-label}</label> :
+				    		${inseeCode}
+				        </p>
+			        </t:if>		        
+					<p><label for="postalAddress">${message:postalAddress-label}</label> :
+			    		${company?.address?.postalAddress}
+			        </p>        
+					<p><label for="postalCode">${message:postalCode-label}</label> :
+			    		${company?.address?.postalCode}
+			        </p>
+			        <p><label for="city">${message:city-label}</label> :
+			    		${company?.address?.city}
+			        </p>
+			        <t:if test="company.insee">
+				        <p><label for="canton">${message:canton-label}</label> :
+				    		${inseeCantonLabel}
+				        </p> 
+				        <p><label for="borough">${message:borough-label}</label> :
+				    		${inseeBoroughLabel}
+				        </p> 
+				        <p><label for="county">${message:county-label}</label> :
+				    		${inseeCountyLabel}
+				        </p> 		   
+				        <p><label for="region">${message:region-label}</label> :
+				    		${inseeRegionLabel}
+				        </p>  
+			        </t:if>
+			        <p><label for="country">${message:country-label}</label> :
+			    		${company?.address?.country?.label}
+			        </p>
+			              
+					<p><label for="email">${message:email-label}</label> :
+						${company.email}
+					</p>
+					<p><label for="website">${message:website-label}</label> :
+						<a href="${company.website}" target="_blank">${company.website}</a>
+					</p>		
+					<p>
+						<br/>
+					</p>
+
+					<p><label for="companyCreationDate">${message:creationDate-label}</label> :
+						${companyCreationDate}
+					</p>
+					<t:if test="company.radiationDate">
+						<p><label for="companyRadiationDate">${message:radiationDate-label}</label> :
+							${companyRadiationDate}
+						</p>
+					</t:if>
+					<p>
+						<br/>
+					</p>
+					
+					<t:loop source="responsibles"  value="responsibleLoop" t:empty="message:company-responsible-empty-label">
+						<p>
+							<label for="responsible">${message:responsible-label}</label> :
+						     <t:if test="physicalPersonDisplay(responsibleLoop.type)">
+						        ${message:physical-person-label} - ${responsibleLoop?.civility} ${responsibleLoop?.firstname} ${responsibleLoop?.lastname} ${responsibleLoop?.email} ${responsibleLoop?.phone}
+						     </t:if>
+
+                             <t:if test="moralPersonDisplay(responsibleLoop.type)">
+                                ${message:moral-person-label} - ${responsibleLoop?.civility} ${responsibleLoop?.firstname} ${responsibleLoop?.lastname} ${responsibleLoop?.email} ${responsibleLoop?.phone}
+                             </t:if>
+						</p>
+					</t:loop>
+					
+					&nbsp;
+					<ul class="links">
+						<t:if test="isAdmin">
+							<li class="back"><t:pagelink page="company/searchresult">${message:back-searchresult-label}</t:pagelink></li>
+						</t:if>
+					</ul>
+				</fieldset>
+			</div>
+		</div>
+	</div>
+</html>

@@ -1,0 +1,66 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html t:type="layout" xmlns:t="http://tapestry.apache.org/schema/tapestry_5_1_0.xsd" xmlns:p="tapestry:parameter">
+    <div id="main-content">
+        <h2>${message:title}</h2>
+
+        <div class="actions-bar">
+       		<p>${message:total-results-label} : <strong>${resultsNumber}</strong></p>
+	     	<ul>
+          		<li><a href="#" onclick="javascript:window.print()">
+								<img src="${context:static/images/printer.png}"
+									alt="${message:print-label}" title="${message:print-label}"/> ${message:print-label}
+					</a>
+				</li>
+			</ul>
+		</div>
+
+        <div class="caption">
+        	<p>${message:results-label}</p>
+        </div>
+    	<table t:id="organismsGrid" t:empty="block:empty" pagerPosition="bottom" model="gridModel" t:type="grid" t:row="organismRow" t:rowIndex="rowIndex" t:source="organismsResult" t:rowsPerPage="${message:rowsPerPage}" t:inplace="true">
+
+			<t:if test="isTechnicalAdmin">
+				<t:parameter name="customerCell">
+						${organismRow?.customer?.label}
+				</t:parameter>
+			</t:if>
+			<t:parameter name="labelCell">
+				<t:pagelink page="organism/detailOrganism" context="organismRow.id">
+					${organismRow.label}
+				</t:pagelink>
+			</t:parameter>
+			<t:parameter name="postalCodeCell">
+		        	${organismRow?.address?.postalCode}
+	        </t:parameter>
+			<t:parameter name="cityCell">
+		        	${organismRow?.address?.city}
+	        </t:parameter>
+			<t:parameter name="memberCell">
+				<t:if test="isAdherent">
+	        		<img src="${context:static/images/ok.png}" alt="${message:member-label}" title="${message:adherent-label}" />
+					<p:else>
+						<img src="${context:static/images/ko.png}" alt="${message:non-member-label}" title="${message:non-member-label}" />
+					</p:else>
+				</t:if>
+			</t:parameter>
+        	<t:parameter name="actionsCell">
+		        <t:pagelink page="organism/detailOrganism" context="organismRow.id">
+		        	 <img src="${context:static/images/organisme_voir.png}" alt="${message:view-label}" title="${message:view-label}" /></t:pagelink>
+
+		        <t:pagelink page="organism/modify" context="organismRow.id">
+		        	<img src="${context:static/images/organisme_modifier.png}" alt="${message:modify-label}" title="${message:modify-label}" /></t:pagelink>
+
+		        <t:pagelink page="organism/managesubscriptions" context="[organismRow.id,organismRow.id]">
+		        	<img src="${context:static/images/organisme_abonnements.png}" alt="${message:subscriptions-label}" title="${message:subscriptions-label}" /></t:pagelink>
+	        </t:parameter>
+  		</table>
+	    <t:block t:id="empty">
+	        ${message:empty-message}
+	    </t:block>
+
+	    <ul class="navigational">
+			<li><t:pagelink page="organism/search" class="back">${message:back-to-search-label}</t:pagelink></li>
+			<li><a href="#" class="top">${message:top-of-page-label}</a></li>
+		</ul>
+	</div>
+</html>

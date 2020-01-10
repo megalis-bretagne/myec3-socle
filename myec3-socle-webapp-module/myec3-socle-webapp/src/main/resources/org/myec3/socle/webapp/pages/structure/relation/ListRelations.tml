@@ -1,0 +1,103 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html t:type="layout" xmlns:t="http://tapestry.apache.org/schema/tapestry_5_1_0.xsd">
+    <div id="main-content">
+       
+	    <t:if test="isOrganism">
+	    	<h2>${message:page-title-organism}</h2>
+			<t:parameter name="else">
+				<h2>${message:page-title-company}</h2>
+			</t:parameter>
+        </t:if>
+		
+        <t:if test="successMessage">
+            <p class="success">
+                ${successMessage}
+            </p>
+        </t:if>
+		
+        <div class="tabbed-data">
+            <ul class="tabs">
+                <t:if test="isOrganism">
+                    <li>
+                        <t:pagelink page="organism/detailOrganism" context="structure.id">
+                            ${message:info-label}
+                        </t:pagelink>
+                    </li>
+                    <t:if test="isAdmin">
+                        <li class="active">
+                            <strong>${message:relations-label}</strong>
+                        </li>
+                        <li>
+                            <t:pagelink page="organism/detailOrganismApplications" context="structure.id">
+                                ${message:service-label}
+                            </t:pagelink>
+                        </li>
+                        <li>
+                        	<t:pagelink page="organism/apiManagement" context="structure.id">
+                        		${message:api-label}
+                       		</t:pagelink>
+                    	</li>
+                    </t:if>
+                    <li>
+                        <t:pagelink page="organism/department/view" context="structure.id">
+                            ${message:oragnization-level-label}
+                        </t:pagelink>
+                    </li>
+                    <li>
+                        <t:pagelink page="organism/agent/listAgents" context="structure.id">
+                            ${message:User-label}
+                        </t:pagelink>
+                    </li>
+                    <t:if test="isAppManagerActive">
+                        <li>
+                            <t:pagelink page="organism/appmanager/listAppManagers" context="structure.id">
+                                ${message:AppAdmin-label}
+                            </t:pagelink>
+                        </li>
+                    </t:if>
+                </t:if>
+            </ul>
+            <div class="tabs-content">
+                <div class="actions-bar">
+                	<p>${message:total-results-label} : <strong>${resultsNumber}</strong></p> 
+                    <ul>
+                        <li>
+                            <t:pagelink page="structure/relation/create" context="structure.id">
+                                <img src="${context:static/images/link_add.png}" alt="${message:create-label}" title="${message:create-label}" /> ${message:create-label}
+                            </t:pagelink>
+                        </li>
+                    </ul>
+                </div>
+                <div class="caption">
+                    <p>${structure?.label}</p>
+                </div>
+				
+                <!-- GRID OF RELATIONS -->
+                <table t:id="structureRelationsGrid" t:empty="block:empty" pagerPosition="bottom" model="gridModel" t:type="grid" t:row="structureRelationRow" t:rowIndex="rowIndex" t:source="structureRelationsResult" t:rowsPerPage="${message:rowsPerPage}" t:inplace="true">
+                    <t:parameter name="actionsCell">
+                        <t:actionlink t:id="delete" context="structureRelationRow.id" t:mixins="confirm" t:message="message:confirm-label">
+                            <img src="${context:static/images/link_delete.png}" alt="${message:delete-label}" title="${message:delete-label}" />
+                        </t:actionlink>
+                    </t:parameter>
+                </table>
+                <t:block t:id="empty">
+                    ${message:empty-message}
+                </t:block>
+                <ul class="links">
+                    <t:if test="isAdmin">
+                        <li class="back">
+                            <t:if test="isOrganism">
+                                <t:pagelink page="organism/searchresult">
+                                    ${message:back-searchresult-label}
+                                </t:pagelink>
+                            </t:if>
+                        </li>
+                    </t:if>
+                    <li class="back">
+                        <a href="javascript:history.go(-1)">${message:back-label}</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</html>

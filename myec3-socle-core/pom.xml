@@ -1,0 +1,275 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<artifactId>myec3-socle-core</artifactId>
+	<packaging>jar</packaging>
+	<name>MyEc3 - Socle core</name>
+
+	<description>
+		Core module for MyEc3 Socle. Define model, services and dao in order to provide these functionalities
+		to others applications and services.
+    </description>
+
+	<!-- DO NOT DECLARES DEPENDENCIES HERE THAT ARE NOT DECLARED AS MANAGED
+		IN PARENT POM ! -->
+
+	<parent>
+		<groupId>org.myec3.socle</groupId>
+		<artifactId>myec3-socle</artifactId>
+		<version>5.6.2-MEGALIS-SNAPSHOT</version>
+		<relativePath>../pom.xml</relativePath>
+	</parent>
+
+	<dependencies>
+	
+		<!-- Spring -->
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-context</artifactId>
+		</dependency>
+		
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-orm</artifactId>
+		</dependency>
+
+		
+		<!-- Javax -->
+		<dependency>
+		    <groupId>javax.validation</groupId>
+		    <artifactId>validation-api</artifactId>
+		</dependency>
+		
+		<dependency>
+		    <groupId>javax.ws.rs</groupId>
+		    <artifactId>javax.ws.rs-api</artifactId>
+		</dependency>
+		
+
+		<!-- eb socle Contract -->
+		<dependency>
+			<artifactId>myec3-socle-contract</artifactId>
+			<groupId>org.myec3.socle</groupId>
+			<version>5.6.2-MEGALIS-SNAPSHOT</version>
+		</dependency>
+		
+        <dependency>
+            <groupId>javax.servlet</groupId>
+    		<artifactId>javax.servlet-api</artifactId>
+        </dependency>
+
+		<!-- Hibernate Cache -->
+		<dependency>
+		   <groupId>org.hibernate</groupId>
+		   <artifactId>hibernate-jcache</artifactId>
+		</dependency>
+		<dependency>
+	      	<groupId>org.ehcache</groupId>
+	      	<artifactId>ehcache</artifactId>
+	    </dependency>
+		
+		<!-- AUDIT -->
+		<dependency>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-envers</artifactId>
+		</dependency>
+
+		<!-- Logging -->
+		<dependency>
+		    <groupId>org.apache.logging.log4j</groupId>
+		    <artifactId>log4j-core</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+		</dependency>
+		<dependency>
+			 <groupId>org.apache.logging.log4j</groupId>
+			 <artifactId>log4j-slf4j-impl</artifactId>
+		</dependency>
+
+		<!-- MySql connector -->
+		<dependency>
+			<groupId>mysql</groupId>
+			<artifactId>mysql-connector-java</artifactId>
+		</dependency>
+
+		<!-- ActiveMQ for JMS -->
+		<dependency>
+		    <groupId>org.apache.activemq</groupId>
+		    <artifactId>activemq-client</artifactId>
+		</dependency>
+		
+		<dependency>
+			<groupId>org.javassist</groupId>
+			<artifactId>javassist</artifactId>
+		</dependency>
+
+		<!-- Javax mail -->
+		<dependency>
+			<groupId>com.sun.mail</groupId>
+			<artifactId>javax.mail</artifactId>
+		</dependency>
+
+		<!-- SpoolMess -->
+<!-- 		<dependency> -->
+<!-- 			<groupId>net.atos.mm.fwk</groupId> -->
+<!-- 			<artifactId>sysmm</artifactId> -->
+<!-- 		</dependency> -->
+
+		<!-- Quartz dependencies -->
+		<dependency>
+			<groupId>org.quartz-scheduler</groupId>
+			<artifactId>quartz</artifactId>
+		</dependency>
+
+		<!-- Used by quartz JDBC Store TX -->
+		<dependency>
+			<groupId>commons-dbcp</groupId>
+			<artifactId>commons-dbcp</artifactId>
+		</dependency>
+
+		<!-- Spring Security dependencies -->
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-core</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-config</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-acl</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-web</artifactId>
+		</dependency>
+		<!-- Javadoc doclet -->
+		<dependency>
+			<groupId>org.umlgraph</groupId>
+			<artifactId>doclet</artifactId>
+			<version>5.1</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-lang3</artifactId>
+		</dependency>
+
+		<!-- Tests -->
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-test</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-jdbc</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.dbunit</groupId>
+			<artifactId>dbunit</artifactId>
+		</dependency>
+
+		<!-- OpenCSV -->
+		<dependency>
+			<groupId>net.sf.opencsv</groupId>
+			<artifactId>opencsv</artifactId>
+		</dependency>
+
+		<!--  Apache commons io -->
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-io</artifactId>
+        </dependency>
+
+        <!--  Scrypt -->
+        <dependency>
+		    <groupId>com.lambdaworks</groupId>
+		    <artifactId>scrypt</artifactId>
+		    <version>1.4.0</version>
+		</dependency>
+		
+		<dependency>
+		    <groupId>com.h2database</groupId>
+		    <artifactId>h2</artifactId>
+		    <scope>test</scope>
+		</dependency>
+		
+		<dependency>
+		    <groupId>org.hibernate.validator</groupId>
+		    <artifactId>hibernate-validator</artifactId>
+		</dependency>
+		<dependency>
+		    <groupId>org.hibernate.validator</groupId>
+		    <artifactId>hibernate-validator-annotation-processor</artifactId>
+		</dependency>
+		
+		<dependency>
+		    <groupId>javax.el</groupId>
+		    <artifactId>javax.el-api</artifactId>
+		    <scope>test</scope>
+		</dependency>
+		<dependency>
+		    <groupId>org.glassfish.web</groupId>
+		    <artifactId>javax.el</artifactId>
+		    <scope>test</scope>
+		</dependency>
+		
+		<dependency>
+			<groupId>org.assertj</groupId>
+			<artifactId>assertj-core</artifactId>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
+
+	<build>
+		<plugins>
+			<!-- this create jar file of code from src/test/java so modules with tests
+				can share code ! -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
+			</plugin>
+		</plugins>
+	</build>
+
+	<reporting>
+		<plugins>
+			<!-- Plugin helping you determine how well the unit testing efforts have
+				been, and can then be used to identify which parts of your Java program are
+				lacking test coverage -->
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>cobertura-maven-plugin</artifactId>
+				<version>2.5.1</version>
+				<configuration>
+					<instrumentation>
+						<excludes>
+							<exclude>org/myec3/socle/core/domain/model/CompanyNafCode.class
+							</exclude>
+							<exclude>org/myec3/socle/core/domain/model/RoleProfile.class
+							</exclude>
+							<exclude>org/myec3/socle/core/domain/model/ResourceType.class
+							</exclude>
+							<exclude>org/myec3/socle/core/domain/model/meta/AuthorizedMimeType.class
+							</exclude>
+							<exclude>org/myec3/socle/sync/api/HttpStatus.class</exclude>
+							<exclude>org/myec3/socle/sync/api/ClassType.class</exclude>
+							<exclude>org/myec3/socle/sync/api/ErrorCodeType.class</exclude>
+							<exclude>org/myec3/socle/sync/api/MethodType.class</exclude>
+						</excludes>
+					</instrumentation>
+				</configuration>
+			</plugin>
+		</plugins>
+	</reporting>
+</project>
+

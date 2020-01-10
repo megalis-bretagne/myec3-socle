@@ -1,0 +1,256 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html t:type="layout" xmlns:t="http://tapestry.apache.org/schema/tapestry_5_1_0.xsd" xmlns:p="tapestry:parameter">
+
+	<t:if test="fromCompanyCreation">
+	<t:if test="isLocHallesTheme">
+		<link href="${context:static/css/loc-halles.css}" rel="stylesheet" type="text/css" />
+	</t:if>
+	</t:if>
+
+  		<t:form t:id="modification_form">
+			<div id="main-content">
+				<h2>${message:create-info-label}</h2>
+
+				<t:if test="fromCompanyCreation">
+				<div class="steps">
+					<ol>
+						<li id="step1">${message:step-siren-label}</li>
+						<li id="step2">${message:step-info-company-label}</li>
+						<li id="step3" class="active">${message:step-info-establishment-label}</li>
+						<li id="step4">${message:step-info-account-label}</li>
+					</ol>
+                </div>
+                </t:if>
+
+			<t:if test="errorMessage">
+				<p class="error">${errorMessage}</p>
+			</t:if>
+			
+			<p t:banner="message:form-error"  t:type="errors" t:clientClass="errorDialogue"></p>
+			<p class="mandatory">${message:mandatory-label}</p>
+				<fieldset>
+					<legend>${message:info-establishment-label}</legend>
+						<t:radiogroup t:type='radioGroup' t:value='radioSelectedValue'>
+						<p>
+						<table t:type="grid" t:empty="message:empty-establishment" t:source="myEstablishmentsList" t:row="myEstablishment" t:model="myEstablishmentModel" t:rowsPerPage="5" t:pagerPosition="top">
+								<t:parameter name="postalAddressCell">
+						        	<t:if test="myEstablishment.address">
+							        	${myEstablishment.address.postalAddress}
+							        </t:if>
+						        </t:parameter>
+					        	<t:parameter name="postalCodeCell">
+						        	<t:if test="myEstablishment.address">
+							        	${myEstablishment.address.postalCode}
+							        </t:if>
+						        </t:parameter>
+								<t:parameter name="cityCell" >
+						        	<t:if test="myEstablishment.address">
+							        	${myEstablishment.address.city}
+							        </t:if>
+						        </t:parameter>
+					        	
+					        	<t:parameter name="selectCell">
+	                 			 	<t:radio t:value='myEstablishment.id' /> 
+	               				</t:parameter>
+	               		</table>
+			        	</p>
+			        	</t:radiogroup>
+			        <t:if test="fromCompanyCreation">
+			        	<t:if test="arrayInitializeDisplay">
+						<div class="form-actions">
+							<p>
+								<input type="reset" value="${message:reset-label}" id="cancelButtonForm" />	 
+							</p>
+						</div>    
+						</t:if>
+			        </t:if>
+			    </fieldset>
+	            
+	            <t:if test="company.foreignIdentifier" negate="true">
+	            	<t:if test="fromCompanyCreation">
+		            	<t:if test="showHeadOffice">
+			            	<fieldset>
+								<legend>${message:labelHeadOffice-establishment}</legend>
+							
+								<p>
+									${message:notHeadOffice-establishement}
+									<t:submit t:id="createHeadOffice" class="button btnOk" value="message:addHeadOffice-establishment" />
+								</p>
+						
+							</fieldset>
+			            </t:if>	
+		       		</t:if>
+
+		            <fieldset>
+						<legend>${message:new-establishement}</legend>								
+							
+						<p>
+		                	<t:label for="nic">${message:nic-label} *:</t:label>
+		               		<t:textfield t:id="nic" t:value="establishmentNic" t:maxlength="5" t:validate="regexp"/>
+		               		<t:submit t:id="searchEstablishment" class="button btnOk" value="message:search-establishment" />
+		            	</p>
+		            	<t:if test="establishment.siret" negate="false">
+		            	
+		            		<p>
+				                <t:label for="label">${message:name-establishment-label} *:</t:label>
+				               	<t:textfield t:id="label" t:value="establishment.label"/>
+			            	</p>
+			            	
+			            	<p>
+				                <t:label for="establishmentSiret">${message:siret-label} *:</t:label>
+				                <t:textfield t:id="establishmentSiret" t:value="establishment.siret" t:disabled="siretDisplay"/>
+				            </p>
+			            	
+			            	<p>
+				            	<t:label for="apeCode">${message:apeNafLabel-label} *:</t:label>
+				        		<t:select t:id="apeCode" t:encoder="apeCodeEncoder" t:disabled="apeCodeDisplay"  t:model="listOfCompanyApeCode" t:value="establishment.apeCode" />
+							</p>
+							
+							<t:if test="inseeCodeDisplay" negate="false">
+								<p>
+									<t:label for="inseeCode">${message:inseeCode-label} :</t:label>
+									<t:textfield t:id="inseeCode" t:value="inseeCode" t:disabled="inseeCodeDisplay"/>
+								</p>
+							</t:if>
+							
+							<p>
+								<t:label for="postalAddress">${message:postalAddress-label} *:</t:label>
+								<t:textfield t:id="postalAddress"
+									t:value="establishment.address.postalAddress" t:disabled="postalAddressDisplay"/>
+							</p>	
+		            			            		
+		            		<p>
+			                	<t:label for="postalCode">${message:postalCode-label} *:</t:label>
+			               		<t:textfield t:id="postalCode" t:value="establishment.address.postalCode" t:disabled="postalCodeDisplay"/>          
+		            		</p>
+		            		            		           		
+		            		<p>
+			                	<t:label for="city">${message:city-label} *:</t:label>
+			               		<t:textfield t:id="city" t:value="establishment.address.city" t:disabled="cityDisplay"/>          
+		            		</p>
+		            		
+		            		<t:if test="inseeCodeDisplay" negate="false">
+			            		<p>
+				                	<t:label for="canton">${message:canton-label} :</t:label>
+				               		<t:textfield t:id="canton" t:value="inseeCantonLabel" t:disabled="inseeCodeDisplay"/>          
+			            		</p>	       
+
+								<p>
+									<t:label for="borough">${message:borough-label} :</t:label>
+									<t:textfield t:id="borough" t:value="inseeBoroughLabel" t:disabled="inseeCodeDisplay"/>
+								</p>
+								
+								<p>
+									<t:label for="county">${message:county-label} :</t:label>
+									<t:textfield t:id="county" t:value="inseeCountyLabel" t:disabled="inseeCodeDisplay"/>
+								</p>
+								
+								<p>
+									<t:label for="region">${message:region-label} :</t:label>
+									<t:textfield t:id="region" t:value="inseeRegionLabel" t:disabled="inseeCodeDisplay"/>
+								</p>
+							</t:if>
+							
+							<p>
+								<t:label for="country">${message:country-label} *:</t:label> 
+								<t:select
+									t:id="country" 
+									t:value="establishment.address.country" 
+									t:validate="required" />
+							</p>
+			            	
+			            	<p>
+				                <t:label for="email">${message:email-label} *:</t:label>
+				               	<t:textfield t:id="email" t:value="establishment.email" t:validate="regexp"/>
+			            	</p>
+			            	
+			            	<p>
+				                <t:label for="phone">${message:phone-label} *:</t:label>
+				               	<t:textfield t:id="phone" t:value="establishment.phone" t:validate="regexp"/>          
+			            	</p>
+			            	
+			            	<p>
+				                <t:label for="fax">${message:fax-label} :</t:label>
+				               	<t:textfield t:id="fax" t:value="establishment.fax" t:validate="regexp"/>          
+			            	</p>
+			            				
+			  			</t:if>				        		      
+						            
+		            </fieldset>
+	            </t:if>
+	            
+	            <t:if test="company.foreignIdentifier" negate="false">
+            	
+            		<fieldset>
+						<legend>${message:new-establishement}</legend>	
+	            		<p>
+			                <t:label for="foreignLabel">${message:establishmentName-label} *:</t:label>
+			               	<t:textfield t:id="foreignLabel" t:value="establishment.label"/>          
+		            	</p>
+		            	
+		            	<p>
+			            	<t:label for="foreignApeCode">${message:apeNafLabel-label} *:</t:label>
+			        		<t:select t:id="foreignApeCode" t:encoder="apeCodeEncoder"  t:model="listOfCompanyApeCode" t:value="establishment.apeCode" />
+						</p>
+		            	
+		            	<p>
+							<t:label for="foreignPostalAddress">${message:postalAddress-label} *:</t:label>
+							<t:textfield t:id="foreignPostalAddress"
+								t:value="establishment.address.postalAddress"/>
+						</p>	
+	            			            		
+	            		<p>
+		                	<t:label for="foreignPostalCode">${message:postalCode-label} *:</t:label>
+		               		<t:textfield t:id="foreignPostalCode" t:value="establishment.address.postalCode"/>          
+	            		</p>
+	            		            		           		
+	            		<p>
+		                	<t:label for="foreignCity">${message:city-label} *:</t:label>
+		               		<t:textfield t:id="foreignCity" t:value="establishment.address.city"/>          
+	            		</p>
+	            		
+	            		<p>
+		                	<t:label for="foreignCanton">${message:canton-label} :</t:label>
+		               		<t:textfield t:id="foreignCanton" t:value="establishment.address.canton"/>          
+	            		</p>
+	            		
+	            		<p>
+							<t:label for="foreignCountry">${message:country-label} *:</t:label> 
+							<t:select
+								t:id="foreignCountry" 
+								t:value="establishment.address.country" 
+								t:validate="required" />
+						</p>
+		            	
+		            	<p>
+			                <t:label for="foreignEmail">${message:email-label} *:</t:label>
+			               	<t:textfield t:id="foreignEmail" t:value="establishment.email" t:validate="email"/>
+		            	</p>
+		            	
+		            	<p>
+			                <t:label for="foreignPhone">${message:phone-label} *:</t:label>
+			               	<t:textfield t:id="foreignPhone" t:value="establishment.phone" t:validate="regexp" placeholder="Exemple : +33123456789"/>
+		            	</p>
+		            	
+		            	<p>
+			                <t:label for="foreignFax">${message:fax-label} :</t:label>
+			               	<t:textfield t:id="foreignFax" t:value="establishment.fax" t:validate="regexp" placeholder="Exemple : +33123456789"/>
+		            	</p>
+		            	
+	            		
+	            	</fieldset>           				            			
+	  			</t:if>	
+	  					
+	            <div class="form-actions">
+						<p>
+							<t:submit t:id="submit" class="button btnOk" value="message:save-label" />
+							<t:submit value="${message:reset-label}" t:id="cancelButton" />
+						</p>
+				</div>
+	            
+	            <ul class="links">
+					<li class="back"><a href="javascript:history.go(-1)">${message:back-label}</a></li>
+				</ul>
+            </div>
+        </t:form>
+</html>

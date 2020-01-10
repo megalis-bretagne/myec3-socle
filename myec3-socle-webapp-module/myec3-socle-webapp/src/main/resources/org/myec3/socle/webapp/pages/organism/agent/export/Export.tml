@@ -1,0 +1,253 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html t:type="layout"
+	xmlns:t="http://tapestry.apache.org/schema/tapestry_5_1_0.xsd"
+	xmlns:p="tapestry:parameter">
+
+<script type="text/javascript">
+	jQuery.noConflict();
+	jQuery(document).ready(function() {
+
+		<!-- Ajoute un effet sur le tableau d'information -->
+		jQuery("#clickMe").click(function() {
+			if(jQuery("#export_fields").is(":visible")){
+				jQuery("#export_fields").slideUp('slow');
+			}else{
+				jQuery("#export_fields").slideDown('slow');
+			}
+		});
+		
+		
+		<!-- Fait disparaitre le bouton de submit et affiche un message -->
+		jQuery("#divSubmit").click(function() {
+				jQuery("#divSubmit").hide();
+				jQuery("#wait").show();
+
+		});
+	});
+</script>
+
+<div id="main-content">
+	<h2>${message:page-title}</h2>
+
+	<t:form t:id="agent_export_form">
+
+		<!-- Error banner -->
+		<p t:banner="message:form-error" t:type="errors"
+			t:clientClass="errorDialogue"></p>
+
+		<!-- IMPORT NEW FILE -->
+		<fieldset class="import">
+			<legend>${message:export-new-file-label}</legend>
+			<div id="info">
+				<p class="first">
+					${message:info-1-message} <span id="clickMe">les champs
+						suivants</span> :
+				</p>
+
+				<div id="export_fields">
+					<table>
+						<tbody>
+							<tr>
+								<th>Nom du champ</th>
+								<th>Explications</th>
+							</tr>				
+							<tr>
+								<td>user_last_connection_date</td>
+								<td>Date de dernière connexion de l’agent</td>
+							</tr>
+							<tr>
+								<td>user_mean_time_betweenTwoConnections</td>
+								<td>Délai moyen entre deux connexions de l’agent</td>
+							</tr>
+							<tr>
+								<td>user_nbConnections</td>
+								<td>Nombre total de connexions de l’agent</td>
+							</tr>
+							<tr>
+								<td>user_civility</td>
+								<td>
+									<ul>
+										<li>M.</li>
+										<li>Mme</li>
+									</ul>
+								</td>
+							</tr>
+							<tr>
+								<td>user_firstname</td>
+								<td>Prénom de l’agent</td>
+							</tr>
+							<tr>
+								<td>user_lastname</td>
+								<td>Nom de famille de l’agent</td>
+							</tr>
+
+							<tr>
+								<td>user_username</td>
+								<td>Identifiant de connexion de l’agent</td>
+							</tr>
+							<tr>
+								<td>user_connectionAttempts</td>
+								<td>Nombre de tentatives de connexion erronées avec le
+									compte de l’agent</td>
+							</tr>
+							<tr>
+								<td>user_expirationDatePassword</td>
+								<td>Date d’expiration du mot de passe actuel de l’agent</td>
+							</tr>
+							<tr>
+								<td>user_modifDatePassword</td>
+								<td>Date de dernière modification connue du mot de passe de
+									l’agent</td>
+							</tr>
+							<tr>
+								<td>profil_id</td>
+								<td>Identifiant technique du profil de l’agent sur la
+									plate-forme</td>
+							</tr>
+							<tr>
+								<td>profil_technicalIdentifier</td>
+								<td>Identifiant unique sur le système d’information d’un SI</td>
+							</tr>
+							<tr>
+								<td>profil_canton</td>
+								<td>Canton</td>
+							</tr>
+							<tr>
+								<td>profil_city</td>
+								<td>Ville</td>
+							</tr>
+							<tr>
+								<td>profil_country</td>
+								<td>Pays</td>
+							</tr>
+							<tr>
+								<td>profil_postalAddress</td>
+								<td>Adresse</td>
+							</tr>
+							<tr>
+								<td>profil_postalCode</td>
+								<td>Code postal</td>
+							</tr>
+							<tr>
+								<td>profil_cellPhone</td>
+								<td>Numéro de téléphone portable de l’agent</td>
+							</tr>
+							<tr>
+								<td>profil_email</td>
+								<td>Adresse de courriel de l’agent</td>
+							</tr>
+							<tr>
+								<td>profil_enabled</td>
+								<td>Profil actif sur la plate-forme ?</td>
+							</tr>
+							<tr>
+								<td>profil_fax</td>
+								<td>Numéro de fax</td>
+							</tr>
+							<tr>
+								<td>profil_function</td>
+								<td>Désigne la fonction de l'utilisateur au sein de
+									l'organisme.</td>
+							</tr>
+							<tr>
+								<td>profil_grade</td>
+								<td>
+									<ul>
+										<li>le Secrétaire général</li>
+										<li>la Maire</li>
+										<li>la Présidente</li>
+										<li>...</li>
+									</ul>
+								</td>
+							</tr>
+							<tr>
+								<td>profil_phone</td>
+								<td>Numéro de téléphone fixe de l’agent</td>
+							</tr>
+							<tr>
+								<td>agent_profil_elected</td>
+								<td>Agent qui est un élu ?</td>
+							</tr>
+							<tr>
+								<td>agent_profil_executive</td>
+								<td>Agent exécutif de l’organisme</td>
+							</tr>
+							<tr>
+								<td>agent_profil_representative</td>
+								<td>Agent représentant de l’organisme à l’Assemblée
+									Générale du GIP</td>
+							</tr>
+							<tr>
+								<td>agent_profil_substitute</td>
+								<td>Agent suppléant de l’organisme à l’Assemblée Générale
+									du GIP</td>
+							</tr>
+							<tr>
+								<td>agent_profil_role_XXX</td>
+								<td>Rôles de l'utilisateur pour l'application XXX, exemple
+									:
+									<ul>
+										<li>Utilisateur du service</li>
+										<li>Apprenant</li>
+										<li>Administrateur</li>
+										<li>Administrateur Global</li>
+									</ul>
+
+								</td>
+							</tr>
+							<tr>
+								<td>organism_department_id</td>
+								<td>Identifiant technique du niveau associé à l’agent dans
+									l’organigramme de la collectivité sur la plate-forme</td>
+							</tr>
+							<tr>
+								<td>organism_department_label</td>
+								<td>Libellé du niveau associé à l’agent dans l’organigramme
+									de la collectivité sur la plate-forme</td>
+							</tr>
+							<tr>
+								<td>organism_id</td>
+								<td>Identifiant technique de l’organisme</td>
+							</tr>
+							<tr>
+								<td>organism_label</td>
+								<td>Nom de l’organisme</td>
+							</tr>
+							<tr>
+								<td>organism_siren</td>
+								<td>SIREN de l’organisme</td>
+							</tr>
+							<tr>
+								<td>organism_nic</td>
+								<td>Code NIC de l’organisme</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+				<p>${message:info-4-message}</p>
+
+			</div>
+
+			<div id="divSubmit" class="form-actions">
+				<p>
+					<t:Submit t:id="submit" value="message:export-label" />
+				</p>
+			</div>
+
+			<div id="wait" style="display: none" class="form-actions">
+				<p>${message:wait-message}</p>
+			</div>
+		</fieldset>
+	</t:form>
+
+
+	<ul class="links">
+		<li class="back"><t:pagelink page="organism/agent/listAgents"
+				context="organism.id">${message:back-users-list-label}</t:pagelink>
+		</li>
+		<li class="back"><t:pagelink page="organism/detail"
+				context="organism.id">${message:back-detailorganism-label}</t:pagelink>
+		</li>
+	</ul>
+</div>
+</html>

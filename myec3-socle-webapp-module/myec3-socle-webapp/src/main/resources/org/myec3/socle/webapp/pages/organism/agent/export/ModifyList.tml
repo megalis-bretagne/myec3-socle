@@ -1,0 +1,99 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html t:type="layout"
+	xmlns:t="http://tapestry.apache.org/schema/tapestry_5_1_0.xsd"
+	xmlns:p="tapestry:parameter">
+
+<div id="main-content">
+	<h2>${message:page-title}</h2>
+
+	<!-- DISPLAY SUCCESS MESSAGE IF EXISTS -->
+	<t:if test="successMessage">
+		<p class="success">${successMessage}</p>
+	</t:if>
+
+	<!-- DISPLAY ERROR MESSAGE IF EXISTS -->
+	<t:if test="errorMessage">
+		<p class="error">${errorMessage}</p>
+	</t:if>
+
+	<div class="tabbed-data">
+
+		<!-- MENU -->
+		<ul class="tabs">
+			<li><t:pagelink page="organism/agent/export/report"
+					context="organism.id">${message:report-label}</t:pagelink>
+			</li>
+			<t:if test="displayCreateMenu">
+				<li><t:pagelink page="organism/agent/export/createList"
+						context="organism.id">${message:create-users-label} ( ${numberOfAgentsToCreate} )</t:pagelink>
+				</li>
+			</t:if>
+
+			<li class="active"><strong>${message:modify-users-label}
+					( ${numberOfAgentsToModify} )</strong></li>
+
+			<t:if test="displayDeleteMenu">
+				<li><t:pagelink page="organism/agent/export/deleteList"
+						context="organism.id">${message:delete-users-label}
+					( ${numberOfAgentsToDelete} )</t:pagelink>
+				</li>
+			</t:if>
+		</ul>
+
+		<div class="tabs-content">
+			<div class="actions-bar">
+				<ul>
+					<li><t:pagelink page="organism/agent/export/import"
+							context="organism.id">
+							<img src="${context:static/images/file_import.png}"
+								alt="${message:import-new-file-label}"
+								title="${message:import-new-file-label}" />
+									${message:import-new-file-label}
+							</t:pagelink>
+					</li>
+				</ul>
+			</div>
+
+			<div t:id="filter_form" t:type="agentListFilter"
+				agentProfileList="agentsToModify" />
+
+
+			<t:form t:id="list_agents_form">
+			<p t:banner="message:form-error" t:type="errors"
+					t:clientClass="errorDialogue"></p>
+					
+				<table t:id="list_agents_grid" model="gridModel" t:type="grid"
+					pagerPosition="bottom" t:row="currentRow"
+					t:source="AgentProfileList" t:rowIndex="rowIndex"
+					t:rowsPerPage="${message:rowsPerPage}" t:inplace="false"
+					t:empty="${message:empty-label}">
+
+					<p:checkBoxFieldHeader>
+						<t:checkbox t:id="masterCheckbox" value="selectAll"
+							t:mixins="boundcheckbox" />
+					</p:checkBoxFieldHeader>
+
+
+					<p:checkBoxFieldCell>
+						<t:if test="isAgentRowLogged" negate="true">
+							<t:checkbox t:id="slaveCheckbox" value="currentRowSelected"
+								t:mixins="boundcheckbox" master="masterCheckbox" />
+						</t:if>
+					</p:checkBoxFieldCell>
+				</table>
+
+				<div class="form-actions">
+					<p>
+						<t:submit t:id="updateAll" class="button btnOk" t:mixins="confirm"
+							t:message="message:confirm-update-all-users-message"
+							value="message:update-all-label" />
+						<t:submit t:id="submit" class="button btnOk" t:mixins="confirm"
+							t:message="message:confirm-update-selected-users-message"
+							value="message:update-users-selected-label" />
+					</p>
+				</div>
+			</t:form>
+		</div>
+	</div>
+</div>
+</html>

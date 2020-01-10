@@ -1,0 +1,22 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<artifactId>myec3-socle-ws-server-module</artifactId>
+	<packaging>pom</packaging>
+	<name>MyEc3 - Socle ws server module</name>
+
+	<description>
+		Multi module maven container project regrouping all elements related to the REST server of MyEc3 "socle".
+    </description>
+
+	<parent>
+		<groupId>org.myec3.socle</groupId>
+		<artifactId>myec3-socle</artifactId>
+		<version>5.6.2-MEGALIS-SNAPSHOT</version>
+		<relativePath>../pom.xml</relativePath>
+	</parent>
+
+	<modules>
+		<module>myec3-socle-ws-server-core</module>
+		<module>myec3-socle-ws-server</module>
+	</modules>
+</project>
