@@ -10,9 +10,11 @@ WORKDIR /app
 #on ajoute notre projet dans /app
 ADD . /app
 
-#on package notre application
-RUN mvn clean deploy
+#telechargement des dépendances maven
+RUN mvn dependency:go-offline
 
+#compilation du projet
+RUN mvn deploy
 
 #on part d'une image tomcat:9.0.30-jdk8-openjdk
 FROM tomcat:9.0.30-jdk8-openjdk as deployer
@@ -23,15 +25,8 @@ apt-get upgrade -y && \
 apt-get install -y curl && \
 apt-get clean
 
-#on cree un repetoire /app
-#RUN mkdir -p /app
-
-#on travaille maintenant dans /app
-#WORKDIR /app
-
 #on ajoute notre build dans /app
-#COPY --from=builder /app/target/app.jar /app/app.jar
+COPY --from=builder /app/myec3-socle-webapp-module/myec3-socle-webapp/target/*.war /usr/local/tomcat/webapps/myec3-socle-webapp.war
+#COPY --from=builder /app/myec3-socle/myec3-socle-ws-client/target/*.war /usr/local/tomcat/myec3-socle-ws.war
 
-#ENTRYPOINT ["java","-Djava.security.egd=file:/dev/./urandom","-Dspring.profiles.active=production","-jar","app.jar"]
-
-HEALTHCHECK --interval=1m --timeout=5m --start-period=2m --retries=3 CMD curl -f http://localhost:8090/health || exit
+#HEALTHCHECK --interval=1m --timeout=5m --start-period=2m --retries=3 CMD curl -f http://localhost:8080/health || exit
