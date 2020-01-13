@@ -1,0 +1,37 @@
+#on part d'une image maven + java 11
+FROM maven:3-jdk-8 as builder
+
+#on cree un repetoire /app
+RUN mkdir -p /app
+
+#on travaille maintenant dans /app
+WORKDIR /app
+
+#on ajoute notre projet dans /app
+ADD . /app
+
+#on package notre application
+RUN mvn clean deploy
+
+
+#on part d'une image tomcat:9.0.30-jdk8-openjdk
+FROM tomcat:9.0.30-jdk8-openjdk as deployer
+
+#mise a jour des packets, installation de curl, suppression du cache de apt
+RUN apt-get update -y && \
+apt-get upgrade -y && \
+apt-get install -y curl && \
+apt-get clean
+
+#on cree un repetoire /app
+#RUN mkdir -p /app
+
+#on travaille maintenant dans /app
+#WORKDIR /app
+
+#on ajoute notre build dans /app
+#COPY --from=builder /app/target/app.jar /app/app.jar
+
+#ENTRYPOINT ["java","-Djava.security.egd=file:/dev/./urandom","-Dspring.profiles.active=production","-jar","app.jar"]
+
+HEALTHCHECK --interval=1m --timeout=5m --start-period=2m --retries=3 CMD curl -f http://localhost:8090/health || exit
