@@ -1,0 +1,29 @@
+image: alpine:latest
+
+before_script:
+  - export http_proxy=http://pro01.sib.fr:3128
+  - export https_proxy=http://pro01.sib.fr:3128
+  - export no_proxy=sib.fr
+  - apk update && apk add sshpass openssh-client bash
+  
+stages:
+  - build
+  - deploy
+
+
+build:
+  image: docker:stable-dind
+  stage: build
+  script:
+    - docker build -f Dockerfile.stages -t klask.sib.fr:52100/megalis/socle-webapp .
+    - docker build -f Dockerfile.stages -t klask.sib.fr:52100/megalis/socle-webapp:${CI_COMMIT_SHA:0:8} .
+    - docker push klask.sib.fr:52100/megalis/socle-webapp
+    - docker push klask.sib.fr:52100/megalis/socle-webapp:${CI_COMMIT_SHA:0:8}
+
+deploy:
+  stage: deploy
+  environment: prod
+  script:
+    - sshpass -V
+    - export SSHPASS=klask
+    #- sshpass -e ssh -o StrictHostKeyChecking=no klask@klask.sib.fr "cd /home/klask/monitoring-app;sh deploy.sh prod master"
