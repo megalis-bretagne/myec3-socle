@@ -42,7 +42,7 @@
 					<webApp>
 						<resourceBases>
 					   		<resourceBase>${project.basedir}/src/main/webapp</resourceBase>
-							<resourceBase>${project.basedir}/src/main/config/local</resourceBase>
+							<resourceBase>${project.basedir}/src/main/config/</resourceBase>
 						</resourceBases>
 					</webApp>
 				</configuration>

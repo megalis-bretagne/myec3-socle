@@ -21,6 +21,7 @@
 	</description>
 
 	<modules>
+		<module>myec3-socle-parent</module>
 		<module>myec3-socle-contract</module>
 		<module>myec3-socle-core</module>
 		<module>myec3-socle-ws-client</module>
@@ -43,62 +44,6 @@
 		&lt;!&ndash; <connection>scm:hg:https://url-to-define/hg/myec3-socle/</connection>  &ndash;&gt;
 		<tag>5.4</tag>
 	</scm>-->
-	<repositories>
-		<repository>
-			<id>central</id>
-			<url>http://repo1.maven.org/maven2</url>
-			<releases>
-				<enabled>false</enabled>
-			</releases>
-			<snapshots>
-				<enabled>false</enabled>
-			</snapshots>
-		</repository>
-		<repository>
-			<id>sib</id>
-			<url>http://nexus:8081/nexus/content/groups/sib-group/</url>
-			<releases>
-				<enabled>true</enabled>
-			</releases>
-			<snapshots>
-				<enabled>true</enabled>
-			</snapshots>
-		</repository>
-	</repositories>
-	<pluginRepositories>
-		<pluginRepository>
-			<id>central</id>
-			<url>http://repo1.maven.org/maven2</url>
-			<releases>
-				<enabled>false</enabled>
-			</releases>
-			<snapshots>
-				<enabled>false</enabled>
-			</snapshots>
-		</pluginRepository>
-		<pluginRepository>
-			<id>sib</id>
-			<url>http://nexus:8081/nexus/content/groups/sib-group/</url>
-			<releases>
-				<enabled>true</enabled>
-			</releases>
-			<snapshots>
-				<enabled>true</enabled>
-			</snapshots>
-		</pluginRepository>
-	</pluginRepositories>
 
-	<distributionManagement>
-		<repository>
-			<id>myec3-repo</id>
-			<name>myec3-repo</name>
-			<url>http://nexus:8081/nexus/content/repositories/myec3-repo</url>
-		</repository>
-		<snapshotRepository>
-			<id>myec3-repo-snapshot</id>
-			<name>myec3-repo-snapshot</name>
-			<url>http://nexus:8081/nexus/content/repositories/myec3-repo-snapshot</url>
-		</snapshotRepository>
-	</distributionManagement>
 
 </project>

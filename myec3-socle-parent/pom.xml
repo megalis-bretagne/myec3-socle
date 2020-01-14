@@ -642,7 +642,7 @@
 		</releases> <snapshots> <enabled>false</enabled> </snapshots> </repository>
 		<repository> <id>sun</id> <name>sun java</name> <url>http://download.java.net/maven/2/</url>
 		<releases> <enabled>true</enabled> </releases> <snapshots> <enabled>false</enabled>
-		</snapshots> </repository> <repository> <id>resthub</id> <url>http://resthub.org/nexus/content/groups/resthub</url>
+		</snapshots> </repository> <repository> <id>ebou_socle</id> <url>http://resthub.org/nexus/content/groups/resthub</url>
 		</repository> </repositories -->
 
 	<!-- pluginRepositories> <pluginRepository> <id>central</id> <name>Maven
@@ -703,6 +703,64 @@
 			</build>
 		</profile>
 	</profiles>
+
+	<repositories>
+		<repository>
+			<id>central</id>
+			<url>http://repo1.maven.org/maven2</url>
+			<releases>
+				<enabled>false</enabled>
+			</releases>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+		</repository>
+		<repository>
+			<id>sib</id>
+			<url>http://nexus:8081/nexus/content/groups/sib-group/</url>
+			<releases>
+				<enabled>true</enabled>
+			</releases>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+		</repository>
+	</repositories>
+	<pluginRepositories>
+		<pluginRepository>
+			<id>central</id>
+			<url>http://repo1.maven.org/maven2</url>
+			<releases>
+				<enabled>false</enabled>
+			</releases>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+		</pluginRepository>
+		<pluginRepository>
+			<id>sib</id>
+			<url>http://nexus:8081/nexus/content/groups/sib-group/</url>
+			<releases>
+				<enabled>true</enabled>
+			</releases>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+		</pluginRepository>
+	</pluginRepositories>
+
+	<distributionManagement>
+		<repository>
+			<id>myec3-repo</id>
+			<name>myec3-repo</name>
+			<url>http://nexus:8081/nexus/content/repositories/myec3-repo</url>
+		</repository>
+		<snapshotRepository>
+			<id>myec3-repo-snapshot</id>
+			<name>myec3-repo-snapshot</name>
+			<url>http://nexus:8081/nexus/content/repositories/myec3-repo-snapshot</url>
+		</snapshotRepository>
+	</distributionManagement>
 
 	<!-- Fin : A supprimer lors de la mise en OpenSource -->
 </project>

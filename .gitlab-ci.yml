@@ -15,7 +15,6 @@ build:
   image: docker:stable-dind
   stage: build
   script:
-    #- ls -lrt /builds/megalis/myec3-socle/
     - docker build -f Dockerfile.stages -t klask.sib.fr:52100/megalis/socle-webapp .
     - docker build -f Dockerfile.stages -t klask.sib.fr:52100/megalis/socle-webapp:${CI_COMMIT_SHA:0:8} .
     - docker push klask.sib.fr:52100/megalis/socle-webapp
