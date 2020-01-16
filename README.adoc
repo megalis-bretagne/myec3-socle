@@ -18,7 +18,8 @@ In MySQL create database/schema __ebou_socle__ and __ebou_synchro__.
 
 
 Import preprod dump
-mysql -u root -p ebou_socle < em_socle_preprod_20200108.sql
+
+ mysql -u root -p ebou_socle < /dump/em_socle_preprod_20200108.sql
 
 
 ## Build Project
