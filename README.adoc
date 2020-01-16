@@ -22,6 +22,7 @@ Import preprod dump
  mysql -u root -p ebou_socle < /dump/em_socle_preprod_20200108.sql
  
 Import structure quartz dump
+ 
  mysql -u root -p ebou_synchro < /dump/Structure_Synchro.sql
 
 
