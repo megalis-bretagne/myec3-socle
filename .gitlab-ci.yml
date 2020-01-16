@@ -8,7 +8,8 @@ before_script:
   
 stages:
   - build
-  - deploy
+  - deploy_dev
+  - deploy_preprod
 
 
 build:
@@ -20,10 +21,20 @@ build:
     - docker push klask.sib.fr:52100/megalis/socle-webapp
     - docker push klask.sib.fr:52100/megalis/socle-webapp:${CI_COMMIT_SHA:0:8}
 
-deploy:
-  stage: deploy
-  environment: prod
+deploy_dev:
+  stage: deploy_dev
   script:
     - sshpass -V
-    - export SSHPASS=klask
-    #- sshpass -e ssh -o StrictHostKeyChecking=no klask@klask.sib.fr "cd /home/klask/monitoring-app;sh deploy.sh prod master"
+    - export SSHPASS=centos
+    - sshpass -e ssh -o StrictHostKeyChecking=no root@sangoku.sib.fr "docker stack deploy --with-registry-auth -c /sibtools/exploitation/exploit.yml sup"
+
+deploy_preprod:
+  stage: deploy_preprod
+  script:
+    - echo "Deploy to pre-production server"
+  environment:
+    name: production
+    url: https://example.com
+  when: manual
+#  only:
+#    - master
