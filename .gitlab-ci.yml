@@ -26,7 +26,7 @@ deploy_dev:
   script:
     - sshpass -V
     - export SSHPASS=centos
-    - sshpass -e ssh -o StrictHostKeyChecking=no root@sangoku.sib.fr "docker stack deploy --with-registry-auth -c /sibtools/exploitation/exploit.yml sup"
+    - sshpass -e ssh -o StrictHostKeyChecking=no root@sangoku.sib.fr "docker stack deploy --with-registry-auth -c /sillage/megalis/megalis-stack.yml megalis"
 
 deploy_preprod:
   stage: deploy_preprod
