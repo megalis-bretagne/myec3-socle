@@ -25,8 +25,7 @@ deploy_dev:
   script:
     - sshpass -V
     - export SSHPASS=centos
-    - export URL_DOCKER=klask.sib.fr:52100
-    - sshpass -e ssh -o StrictHostKeyChecking=no root@sangoku.sib.fr "docker stack deploy --with-registry-auth -c /sillage/megalis/megalis-stack.yml megalis"
+    - sshpass -e ssh -o StrictHostKeyChecking=no root@sangoku.sib.fr "export URL_DOCKER=klask.sib.fr:52100;docker stack deploy --with-registry-auth -c /sillage/megalis/megalis-stack.yml megalis"
 
 deploy_preprod:
   stage: deploy_preprod
@@ -35,6 +34,5 @@ deploy_preprod:
     - docker push klask.sib.fr:5000/megalis/socle-webapp
     - sshpass -V
     - export SSHPASS=7rEjdDLFyE
-    - export URL_DOCKER=haproxy-edipro.sib:443
-    - sshpass -e ssh -o StrictHostKeyChecking=no root@10.253.104.100 "docker stack deploy --with-registry-auth -c /data/livraison/megalis-stack.yml megalis"
+    - sshpass -e ssh -o StrictHostKeyChecking=no root@10.253.104.100 "export URL_DOCKER=haproxy-edipro.sib:443;docker stack deploy --with-registry-auth -c /data/livraison/megalis-stack.yml megalis"
   when: manual
