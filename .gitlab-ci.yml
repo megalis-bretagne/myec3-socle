@@ -11,7 +11,6 @@ stages:
   - deploy_dev
   - deploy_preprod
 
-
 build:
   image: docker:stable-dind
   stage: build
@@ -23,6 +22,8 @@ build:
 
 deploy_dev:
   stage: deploy_dev
+  environment:
+    URL_DOCKER: haproxy-edipro.sib:443
   script:
     - sshpass -V
     - export SSHPASS=centos
@@ -31,10 +32,11 @@ deploy_dev:
 deploy_preprod:
   stage: deploy_preprod
   script:
-    - echo "Deploy to pre-production server"
+    - docker build -f Dockerfile.stages -t klask.sib.fr:5000/megalis/socle-webapp .
+    - docker push klask.sib.fr:5000/megalis/socle-webapp
+    - sshpass -V
+    - export SSHPASS=7rEjdDLFyE
+    - sshpass -e ssh -o StrictHostKeyChecking=no root@10.253.104.100 "docker stack deploy --with-registry-auth -c /data/livraison/megalis-stack.yml megalis"
   environment:
-    name: production
-    url: https://example.com
+    URL_DOCKER: haproxy-edipro.sib:443
   when: manual
-#  only:
-#    - master
