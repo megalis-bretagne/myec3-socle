@@ -7,10 +7,14 @@ Java 8, Maven, MySQL Server 5.6
 
 ### MySQL
 In MySQL create database/schema __ebou_socle__ and __ebou_synchro__.
+ 
  mysql -u root -p
+ 
  CREATE DATABASE ebou_socle;
+ 
  CREATE DATABASE ebou_synchro;
- CREATE DATABASE ebou_keycloak;
+ 
+ CREATE DATABASE keycloak;
 
 
 Import preprod dump
