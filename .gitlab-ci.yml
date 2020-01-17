@@ -28,6 +28,7 @@ deploy_dev:
     - sshpass -e ssh -o StrictHostKeyChecking=no root@sangoku.sib.fr "export URL_DOCKER=klask.sib.fr:52100;docker stack deploy --with-registry-auth -c /sillage/megalis/megalis-stack.yml megalis"
 
 deploy_preprod:
+  image: docker:stable-dind
   stage: deploy_preprod
   script:
     - docker build -f Dockerfile.stages -t klask.sib.fr:5000/megalis/socle-webapp .
