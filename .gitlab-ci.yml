@@ -37,3 +37,4 @@ deploy_preprod:
     - export SSHPASS=7rEjdDLFyE
     - sshpass -e ssh -o StrictHostKeyChecking=no root@10.253.104.100 "export URL_DOCKER=haproxy-edipro.sib.fr:443;docker stack deploy --with-registry-auth -c /data/livraison/megalis-stack.yml megalis"
   when: manual
+
