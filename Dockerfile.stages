@@ -27,6 +27,9 @@ apt-get clean
 
 #on ajoute notre build dans /app
 COPY --from=builder /app/myec3-socle-webapp-module/myec3-socle-webapp/target/*.war /usr/local/tomcat/webapps/myec3-socle-webapp.war
+COPY --from=builder /app/myec3-socle-esb/target/*.war /usr/local/tomcat/webapps/myec3-socle-esb.war
+COPY --from=builder /app/myec3-socle-synchro-module/myec3-socle-synchro/target/*.war /usr/local/tomcat/webapps/myec3-socle-synchro.war
+COPY --from=builder /app/myec3-socle-ws-server-module/myec3-socle-ws-server/target/*.war /usr/local/tomcat/webapps/myec3-socle-ws-server.war
 
 
 #HEALTHCHECK --interval=1m --timeout=5m --start-period=2m --retries=3 CMD curl -f http://localhost:8080/health || exit
