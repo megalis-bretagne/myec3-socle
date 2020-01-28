@@ -8,17 +8,24 @@ before_script:
   
 stages:
   - build
+  - buildImage
   - deploy_dev
   - deploy_preprod
 
 build:
-  image: docker:stable-dind
+  image : docker:stable-dind
   stage: build
   script:
-    - docker build -f Dockerfile.stages -t klask.sib.fr:52100/megalis/socle-webapp .
-    - docker build -f Dockerfile.stages -t klask.sib.fr:52100/megalis/socle-webapp:${CI_COMMIT_SHA:0:8} .
-    - docker push klask.sib.fr:52100/megalis/socle-webapp
-    - docker push klask.sib.fr:52100/megalis/socle-webapp:${CI_COMMIT_SHA:0:8}
+    - docker build -f Dockerfile_mvn.stages .
+
+buildImage :
+  image: docker:stable-dind
+  stage: buildImage
+  script:
+    - docker build -f Dockerfile_esb.stages -t klask.sib.fr:52100/megalis/socle-esb .
+    - docker build -f Dockerfile_esb.stages -t klask.sib.fr:52100/megalis/socle-esb:${CI_COMMIT_SHA:0:8} .
+    - docker push klask.sib.fr:52100/megalis/socle-esb
+    - docker push klask.sib.fr:52100/megalis/socle-esb:${CI_COMMIT_SHA:0:8}
 
 deploy_dev:
   stage: deploy_dev
@@ -31,7 +38,7 @@ deploy_preprod:
   image: docker:stable-dind
   stage: deploy_preprod
   script:
-    - docker build -f Dockerfile.stages -t klask.sib.fr:5000/megalis/socle-webapp .
+    - docker build -f Dockerfile_socle.stages -t klask.sib.fr:5000/megalis/socle-webapp .
     - docker push klask.sib.fr:5000/megalis/socle-webapp
     - sshpass -V
     - export SSHPASS=7rEjdDLFyE

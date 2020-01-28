@@ -1,0 +1,17 @@
+#on part d'une image maven + java 11
+FROM maven:3-jdk-8 as builder
+
+#on cree un repetoire /app
+RUN mkdir -p /app
+
+#on travaille maintenant dans /app
+WORKDIR /app
+
+#on ajoute notre projet dans /app
+ADD . /app
+
+#telechargement des dépendances maven
+#RUN mvn dependency:go-offline
+
+#compilation du projet
+RUN mvn -B deploy
