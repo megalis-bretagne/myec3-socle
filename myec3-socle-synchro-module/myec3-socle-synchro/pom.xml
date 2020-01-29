@@ -40,6 +40,12 @@
 	</dependencies>
 
 	<build>
+		<resources>
+			<resource>
+				<!--TODO : à revoir-->
+				<directory>${basedir}/src/main/config/local</directory>
+			</resource>
+		</resources>
 		<plugins>
 			<plugin>
 				<groupId>org.eclipse.jetty</groupId>
