@@ -1,5 +1,5 @@
 #on part d'une image maven + java 11
-FROM maven:3-jdk-8 as builder
+FROM maven:3-jdk-8
 
 #on cree un repetoire /app
 RUN mkdir -p /app
