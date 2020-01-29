@@ -1,8 +1,5 @@
 image: alpine:latest
 
-.something: &something
-  - echo 'something'
-
 before_script:
   - export http_proxy=http://pro01.sib.fr:3128
   - export https_proxy=http://pro01.sib.fr:3128
@@ -13,11 +10,6 @@ before_script:
   - buildImages
   - deploy_dev
   - deploy_preprod
-
-test:
-  script:
-    - *something
-    - echo 'this is the script'
 
 build:
   image : docker:stable-dind
