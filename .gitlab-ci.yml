@@ -5,7 +5,8 @@ before_script:
   - export https_proxy=http://pro01.sib.fr:3128
   - export no_proxy=sib.fr
   - apk update && apk add sshpass openssh-client bash
-  
+
+stages:
   - build
   - buildImages
   - deploy_dev
