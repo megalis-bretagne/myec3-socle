@@ -118,7 +118,7 @@ public class JMSSynchronizationServiceImpl implements SynchronizationService {
 			log.info("Application " + MyEc3EsbConstants.getApplicationSendingJmsName() + " is connected to broker");
 		} catch (Exception e) {
 			log.error("L'application " + MyEc3EsbConstants.getApplicationSendingJmsName()
-					+ " n'arrive pas à se connecter au broker JMS " + MyEc3EsbConstants.getInUrl());
+					+ " n'arrive pas à se connecter au broker JMS " + MyEc3EsbConstants.getInUrl(),e);
 		}
 	}
 
