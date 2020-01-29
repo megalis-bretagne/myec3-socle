@@ -9,12 +9,10 @@ before_script:
   - export no_proxy=sib.fr
   - apk update && apk add sshpass openssh-client bash
   
-stages:
-  - test
-#  - build
-#  - buildImages
-#  - deploy_dev
-#  - deploy_preprod
+  - build
+  - buildImages
+  - deploy_dev
+  - deploy_preprod
 
 test:
   script:
@@ -35,6 +33,19 @@ buildImages :
     - docker build -f Dockerfile_esb.stages -t klask.sib.fr:52100/megalis/socle-esb:${CI_COMMIT_SHA:0:8} .
     - docker push klask.sib.fr:52100/megalis/socle-esb
     - docker push klask.sib.fr:52100/megalis/socle-esb:${CI_COMMIT_SHA:0:8}
+    - docker build -f Dockerfile_webapp.stages -t klask.sib.fr:52100/megalis/socle-webapp .
+    - docker build -f Dockerfile_webapp.stages -t klask.sib.fr:52100/megalis/socle-webapp:${CI_COMMIT_SHA:0:8} .
+    - docker push klask.sib.fr:52100/megalis/socle-webapp
+    - docker push klask.sib.fr:52100/megalis/socle-webapp:${CI_COMMIT_SHA:0:8}
+    - docker build -f Dockerfile_synchro.stages -t klask.sib.fr:52100/megalis/socle-synchro .
+    - docker build -f Dockerfile_synchro.stages -t klask.sib.fr:52100/megalis/socle-synchro:${CI_COMMIT_SHA:0:8} .
+    - docker push klask.sib.fr:52100/megalis/socle-synchro
+    - docker push klask.sib.fr:52100/megalis/socle-synchro:${CI_COMMIT_SHA:0:8}
+    - docker build -f Dockerfile_ws.stages -t klask.sib.fr:52100/megalis/socle-ws .
+    - docker build -f Dockerfile_ws.stages -t klask.sib.fr:52100/megalis/socle-ws:${CI_COMMIT_SHA:0:8} .
+    - docker push klask.sib.fr:52100/megalis/socle-ws
+    - docker push klask.sib.fr:52100/megalis/socle-ws:${CI_COMMIT_SHA:0:8}
+
 
 deploy_dev:
   stage: deploy_dev
@@ -47,7 +58,7 @@ deploy_preprod:
   image: docker:stable-dind
   stage: deploy_preprod
   script:
-    - docker build -f Dockerfile_socle.stages -t klask.sib.fr:5000/megalis/socle-webapp .
+    - docker build -f Dockerfile_webapp.stages -t klask.sib.fr:5000/megalis/socle-webapp .
     - docker push klask.sib.fr:5000/megalis/socle-webapp
     - sshpass -V
     - export SSHPASS=7rEjdDLFyE
