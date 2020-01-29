@@ -20,7 +20,7 @@ build:
 
 buildImages :
   image: docker:stable-dind
-  stage: buildImage
+  stage: buildImages
   script:
     - docker build -f Dockerfile_esb.stages -t klask.sib.fr:52100/megalis/socle-esb .
     - docker build -f Dockerfile_esb.stages -t klask.sib.fr:52100/megalis/socle-esb:${CI_COMMIT_SHA:0:8} .
