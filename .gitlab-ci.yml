@@ -17,6 +17,10 @@ build:
   stage : build
   script :
     - mvn -B deploy
+  artifacts:
+    paths:
+      - myec3-socle-esb/target/myec3-socle-esb-*.war
+    expire_in: 1 days
 
 buildImages :
   image: docker:stable-dind
