@@ -8,7 +8,8 @@ apt-get install -y curl && \
 apt-get install -y vim && \
 apt-get clean
 
-COPY myec3-socle-esb-*.war /usr/local/tomcat/webapps/myec3-socle-esb.war
+#COPY myec3-socle-esb-*.war /usr/local/tomcat/webapps/myec3-socle-esb.war
+COPY coucou.txt /tmp
 
 #recupération de nexus de l'artifact
 # TODO : récupérer la version du pom.xml
