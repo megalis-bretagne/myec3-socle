@@ -17,19 +17,19 @@ build:
   stage : build
   script :
 #    - mvn -B deploy
-    echo toto > ./coucou.txt
+    echo toto > ./myec3-socle-esb/target/coucou.txt
   artifacts:
     paths:
 #      - myec3-socle-esb/target/myec3-socle-esb-*.war
-      - coucou.txt
+      - myec3-socle-esb/target/coucou.txt
     expire_in: 1 days
 
 buildImages :
   image: docker:stable-dind
   stage: buildImages
   script:
-    - ls
-    - cat coucou.txt
+    - ls myec3-socle-esb/target
+    - cat myec3-socle-esb/target/coucou.txt
     - docker build -f Dockerfile_esb.stages -t klask.sib.fr:52100/megalis/socle-esb .
 #    - docker build -f Dockerfile_esb.stages -t klask.sib.fr:52100/megalis/socle-esb:${CI_COMMIT_SHA:0:8} .
 #    - docker push klask.sib.fr:52100/megalis/socle-esb
