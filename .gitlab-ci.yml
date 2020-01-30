@@ -18,11 +18,11 @@ build:
   script :
 #    - mvn -B deploy
     - ls
-    - echo toto > ./myec3-socle-esb/target/coucou.txt
+    - echo toto > ./myec3-socle-esb/coucou.txt
   artifacts:
     paths:
 #      - myec3-socle-esb/target/myec3-socle-esb-*.war
-      - myec3-socle-esb/target/coucou.txt
+      - myec3-socle-esb/coucou.txt
     expire_in: 1 days
 
 buildImages :
