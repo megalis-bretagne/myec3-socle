@@ -12,12 +12,6 @@ stages:
   - deploy_dev
   - deploy_preprod
 
-#build:
-#  image : docker:stable-dind
-#  stage: build
-#  script:
-#    - docker build -f Dockerfile_mvn.stages .
-
 build:
   image : maven:3-jdk-8
   stage : build
