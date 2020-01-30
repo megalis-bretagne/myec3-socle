@@ -17,7 +17,8 @@ build:
   stage : build
   script :
 #    - mvn -B deploy
-    echo toto > ./myec3-socle-esb/target/coucou.txt
+    - ls
+    - echo toto > ./myec3-socle-esb/target/coucou.txt
   artifacts:
     paths:
 #      - myec3-socle-esb/target/myec3-socle-esb-*.war
