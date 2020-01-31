@@ -29,9 +29,9 @@ buildImages :
   script:
     - ls
     - docker build -f Dockerfile_esb.stages -t klask.sib.fr:52100/megalis/socle-esb .
-#    - docker build -f Dockerfile_esb.stages -t klask.sib.fr:52100/megalis/socle-esb:${CI_COMMIT_SHA:0:8} .
-#    - docker push klask.sib.fr:52100/megalis/socle-esb
-#    - docker push klask.sib.fr:52100/megalis/socle-esb:${CI_COMMIT_SHA:0:8}
+    - docker build -f Dockerfile_esb.stages -t klask.sib.fr:52100/megalis/socle-esb:${CI_COMMIT_SHA:0:8} .
+    - docker push klask.sib.fr:52100/megalis/socle-esb
+    - docker push klask.sib.fr:52100/megalis/socle-esb:${CI_COMMIT_SHA:0:8}
 #    - docker build -f Dockerfile_webapp.stages -t klask.sib.fr:52100/megalis/socle-webapp .
 #    - docker build -f Dockerfile_webapp.stages -t klask.sib.fr:52100/megalis/socle-webapp:${CI_COMMIT_SHA:0:8} .
 #    - docker push klask.sib.fr:52100/megalis/socle-webapp
@@ -51,7 +51,7 @@ deploy_dev:
   script:
     - sshpass -V
     - export SSHPASS=centos
-#    - sshpass -e ssh -o StrictHostKeyChecking=no root@sangoku.sib.fr "export URL_DOCKER=klask.sib.fr:52100;docker stack deploy --with-registry-auth -c /sillage/megalis/megalis-stack.yml megalis"
+    - sshpass -e ssh -o StrictHostKeyChecking=no root@sangoku.sib.fr "export URL_DOCKER=klask.sib.fr:52100;docker stack deploy --with-registry-auth -c /sillage/megalis/megalis-stack.yml megalis"
 
 deploy_preprod:
   image: docker:stable-dind
