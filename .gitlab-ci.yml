@@ -20,7 +20,7 @@ build:
     - cp myec3-socle-esb/target/myec3-socle-esb-*.war ./myec3-socle-esb.war
   artifacts:
     paths:
-      - myec3-socle-esb-*.war
+      - myec3-socle-esb.war
     expire_in: 1 days
 
 buildImages :
