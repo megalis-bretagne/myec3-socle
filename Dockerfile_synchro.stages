@@ -8,7 +8,9 @@ apt-get install -y curl && \
 apt-get install -y vim && \
 apt-get clean
 
-COPY myec3-socle-synchro.war /usr/local/tomcat/webapps/myec3-socle-synchro.war
+#recupération de nexus de l'artifact
+# TODO : récupérer la version du pom.xml
+ADD "http://nexus.sib.fr:8081/nexus/service/local/artifact/maven/redirect?r=sib-group&g=org.myec3.socle&a=myec3-socle-synchro&v=5.6.2-MEGALIS-SNAPSHOT&p=war" /usr/local/tomcat/webapps/myec3-socle-synchro.war
 
 #pour ne pas lancer le tomcat au lancement du conteneur et pour que ce dernier ne s'arrête pas lors de l'arrêt du tomcat
 #CMD tail -f /dev/null
