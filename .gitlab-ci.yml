@@ -16,13 +16,13 @@ build:
   image : maven:3-jdk-8
   stage : build
   script :
-#    - mvn -B deploy
+    - mvn -B deploy
     - ls
-    - echo toto > ./myec3-socle-esb/coucou.txt
+    - echo toto > ./myec3-socle-esb/target/coucou.txt
   artifacts:
     paths:
 #      - myec3-socle-esb/target/myec3-socle-esb-*.war
-      - myec3-socle-esb/coucou.txt
+      - myec3-socle-esb/target/coucou.txt
     expire_in: 1 days
 
 buildImages :
@@ -30,7 +30,7 @@ buildImages :
   stage: buildImages
   script:
     - ls
-    - ls myec3-socle-esb/
+    - ls myec3-socle-esb/target/
     - docker build -f Dockerfile_esb.stages -t klask.sib.fr:52100/megalis/socle-esb .
 #    - docker build -f Dockerfile_esb.stages -t klask.sib.fr:52100/megalis/socle-esb:${CI_COMMIT_SHA:0:8} .
 #    - docker push klask.sib.fr:52100/megalis/socle-esb
