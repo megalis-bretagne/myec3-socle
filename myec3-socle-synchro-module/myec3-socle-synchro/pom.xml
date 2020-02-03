@@ -40,12 +40,6 @@
 	</dependencies>
 
 	<build>
-		<resources>
-			<resource>
-				<!--TODO : à revoir-->
-				<directory>${basedir}/src/main/config/local</directory>
-			</resource>
-		</resources>
 		<plugins>
 			<plugin>
 				<groupId>org.eclipse.jetty</groupId>
@@ -58,5 +52,29 @@
 			</plugin>
 		</plugins>
 	</build>
-
+	<profiles>
+		<profile>
+			<id>local</id>
+			<build>
+				<resources>
+					<resource>
+						<directory>${basedir}/src/main/config/local</directory>
+					</resource>
+				</resources>
+			</build>
+		</profile>
+		<profile>
+			<id>server</id>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
+			<build>
+				<resources>
+					<resource>
+						<directory>${basedir}/src/main/config/server</directory>
+					</resource>
+				</resources>
+			</build>
+		</profile>
+	</profiles>
 </project>
