@@ -49,9 +49,8 @@ public class JpaSynchronizationQueueDao extends JpaGenericSynchronizationDao<Syn
 	@Override
 	@SuppressWarnings("unchecked")
 	public List<SynchronizationQueue> findAll(int limit) {
-		log.debug("Finding all synchronization queue with limit = " + limit);
-
 		try {
+			log.debug("Finding all synchronization queue with limit = " + limit + " on " + this.getDomainClass().getSimpleName());
 			Query query = this.getEm()
 					.createQuery("SELECT s from " + this.getDomainClass().getSimpleName() + " s ORDER BY id ASC");
 

@@ -40,9 +40,8 @@ public class JpaAcronymsListDao extends JpaNoResourceGenericDao<AcronymsList> im
 	 */
 	@Override
 	public AcronymsList findOneAvailableAcronym() {
-		getLog().debug("Finding one available acronym");
-
 		try {
+			getLog().debug("Finding one available acronym on " + this.getDomainClass().getSimpleName());
 			Query query = getEm().createQuery(
 					"select a from " + this.getDomainClass().getSimpleName() + " a where a.available = :available");
 			query.setParameter("available", Boolean.TRUE);

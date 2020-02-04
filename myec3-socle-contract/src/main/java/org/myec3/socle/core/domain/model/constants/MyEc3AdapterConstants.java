@@ -22,7 +22,7 @@ import java.util.ResourceBundle;
 /**
  * Constants used by the XML adapter
  * 
- * @see ChildStructuresAdapter.class and ParentStructuresAdapter.class
+ * @see org.myec3.socle.core.domain.model.adapter.ChildStructuresAdapter and {@link org.myec3.socle.core.domain.model.adapter.ParentStructuresAdapter}
  * 
  * @author Denis Cucchietti <denis.cucchietti@atosorigin.com>
  */

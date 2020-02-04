@@ -22,8 +22,8 @@ import java.util.ResourceBundle;
 /**
  * Constants class used to manage MpsUpdate
  * 
- * @see CompanyServiceImpl.class
- * @see EstablishmentServiceImpl.class
+ * @see org.myec3.socle.core.service.impl.CompanyServiceImpl
+ * @see org.myec3.socle.core.service.impl.EstablishmentServiceImpl
  * 
  * @author Matthieu Gaspard <matthieu.gaspard@atosorigin.com>
  */

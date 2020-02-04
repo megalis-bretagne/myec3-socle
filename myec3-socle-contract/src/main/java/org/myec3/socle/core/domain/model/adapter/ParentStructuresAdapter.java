@@ -38,8 +38,8 @@ import org.myec3.socle.core.domain.model.enums.StructureTypeValue;
  * 
  * @XmlJavaTypeAdapter(ParentStructuresAdapter.class) over the attribute to send
  *                                                    into the XML
- * @see Structure.class
- * @see StructureRelations.class
+ * @see Structure
+ * @see StructureRelations
  * 
  * @author Denis Cucchietti <denis.cucchietti@atosorigin.com>
  */

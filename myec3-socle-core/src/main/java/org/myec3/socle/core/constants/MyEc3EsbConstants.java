@@ -22,7 +22,7 @@ import java.util.ResourceBundle;
 /**
  * Constants class used for the connection between an application and the ESB (Enterprise Service Bus)
  * 
- * @see SchedulerServiceImpl.class
+ * @see org.myec3.socle.synchro.api.quartz.impl.SchedulerServiceImpl
  * 
  * @author Denis Cucchietti <denis.cucchietti@atosorigin.com>
  */
