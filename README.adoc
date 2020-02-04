@@ -46,7 +46,7 @@ Add the following modifiers :
 
 |===
 |Order | Action | Name | Value | Description | State | Actions 
-| 1 | Add | uid | 67231 | uid | Super Admin | ENABLED 
+| 1 | Add | uid | 1 | uid | Super Admin | ENABLED
 | 2 | Add | userType | ADMIN | userType | Admin | ENABLED 
 |===
 
