@@ -18,24 +18,24 @@
  
 /* Page de creation d'un organisme */
 
- .datePickerButtonLeft{
- 	width: 14px;
+.datePickerButtonLeft{
+	width: 14px;
     height: 14px;
     background: buttonface url("../images/arrow_left.png") no-repeat center center;
- }
+}
  
-  .datePickerButtonRight{
- 	width: 14px;
+.datePickerButtonRight{
+	width: 14px;
     height: 14px;
     background: buttonface url("../images/arrow_right.png") no-repeat center center;
- }
+}
 
 div.t-data-grid-pager {
 	text-align: center;
 }
 
 div.t-data-grid-pager span.current {
-	background: #FF4F07;	
+	background: #1E68B1;
 }
 
 table.t-data-grid {
