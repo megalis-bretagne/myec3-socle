@@ -49,6 +49,7 @@ import org.apache.tapestry5.upload.services.UploadedFile;
 import org.myec3.socle.core.domain.model.*;
 import org.myec3.socle.core.domain.model.enums.AuthorizedMimeType;
 import org.myec3.socle.core.domain.model.enums.Country;
+import org.myec3.socle.core.domain.model.enums.OrganismMemberStatus;
 import org.myec3.socle.core.domain.model.enums.OrganismNafCode;
 import org.myec3.socle.core.service.CustomerService;
 import org.myec3.socle.core.service.OrganismService;
@@ -56,7 +57,6 @@ import org.myec3.socle.core.service.exceptions.AllAcronymsUsedException;
 import org.myec3.socle.core.service.exceptions.OrganismCreationException;
 import org.myec3.socle.webapp.constants.GuWebAppConstants;
 import org.myec3.socle.webapp.encoder.GenericListEncoder;
-import org.myec3.socle.webapp.model.OrganismMemberStatusSelectModel;
 import org.myec3.socle.webapp.pages.AbstractPage;
 import org.myec3.socle.webapp.pages.Index;
 
@@ -78,6 +78,8 @@ import org.myec3.socle.webapp.pages.Index;
 public class Create extends AbstractPage {
 
   private static final Log logger = LogFactory.getLog(Create.class);
+
+  private static final String EBOU = "Ebou";
 
   // Template properties
   @Property
@@ -142,9 +144,6 @@ public class Create extends AbstractPage {
 
   @Property
   private OrganismStatus organismStatus = new OrganismStatus();
-
-  @Property
-  private SelectModel listOrganismMemberStatusModel;
 
   // Page Activation n Passivation
 
@@ -372,7 +371,7 @@ public class Create extends AbstractPage {
   }
 
   public ValueEncoder<Customer> getCustomerEncoder() {
-    return new GenericListEncoder<Customer>(this.customerService.findAll());
+    return new GenericListEncoder<>(this.customerService.findAll());
 
   }
 
@@ -382,27 +381,16 @@ public class Create extends AbstractPage {
    */
   public void setupRender() {
 
+    OrganismMemberStatus[] availablesOrganismStatus = OrganismMemberStatus.values();
     List<OrganismMemberStatus> organismMemberStatuses = new ArrayList<>();
-    for (String key : this.getMessages().getKeys()) {
-      if (key.contains("OrganismMemberStatus")) {
-        String keyValue = key.split("\\.")[1];
-        OrganismMemberStatus organismMemberStatus = new OrganismMemberStatus(keyValue, this.getMessages().get(key));
-        organismMemberStatuses.add(organismMemberStatus);
-      }
+    Collections.addAll(organismMemberStatuses, availablesOrganismStatus);
+    if (EBOU.equals(this.getMessages().get("plateform-name"))) {
+      plateformSelectModel = selectModelFactory.create(organismMemberStatuses, "label");
+    } else {
+      organismMemberStatuses.remove(OrganismMemberStatus.DISSOLUTION);
+      organismMemberStatuses.remove(OrganismMemberStatus.TEST);
+      plateformSelectModel = selectModelFactory.create(organismMemberStatuses, "label");
     }
-    listOrganismMemberStatusModel = new OrganismMemberStatusSelectModel(organismMemberStatuses);
-
-    // version old Megalis
-//    OrganismMemberStatus[] availablesOrganismStatus = OrganismMemberStatus.values();
-//    List<OrganismMemberStatus> organismMemberStatuses = new ArrayList<OrganismMemberStatus>();
-//    Collections.addAll(organismMemberStatuses, availablesOrganismStatus);
-//    if (EBOU.equals(this.getMessages().get("plateform-name"))) {
-//      plateformSelectModel = selectModelFactory.create(organismMemberStatuses, "label");
-//    } else {
-//      organismMemberStatuses.remove(OrganismMemberStatus.DISSOLUTION);
-//      organismMemberStatuses.remove(OrganismMemberStatus.TEST);
-//      plateformSelectModel = selectModelFactory.create(organismMemberStatuses, "label");
-//    }
 
   }
 

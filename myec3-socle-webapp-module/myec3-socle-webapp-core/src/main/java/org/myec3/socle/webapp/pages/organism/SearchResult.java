@@ -35,6 +35,7 @@ import org.apache.tapestry5.services.BeanModelSource;
 import org.apache.tapestry5.services.PropertyConduitSource;
 import org.myec3.socle.core.domain.model.Organism;
 import org.myec3.socle.core.domain.model.OrganismStatus;
+import org.myec3.socle.core.domain.model.enums.OrganismMemberStatus;
 import org.myec3.socle.core.tools.UnaccentLetter;
 import org.myec3.socle.webapp.pages.AbstractPage;
 import org.myec3.socle.webapp.pages.Index;
@@ -142,17 +143,17 @@ public class SearchResult extends AbstractPage {
 		if (null != this.organismRow.getOrganismStatus() && !this.organismRow.getOrganismStatus().isEmpty()) {
 			Set<OrganismStatus> organismStatuses = organismRow.getOrganismStatus();
 			Date date = organismStatuses.iterator().next().getDate();
-			String label = organismStatuses.iterator().next().getStatus();
+			String label = organismStatuses.iterator().next().getStatus().getLabel();
 			for (OrganismStatus organismStatus : organismStatuses) {
 				Date date_tmp = organismStatus.getDate();
 				if (date_tmp.after(date)) {
 					date = date_tmp;
-					label = organismStatus.getStatus();
+					label = organismStatus.getStatus().getLabel();
 				}
 			}
-			if (label.equals("ADHERENT")) {
-				return Boolean.TRUE;
-			}
+      if (label.equals(OrganismMemberStatus.ADHERENT.getLabel())) {
+        return Boolean.TRUE;
+      }
 		}
 		return Boolean.FALSE;
 	}

@@ -49,22 +49,22 @@
         <t:label for="memberStatus">
           ${message:member-status-label} *:
         </t:label>
-        <t:select t:id="memberStatus" t:value="organismStatus.status" model="listOrganismMemberStatusModel"
-                  t:validate="required"/>
+        <t:select t:id="memberStatus" t:value="organismStatus.status" t:label="organismStatus.status"
+                  t:model="plateformSelectModel" t:validate="required"/>
       </p>
 
-<!--        todo version d'origine Megalis => voir avec Megalis-->
-<!--      <p>-->
-<!--        <t:label for="beginMemberShipDate">${message:membership-begin-date-label} *:</t:label>-->
-<!--        <t:datefield t:id="beginMemberShipDate" t:value="organismStatus.date" t:format="literal:dd/MM/yyyy"-->
-<!--                     t:maxlength="10" t:validate="required, regexp"/>-->
-<!--      </p>-->
+      <!--        todo version d'origine Megalis => voir avec Megalis-->
+      <!--      <p>-->
+      <!--        <t:label for="beginMemberShipDate">${message:membership-begin-date-label} *:</t:label>-->
+      <!--        <t:datefield t:id="beginMemberShipDate" t:value="organismStatus.date" t:format="literal:dd/MM/yyyy"-->
+      <!--                     t:maxlength="10" t:validate="required, regexp"/>-->
+      <!--      </p>-->
 
-<!--            <div class="datePicker-div">-->
-<!--              <t:label class="datePicker-label" for="beginMemberShipDate">${message:membership-begin-date-label} *:</t:label>-->
-<!--              <t:datefield class="datePicker-input" t:id="beginMemberShipDate" t:value="organismStatus.date"-->
-<!--                           t:format="literal:dd/MM/yyyy" t:maxlength="10" t:validate="required, regexp"/>-->
-<!--            </div>-->
+      <!--            <div class="datePicker-div">-->
+      <!--              <t:label class="datePicker-label" for="beginMemberShipDate">${message:membership-begin-date-label} *:</t:label>-->
+      <!--              <t:datefield class="datePicker-input" t:id="beginMemberShipDate" t:value="organismStatus.date"-->
+      <!--                           t:format="literal:dd/MM/yyyy" t:maxlength="10" t:validate="required, regexp"/>-->
+      <!--            </div>-->
       <!--      <div class="datePicker-div">-->
       <!--        <t:label class="datePicker-label" for="ideoSignatureDate">${message:ideo-signature-date-label} :</t:label>-->
       <!--        <t:datefield class="datePicker-input" t:id="ideoSignatureDate" t:value="organism.ideoSignatureDate"-->
@@ -105,44 +105,6 @@
         <t:select t:id="organismNafCode" t:encoder="nafCodeEncoder" t:model="listOfOrganismNafCode"
                   t:value="organism.apeCode" t:blankLabel="message:unspecified-label"/>
       </p>
-
-      <!--      todo add fields-->
-      <p>
-        <t:label for="officialPopulation">
-          ${message:officialPopulation-label} :
-        </t:label>
-        <t:textfield t:id="officialPopulation" t:value="officialPopulation" t:maxlength="9" t:validate="regexp"/>
-      </p>
-      <p>
-        <t:label for="workforce">
-          ${message:workforce-label} :
-        </t:label>
-        <t:textfield t:id="workforce" t:value="workforce" t:maxlength="9" t:validate="regexp"/>
-      </p>
-      <p>
-        <t:label for="budget">${message:budget-label} :</t:label>
-        <t:textfield t:id="budget" t:value="budget" t:maxlength="9" t:validate="regexp"/>
-      </p>
-      <p>
-        <t:label for="contributionAmount">
-          ${message:contributionAmount-label} :
-        </t:label>
-        <t:textfield t:id="contributionAmount" t:value="contributionAmount" t:maxlength="9" t:validate="regexp"/>
-      </p>
-      <p>
-        <t:label for="description">
-          ${message:description-label}
-        </t:label>
-        <input t:type="TextArea" t:id="description" t:value="organism.description" cols="17" rows="5"
-               t:validate="maxlength=250"/>
-      </p>
-
-      <!--      <p>-->
-      <!--        <t:label for="college">-->
-      <!--          ${message:college-label} *:-->
-      <!--        </t:label>-->
-      <!--        <t:select t:id="college" t:value="organism.college" model="listCollegeModel" t:validate="required"/>-->
-      <!--      </p>-->
 
       <p>
         <t:label for="postalAddress">${message:postalAddress-label} *:</t:label>

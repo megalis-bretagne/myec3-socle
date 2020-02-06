@@ -3,9 +3,11 @@
 <html t:type="layout" xmlns:t="http://tapestry.apache.org/schema/tapestry_5_1_0.xsd">
 <div id="main-content">
   <h2>${organism?.article?.label} ${organism?.label}</h2>
+
   <t:if test="successMessage">
     <p class="success">${successMessage}</p>
   </t:if>
+
   <div class="tabbed-data">
     <ul class="tabs">
       <li class="active"><strong>${message:info-label}</strong></li>
@@ -54,13 +56,14 @@
 
         <t:if test="isAdmin">
 
-          <t:loop source="organismStatusList.keySet()" value="currentKeyOrganismStatus">
+          <t:loop source="organismStatusList" value="organismStatusLoop">
             <p>
               <label for="memberStatus">${message:member-status-label}</label> :
-              ${currentKeyOrganismStatus} -
-              <t:output format="dateFormat" t:value="currentValue.date"/>
+              ${organismStatusLoop.status.label} -
+              <t:output format="dateFormat" t:value="organismStatusLoop.date"/>
             </p>
           </t:loop>
+
         </t:if>
 
         <p><label for="label">${message:label-label}</label> :
@@ -84,7 +87,6 @@
             ${apeCodeLabel}
           </t:if>
         </p>
-
         <p><label for="postalAddress">${message:postalAddress-label}</label> :
           ${organism?.address?.postalAddress}
         </p>
