@@ -1,144 +1,140 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html t:type="layout" xmlns:t="http://tapestry.apache.org/schema/tapestry_5_1_0.xsd">
-    <div id="main-content">
-  		<h2>${organism?.article?.label} ${organism?.label}</h2>
-		<t:if test="successMessage">
-			<p class="success">${successMessage}</p>
-		</t:if>
-  		<div class="tabbed-data">
-			<ul class="tabs">
-				<li class="active"><strong>${message:info-label}</strong></li>
-				<t:if test="isAdmin">
-					<li><t:pagelink page="structure/relation/listRelations" context="organism.id">${message:relation-label}</t:pagelink></li>
-					<li><t:pagelink page="organism/detailOrganismApplications" context="organism.id">${message:service-label}</t:pagelink></li>
-					<li><t:pagelink page="organism/apiManagement" context="organism.id">${message:api-label}</t:pagelink></li>
-				</t:if>
-				<li><t:pagelink page="organism/department/view" context="organism.id">${message:oragnization-level-label}</t:pagelink></li> 
-				<li><t:pagelink page="organism/agent/listAgents" context="organism.id">${message:User-label}</t:pagelink></li>
-				<t:if test="isAppManagerActive">
-				    <li><t:pagelink page="organism/appmanager/listAppManagers" context="organism.id">${message:AppAdmin-label}</t:pagelink></li>
-                </t:if>
-			</ul>
-			<div class="tabs-content">
+<div id="main-content">
+  <h2>${organism?.article?.label} ${organism?.label}</h2>
+  <t:if test="successMessage">
+    <p class="success">${successMessage}</p>
+  </t:if>
+  <div class="tabbed-data">
+    <ul class="tabs">
+      <li class="active"><strong>${message:info-label}</strong></li>
+      <t:if test="isAdmin">
+        <li>
+          <t:pagelink page="structure/relation/listRelations"
+                      context="organism.id">${message:relation-label}</t:pagelink>
+        </li>
+        <li>
+          <t:pagelink page="organism/detailOrganismApplications"
+                      context="organism.id">${message:service-label}</t:pagelink>
+        </li>
+      </t:if>
+      <li>
+        <t:pagelink page="organism/department/view"
+                    context="organism.id">${message:oragnization-level-label}</t:pagelink>
+      </li>
+      <li>
+        <t:pagelink page="organism/agent/listAgents" context="organism.id">${message:User-label}</t:pagelink>
+      </li>
+    </ul>
+    <div class="tabs-content">
 
+      <p class="mandatory">&nbsp;</p>
 
-				<p class="mandatory">&nbsp;</p>
+      <div class="actions-bar">
+        <ul>
+          <li>
+            <t:pagelink page="organism/modify" context="organism.id">
+              <img src="${context:static/images/organisme_modifier.png}"
+                   alt="${message:modify-label}"
+                   title="${message:modify-organism-label}"/> ${message:modify-organism-label}
+            </t:pagelink>
+          </li>
+        </ul>
+      </div>
+      <fieldset>
+        <legend>${message:organization-info-label}</legend>
 
-				<div class="actions-bar">
-						<ul>
-							<li><t:pagelink page="organism/modify" context="organism.id">
-							<img src="${context:static/images/organisme_modifier.png}"
-										alt="${message:modify-label}" title="${message:modify-organism-label}" /> ${message:modify-organism-label}
-										</t:pagelink>
-							</li>
-						</ul>
-				</div>
-				<fieldset>
-					<legend>${message:organization-info-label}</legend>
+        <t:if test="isTechnicalAdmin">
+          <p>
+            <label for="customer">${message:customer-label}</label> :
+            ${organism?.customer?.label}
+          </p>
+        </t:if>
 
-        			<t:if test="isTechnicalAdmin">
-						<p>
-							<label for="customer">${message:customer-label}</label> :
-							${organism?.customer?.label}
-						</p>
-					</t:if>
+        <t:if test="isAdmin">
 
-        			<t:if test="isAdmin">
+          <t:loop source="organismStatusList.keySet()" value="currentKeyOrganismStatus">
+            <p>
+              <label for="memberStatus">${message:member-status-label}</label> :
+              ${currentKeyOrganismStatus} -
+              <t:output format="dateFormat" t:value="currentValue.date"/>
+            </p>
+          </t:loop>
+        </t:if>
 
-                    <t:loop source="organismStatusList.keySet()" value="currentKeyOrganismStatus">
-                        <p>
-                            <label for="memberStatus">${message:member-status-label}</label> :
-                            ${currentKeyOrganismStatus} - <t:output format="dateFormat" t:value="currentValue.date"/>
-                        </p>
-                    </t:loop>
-					</t:if>
+        <p><label for="label">${message:label-label}</label> :
+          ${organism?.article?.label} ${organism?.label}
+        </p>
+        <p><label for="siren">${message:siren-label}</label> :
+          ${organism.siren}
+        </p>
+        <p><label for="nic">${message:organism-nic-label}</label> :
+          ${organism.nic}
+        </p>
+        <p>
+          <label for="legalCategory">${message:legal-category-label}</label> :
+          <t:if test="organism.legalCategory">
+            ${legalCategoryLabel}
+          </t:if>
+        </p>
+        <p>
+          <label for="organismNafCode">${message:apeNafLabel-label}</label> :
+          <t:if test="organism.apeCode">
+            ${apeCodeLabel}
+          </t:if>
+        </p>
 
-					<p><label for="ideoSignatureDate">${message:ideo-signature-date-label}</label> :
-						<t:output format="dateFormat" t:value="organism.ideoSignatureDate"/>
-					</p>
-					<p><label for="label">${message:label-label}</label> :
-						${organism?.article?.label} ${organism?.label}
-					</p>
-					<p><label for="siren">${message:siren-label}</label> :
-						${organism.siren}
-					</p>
-					<p><label for="nic">${message:organism-nic-label}</label> :
-						${organism.nic}
-					</p>
-					<p>
-						<label for="legalCategory">${message:legal-category-label}</label> :
-						<t:if test="organism.legalCategory">
-							${legalCategoryLabel}
-						</t:if>
-					</p>
-					<p>
-		            	<label for="organismNafCode">${message:apeNafLabel-label}</label> :
-						<t:if test="organism.apeCode">
-							${apeCodeLabel}
-						</t:if>
-	        		</p>
-					<t:if test="isAdmin">
-						<p>
-							<label for="college">${message:college-label}</label> :
-							${collegeCategorie?.name}
-						</p>
+        <p><label for="postalAddress">${message:postalAddress-label}</label> :
+          ${organism?.address?.postalAddress}
+        </p>
+        <p>
+          <label for="localityAddress">${message:localityAddress-label}</label>:
+          ${organism?.address?.localityAddress}
+        </p>
+        <p>
+          <label for="additionalInfoAddress">${message:additionalInfoAddress-label}</label>:
+          ${organism?.address?.additionalInfoAddress}
+        </p>
+        <p><label for="postalCode">${message:postalCode-label}</label> :
+          ${organism?.address?.postalCode}
+        </p>
+        <p><label for="city">${message:city-label}</label> :
+          ${organism?.address?.city}
+        </p>
+        <p><label for="country">${message:country-label}</label>:
+          ${organism?.address?.country?.label}
+        </p>
+        <p><label for="email">${message:email-label}</label> :
+          ${organism.email}
+        </p>
+        <p><label for="phone">${message:phone-label}</label> :
+          ${organism.phone}
+        </p>
+        <p><label for="fax">${message:fax-label}</label> :
+          ${organism.fax}
+        </p>
+        <p><label for="website">${message:website-label}</label> :
+          ${organism.website}
+        </p>
 
-					</t:if>
-
-					<p><label for="postalAddress">${message:postalAddress-label}</label> :
-			    			${organism?.address?.postalAddress}
-			        </p>
-
-                    <p>
-                        <label for="localityAddress">${message:localityAddress-label}</label>:
-                        ${organism?.address?.localityAddress}
-                    </p>
-
-                    <p>
-                        <label for="additionalInfoAddress">${message:additionalInfoAddress-label}</label>:
-                        ${organism?.address?.additionalInfoAddress}
-                    </p>
-
-					<p><label for="postalCode">${message:postalCode-label}</label> :
-			    			${organism?.address?.postalCode}
-			        </p>
-			        <p><label for="city">${message:city-label}</label> :
-			    			${organism?.address?.city}
-			        </p>
-			        <p><label for="country">${message:country-label}</label>:
-			    			${organism?.address?.country?.label}
-			        </p>
-					<p><label for="email">${message:email-label}</label> :
-						${organism.email}
-					</p>
-					<p><label for="phone">${message:phone-label}</label> :
-						${organism.phone}
-					</p>
-					<p><label for="fax">${message:fax-label}</label> :
-						${organism.fax}
-					</p>
-					<p><label for="website">${message:website-label}</label> :
-						${organism.website}
-					</p>
-					<p><label for="apiKey">${message:api-key-label}</label> :
-               			${organism?.apiKey}
-               		</p>
-					&nbsp;
-
-					<t:if test="organism.logoUrl">
-						<img class="imgOrganism mainLogo" src="${organism.logoUrl}" alt="${message:organism-logo-label}" />
-						<t:parameter name="else">
-							<img class="imgOrganism" src="${context:static/images/noImageAvailable.jpg}" alt="${message:noImage-label}" />
-						</t:parameter>
-					</t:if>
-					<ul class="links">
-						<t:if test="isAdmin">
-							<li class="back"><t:pagelink page="organism/searchresult">${message:back-searchresult-label}</t:pagelink></li>
-						</t:if>
-					</ul>
-				</fieldset>
-			</div>
-		</div>
-	</div>
+        <t:if test="organism.logoUrl">
+          <img class="imgOrganism mainLogo" src="${organism.logoUrl}" alt="${message:organism-logo-label}"/>
+          <t:parameter name="else">
+            <img class="imgOrganism" src="${context:static/images/noImageAvailable.jpg}"
+                 alt="${message:noImage-label}"/>
+          </t:parameter>
+        </t:if>
+        <ul class="links">
+          <t:if test="isAdmin">
+            <li class="back">
+              <t:pagelink page="organism/searchresult">${message:back-searchresult-label}</t:pagelink>
+            </li>
+          </t:if>
+        </ul>
+      </fieldset>
+    </div>
+  </div>
+</div>
 </html>
 
