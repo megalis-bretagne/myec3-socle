@@ -62,7 +62,7 @@ img {border: 0;}
 hr {display: none;}
 
 h1 {float: left; width: 298px; margin: 10px 25px 0;}
-h2 {color: #039; background: #FFF; margin-bottom: 20px;}
+h2 {color: #000; background: #FFF; margin-bottom: 20px;}
 
 p, li, dt, dd {font-size: 0.8em;}
 ul {padding-left: 16px;}
@@ -152,7 +152,7 @@ fieldset p {float: left; width: 100%;}
 legend {
 	font-size: 0.95em;
 	font-weight: bold;
-	color: #039;
+	color: #000;
 	background: #FFF url(../images/bg_legend.png) 7px 5px no-repeat;
 	padding: 0 8px 0 15px;
 	margin-left: 20px;
@@ -182,10 +182,10 @@ input[type=submit] {
 	font-weight: bold;
 	text-transform: uppercase;
 	color: #FFF;
-	background: #FF4D07;
+	background: #1E68B1;
 	padding: 2px 5px 3px 5px;
 	margin: 0 5px;
-	border: 1px solid #C14918;
+	border: 1px solid #15477A;
 	-moz-border-radius: 4px;
 	-webkit-border-radius: 4px;
 	border-radius: 4px;
@@ -196,7 +196,7 @@ input[type=submit] {
 }
 input[type=submit]:hover {
 	color: #FFF;
-	background: #C14918;
+	background: #15477A;
 	border-color: #000;
 	-moz-box-shadow: none;
 	-webkit-box-shadow: none;
@@ -281,7 +281,6 @@ label.form-subscription {
 	width: 100%;
 	text-align: left;
 	color: #333;
-	background: #FFF url(../images/bg_header.png) 580px -200px no-repeat;
 	margin-bottom: 20px;
 	border: 1px solid #EEE;
 	-moz-border-radius: 10px;
@@ -355,7 +354,7 @@ label.form-subscription {
 #nav a:hover {
 	text-decoration: none;
   	color: #FFF;
-  	background: #FF4F09 url(../images/bg_tab_on.png) repeat-x;
+  	background: linear-gradient(#2458BF, #1E68B1);
 }
 
 /* Active section without link */
@@ -389,7 +388,7 @@ ul.tabs {
 	list-style-type: none;
 	padding: 0;
 	margin: 1px 0 20px 1px;
-	border-bottom: 3px solid #FF4D07;
+	border-bottom: 3px solid #1E68B1;
 }
 	ul.tabs li {
 		float: left;
@@ -413,7 +412,7 @@ ul.tabs {
 	}
 	ul.tabs a:hover {
 		color: #FFF;
-  		background: #FF4F09 url(../images/bg_tab_on.png) repeat-x;
+  		background: linear-gradient(#2458BF, #1E68B1);
 	}
 	/* Current tab */
 	ul.tabs li.active strong {
@@ -421,7 +420,7 @@ ul.tabs {
 		font-weight: bold;
 		text-decoration: none;
   		color: #FFF;
-  		background: #FF4F09 url(../images/bg_tab_on.png) repeat-x;
+  		background: linear-gradient(#2458BF, #1E68B1);
 		padding: 5px 15px;
 		-moz-border-radius-topright: 5px;
 		-moz-border-radius-topleft: 5px;
@@ -516,7 +515,7 @@ div.section {
 	border-radius: 8px;
 }
 	div.section h3 {
-		color: #FF4D07;
+		color: #000;
 		background: #FFF;
 		margin-bottom: 20px;
 	}
@@ -562,19 +561,19 @@ div.steps li {
 
 /* Active steps images */
 #step1.active {
-		color: #FF4F07;
+		color: #1E68B1;
 		background: transparent url(../images/bg_step.png) left -200px no-repeat;
 }
 #step2.active {
-		color: #FF4F07;
+		color: #1E68B1;
 		background: transparent url(../images/bg_step.png) left -250px no-repeat;
 }
 #step3.active {
-		color: #FF4F07;
+		color: #1E68B1;
 		background: transparent url(../images/bg_step.png) left -300px no-repeat;
 }
 #step4.active {
-		color: #FF4F07;
+		color: #1E68B1;
 		background: transparent url(../images/bg_step.png) left -350px no-repeat;
 }
 	
@@ -583,13 +582,13 @@ div.steps li {
 ul.links {
 	color: #000;
 	background: transparent url(../images/bg_dotted_h.gif) top left repeat-x;
-	list-style-image: url(../images/bullet.png);
+	list-style-image: url(../images/bg_legend.png);
 	padding-top: 10px;
 	margin: 20px 0 20px 0;
 }
 	ul.links a, ul.links a:link {
 		font-weight: bold;
-		color: #FF4D07;
+		color: #1E68B1;
 		background: transparent;
 	}
 
@@ -600,7 +599,7 @@ ul.links {
 	}
 	
 	ul.links a:visited {
-		color: #F90;
+		color: #1E68B1;
 		background: transparent;
 	}
 
@@ -667,7 +666,7 @@ div.actions-bar {
 		line-height: 25px;
 		padding-left: 10px;
 	}
-	div.actions-bar strong {color: #FF4F07; background: #FFF;}
+	div.actions-bar strong {color: #1E68B1; background: #FFF;}
 	
 	div.actions-bar ul {
 		float: right;
@@ -720,8 +719,8 @@ div.actions-bar {
 /* --- LIST PAGINATION --- */
 ul.pagination {
 	padding:0;
-	margin-top: 20px; 
- 	list-style-type:none; 
+	margin-top: 20px;
+ 	list-style-type:none;
 }
 
 ul.pagination li{
@@ -736,7 +735,7 @@ ul.pagination li:hover{
 }
 
 ul.pagination li.active{
-	background-color: orange;
+    background-color: #1E68B1;
 }
 
 ul.pagination li a{
@@ -873,7 +872,7 @@ select#agentList {
 p.mandatory {
 	font-size: 0.7em;
 	text-align: right;
-	color: #FF4F07;
+	color: #1E68B1;
 	padding-right: 5px;
 	margin-bottom: 10px;
 } 
