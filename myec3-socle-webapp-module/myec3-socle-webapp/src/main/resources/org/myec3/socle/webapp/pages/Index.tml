@@ -60,7 +60,7 @@
 	    <!-- Functionnal Administrator block -->
 		<t:block id="functionalAdminBlock">
     		<div id="main-content">
-				<h2>${message:welcome-title-label}</h2>
+				<h2>${message:welcome-title-label}</h2> status
 				<fieldset>
 					<legend>${message:functional-admin-welcome-description-label}</legend>
 					<!-- FIXME !! -->
@@ -70,7 +70,7 @@
 				<div id="account-intro" class="section">
 					<h3>${message:functional-admin-create-organism-abstract-label}</h3>
 					<p>${message:functional-admin-manage-organism-create-3-steps-label}</p>
-					<ul> 
+					<ul>
 						<li>${message:functional-admin-manage-organism-create-1-label}</li>
 						<li>${message:functional-admin-manage-organism-create-2-label}</li>
 						<li>${message:functional-admin-manage-organism-create-3-label}</li>
@@ -95,12 +95,6 @@
 				</div>
 				<div id="search-intro" class="section">
 					<h3>${message:manager-manage-users}</h3>
-					<p>${message:technical-admin-manage-user-description-label}</p>
-					<ul> 
-						<li>${message:technical-admin-manage-user-step-1-label}</li>
-						<li>${message:technical-admin-manage-user-step-2-label}</li>
-						<li>${message:technical-admin-manage-user-step-3-label}</li>
-					</ul>
 					<ul class="links">
 						<li>
 							<a href="./user/search/">${message:manager-search-user}</a>
@@ -141,12 +135,25 @@
 							</t:pagelink>
 						</li>
 						<li>
+							<a href="./user/search/">${message:manager-search-user}</a>
+						</li>
+						<li>
 							<t:pagelink page="organism/agent/export/import"
 							context="agentProfile.organismDepartment.organism.id">Importer des utilisateurs
 							</t:pagelink>
 						</li>
+					</ul>
+					<p>Gérer vos informations personnelles.</p>
+					<ul class="links">
 						<li>
-							<a href="./user/search/">${message:manager-search-user}</a>
+							<t:pagelink page="organism/agent/View"
+							context="loggedProfile.id">Voir/Modifier vos informations personnelles
+							</t:pagelink>
+						</li>
+						<li>
+							<t:pagelink page="user/RegeneratePassword"
+							context="loggedProfile.id">Regénérer votre mot de passe
+							</t:pagelink>
 						</li>
 					</ul>
 				</div>
@@ -179,29 +186,6 @@
 			</div>
 	    </t:block>
 
-        <!-- Application Manager Agent block -->
-        <t:block id="applicationManagerAgentBlock">
-            <div id="main-content">
-                <h2>${message:welcome-title-label}</h2>
-                <fieldset>
-                    <legend>${message:manager-welcome-description-label}</legend>
-                    <p style="margin-left:15px;margin-right:15px;">${message:manager-welcome-information-label}  ${agentProfile?.organismDepartment?.organism?.label} ${message:manager-welcome-abstract-label}</p>
-                </fieldset>
-
-                <div class="section">
-                    <h3>${message:manager-manage-users}</h3>
-                    <p>${message:manager-agent-users-list}</p>
-                    <ul class="links">
-                        <li>
-                            <t:pagelink page="organism/agent/listagents"
-                            context="agentProfile.organismDepartment.organism.id">${message:manager-agent-organism-users-list}
-                            </t:pagelink>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </t:block>
-	    
 	    <!-- Manager Employee block -->
         <t:block id="managerEmployeeBlock">
 	    	<div id="main-content">	
@@ -237,6 +221,19 @@
 							<a href="./user/search/">${message:manager-search-user}</a>
 						</li>
 					</ul>
+					<p>Gérer vos informations personnelles.</p>
+					<ul class="links">
+						<li>
+							<t:pagelink page="company/employee/View"
+							context="loggedProfile.id">Voir/Modifier vos informations personnelles
+							</t:pagelink>
+						</li>
+						<li>
+							<t:pagelink page="user/RegeneratePassword"
+							context="loggedProfile.id">Regénérer votre mot de passe
+							</t:pagelink>
+						</li>
+					</ul>
 				</div>
 			</div>
 	    </t:block>
@@ -259,6 +256,18 @@
 				<fieldset>
 					<legend>${message:agent-welcome-description-label}</legend>
 					<p style="margin-left:15px;margin-right:15px;">${message:agent-welcome-information-label}</p><br/><br/>
+					<ul class="links">
+						<li>
+							<t:pagelink page="organism/agent/View"
+							context="loggedProfile.id">Voir/Modifier vos informations personnelles
+							</t:pagelink>
+						</li>
+						<li>
+							<t:pagelink page="user/RegeneratePassword"
+							context="loggedProfile.id">Regénérer votre mot de passe
+							</t:pagelink>
+						</li>
+					</ul>
 				</fieldset>
 			</div>
 	    </t:block>
@@ -268,8 +277,25 @@
 			<div id="main-content">    	
 				<h2>${message:welcome-title-label}</h2>
 				<fieldset>
-					<legend>${message:agent-welcome-description-label}</legend>
-					<p style="margin-left:15px;margin-right:15px;">${message:agent-welcome-information-label}</p><br/><br/>
+					<legend>${message:employee-welcome-description-label}</legend>
+					<p style="margin-left:15px;margin-right:15px;">${message:employee-welcome-information-label}</p><br/><br/>
+					<ul class="links">
+						<li>
+							<t:pagelink page="company/employee/View"
+							context="loggedProfile.id">Voir/Modifier vos informations personnelles
+							</t:pagelink>
+						</li>
+						<li>
+							<t:pagelink page="company/establishment/create"
+							context="employeeProfile.companyDepartment.company.id">Créer un établissement au sein de votre entreprise
+							</t:pagelink>
+						</li>
+						<li>
+							<t:pagelink page="user/RegeneratePassword"
+							context="loggedProfile.id">Regénérer votre mot de passe
+							</t:pagelink>
+						</li>
+					</ul>
 				</fieldset>
 			</div>
 	    </t:block>
