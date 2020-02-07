@@ -102,6 +102,7 @@ public class AbstractPage {
 		SecurityContext context = null;
 		Session session = null;
 		Profile profile = null;
+		request.getHeaderNames().stream().forEach(p -> System.out.println(p + request.getHeader(p)));
 
 		session = this.request.getSession(true);
 		String userType = request.getHeader("userType");
