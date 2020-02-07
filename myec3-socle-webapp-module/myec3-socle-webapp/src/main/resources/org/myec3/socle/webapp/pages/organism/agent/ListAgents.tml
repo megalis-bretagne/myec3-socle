@@ -1,141 +1,153 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html t:type="layout" xmlns:t="http://tapestry.apache.org/schema/tapestry_5_1_0.xsd">
-	<div id="main-content">
-		<t:if test="isOrganismDepartment">
-			<h2>${message:page-title-department} : ${organismDepartment.label}</h2>
-		<t:parameter name="else">
-			<h2>${message:page-title-organism}</h2>
-		</t:parameter>
-		</t:if>	
-		<t:if test="successMessage">
-			<p class="success">${successMessage}</p>
-		</t:if>
-		<div class="tabbed-data"> 
-			<t:if test="organism">
-				<ul class="tabs">
-                    <t:if test="isOrganismAdmin">
-					    <li><t:pagelink page="organism/detailOrganism" context="organism.id">${message:info-label}</t:pagelink></li>
-                     </t:if>
-					<t:if test="isAdmin">
-						<li><t:pagelink page="structure/relation/listRelations" context="organism.id">${message:relation-label}</t:pagelink></li>
-						<li><t:pagelink page="organism/detailOrganismApplications" context="organism.id">${message:service-label}</t:pagelink></li> 
-						<li><t:pagelink page="organism/apiManagement" context="organism.id">${message:api-label}</t:pagelink></li>
-					</t:if>
-					<t:if test="isOrganismAdmin">
-					    <li><t:pagelink page="organism/department/view" context="organism.id">${message:oragnization-level-label}</t:pagelink></li>
-                    </t:if>
-					<li class="active"><strong>${message:User-label}</strong></li>
-					<t:if test="isOrganismAdmin">
-					    <t:if test="isAppManagerActive">
-					        <li><t:pagelink page="organism/appmanager/listAppManagers" context="organism.id">${message:AppAdmin-label}</t:pagelink></li>
-                        </t:if>
-                    </t:if>
-				</ul>
-			</t:if>
-			<div class="tabs-content">
-				<div class="actions-bar">
-					<p>${message:total-results-label} : <strong>${resultsNumber}</strong></p>
-					<t:if test="isOrganismAdmin">
-                        <ul>
-                            <li>
-                                <t:pagelink page="organism/agent/export/export"
-                                    context="organismDepartment.organism.id">
-                                <img src="${context:static/images/add_users.png}"
-                                        alt="${message:export-users-label}" title="${message:export-users-label}" />
-                                    ${message:export-users-label}
-                                </t:pagelink>
-                            </li>
-                            <li>
-                                <t:pagelink page="organism/agent/export/import"
-                                    context="organismDepartment.organism.id">
-                                <img src="${context:static/images/add_users.png}"
-                                        alt="${message:import-users-label}" title="${message:import-users-label}" />
-                                    ${message:import-users-label}
-                                </t:pagelink>
-                            </li>
-                            <li><t:if test="organismDepartment">
-                                <t:pagelink page="organism/agent/create"
-                                    context="[organismDepartment.organism.id,organismDepartment.id]">
-                                    <img src="${context:static/images/agent_ajouter.png}"
-                                        alt="${message:addAgent-label}" title="${message:create-user-label}" /> ${message:create-user-label}
-                                        </t:pagelink>
-                            </t:if>
-                            </li>
-                            <li><a href="#" onclick="javascript:window.print()">
-                                    <img src="${context:static/images/printer.png}"
-                                        alt="${message:print-label}" title="${message:print-label}"/> ${message:print-label}
-                                </a>
-                            </li>
-                        </ul>
-                    </t:if>
-				</div>
-				<div class="caption">
-					<p>${message:result-label}</p>
-				</div>
+<div id="main-content">
 
-				<table t:id="agentProfileGrid" model="gridModel" t:type="grid"
-					pagerPosition="bottom"
-					t:row="agentProfileRow" t:source="AgentProfileList"
-					t:rowIndex="rowIndex" t:rowsPerPage="${message:rowsPerPage}"
-					t:inplace="true" t:empty="${message:empty-label}">
-					<t:parameter name="userCell">
-						<t:if test="agentProfileRow.user">
-							<t:pagelink page="organism/agent/view" context="agentProfileRow.id">
-								${agentProfileRow?.user?.firstname}&nbsp; ${agentProfileRow?.user?.lastname}
-							</t:pagelink>		
-						</t:if>
-					</t:parameter>
-					<t:parameter name="actionsCell">
-									
-						<t:pagelink page="organism/agent/view"
-							context="agentProfileRow.id">
-							<img src="${context:static/images/agent_voir.png}"
-								alt="${message:view-label}" title="${message:view-label}"/></t:pagelink>&nbsp;
+  <t:if test="isOrganismDepartment">
+    <h2>${message:page-title-department} : ${organismDepartment.label}</h2>
+    <t:parameter name="else">
+      <h2>${message:page-title-organism}</h2>
+    </t:parameter>
+  </t:if>
+  <t:if test="successMessage">
+    <p class="success">${successMessage}</p>
+  </t:if>
 
-						<t:if test="isOrganismAdmin">
+  <div class="tabbed-data">
+    <t:if test="organism">
+      <ul class="tabs">
+        <li>
+          <t:pagelink page="organism/detailOrganism" context="organism.id">${message:info-label}</t:pagelink>
+        </li>
+        <t:if test="isAdmin">
+          <li>
+            <t:pagelink page="structure/relation/listRelations"
+                        context="organism.id">${message:relation-label}</t:pagelink>
+          </li>
+          <li>
+            <t:pagelink page="organism/detailOrganismApplications"
+                        context="organism.id">${message:service-label}</t:pagelink>
+          </li>
+        </t:if>
+        <li>
+          <t:pagelink page="organism/department/view"
+                      context="organism.id">${message:oragnization-level-label}</t:pagelink>
+        </li>
+        <li class="active"><strong>${message:User-label}</strong></li>
+      </ul>
+    </t:if>
+    <div class="tabs-content">
+      <div class="actions-bar">
+        <p>${message:total-results-label} : <strong>${resultsNumber}</strong></p>
+        <t:if test="isOrganismAdmin">
+          <ul>
+            <li>
+              <t:pagelink page="organism/agent/export/export"
+                          context="organismDepartment.organism.id">
+                <img src="${context:static/images/add_users.png}"
+                     alt="${message:export-users-label}" title="${message:export-users-label}"/>
+                ${message:export-users-label}
+              </t:pagelink>
+            </li>
+            <li>
+              <t:pagelink page="organism/agent/export/import"
+                          context="organismDepartment.organism.id">
+                <img src="${context:static/images/add_users.png}"
+                     alt="${message:import-users-label}" title="${message:import-users-label}"/>
+                ${message:import-users-label}
+              </t:pagelink>
+            </li>
+            <li>
+              <t:if test="organismDepartment">
+                <t:pagelink page="organism/agent/create"
+                            context="[organismDepartment.organism.id,organismDepartment.id]">
+                  <img src="${context:static/images/agent_ajouter.png}"
+                       alt="${message:addAgent-label}"
+                       title="${message:create-user-label}"/> ${message:create-user-label}
+                </t:pagelink>
+              </t:if>
+            </li>
+            <li><a href="#" onclick="javascript:window.print()">
+              <img src="${context:static/images/printer.png}"
+                   alt="${message:print-label}" title="${message:print-label}"/> ${message:print-label}
+            </a>
+            </li>
+          </ul>
+        </t:if>
+      </div>
+      <div class="caption">
+        <p>${message:result-label}</p>
+      </div>
 
-                            <t:if test="agentProfileRow.user.enabled">
-                                <t:pagelink page="organism/agent/modify"
-                                context="agentProfileRow.id"><img src="${context:static/images/agent_modifier.png}"
-                                    alt="${message:modify-user-label}" title="${message:modify-user-label}"/></t:pagelink>&nbsp;
-                            <t:if test="isAgentRowLogged" negate="true">
-                                <t:actionlink t:id="disable"
-                                    context="agentProfileRow.id" t:mixins="confirm"
-                                    t:message="message:confirm-disabled-label"><img src="${context:static/images/agent_disable.png}"
-                                        alt="${message:disable-user-label}" title="${message:disable-user-label}"/></t:actionlink>&nbsp;
-                                        </t:if>
-                            </t:if>
-                            <t:if test="!agentProfileRow.user.enabled">
-                                <img src="${context:static/images/agent_modifier_disable.png}"
-                                    alt="${message:modify-user-label-disable}" title="${message:modify-user-label-disable}"/>&nbsp;
+      <table t:id="agentProfileGrid" model="gridModel" t:type="grid"
+             pagerPosition="bottom"
+             t:row="agentProfileRow" t:source="AgentProfileList"
+             t:rowIndex="rowIndex" t:rowsPerPage="${message:rowsPerPage}"
+             t:inplace="true" t:empty="${message:empty-label}">
+        <t:parameter name="userCell">
+          <t:if test="agentProfileRow.user">
+            <t:pagelink page="organism/agent/view" context="agentProfileRow.id">
+              ${agentProfileRow?.user?.firstname}&nbsp; ${agentProfileRow?.user?.lastname}
+            </t:pagelink>
+          </t:if>
+        </t:parameter>
+        <t:parameter name="actionsCell">
 
-                                <t:actionlink t:id="enable"
-                                    context="agentProfileRow.id" t:mixins="confirm"
-                                    t:message="message:confirm-enabled-label"><img src="${context:static/images/agent_enable.png}"
-                                        alt="${message:enable-user-label}" title="${message:enable-user-label}"/></t:actionlink>&nbsp;
-                            </t:if>
-                            <t:if test="isAgentRowLogged" negate="true">
-                                <t:actionlink t:id="delete"
-                                    context="agentProfileRow.id" t:mixins="confirm"
-                                    t:message="message:confirm-delete-label"><img src="${context:static/images/agent_supprimer.png}"
-                                        alt="${message:delete-user-label}" title="${message:delete-user-label}"/></t:actionlink>&nbsp;
-                            </t:if>
+          <t:pagelink page="organism/agent/view"
+                      context="agentProfileRow.id">
+            <img src="${context:static/images/agent_voir.png}"
+                 alt="${message:view-label}" title="${message:view-label}"/></t:pagelink>&nbsp;
 
-                        </t:if>
-					</t:parameter>
-						
-				</table>
-			
-				<ul class="links">
-					<t:if test="isAdmin">
-						<li class="back"><t:pagelink page="organism/searchresult">${message:back-searchresult-label}</t:pagelink></li>
-					</t:if>
-					<li class="back"><a href="javascript:history.go(-1)">${message:back-label}</a></li>
-				</ul>
+          <t:if test="isOrganismAdmin">
 
-			</div>
-		</div>
-	</div>
-	
+            <t:if test="agentProfileRow.user.enabled">
+              <t:pagelink page="organism/agent/modify"
+                          context="agentProfileRow.id"><img src="${context:static/images/agent_modifier.png}"
+                                                            alt="${message:modify-user-label}"
+                                                            title="${message:modify-user-label}"/></t:pagelink>&nbsp;
+              <t:if test="isAgentRowLogged" negate="true">
+                <t:actionlink t:id="disable"
+                              context="agentProfileRow.id" t:mixins="confirm"
+                              t:message="message:confirm-disabled-label"><img
+                    src="${context:static/images/agent_disable.png}"
+                    alt="${message:disable-user-label}" title="${message:disable-user-label}"/></t:actionlink>&nbsp;
+              </t:if>
+            </t:if>
+            <t:if test="!agentProfileRow.user.enabled">
+              <img src="${context:static/images/agent_modifier_disable.png}"
+                   alt="${message:modify-user-label-disable}" title="${message:modify-user-label-disable}"/>&nbsp;
+
+              <t:actionlink t:id="enable"
+                            context="agentProfileRow.id" t:mixins="confirm"
+                            t:message="message:confirm-enabled-label"><img
+                  src="${context:static/images/agent_enable.png}"
+                  alt="${message:enable-user-label}" title="${message:enable-user-label}"/></t:actionlink>&nbsp;
+            </t:if>
+            <t:if test="isAgentRowLogged" negate="true">
+              <t:actionlink t:id="delete"
+                            context="agentProfileRow.id" t:mixins="confirm"
+                            t:message="message:confirm-delete-label"><img
+                  src="${context:static/images/agent_supprimer.png}"
+                  alt="${message:delete-user-label}" title="${message:delete-user-label}"/></t:actionlink>&nbsp;
+            </t:if>
+
+          </t:if>
+        </t:parameter>
+
+      </table>
+
+      <ul class="links">
+        <t:if test="isAdmin">
+          <li class="back">
+            <t:pagelink page="organism/searchresult">${message:back-searchresult-label}</t:pagelink>
+          </li>
+        </t:if>
+        <li class="back"><a href="javascript:history.go(-1)">${message:back-label}</a></li>
+      </ul>
+
+    </div>
+  </div>
+</div>
+
 
 </html>

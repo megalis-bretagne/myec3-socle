@@ -20,6 +20,7 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 import org.hibernate.envers.Audited;
 import org.myec3.socle.core.domain.model.adapter.DateAdapter;
+import org.myec3.socle.core.domain.model.enums.OrganismMemberStatus;
 
 /**
  * Created by A664936 on 12/04/2017.
@@ -28,20 +29,20 @@ import org.myec3.socle.core.domain.model.adapter.DateAdapter;
 @Entity
 public class OrganismStatus implements Serializable, PE {
 	private Long id;
-	private String status;
+	private OrganismMemberStatus status;
 	private Date date;
 	private Organism organism;
 
 	public OrganismStatus() {
 	}
 
-	public OrganismStatus(String status, Date date, Organism organism) {
+	public OrganismStatus(OrganismMemberStatus status, Date date, Organism organism) {
 		this.status = status;
 		this.date = date;
 		this.organism = organism;
 	}
 
-	public OrganismStatus(Long id, String status, Date date, Organism organism) {
+	public OrganismStatus(Long id, OrganismMemberStatus status, Date date, Organism organism) {
 		this.id = id;
 		this.status = status;
 		this.date = date;
@@ -58,11 +59,12 @@ public class OrganismStatus implements Serializable, PE {
 		this.id = id;
 	}
 
-	public String getStatus() {
+  @Enumerated(EnumType.STRING)
+	public OrganismMemberStatus getStatus() {
 		return status;
 	}
 
-	public void setStatus(String status) {
+	public void setStatus(OrganismMemberStatus status) {
 		this.status = status;
 	}
 

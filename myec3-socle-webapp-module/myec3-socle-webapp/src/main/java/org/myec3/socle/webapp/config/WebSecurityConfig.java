@@ -45,6 +45,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
 				.antMatchers("/organism/create/**").hasAnyAuthority("ROLE_SUPER_ADMIN", "ROLE_ADMIN")
 				.antMatchers("/organism/search/**").hasAnyAuthority("ROLE_SUPER_ADMIN", "ROLE_ADMIN")
+        .antMatchers("/organism/apiManagement/**").hasAnyAuthority("ROLE_SUPER_ADMIN")
+        .antMatchers("/organism/appmanager/**").hasAnyAuthority("ROLE_SUPER_ADMIN")
+
 				.antMatchers("/organism/agent/modify/**")
 				.hasAnyAuthority("ROLE_SUPER_ADMIN", "ROLE_ADMIN", "ROLE_MANAGER_AGENT", "ROLE_DEFAULT")
 				.antMatchers("/organism/agent/modify.agent_form.modification_form")
