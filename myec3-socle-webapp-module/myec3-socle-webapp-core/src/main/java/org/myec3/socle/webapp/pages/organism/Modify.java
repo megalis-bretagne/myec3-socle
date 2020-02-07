@@ -399,7 +399,7 @@ public class Modify extends AbstractPage {
 			@Override
 			public OrganismStatus toValue(String statusAsString) {
 				for (OrganismStatus organismStatus : organismStatusList) {
-					if (organismStatus.getStatus().equals(statusAsString)) {
+					if (organismStatus.getStatus().getLabel().equals(statusAsString)) {
 						// The first object matching statusAsString will be modified
 						// Removing and adding organismStatus put the object at the end of the list
 						// So if there are objects with equal statuses, no one will be modified several

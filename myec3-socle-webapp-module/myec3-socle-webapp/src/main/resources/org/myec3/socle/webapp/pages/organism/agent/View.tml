@@ -48,14 +48,12 @@
 	                                </t:actionlink>
 	                            </li>
 	                        </t:if>
-	                        <t:if test="isOrganismAdmin">
 	                        	<li>
 		                            <t:pagelink page="organism/agent/modify" context="agentProfile.id">
-			                                <img src="${context:static/images/agent_modifier.png}" alt="${message:modify-user-label}" title="${message:modify-user-label}"  /> ${message:modify-user-label}
+			                                <img src="${context:static/images/agent_modifier.png}" alt="${message:modify-user-label}" title="${message:modify-user-label}"  /> <t:if test="!isHimselfAndNotAdmin">${message:modify-user-label}</t:if>
 		                            </t:pagelink>
 	                            </li>
                             </t:if>
-                        </t:if>
                         <t:if test="!agentProfile.user.enabled">
                         		<li>
 	                        		<a class="disable" >
@@ -176,18 +174,6 @@
                         <label>${message:email-label} : </label>
 						${agentProfile?.email}
                     </p>
-                    <p>
-                        <label>${message:birthDate-label} : </label>
-                        ${agentProfile?.user?.birthDate}
-                    </p>
-                    <p>
-                        <label>${message:birthPlace-label} : </label>
-                        ${agentProfile?.user.birthPlace}
-                    </p>
-                    <p>
-                        <label>${message:birthCountry-label} : </label>
-                        ${agentProfile?.user.birthCountry}
-                    </p>
 					<p>
                         <label>${message:cellPhone-label} : </label>
 						${agentProfile?.cellPhone}
@@ -201,10 +187,11 @@
 						${agentProfile?.fax}
 				    </p>
                   <p>
-                    <label>${message:competences-label} : </label>
-                    ${competences}
+                    <label>${message:certificate} : </label>
+                    <t:if test="agentProfile.user.certificate">
+                      ${message:certificate-is-present}
+                    </t:if>
                   </p>
-
 					<p>
 						<label>${message:lastConnectionDate-label} : </label>
 						<t:if test="agentProfile.user.connectionInfos">
@@ -218,7 +205,7 @@
 
                      &nbsp;
                     <ul class="links">
-                        <t:if test="isOrganismAdmin">
+                        <t:if test="isHimselfAndNotAdmin">
                             <li class="back">
                                 <t:pagelink page="organism/department/detail" context="agentProfile.organismDepartment.id">
                                     ${message:back-detailorganismdepartment-label} : ${agentProfile?.organismDepartment?.label}
@@ -229,13 +216,6 @@
                                     ${message:back-detailorganism-label} : ${agentProfile.organismDepartment.organism?.article?.label} ${agentProfile?.organismDepartment?.organism?.label}
                                 </t:pagelink>
                             </li>
-                        <p:else>
-                            <li class="back">
-                                <t:pagelink page="organism/agent/listAgents" context="agentProfile.organismDepartment.organism.id">
-                                    ${message:back-users-list-label}
-                                </t:pagelink>
-                            </li>
-                        </p:else>
                         </t:if>
                         <li class="back">
                             <a href="javascript:history.go(-1)">${message:back-label}</a>
