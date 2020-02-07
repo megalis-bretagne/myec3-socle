@@ -121,66 +121,6 @@ public class AgentForm extends AbstractPage {
 
 	/**
 	 * Business Service providing methods and specifics operations on
-	 * {@link AgentProfile} objects
-	 */
-	@Inject
-	@Service("competenceService")
-	private CompetenceService competenceService;
-
-	/**
-	 * List with all compences availables
-	 */
-	private List<Competence> competenceList;
-
-	public List<Competence> getCompetenceList() {
-		if (competenceList == null) {
-			competenceList = competenceService.findAll();
-		}
-		return competenceList;
-	}
-
-	public void setCompetenceList(List<Competence> selected) {
-		competenceList = selected;
-	}
-
-	/**
-	 * Create selectModel from competenceList
-	 * @return
-	 */
-	public SelectModel getModelCompetence() {
-		List<OptionModel> optionModels = new ArrayList<>();
-		for (Competence c : getCompetenceList()) {
-			optionModels.add(new OptionModelImpl(c.getName(), c));
-		}
-		return new SelectModelImpl(null, optionModels);
-	}
-
-	/**
-	 * Convert Competences <-> String
-	 */
-	@Property
-	private ValueEncoder<Competence> competenceValueEncoder = new ValueEncoder<Competence>() {
-		@Override
-		public String toClient(Competence competence) {
-			if (competence == null) {
-				return "";
-			}
-			return competence.getName();
-		}
-
-		@Override
-		public Competence toValue(String s) {
-			for (Competence c : getCompetenceList()) {
-				if (c.getName().equals(s)) {
-					return c;
-				}
-			}
-			return null;
-		}
-	};
-
-	/**
-	 * Business Service providing methods and specifics operations on
 	 * {@link OrganismDepartment} objects
 	 */
 	@Inject
