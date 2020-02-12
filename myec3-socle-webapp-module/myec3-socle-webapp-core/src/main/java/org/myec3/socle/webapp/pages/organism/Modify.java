@@ -32,6 +32,7 @@ import org.apache.tapestry5.Block;
 import org.apache.tapestry5.EventConstants;
 import org.apache.tapestry5.SelectModel;
 import org.apache.tapestry5.ValueEncoder;
+import org.apache.tapestry5.annotations.AfterRender;
 import org.apache.tapestry5.annotations.Component;
 import org.apache.tapestry5.annotations.Import;
 import org.apache.tapestry5.annotations.InjectPage;
@@ -45,14 +46,13 @@ import org.apache.tapestry5.services.javascript.JavaScriptSupport;
 import org.apache.tapestry5.upload.services.UploadedFile;
 import org.myec3.socle.core.domain.model.*;
 import org.myec3.socle.core.domain.model.enums.AuthorizedMimeType;
+import org.myec3.socle.core.domain.model.enums.OrganismMemberStatus;
 import org.myec3.socle.core.domain.model.enums.OrganismNafCode;
 import org.myec3.socle.core.service.OrganismService;
 import org.myec3.socle.core.service.StructureService;
 import org.myec3.socle.synchro.api.SynchronizationNotificationService;
 import org.myec3.socle.webapp.constants.GuWebAppConstants;
 import org.myec3.socle.webapp.encoder.GenericListEncoder;
-import org.myec3.socle.webapp.model.CollegeCategorieSelectModel;
-import org.myec3.socle.webapp.model.OrganismMemberStatusSelectModel;
 import org.myec3.socle.webapp.pages.AbstractPage;
 
 /**
@@ -72,6 +72,8 @@ import org.myec3.socle.webapp.pages.AbstractPage;
 public class Modify extends AbstractPage {
 
 	private static final Logger logger = LogManager.getLogger(Modify.class);
+
+  private static final String EBOU = "Ebou";
 
 	@Property
 	private String errorMessage;
@@ -152,12 +154,12 @@ public class Modify extends AbstractPage {
 	@Inject
 	private SelectModelFactory selectModelFactory;
 
-	@Property
-	private SelectModel listCollegeModel;
+  @AfterRender
+  public void afterRender() {
+    javaScriptSupport.importJavaScriptLibrary(this.getWebContext()
+      + "/static/js/custom_datepicker.js");
+  }
 
-	@Property
-	private SelectModel listOrganismMemberStatusModel;
-	
 	// Page Activation n Passivation
 	@OnEvent(EventConstants.ACTIVATE)
 	public void Activation() {
@@ -391,13 +393,13 @@ public class Modify extends AbstractPage {
 
 			@Override
 			public String toClient(OrganismStatus value) {
-				return value.getStatus();
+				return value.getStatus().getLabel();
 			}
 
 			@Override
 			public OrganismStatus toValue(String statusAsString) {
 				for (OrganismStatus organismStatus : organismStatusList) {
-					if (organismStatus.getStatus().equals(statusAsString)) {
+					if (organismStatus.getStatus().getLabel().equals(statusAsString)) {
 						// The first object matching statusAsString will be modified
 						// Removing and adding organismStatus put the object at the end of the list
 						// So if there are objects with equal statuses, no one will be modified several
@@ -420,18 +422,9 @@ public class Modify extends AbstractPage {
 	 */
 	@OnEvent(value = EventConstants.ADD_ROW, component = "status_list")
 	public OrganismStatus onAddRow() {
-		List<OrganismMemberStatus> organismMemberStatuses = new ArrayList<>();
-		for (String key : this.getMessages().getKeys()) {
-			if (key.contains("OrganismMemberStatus")) {
-				String keyValue = key.split("\\.")[1];
-				OrganismMemberStatus organismMemberStatus = new OrganismMemberStatus(keyValue, this.getMessages().get(key));
-				organismMemberStatuses.add(organismMemberStatus);
-			}
-		}
-		listOrganismMemberStatusModel = new OrganismMemberStatusSelectModel(organismMemberStatuses);
-		OrganismStatus newOrganismStatus = new OrganismStatus("ADHERENT", new Date(), this.organism);
-		this.organismStatusList.add(newOrganismStatus);
-		return newOrganismStatus;
+    OrganismStatus newOrganismStatus = new OrganismStatus(OrganismMemberStatus.ADHERENT, new Date(), this.organism);
+    this.organismStatusList.add(newOrganismStatus);
+    return newOrganismStatus;
 	}
 
 	/**
@@ -460,45 +453,16 @@ public class Modify extends AbstractPage {
 	 */
 	public void setupRender() {
 
-		List<OrganismMemberStatus> organismMemberStatuses = new ArrayList<>();
-		for (String key : this.getMessages().getKeys()) {
-			if (key.contains("OrganismMemberStatus")) {
-				String keyValue = key.split("\\.")[1];
-				OrganismMemberStatus organismMemberStatus = new OrganismMemberStatus(keyValue, this.getMessages().get(key));
-				organismMemberStatuses.add(organismMemberStatus);
-			}
-		}
-		listOrganismMemberStatusModel = new OrganismMemberStatusSelectModel(organismMemberStatuses);
-
-		List<CollegeCategorie> colleges = new ArrayList<>();
-
-		for (String key : this.getMessages().getKeys()) {
-			if (key.contains("OrganismCollegeCat")) {
-				String keyValue = key.split("\\.")[1];
-				CollegeCategorie college = new CollegeCategorie(keyValue, this.getMessages().get(key));
-				colleges.add(college);
-			}
-		}
-
-		Collections.sort(colleges, new Comparator<CollegeCategorie>() {
-			@Override
-			public int compare(CollegeCategorie o1, CollegeCategorie o2) {
-				try {
-					int indiceCC1 = Integer.parseInt(o1.getName().split("-")[0].replace(" ", ""));
-					int indiceCC2 = Integer.parseInt(o2.getName().split("-")[0].replace(" ", ""));
-					if (indiceCC1 == indiceCC2) {
-						return 0;
-					} else if (indiceCC1 < indiceCC2) {
-						return -1;
-					}
-				} catch (Exception e) {
-					logger.error("Problème lors du tri des colleges categories : " + e.getMessage());
-				}
-				return 1;
-			}
-		});
-
-		listCollegeModel = new CollegeCategorieSelectModel(colleges);
+    OrganismMemberStatus[] availablesOrganismStatus = OrganismMemberStatus.values();
+    List<OrganismMemberStatus> organismMemberStatuses = new ArrayList<OrganismMemberStatus>();
+    Collections.addAll(organismMemberStatuses, availablesOrganismStatus);
+    if (EBOU.equals(this.getMessages().get("plateform-name"))) {
+      plateformSelectModel = selectModelFactory.create(organismMemberStatuses, "label");
+    } else {
+      organismMemberStatuses.remove(OrganismMemberStatus.DISSOLUTION);
+      organismMemberStatuses.remove(OrganismMemberStatus.TEST);
+      plateformSelectModel = selectModelFactory.create(organismMemberStatuses, "label");
+    }
 		
 	}
 

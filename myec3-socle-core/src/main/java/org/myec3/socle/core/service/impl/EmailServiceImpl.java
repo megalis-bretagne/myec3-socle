@@ -36,6 +36,7 @@ import org.apache.commons.logging.LogFactory;
 import org.myec3.socle.core.constants.MyEc3EmailConstants;
 import org.myec3.socle.core.domain.model.Organism;
 import org.myec3.socle.core.domain.model.OrganismStatus;
+import org.myec3.socle.core.domain.model.enums.OrganismMemberStatus;
 import org.myec3.socle.core.service.EmailService;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
@@ -132,7 +133,8 @@ public class EmailServiceImpl implements EmailService {
 	 */
 	@Override
 	public Boolean authorizedToSendMail(Organism organism) {
-		Assert.notNull(organism, "organism is mandatory. null value is forbidden.");
+		Assert.notNull(organism,
+				"organism is mandatory. null value is forbidden.");
 
 		if (organism.getOrganismStatus() != null) {
 			// If the organism is a prospect or disabled or don we don't send
@@ -140,17 +142,17 @@ public class EmailServiceImpl implements EmailService {
 			// login and password for the new user
 			Set<OrganismStatus> organismStatuses = organism.getOrganismStatus();
 			Date date = organismStatuses.iterator().next().getDate();
-			String label = organismStatuses.iterator().next().getStatus();
-			for (OrganismStatus organismStatus : organismStatuses) {
+			String label = organismStatuses.iterator().next().getStatus().getLabel();
+			for(OrganismStatus organismStatus : organismStatuses){
 				Date date_tmp = organismStatus.getDate();
-				if (date_tmp.after(date)) {
+				if(date_tmp.after(date)){
 					date = date_tmp;
-					label = organismStatus.getStatus();
+					label = organismStatus.getStatus().getLabel();
 				}
 			}
-			if (!(label.equals("PROSPECT"))
-					&& !(label.equals("REFUS_D_ADHERER"))
-					&& !(label.equals("RESILIE"))) {
+			if (!(label.equals(OrganismMemberStatus.PROSPECT.getLabel()))
+					&& !(label.equals(OrganismMemberStatus.REFUS_D_ADHERER.getLabel()))
+					&& !(label.equals(OrganismMemberStatus.RESILIE.getLabel()))) {
 				return Boolean.TRUE;
 			}
 		} else {

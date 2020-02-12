@@ -1,140 +1,137 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"> 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <t:container xmlns:t="http://tapestry.apache.org/schema/tapestry_5_1_0.xsd" xmlns:p="tapestry:parameter">
 
-		<p class="mandatory">${message:mandatory-label}</p>
-		
-	    <t:form t:id="modification_form" autofocus="false" class="agent-profile">
-	      <t:if test="newAgentProfile">
-	      	<p t:banner="message:error-creation-agent-label"  t:type="errors" t:clientClass="errorDialogue"></p>
-	      	<p:else>
-	             	<p t:banner="message:error-modification-agent-label"  t:type="errors" t:clientClass="errorDialogue"></p> 		
-	        </p:else>
-	      </t:if>      
-	      
-	    	<fieldset>
-	    		<legend>${message:form-legend-label}</legend>
-	    		
-	    	 	<t:if test="usernameDisplay">
-	    			<p>
-	    				<t:label for="username">${message:username-label} *:</t:label>
-	            		<input t:type="TextField" t:id="username" t:value="agentProfile.user.username" t:validate="required, regexp"/>
-	           		</p>
-	           	</t:if>
-	           
-	            
-	            <p>
-	            	<t:label for="civility">${message:civility-label} :</t:label>
-	            	<t:select t:id="civility" t:value="agentProfile.user.civility" t:validate="required"/>
-	            </p>
-	            <p>
-	            	<t:label for="firstname">${message:firstname-label} *:</t:label>
-	            	<t:textfield t:id="firstname" t:value="agentProfile.user.firstname" t:validate="required"/>
-	            </p>
-	            <p>
-	            	<t:label for="lastname">${message:lastname-label} *:</t:label>
-	            	<t:textfield t:id="lastname" t:value="agentProfile.user.lastname" t:validate="required"/>
-	            </p>
-	             <p>
-	            	<t:label for="technicalIdentifier">${message:technicalIdentifier-label} :</t:label>
-	            	<t:textfield t:id="technicalIdentifier" t:value="agentProfile.technicalIdentifier"/>
-	            </p>
-	            <p>
-	            	 <t:label for="elected">${message:elected-label} :</t:label><t:checkbox t:id="elected" t:value="agentProfile.elected"/>
-	            </p>
-					
-				<t:if test="isAdmin">
-					<p>
-	            	 	<t:label for="executive">${message:executive-label} :</t:label><t:checkbox t:id="executive" t:value="agentProfile.executive"/>
-						<a href="#" title="${message:executive-help}">
-	        				<img src="${context:static/images/pic_help.png}" class="picHelp" alt="${message:executive-help}"/>
-	        			</a>
-	            	</p>
-											
-					<p>
-						<t:label for="representative">${message:representative-label} :</t:label>	
-	            	 	<t:checkbox t:id="representative" t:value="agentProfile.representative" t:disabled="isRepresentativeDisabled"/>
-						<a href="#" title="${message:representative-help}">
-	        				<img src="${context:static/images/pic_help.png}" class="picHelp" alt="${message:representative-help}"/>
-	        			</a>
-	            	</p>
+  <p class="mandatory">${message:mandatory-label}</p>
 
-					<p>
-	            	 	<t:label for="substitute">${message:substitute-label} :</t:label>
-						<t:checkbox t:id="substitute" t:value="agentProfile.substitute" t:disabled="isSubstituteDisabled"/>
-						<a href="#" title="${message:substitute-help}">
-	        				<img src="${context:static/images/pic_help.png}" class="picHelp" alt="${message:substitute-help}"/>
-	        			</a>
-	            	</p>
-				</t:if>
-				<p>
-                    <t:label for="grade">${message:grade-label} :</t:label>
-                    <t:select t:id="grade" t:value="agentProfile.grade" t:blankLabel="message:unspecified-label"/>
-                </p>            
-	            <p>
-	                <t:label for="function">${message:function-label} :</t:label>
-	                <t:textfield t:id="function" t:value="agentProfile.function" t:validate="maxlength=255"/>
-	            </p>
-	            <p>
-	            	<t:label for="function">${message:organismDepartment-label} :</t:label>
-	            	<t:select t:id="organismDepartment" t:validate="required" t:encoder="departmentEncoder" t:model="departments" t:value="agentProfile.organismDepartment" />
-	            </p>
-	           
-			    <t:address address="agentProfile.address"/>
-	            
-	            <p>
-	                <t:label for="email">${message:email-label} *:</t:label>
-	              	<input t:type="TextField" t:id="email" t:value="agentProfile.email" t:validate="required,regexp"/>
-	            </p>
-				<p>
-	                <t:label for="cellPhone">${message:cellPhone-label} :</t:label>
-	                <t:textfield t:id="cellPhone" t:value="agentProfile.cellPhone" t:validate="regexp"/>
-	            </p>
-				<p>
-					<t:label for="birthDate">${message:birthDate-label} :</t:label>
-					<t:datefield t:id="birthDate" t:value="agentProfile.user.birthDate"/>
-				</p>
-				<p>
-					<t:label for="birthPlace">${message:birthPlace-label} :</t:label>
-					<t:textfield t:id="birthPlace" t:value="agentProfile.user.birthPlace" t:validate="regexp"/>
-				</p>
-				<p>
-					<t:label for="birthCountry">${message:birthCountry-label} :</t:label>
-					<t:textfield t:id="birthCountry" t:value="agentProfile.user.birthCountry" t:validate="regexp"/>
-				</p>
-	            <p>
-	                <t:label for="phone">${message:phone-label} :</t:label>
-	                <t:textfield t:id="phone" t:value="agentProfile.phone" t:validate="regexp"/>
-	            </p>
-	            <p>
-	                <t:label for="fax">${message:fax-label} :</t:label>
-	                <t:textfield t:id="fax" t:value="agentProfile.fax" t:validate="regexp"/>
-	            </p>
-	            <p>
-	            	<t:label for="prefComMedia">${message:prefComMedia-label} :</t:label>
-	            	<t:select t:id="prefComMedia" t:blankOption="never" t:value="agentProfile.prefComMedia"/>
-	            </p>
-                 <p>
-                    <input t:type="hidden" t:id="CheckCertificate" t:value="CheckCertificate" />
-                </p>
-              <p>
-                <t:label for="competences2">${message:competences-label} :</t:label>
-                <t:palette t:id="competences2" t:encoder="competenceValueEncoder" t:model="modelCompetence"
-                           t:selected="agentProfile.competences" t:value="agentProfile.competences" t:size="5"
-                />
-              </p>
-	        
-		    	<div class="form-actions"> 
-		    		<p>
-		        		<t:submit t:id="submit" class="button btnOk" value="message:save-label" />
-		        		<input type="reset" value="${message:reset-label}" id="cancelButton" />
-		        	</p>
-		        </div>
-		        &nbsp;
-				<ul class="links">
-					<li class="back"><a href="javascript:history.go(-1)">${message:back-label}</a></li>
-				</ul>
-	        </fieldset>
-	    </t:form>
-    
+  <t:form t:id="modification_form" autofocus="false" class="agent-profile">
+    <t:if test="newAgentProfile">
+      <p t:banner="message:error-creation-agent-label" t:type="errors" t:clientClass="errorDialogue"></p>
+      <p:else>
+        <p t:banner="message:error-modification-agent-label" t:type="errors" t:clientClass="errorDialogue"></p>
+      </p:else>
+    </t:if>
+
+    <t:if test="certificateSuccessMessage">
+      <p class="success">${certificateSuccessMessage}</p>
+    </t:if>
+    <t:if test="certificateErrorMessage">
+      <p class="error">${certificateErrorMessage}</p>
+    </t:if>
+
+    <fieldset>
+      <legend>${message:form-legend-label}</legend>
+
+      <t:if test="usernameDisplay">
+        <p>
+          <t:label for="username">${message:username-label} *:</t:label>
+          <input t:type="TextField" t:id="username" t:value="agentProfile.user.username" t:validate="required, regexp"/>
+        </p>
+      </t:if>
+
+      <p>
+        <t:label for="civility">${message:civility-label} :</t:label>
+        <t:select t:id="civility" t:value="agentProfile.user.civility" t:validate="required"/>
+      </p>
+      <p>
+        <t:label for="firstname">${message:firstname-label} *:</t:label>
+        <t:textfield t:id="firstname" t:value="agentProfile.user.firstname" t:validate="required"/>
+      </p>
+      <p>
+        <t:label for="lastname">${message:lastname-label} *:</t:label>
+        <t:textfield t:id="lastname" t:value="agentProfile.user.lastname" t:validate="required"/>
+      </p>
+      <p>
+        <t:label for="technicalIdentifier">${message:technicalIdentifier-label} :</t:label>
+        <t:textfield t:id="technicalIdentifier" t:value="agentProfile.technicalIdentifier"/>
+      </p>
+      <p>
+        <t:label for="elected">${message:elected-label} :</t:label>
+        <t:checkbox t:id="elected" t:value="agentProfile.elected"/>
+      </p>
+
+      <t:if test="isAdmin">
+        <p>
+          <t:label for="executive">${message:executive-label} :</t:label>
+          <t:checkbox t:id="executive" t:value="agentProfile.executive"/>
+          <a href="#" title="${message:executive-help}">
+            <img src="${context:static/images/pic_help.png}" class="picHelp" alt="${message:executive-help}"/>
+          </a>
+        </p>
+
+        <p>
+          <t:label for="representative">${message:representative-label} :</t:label>
+          <t:checkbox t:id="representative" t:value="agentProfile.representative"
+                      t:disabled="isRepresentativeDisabled"/>
+          <a href="#" title="${message:representative-help}">
+            <img src="${context:static/images/pic_help.png}" class="picHelp" alt="${message:representative-help}"/>
+          </a>
+        </p>
+
+        <p>
+          <t:label for="substitute">${message:substitute-label} :</t:label>
+          <t:checkbox t:id="substitute" t:value="agentProfile.substitute" t:disabled="isSubstituteDisabled"/>
+          <a href="#" title="${message:substitute-help}">
+            <img src="${context:static/images/pic_help.png}" class="picHelp" alt="${message:substitute-help}"/>
+          </a>
+        </p>
+      </t:if>
+      <p>
+        <t:label for="grade">${message:grade-label} :</t:label>
+        <t:select t:id="grade" t:value="agentProfile.grade" t:blankLabel="message:unspecified-label"/>
+      </p>
+      <p>
+        <t:label for="function">${message:function-label} :</t:label>
+        <t:textfield t:id="function" t:value="agentProfile.function" t:validate="maxlength=255"/>
+      </p>
+      <p>
+        <t:label for="function">${message:organismDepartment-label} :</t:label>
+        <t:select t:id="organismDepartment" t:validate="required" t:encoder="departmentEncoder" t:model="departments"
+                  t:value="agentProfile.organismDepartment"/>
+      </p>
+
+      <t:address address="agentProfile.address"/>
+
+      <p>
+        <t:label for="email">${message:email-label} *:</t:label>
+        <input t:type="TextField" t:id="email" t:value="agentProfile.email" t:validate="required,regexp"/>
+      </p>
+      <p>
+        <t:label for="cellPhone">${message:cellPhone-label} :</t:label>
+        <t:textfield t:id="cellPhone" t:value="agentProfile.cellPhone" t:validate="regexp"/>
+      </p>
+      <p>
+        <t:label for="phone">${message:phone-label} :</t:label>
+        <t:textfield t:id="phone" t:value="agentProfile.phone" t:validate="regexp"/>
+      </p>
+      <p>
+        <t:label for="fax">${message:fax-label} :</t:label>
+        <t:textfield t:id="fax" t:value="agentProfile.fax" t:validate="regexp"/>
+      </p>
+      <p>
+        <t:label for="certificate">${message:certificate}<a href="#" title="${message:certificate-help}"><img
+            src="${context:static/images/pic_help.png}" class="picHelp" alt="${message:certificate-help}"/></a>
+          :
+        </t:label>
+        <t:textarea t:id="certificate" t:value="agentProfile.user.certificate"/>
+        <t:submit t:id="checkCertificate" class="button btnOk" value="message:check-certificate"/>
+      </p>
+      <p>
+        <t:label for="prefComMedia">${message:prefComMedia-label} :</t:label>
+        <t:select t:id="prefComMedia" t:blankOption="never" t:value="agentProfile.prefComMedia"/>
+      </p>
+      <div class="form-actions">
+        <p>
+          <t:submit t:id="submit" class="button btnOk" value="message:save-label"/>
+          <input type="reset" value="${message:reset-label}" id="cancelButton"/>
+        </p>
+      </div>
+      &nbsp;
+      <ul class="links">
+        <li class="back"><a href="javascript:history.go(-1)">${message:back-label}</a></li>
+      </ul>
+    </fieldset>
+  </t:form>
+
 </t:container>
 
