@@ -102,8 +102,11 @@ public class AbstractPage {
 		SecurityContext context = null;
 		Session session = null;
 		Profile profile = null;
-		//TODO à supprimer
-		request.getHeaderNames().stream().forEach(p -> System.out.println(p + " " + request.getHeader(p)));
+
+		if (logger.isDebugEnabled()){
+			logger.debug("Liste des headers recus");
+			request.getHeaderNames().stream().forEach(p -> logger.debug(p + " " + request.getHeader(p)));
+		}
 
 		session = this.request.getSession(true);
 		String userType = request.getHeader("userType");
