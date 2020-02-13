@@ -30,8 +30,8 @@ buildImages :
     - docker build -f Dockerfile_synchro.stages -t klask.sib.fr:52100/megalis/socle-synchro:${CI_COMMIT_SHA:0:8} .
     - docker push klask.sib.fr:52100/megalis/socle-synchro
     - docker push klask.sib.fr:52100/megalis/socle-synchro:${CI_COMMIT_SHA:0:8}
-    - docker build -f myec3-socle-webapp-module/myec3-socle-webapp/Dockerfile_webapp.stages/Dockerfile.stages -t klask.sib.fr:52100/megalis/socle-webapp .
-    - docker build -f myec3-socle-webapp-module/myec3-socle-webapp/Dockerfile_webapp.stages/Dockerfile.stages -t klask.sib.fr:52100/megalis/socle-webapp:${CI_COMMIT_SHA:0:8} .
+    - docker build -f myec3-socle-webapp-module/myec3-socle-webapp/Dockerfile.stages -t klask.sib.fr:52100/megalis/socle-webapp .
+    - docker build -f myec3-socle-webapp-module/myec3-socle-webapp/Dockerfile.stages -t klask.sib.fr:52100/megalis/socle-webapp:${CI_COMMIT_SHA:0:8} .
     - docker push klask.sib.fr:52100/megalis/socle-webapp
     - docker push klask.sib.fr:52100/megalis/socle-webapp:${CI_COMMIT_SHA:0:8}
     - docker build -f Dockerfile_ws.stages -t klask.sib.fr:52100/megalis/socle-ws .
@@ -53,7 +53,7 @@ deploy_preprod:
   script:
     - docker build -f Dockerfile_esb.stages -t klask.sib.fr:5000/megalis/socle-esb .
     - docker push klask.sib.fr:5000/megalis/socle-esb
-    - docker build -f ./myec3-socle/myec3-socle-webapp-module/myec3-socle-webapp/Dockerfile_webapp.stages/Dockerfile.stages -t klask.sib.fr:5000/megalis/socle-webapp .
+    - docker build -f myec3-socle-webapp-module/myec3-socle-webapp/Dockerfile.stages -t klask.sib.fr:5000/megalis/socle-webapp .
     - docker push klask.sib.fr:5000/megalis/socle-webapp
     - docker build -f Dockerfile_synchro.stages -t klask.sib.fr:5000/megalis/socle-synchro .
     - docker push klask.sib.fr:5000/megalis/socle-synchro
