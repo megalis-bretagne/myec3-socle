@@ -19,6 +19,10 @@ package org.myec3.socle.webapp.pages;
 
 import org.apache.tapestry5.EventConstants;
 import org.apache.tapestry5.annotations.OnEvent;
+import org.myec3.socle.webapp.constants.GuWebAppConstants;
+
+import java.net.MalformedURLException;
+import java.net.URL;
 
 /**
  * Configure into securityMyec3Context.xml, redirect to openssoLogout after
@@ -32,27 +36,15 @@ import org.apache.tapestry5.annotations.OnEvent;
  */
 public class Logout extends AbstractPage {
 		
-	/*@Inject
-    private ReloadableResourceBundleMessageSource messageSource;
-	
+
 	@OnEvent(EventConstants.ACTIVATE)
-	public URL onActivate() { 
-		
-		SecurityContextHolder.clearContext();
-		
-		URL redirect = null;
+	public URL onActivate() {
 		try {
-			redirect = new URL(this.messageSource.getMessage("logoutURL", null, Locale.FRENCH));
-		} catch (MalformedURLException e) {			
+			return new URL(GuWebAppConstants.KEYCLOAK_BASE_URL + "/auth/realms/megalis/protocol/openid-connect/logout");
+		} catch (MalformedURLException e) {
 			e.printStackTrace();
-		} catch (NoSuchMessageException e) {			
-			e.printStackTrace();
+			return null;
 		}
-		
-		return redirect; 
-	}*/
-	
-	@OnEvent(EventConstants.ACTIVATE)
-	public void onActivate() {		
 	}
+	
 }

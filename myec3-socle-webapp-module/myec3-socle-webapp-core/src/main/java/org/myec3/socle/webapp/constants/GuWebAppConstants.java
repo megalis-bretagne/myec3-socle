@@ -58,6 +58,11 @@ public final class GuWebAppConstants {
     private static final ResourceBundle GU_BUNDLE = ResourceBundle
 	    .getBundle(GU_BUNDLE_NAME);
 
+    // environment constant
+    private static final String ENV_BUNDLE_NAME = "environment";
+    private static final ResourceBundle ENV_BUNDLE = ResourceBundle
+            .getBundle(ENV_BUNDLE_NAME);
+
     // Max number of levels (sub departments) for an department
     public static int getSocleGuMaxSubDepartments() {
 	return Integer
@@ -129,4 +134,6 @@ public final class GuWebAppConstants {
     // Expiration time url modif password (days)
     public static int expirationTimeUrlModifPassword = Integer
 	    .valueOf(GU_BUNDLE.getString("expiration.time.url.modif.password"));
+
+    public static final String KEYCLOAK_BASE_URL = ENV_BUNDLE.getString("keycloak.baseUrl");
 }
