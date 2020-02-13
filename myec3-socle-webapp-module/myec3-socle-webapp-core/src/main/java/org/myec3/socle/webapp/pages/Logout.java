@@ -40,7 +40,8 @@ public class Logout extends AbstractPage {
 	@OnEvent(EventConstants.ACTIVATE)
 	public URL onActivate() {
 		try {
-			return new URL(GuWebAppConstants.KEYCLOAK_BASE_URL + "/auth/realms/megalis/protocol/openid-connect/logout");
+//			return new URL(GuWebAppConstants.KEYCLOAK_BASE_URL + "/auth/realms/megalis/protocol/openid-connect/logout");
+			return new URL(GuWebAppConstants.KEYCLOAK_BASE_URL);
 		} catch (MalformedURLException e) {
 			e.printStackTrace();
 			return null;
