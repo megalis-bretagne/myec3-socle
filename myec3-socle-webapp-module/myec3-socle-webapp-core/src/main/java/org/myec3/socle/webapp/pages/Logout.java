@@ -38,15 +38,15 @@ public class Logout extends AbstractPage {
 		
 
 	@OnEvent(EventConstants.ACTIVATE)
-	public String onActivate() {
-//		try {
+	public URL onActivate() {
+		try {
 //			return new URL(GuWebAppConstants.KEYCLOAK_BASE_URL + "/auth/realms/megalis/protocol/openid-connect/logout");
-//			return new URL(GuWebAppConstants.KEYCLOAK_BASE_URL); https://sangoku.sib.fr/redirect_uri?logout=https%3A%2F%2Fwww.google.com
-			return "https://sangoku.sib.fr/redirect_uri?logout=https%3A%2F%2Fwww.google.com";
-//		} catch (MalformedURLException e) {
-//			e.printStackTrace();
-//			return null;
-//		}
+			return new URL("https://sangoku.sib.fr/redirect_uri?logout=https%3A%2F%2Fwww.google.com");
+//			return "https://sangoku.sib.fr/redirect_uri?logout=https%3A%2F%2Fwww.google.com";
+		} catch (MalformedURLException e) {
+			e.printStackTrace();
+			return null;
+		}
 	}
 	
 }
