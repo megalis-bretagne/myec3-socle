@@ -21,7 +21,10 @@ import org.apache.tapestry5.EventConstants;
 import org.apache.tapestry5.annotations.OnEvent;
 import org.myec3.socle.webapp.constants.GuWebAppConstants;
 
+import java.io.IOException;
+import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
+import java.net.ProtocolException;
 import java.net.URL;
 
 /**
@@ -38,15 +41,19 @@ public class Logout extends AbstractPage {
 		
 
 	@OnEvent(EventConstants.ACTIVATE)
-	public URL onActivate() {
-		try {
-//			return new URL(GuWebAppConstants.KEYCLOAK_BASE_URL + "/auth/realms/megalis/protocol/openid-connect/logout");
-			return new URL("https://sangoku.sib.fr/redirect_uri?logout=https%3A%2F%2Fwww.google.com");
-//			return "https://sangoku.sib.fr/redirect_uri?logout=https%3A%2F%2Fwww.google.com";
-		} catch (MalformedURLException e) {
+	public Object onActivate() {
+		//solution temporaire en attendant de voir comment on s'intègre vraiment avec le portail
+		try{
+		URL url = new URL(GuWebAppConstants.KEYCLOAK_BASE_URL + "/auth/realms/megalis/protocol/openid-connect/logout");
+		HttpURLConnection con = (HttpURLConnection) url.openConnection();
+		con.setRequestMethod("GET");
+		int status = con.getResponseCode();
+		con.disconnect();
+		} catch (IOException e) {
 			e.printStackTrace();
 			return null;
 		}
+		return Index.class;
 	}
 	
 }
