@@ -41,19 +41,14 @@ public class Logout extends AbstractPage {
 		
 
 	@OnEvent(EventConstants.ACTIVATE)
-	public Object onActivate() {
-		//solution temporaire en attendant de voir comment on s'intègre vraiment avec le portail
+	public URL onActivate() {
+		//TODO solution temporaire en attendant de voir comment on s'intègre vraiment avec le portail
 		try{
-		URL url = new URL(GuWebAppConstants.KEYCLOAK_BASE_URL + "/auth/realms/megalis/protocol/openid-connect/logout");
-		HttpURLConnection con = (HttpURLConnection) url.openConnection();
-		con.setRequestMethod("GET");
-		int status = con.getResponseCode();
-		con.disconnect();
+		return new URL(GuWebAppConstants.KEYCLOAK_BASE_URL + "/auth/realms/megalis/protocol/openid-connect/logout");
 		} catch (IOException e) {
 			e.printStackTrace();
 			return null;
 		}
-		return Index.class;
 	}
 	
 }
