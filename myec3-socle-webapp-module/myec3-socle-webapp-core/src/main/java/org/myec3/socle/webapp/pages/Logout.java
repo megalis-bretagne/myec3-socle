@@ -19,6 +19,8 @@ package org.myec3.socle.webapp.pages;
 
 import org.apache.tapestry5.EventConstants;
 import org.apache.tapestry5.annotations.OnEvent;
+import org.apache.tapestry5.ioc.annotations.Inject;
+import org.apache.tapestry5.services.Request;
 import org.myec3.socle.webapp.constants.GuWebAppConstants;
 
 import java.io.IOException;
@@ -38,13 +40,16 @@ import java.net.URL;
  * 
  */
 public class Logout extends AbstractPage {
-		
+
+	@Inject
+	private Request request;
 
 	@OnEvent(EventConstants.ACTIVATE)
 	public URL onActivate() {
 		//TODO solution temporaire en attendant de voir comment on s'intègre vraiment avec le portail
 		try{
-		return new URL(GuWebAppConstants.KEYCLOAK_BASE_URL + "/auth/realms/megalis/protocol/openid-connect/logout");
+			request.getSession(true).invalidate();
+			return new URL(GuWebAppConstants.KEYCLOAK_BASE_URL + "/auth/realms/megalis/protocol/openid-connect/logout");
 		} catch (IOException e) {
 			e.printStackTrace();
 			return null;
