@@ -81,9 +81,9 @@ public class MpsWsClient implements CompanyWSinfo {
 			conn.disconnect();
 
 		} catch (MalformedURLException e) {
-			logger.error("Not a valid URL: " + url);
+			logger.error("Not a valid URL: " + url, e);
 		} catch (IOException e) {
-			logger.error("Unable to connect to : " + url);
+			logger.error("Unable to connect to : " + url, e);
 		} finally {
 			// close connection properly if not closed yet
 			if (conn != null) {

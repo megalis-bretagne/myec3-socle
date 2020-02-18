@@ -32,8 +32,8 @@ buildImages :
     - docker push klask.sib.fr:52100/megalis/socle-synchro
     - docker push klask.sib.fr:52100/megalis/socle-synchro:${CI_COMMIT_SHA:0:8}
 
-    - docker build -f Dockerfile_webapp.stages -t klask.sib.fr:52100/megalis/socle-webapp .
-    - docker build -f Dockerfile_webapp.stages -t klask.sib.fr:52100/megalis/socle-webapp:${CI_COMMIT_SHA:0:8} .
+    - docker build -f myec3-socle-webapp-module/myec3-socle-webapp/Dockerfile.stages -t klask.sib.fr:52100/megalis/socle-webapp .
+    - docker build -f myec3-socle-webapp-module/myec3-socle-webapp/Dockerfile.stages -t klask.sib.fr:52100/megalis/socle-webapp:${CI_COMMIT_SHA:0:8} .
     - docker push klask.sib.fr:52100/megalis/socle-webapp
     - docker push klask.sib.fr:52100/megalis/socle-webapp:${CI_COMMIT_SHA:0:8}
 
@@ -56,7 +56,7 @@ deploy_preprod:
   script:
     - docker build -f Dockerfile_esb.stages -t klask.sib.fr:5000/megalis/socle-esb .
     - docker push klask.sib.fr:5000/megalis/socle-esb
-    - docker build -f Dockerfile_webapp.stages -t klask.sib.fr:5000/megalis/socle-webapp .
+    - docker build -f myec3-socle-webapp-module/myec3-socle-webapp/Dockerfile.stages -t klask.sib.fr:5000/megalis/socle-webapp .
     - docker push klask.sib.fr:5000/megalis/socle-webapp
     - docker build -f Dockerfile_synchro.stages -t klask.sib.fr:5000/megalis/socle-synchro .
     - docker push klask.sib.fr:5000/megalis/socle-synchro
@@ -64,6 +64,6 @@ deploy_preprod:
     - docker push klask.sib.fr:5000/megalis/socle-ws
     - sshpass -V
     - export SSHPASS=7rEjdDLFyE
-    - sshpass -e ssh -o StrictHostKeyChecking=no root@10.253.104.100 "export URL_DOCKER=haproxy-edipro.sib.fr:443;docker stack deploy --with-registry-auth -c /data/livraison/megalis-stack-pre-prod.yml megalis"
+    - sshpass -e ssh -o StrictHostKeyChecking=no root@10.253.104.100 "export URL_DOCKER=edipro.sib.fr:443;docker stack deploy --with-registry-auth -c /data/livraison/megalis-stack-pre-prod.yml megalis"
   when: manual
 

@@ -88,6 +88,7 @@ public class AppModule {
 	public static void contributeIgnoredPathsFilter(
 			final Configuration<String> configuration) {
 		configuration.add("/oauth/.*");
+		configuration.add("/health");
 	}
 
 	public HttpServletRequestFilter buildUtf8Filter() {
