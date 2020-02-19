@@ -1,12 +1,10 @@
 package org.myec3.socle.ws.client.impl.mps.response;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import org.myec3.socle.core.domain.model.Company;
 import org.myec3.socle.core.domain.model.Establishment;
-import org.myec3.socle.core.domain.model.Person;
 
 public class ResponseEntreprises {
 
