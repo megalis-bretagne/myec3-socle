@@ -118,8 +118,8 @@ public class Layout extends AbstractPage {
 			"/auth/realms/megalis/protocol/openid-connect/logout";
 
 	@SuppressWarnings("unused")
-	public Link getRedirectUri() {
-		return linkSource.createPageRenderLink(this.resources.getPage().getClass());
+	public String currentPage() {
+		return linkSource.createPageRenderLink(this.resources.getPage().getClass()).toURI();
 	}
 	
 	@Property
