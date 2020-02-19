@@ -112,22 +112,18 @@ public class Layout extends AbstractPage {
 //	@Property
 //	private String logoutUrl = MyEc3Constants.J_SPRING_SECURITY_LOGOUT;
 
-//	@SuppressWarnings("unused")
-//	@Property
-//	private String logoutUrl = GuWebAppConstants.KEYCLOAK_BASE_URL +
-//			"/auth/realms/megalis/protocol/openid-connect/logout&redirect_url="+this.resources.getPage().;
+	@SuppressWarnings("unused")
+	@Property
+	private String logoutUrl = GuWebAppConstants.KEYCLOAK_BASE_URL +
+			"/auth/realms/megalis/protocol/openid-connect/logout";
+
+	@SuppressWarnings("unused")
+	public Link getRedirectUri() {
+		return linkSource.createPageRenderLink(this.resources.getPage().getClass());
+	}
 	
 	@Property
 	private String legalNoticeUrl = GuWebAppConstants.LEGAL_NOTICE_URL;
-
-	@SuppressWarnings("unused")
-	public Link getLogoutUrl() {
-		Link link = linkSource.createPageRenderLink(GuWebAppConstants.KEYCLOAK_BASE_URL +
-				"/auth/realms/megalis/protocol/openid-connect/logout");
-		Link redirectUri = linkSource.createPageRenderLink(this.resources.getPage().getClass());
-		link.addParameterValue("redirect_uri", redirectUri.toURI());
-		return link;
-	}
 
 	/**
 	 * @return List of menu items corresponding at the logged user
