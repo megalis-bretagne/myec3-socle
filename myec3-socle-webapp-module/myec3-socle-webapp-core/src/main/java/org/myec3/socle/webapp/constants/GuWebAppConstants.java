@@ -136,4 +136,6 @@ public final class GuWebAppConstants {
 	    .valueOf(GU_BUNDLE.getString("expiration.time.url.modif.password"));
 
     public static final String KEYCLOAK_BASE_URL = ENV_BUNDLE.getString("keycloak.baseUrl");
+
+    public static final String MYEC3_BASE_URL = ENV_BUNDLE.getString("myec3.baseUrl");
 }

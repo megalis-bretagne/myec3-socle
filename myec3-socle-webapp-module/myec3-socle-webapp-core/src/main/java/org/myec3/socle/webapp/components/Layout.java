@@ -19,14 +19,12 @@ package org.myec3.socle.webapp.components;
 
 import org.apache.tapestry5.ComponentResources;
 import org.apache.tapestry5.EventConstants;
-import org.apache.tapestry5.Link;
 import org.apache.tapestry5.annotations.OnEvent;
 import org.apache.tapestry5.annotations.Property;
 import org.apache.tapestry5.ioc.annotations.Inject;
 import org.apache.tapestry5.services.PageRenderLinkSource;
 import org.apache.tapestry5.services.PersistentLocale;
 import org.myec3.socle.core.constants.MyEc3ApplicationConstants;
-import org.myec3.socle.core.constants.MyEc3Constants;
 import org.myec3.socle.core.domain.model.Customer;
 import org.myec3.socle.core.domain.model.Profile;
 import org.myec3.socle.core.domain.model.Role;
@@ -115,13 +113,8 @@ public class Layout extends AbstractPage {
 	@SuppressWarnings("unused")
 	@Property
 	private String logoutUrl = GuWebAppConstants.KEYCLOAK_BASE_URL +
-			"/auth/realms/megalis/protocol/openid-connect/logout";
+			"/auth/realms/megalis/protocol/openid-connect/logout?redirect_uri=" + GuWebAppConstants.MYEC3_BASE_URL;
 
-	@SuppressWarnings("unused")
-	public String currentPage() {
-		return linkSource.createPageRenderLink(this.resources.getPage().getClass()).toURI();
-	}
-	
 	@Property
 	private String legalNoticeUrl = GuWebAppConstants.LEGAL_NOTICE_URL;
 
