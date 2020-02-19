@@ -19,9 +19,11 @@ package org.myec3.socle.webapp.components;
 
 import org.apache.tapestry5.ComponentResources;
 import org.apache.tapestry5.EventConstants;
+import org.apache.tapestry5.Link;
 import org.apache.tapestry5.annotations.OnEvent;
 import org.apache.tapestry5.annotations.Property;
 import org.apache.tapestry5.ioc.annotations.Inject;
+import org.apache.tapestry5.services.PageRenderLinkSource;
 import org.apache.tapestry5.services.PersistentLocale;
 import org.myec3.socle.core.constants.MyEc3ApplicationConstants;
 import org.myec3.socle.core.constants.MyEc3Constants;
@@ -58,6 +60,9 @@ public class Layout extends AbstractPage {
 	@SuppressWarnings("unused")
 	@Inject
 	private ComponentResources resources;
+
+	@Inject
+	private PageRenderLinkSource linkSource;
 
 	@Property
 	@SuppressWarnings("unused")
@@ -103,12 +108,26 @@ public class Layout extends AbstractPage {
 		super.initUser();
 	}
 
-	@SuppressWarnings("unused")
-	@Property
-	private String logoutUrl = MyEc3Constants.J_SPRING_SECURITY_LOGOUT;
+//	@SuppressWarnings("unused")
+//	@Property
+//	private String logoutUrl = MyEc3Constants.J_SPRING_SECURITY_LOGOUT;
+
+//	@SuppressWarnings("unused")
+//	@Property
+//	private String logoutUrl = GuWebAppConstants.KEYCLOAK_BASE_URL +
+//			"/auth/realms/megalis/protocol/openid-connect/logout&redirect_url="+this.resources.getPage().;
 	
 	@Property
 	private String legalNoticeUrl = GuWebAppConstants.LEGAL_NOTICE_URL;
+
+	@SuppressWarnings("unused")
+	public Link getLogoutUrl() {
+		Link link = linkSource.createPageRenderLink(GuWebAppConstants.KEYCLOAK_BASE_URL +
+				"/auth/realms/megalis/protocol/openid-connect/logout");
+		Link redirectUri = linkSource.createPageRenderLink(this.resources.getPage().getClass());
+		link.addParameterValue("redirect_uri", redirectUri.toURI());
+		return link;
+	}
 
 	/**
 	 * @return List of menu items corresponding at the logged user
