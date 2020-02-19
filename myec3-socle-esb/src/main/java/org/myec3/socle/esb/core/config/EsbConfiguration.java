@@ -9,17 +9,16 @@ import org.apache.activemq.camel.component.ActiveMQComponent;
 import org.apache.activemq.pool.PooledConnectionFactory;
 import org.apache.camel.component.jms.JmsConfiguration;
 import org.apache.camel.spring.javaconfig.CamelConfiguration;
+import org.myec3.socle.config.HealthCheckConfig;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.PropertySource;
+import org.springframework.context.annotation.*;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 @Configuration
 @PropertySource({ "classpath:sync.properties" })
 @ComponentScan(basePackages = { "org.myec3.socle.esb.core" })
+@Import({HealthCheckConfig.class})
 @EnableWebMvc
 public class EsbConfiguration extends CamelConfiguration {
 

@@ -1,15 +1,9 @@
 package org.myec3.socle.webapp.config;
 
 import org.myec3.socle.config.CoreConfig;
+import org.myec3.socle.config.HealthCheckConfig;
 import org.myec3.socle.synchro.core.config.SynchroCoreConfig;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.PropertiesFactoryBean;
-import org.springframework.boot.actuate.autoconfigure.EndpointAutoConfiguration;
-import org.springframework.boot.actuate.autoconfigure.HealthIndicatorAutoConfiguration;
-import org.springframework.boot.actuate.endpoint.HealthEndpoint;
-import org.springframework.boot.actuate.endpoint.mvc.EndpointHandlerMapping;
-import org.springframework.boot.actuate.endpoint.mvc.EndpointMvcAdapter;
-import org.springframework.boot.actuate.endpoint.mvc.MvcEndpoint;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -22,13 +16,10 @@ import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.resource.PathResourceResolver;
 
-import java.util.Collection;
-
-
 @Configuration
 @EnableWebMvc
 @ComponentScan(basePackages = { "org.myec3.socle.webapp.controller" })
-@Import({ CoreConfig.class, WebSecurityConfig.class, SynchroCoreConfig.class, EndpointAutoConfiguration.class ,HealthIndicatorAutoConfiguration.class})
+@Import({ CoreConfig.class, WebSecurityConfig.class, SynchroCoreConfig.class, HealthCheckConfig.class})
 @ImportResource("classpath:pwdExpirationNotificationMyec3Context.xml")
 public class WebAppConfig implements WebMvcConfigurer {
 
@@ -53,17 +44,6 @@ public class WebAppConfig implements WebMvcConfigurer {
 		propertiesFactoryBean.setLocation(new ClassPathResource("app.properties"));
 		propertiesFactoryBean.setFileEncoding("UTF-8");
 		return propertiesFactoryBean;
-	}
-	@Bean
-	@Autowired
-	public EndpointHandlerMapping endpointHandlerMapping(Collection<? extends MvcEndpoint> endpoints) {
-		return new EndpointHandlerMapping(endpoints);
-	}
-
-	@Bean
-	@Autowired
-	public EndpointMvcAdapter healthActuatorEndPoint(HealthEndpoint delegate) {
-		return new EndpointMvcAdapter(delegate);
 	}
 
 }
