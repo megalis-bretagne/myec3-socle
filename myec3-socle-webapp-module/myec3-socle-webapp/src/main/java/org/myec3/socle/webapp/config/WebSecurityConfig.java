@@ -123,7 +123,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
 				.and().logout()
 				.logoutRequestMatcher(new AntPathRequestMatcher(MyEc3Constants.J_SPRING_SECURITY_LOGOUT, "GET"))
-				.invalidateHttpSession(true).logoutSuccessUrl("/Logout");
+				.invalidateHttpSession(true).deleteCookies("mod_auth_openidc_session").logoutSuccessUrl("/Logout");
 	}
 
 	@Override

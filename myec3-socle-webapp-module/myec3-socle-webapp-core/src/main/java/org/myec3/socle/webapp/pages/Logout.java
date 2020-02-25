@@ -48,7 +48,7 @@ public class Logout extends AbstractPage {
 	public URL onActivate() {
 		//TODO solution temporaire en attendant de voir comment on s'intègre vraiment avec le portail
 		try{
-			return new URL(GuWebAppConstants.KEYCLOAK_BASE_URL + "/auth/realms/megalis/protocol/openid-connect/logout");
+			return new URL(GuWebAppConstants.KEYCLOAK_BASE_URL + "/auth/realms/megalis/protocol/openid-connect/logout?redirect_uri=" + GuWebAppConstants.MYEC3_BASE_URL);
 		} catch (IOException e) {
 			e.printStackTrace();
 			return null;
