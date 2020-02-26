@@ -1,9 +1,11 @@
 package org.myec3.socle.synchro.scheduler.job.resources;
 
 import org.myec3.socle.core.domain.model.Customer;
+import org.myec3.socle.core.domain.sdm.model.SdmService;
 import org.myec3.socle.core.sync.api.ResponseMessage;
 import org.myec3.socle.synchro.core.domain.model.SynchronizationSubscription;
 import org.myec3.socle.ws.client.ResourceWsClient;
+import org.myec3.socle.ws.client.impl.SdmWsClientImpl;
 import org.springframework.stereotype.Component;
 
 /**
@@ -29,6 +31,16 @@ public class CustomerSynchronizationJob extends
 	public ResponseMessage create(Customer resource,
 			SynchronizationSubscription synchronizationSubscription,
 			ResourceWsClient resourceWsClient) {
+
+		if ("SDM".equals(synchronizationSubscription.getApplication().getName())) {
+			SdmService serviceSDM = new SdmService();
+			//resource.get
+			//todo
+
+			SdmWsClientImpl sdmWsClient = (SdmWsClientImpl) resourceWsClient;
+
+			return sdmWsClient.post(resource, serviceSDM, synchronizationSubscription);
+		}
 		return resourceWsClient.post(resource, synchronizationSubscription);
 	}
 

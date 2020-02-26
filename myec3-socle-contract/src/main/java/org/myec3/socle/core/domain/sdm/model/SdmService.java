@@ -1,11 +1,15 @@
 package org.myec3.socle.core.domain.sdm.model;
 
-public class SdmService {
 
-    private String id;
-    private String idParent;
-    private String idExterne;
-    private String idExterneParent;
+import javax.xml.bind.annotation.XmlRootElement;
+
+@XmlRootElement
+public class SdmService extends SdmResource  {
+
+    private long id;
+    private long idParent;
+    private long idExterne;
+    private long idExterneParent;
     private String libelle;
     private String acronymeOrganisme;
     private String sigle;
@@ -15,35 +19,35 @@ public class SdmService {
     private String formeJuridique;
     private String formeJuridiqueCode;
 
-    public String getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(long id) {
         this.id = id;
     }
 
-    public String getIdParent() {
+    public long getIdParent() {
         return idParent;
     }
 
-    public void setIdParent(String idParent) {
+    public void setIdParent(long idParent) {
         this.idParent = idParent;
     }
 
-    public String getIdExterne() {
+    public long getIdExterne() {
         return idExterne;
     }
 
-    public void setIdExterne(String idExterne) {
+    public void setIdExterne(long idExterne) {
         this.idExterne = idExterne;
     }
 
-    public String getIdExterneParent() {
+    public long getIdExterneParent() {
         return idExterneParent;
     }
 
-    public void setIdExterneParent(String idExterneParent) {
+    public void setIdExterneParent(long idExterneParent) {
         this.idExterneParent = idExterneParent;
     }
 

@@ -114,7 +114,7 @@ public class StructureType implements Serializable, PE {
 	/**
 	 * @return the value corresponding at this type of {@link Structure}
 	 * 
-	 * @see StructureTypeValue.class
+	 * @see StructureTypeValue
 	 */
 	@Enumerated(EnumType.STRING)
 	@Column(unique = true)

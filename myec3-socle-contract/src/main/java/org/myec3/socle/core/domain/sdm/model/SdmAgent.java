@@ -1,35 +1,61 @@
 package org.myec3.socle.core.domain.sdm.model;
 
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
 import java.util.Date;
 
-public class SdmAgent {
+@XmlRootElement
+public class SdmAgent extends SdmResource {
 
-      private Long idProfil;
-      private Long identifiant;
+
+      private long idProfil;
+
+      @XmlElement(required = true)
+      private String identifiant;
+
+      @XmlElement(required = true)
       private String email;
+
+      @XmlElement(required = true)
       private String nom;
+
+      @XmlElement(required = true)
       private String prenom;
+
+      @XmlElement(required = true)
       private String acronymeOrganisme;
+
+      @XmlElement(required = true)
       boolean actif;
+
+      @XmlElement(required = false)
       private String telephone;
+
+      @XmlElement(required = false)
       private String fax;
+
+      @XmlElement(required = true)
       private Date dateCreation;
+
+      @XmlElement(required = true)
       private Date dateModification;
+
+      @XmlElement(required = true)
       private SdmService service;
 
-      public Long getIdProfil() {
+      public long getIdProfil() {
             return idProfil;
       }
 
-      public void setIdProfil(Long idProfil) {
+      public void setIdProfil(long idProfil) {
             this.idProfil = idProfil;
       }
 
-      public Long getIdentifiant() {
+      public String getIdentifiant() {
             return identifiant;
       }
 
-      public void setIdentifiant(Long identifiant) {
+      public void setIdentifiant(String identifiant) {
             this.identifiant = identifiant;
       }
 

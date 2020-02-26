@@ -18,10 +18,16 @@
 package org.myec3.socle.synchro.scheduler.job.resources;
 
 import org.myec3.socle.core.domain.model.Establishment;
+import org.myec3.socle.core.domain.sdm.model.SdmAdresse;
+import org.myec3.socle.core.domain.sdm.model.SdmEtablissement;
+import org.myec3.socle.core.domain.sdm.model.SdmService;
 import org.myec3.socle.core.sync.api.ResponseMessage;
 import org.myec3.socle.synchro.core.domain.model.SynchronizationSubscription;
 import org.myec3.socle.ws.client.ResourceWsClient;
+import org.myec3.socle.ws.client.impl.SdmWsClientImpl;
 import org.springframework.stereotype.Component;
+
+import java.util.Date;
 
 /**
  * Concrete job implementation used when the resource to synchronize is an
@@ -47,6 +53,33 @@ public class EstablishmentSynchronizationJob extends
 	public ResponseMessage create(Establishment resource,
 			SynchronizationSubscription synchronizationSubscription,
 			ResourceWsClient resourceWsClient) {
+
+		if ("SDM".equals(synchronizationSubscription.getApplication().getName())) {
+
+			SdmEtablissement etablissementSDM = new SdmEtablissement();
+			etablissementSDM.setId("");
+			etablissementSDM.setSiege("");
+
+			if (resource.getAddress() != null){
+				SdmAdresse adresseSDM = new SdmAdresse ();
+				adresseSDM.setCodePostal(resource.getAddress().getPostalCode());
+				if (resource.getAddress().getCountry() !=null){
+					adresseSDM.setPays(resource.getAddress().getCountry().getLabel());
+				}
+				adresseSDM.setRue(resource.getAddress().getStreetName());
+				adresseSDM.setVille(resource.getAddress().getCity());
+				adresseSDM.setAcronymePays(resource.getAddress().getInsee());
+
+				etablissementSDM.setAdresse(adresseSDM);
+			}
+
+			etablissementSDM.setDateCreation(new Date());
+			etablissementSDM.setDateModification(etablissementSDM.getDateCreation());
+
+			SdmWsClientImpl sdmWsClient = (SdmWsClientImpl) resourceWsClient;
+
+			return sdmWsClient.post(resource, etablissementSDM, synchronizationSubscription);
+		}
 		return resourceWsClient.post(resource, synchronizationSubscription);
 	}
 
