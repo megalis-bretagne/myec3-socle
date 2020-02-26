@@ -10,7 +10,6 @@ import org.myec3.socle.core.domain.sdm.model.SdmResource;
 import org.myec3.socle.core.sync.api.Error;
 import org.myec3.socle.core.sync.api.*;
 import org.myec3.socle.synchro.core.domain.model.SynchronizationSubscription;
-import org.myec3.socle.synchro.core.service.impl.LoggingFilter;
 import org.myec3.socle.ws.client.ResourceWsClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -53,7 +52,6 @@ public class SdmWsClientImpl implements ResourceWsClient {
 	private Client getClientWs() {
 		if (this.clientWs == null) {
 			this.clientWs = JerseyClientBuilder.newClient();
-			clientWs.register(new LoggingFilter());
 		}
 		return this.clientWs;
 	}
