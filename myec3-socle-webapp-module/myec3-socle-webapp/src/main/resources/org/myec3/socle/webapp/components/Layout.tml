@@ -41,7 +41,9 @@
 					<div id="user-data">
 							<dl>
 								<dt>${message:welcome-label}, <strong id="userId"><t:if test="loggedProfile?.user?.civility">${loggedProfile?.user?.civility?.label}</t:if> ${loggedProfile?.user?.firstName} ${loggedProfile?.user?.lastName}</strong></dt>
-								<dd>&raquo; <a href="${webContext}${logoutUrl}">${message:logout-label}</a></dd>
+								<dd>&raquo; <a href="${webContext}${logoutUrl}">
+									${message:logout-label}
+								</a></dd>
 							</dl>
 					</div> 
 					<t:navigationMenu t:items="mainMenuList" t:id="navigation"></t:navigationMenu>

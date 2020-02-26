@@ -106,7 +106,7 @@ public class Layout extends AbstractPage {
 	@SuppressWarnings("unused")
 	@Property
 	private String logoutUrl = MyEc3Constants.J_SPRING_SECURITY_LOGOUT;
-	
+
 	@Property
 	private String legalNoticeUrl = GuWebAppConstants.LEGAL_NOTICE_URL;
 
