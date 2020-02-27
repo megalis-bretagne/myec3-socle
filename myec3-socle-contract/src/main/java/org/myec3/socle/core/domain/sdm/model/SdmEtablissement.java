@@ -2,7 +2,7 @@ package org.myec3.socle.core.domain.sdm.model;
 
 import java.util.Date;
 
-public class SdmEtablissement {
+public class SdmEtablissement extends SdmResource  {
 
     private String id;
     private String siege;

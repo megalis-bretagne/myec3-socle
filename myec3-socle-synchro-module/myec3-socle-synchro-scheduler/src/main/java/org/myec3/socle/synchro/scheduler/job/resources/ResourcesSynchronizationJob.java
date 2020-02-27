@@ -63,6 +63,7 @@ import org.myec3.socle.synchro.core.service.SynchronizationLogService;
 import org.myec3.socle.synchro.core.service.SynchronizationSubscriptionService;
 import org.myec3.socle.synchro.scheduler.constants.MyEc3SynchroConstants;
 import org.myec3.socle.synchro.scheduler.service.SchedulerService;
+import org.myec3.socle.synchro.scheduler.service.impl.SchedulerServiceImpl;
 import org.myec3.socle.ws.client.ResourceWsClient;
 import org.quartz.JobDataMap;
 import org.quartz.JobExecutionContext;
@@ -118,6 +119,13 @@ public abstract class ResourcesSynchronizationJob<T extends Resource> extends Qu
 	private ResourceWsClient externalWsClientService;
 
 	/**
+	 * Service used to send REST request to HTTPS external API
+	 */
+	@Autowired
+	@Qualifier("sdmWsClientImpl")
+	private ResourceWsClient sdmWsClientImpl;
+
+	/**
 	 * Service used to manage {@link SynchronizationError} objects
 	 */
 	@Autowired
@@ -125,7 +133,7 @@ public abstract class ResourcesSynchronizationJob<T extends Resource> extends Qu
 	private SynchronizationErrorService synchronizationErrorService;
 
 	/**
-	 * Service used to manage {@link InitialSynchronization} objects
+	 * Service used to manage {@link SynchronizationInitial} objects
 	 */
 	@Autowired
 	@Qualifier("synchronizationInitialService")
@@ -218,7 +226,7 @@ public abstract class ResourcesSynchronizationJob<T extends Resource> extends Qu
 	/**
 	 * Response message returned by the web service
 	 * 
-	 * @see ResponseMessage.class
+	 * @see ResponseMessage
 	 */
 	private ResponseMessage responseMessage;
 
@@ -237,7 +245,7 @@ public abstract class ResourcesSynchronizationJob<T extends Resource> extends Qu
 	/**
 	 * Job Type of synchronization : CREATE, UPDATE, DELETE
 	 * 
-	 * @see SynchronizationJobType.class
+	 * @see SynchronizationJobType
 	 */
 	private SynchronizationJobType synchronizationJobType;
 
@@ -245,7 +253,7 @@ public abstract class ResourcesSynchronizationJob<T extends Resource> extends Qu
 	 * Type of synchronization : SYNCHRONIZATION, ERROR_HANDLING,
 	 * RESYNCHRONIZATION...
 	 * 
-	 * @see SynchronizationType.class
+	 * @see SynchronizationType
 	 */
 	private SynchronizationType synchronizationType;
 
@@ -257,7 +265,7 @@ public abstract class ResourcesSynchronizationJob<T extends Resource> extends Qu
 	/**
 	 * The resource to synchronize
 	 * 
-	 * @see Resource.class
+	 * @see Resource
 	 */
 	private T resource;
 
@@ -707,6 +715,9 @@ public abstract class ResourcesSynchronizationJob<T extends Resource> extends Qu
 	}
 
 	private ResourceWsClient getResourceWsClient(SynchronizationSubscription synchronizationSubscription) {
+		if ("SDM".equals(synchronizationSubscription.getApplication().getName())){
+			return sdmWsClientImpl;
+		}
 		if (synchronizationSubscription.getHttps()) {
 			return externalWsClientService;
 		} else {
@@ -719,7 +730,7 @@ public abstract class ResourcesSynchronizationJob<T extends Resource> extends Qu
 	 * 
 	 * @param responseMessage             : the response returned by the WS client
 	 * @param resource                    : the {@link Resource} synchronized
-	 * @param synchronizationSubscription : the {@link synchronizationSubscription}
+	 * @param synchronizationSubscription : the {@link SynchronizationSubscription}
 	 *                                    concerned by the synchronization
 	 */
 	protected void checkResponseMessage(ResponseMessage responseMessage, Resource resource,
@@ -834,7 +845,7 @@ public abstract class ResourcesSynchronizationJob<T extends Resource> extends Qu
 	 * 
 	 * @param responseMessage             : the response returned by the WS client
 	 * @param resource                    : the {@link Resource} synchronized
-	 * @param synchronizationSubscription : the {@link synchronizationSubscription}
+	 * @param synchronizationSubscription : the {@link SynchronizationSubscription}
 	 *                                    concerned by the synchronization
 	 * @param synchronizationJobType      : the action to perform on the distant
 	 *                                    application (CREATE,UPDATE, DELETE...)
@@ -970,7 +981,7 @@ public abstract class ResourcesSynchronizationJob<T extends Resource> extends Qu
 	 * @param synchronizationJobType      : the action to perform on the distant
 	 *                                    application (CREATE,UPDATE, DELETE...)
 	 * @param resource                    : the {@link Resource} synchronized
-	 * @param synchronizationSubscription : the {@link synchronizationSubscription}
+	 * @param synchronizationSubscription : the {@link SynchronizationSubscription}
 	 *                                    concerned by the synchronization
 	 */
 	public void checkSynchronizationError(SynchronizationJobType synchronizationJobType, Resource resource,
@@ -1125,7 +1136,7 @@ public abstract class ResourcesSynchronizationJob<T extends Resource> extends Qu
 	 * @param delay                       : the delay to use before sending a new
 	 *                                    request
 	 * 
-	 * @see SchudulerServiceImpl.java
+	 * @see SchedulerServiceImpl
 	 */
 	public void createNewDelayedSynchronizationJob(SynchronizationError synchronizationError,
 			SynchronizationJobType synchronizationJobType, Resource resource,
@@ -1141,7 +1152,7 @@ public abstract class ResourcesSynchronizationJob<T extends Resource> extends Qu
 	 * Resynchronize a {@link Resource} dependency when an error 404 with error code
 	 * 004 occures (RELATION MISSING). We must send the {@link Resource} missing
 	 * before resynchronize the main {@link Resource}. ie : To create an
-	 * {@link Employee} the distant application must know his {Company}. If the
+	 * {@link EmployeeProfile} the distant application must know his {Company}. If the
 	 * distant application doesn't know the company of the employee we must send the
 	 * company and AFTER the employee!
 	 * 
@@ -1346,7 +1357,7 @@ public abstract class ResourcesSynchronizationJob<T extends Resource> extends Qu
 	/**
 	 * Convert a MethodType to an SynchronizationJobType
 	 * 
-	 * @param MethodType : the method type to convert
+	 * @param methodType : the method type to convert
 	 * @return SynchronizationJobType : the {@link SynchronizationJobType}
 	 *         corresponding at the given {@link MethodType}
 	 */

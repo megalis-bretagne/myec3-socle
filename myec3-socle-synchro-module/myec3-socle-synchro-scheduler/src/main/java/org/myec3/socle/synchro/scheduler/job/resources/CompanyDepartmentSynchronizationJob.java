@@ -18,10 +18,15 @@
 package org.myec3.socle.synchro.scheduler.job.resources;
 
 import org.myec3.socle.core.domain.model.CompanyDepartment;
+import org.myec3.socle.core.domain.sdm.model.SdmAgent;
+import org.myec3.socle.core.domain.sdm.model.SdmService;
 import org.myec3.socle.core.sync.api.ResponseMessage;
 import org.myec3.socle.synchro.core.domain.model.SynchronizationSubscription;
 import org.myec3.socle.ws.client.ResourceWsClient;
+import org.myec3.socle.ws.client.impl.SdmWsClientImpl;
 import org.springframework.stereotype.Component;
+
+import java.util.Date;
 
 /**
  * Concrete job implementation used when the resource to synchronize is an
@@ -48,7 +53,19 @@ public class CompanyDepartmentSynchronizationJob extends
 	public ResponseMessage create(CompanyDepartment resource,
 			SynchronizationSubscription synchronizationSubscription,
 			ResourceWsClient resourceWsClient) {
-		return resourceWsClient.post(resource, synchronizationSubscription);
+		if ("SDM".equals(synchronizationSubscription.getApplication().getName())){
+
+			SdmService serviceSDM = new SdmService();
+			//resource.get
+			//todo
+
+			SdmWsClientImpl sdmWsClient = (SdmWsClientImpl) resourceWsClient;
+
+			return sdmWsClient.post(resource,serviceSDM, synchronizationSubscription);
+
+		}else {
+			return resourceWsClient.post(resource, synchronizationSubscription);
+		}
 	}
 
 	/**

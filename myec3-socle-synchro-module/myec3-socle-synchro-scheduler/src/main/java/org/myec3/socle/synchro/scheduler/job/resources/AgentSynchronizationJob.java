@@ -18,10 +18,18 @@
 package org.myec3.socle.synchro.scheduler.job.resources;
 
 import org.myec3.socle.core.domain.model.AgentProfile;
+import org.myec3.socle.core.domain.model.Profile;
+import org.myec3.socle.core.domain.model.Role;
+import org.myec3.socle.core.domain.sdm.model.SdmAgent;
+import org.myec3.socle.core.domain.sdm.model.SdmService;
 import org.myec3.socle.core.sync.api.ResponseMessage;
 import org.myec3.socle.synchro.core.domain.model.SynchronizationSubscription;
 import org.myec3.socle.ws.client.ResourceWsClient;
+import org.myec3.socle.ws.client.impl.SdmWsClientImpl;
 import org.springframework.stereotype.Component;
+
+import javax.ws.rs.client.Entity;
+import java.util.Date;
 
 /**
  * Concrete job implementation used when the resource to synchronize is an
@@ -48,8 +56,40 @@ public class AgentSynchronizationJob extends
 	public ResponseMessage create(AgentProfile resource,
 			SynchronizationSubscription synchronizationSubscription,
 			ResourceWsClient resourceWsClient) {
+		//todo ajout atexo
+		//convertion object
+		if ("SDM".equals(synchronizationSubscription.getApplication().getName())){
+			SdmAgent agentSDM = new SdmAgent();
 
-		return resourceWsClient.post(resource, synchronizationSubscription);
+			agentSDM.setIdentifiant(resource.getUsername());
+			//todo voir ce qu'il faut mettre dans rôle pour la salle des marchés
+			agentSDM.setIdProfil(2);
+/*
+			if (resource.getRoles() !=null && resource.getRoles().size() >0){
+				agentSDM.setIdProfil(resource.getRoles().get(0).getExternalId());
+			}
+*/
+			agentSDM.setEmail(resource.getEmail());
+			agentSDM.setNom(resource.getUser().getLastname());
+			agentSDM.setPrenom(resource.getUser().getFirstname());
+			agentSDM.setActif(resource.isEnabled());
+			agentSDM.setTelephone(resource.getPhone());
+			agentSDM.setFax(resource.getFax());
+			agentSDM.setDateCreation(new Date());
+			agentSDM.setDateModification(agentSDM.getDateCreation());
+			agentSDM.setAcronymeOrganisme(resource.getOrganismDepartment().getOrganism().getAcronym());
+			SdmService serviceSDM= new SdmService();
+			serviceSDM.setIdExterne(resource.getOrganismDepartment().getExternalId());
+			agentSDM.setService(serviceSDM);
+
+			SdmWsClientImpl sdmWsClient = (SdmWsClientImpl) resourceWsClient;
+
+			return sdmWsClient.post(resource,agentSDM, synchronizationSubscription);
+
+		}else {
+			return resourceWsClient.post(resource, synchronizationSubscription);
+		}
+
 	}
 
 	/**
@@ -70,7 +110,48 @@ public class AgentSynchronizationJob extends
 	public ResponseMessage update(AgentProfile resource,
 			SynchronizationSubscription synchronizationSubscription,
 			ResourceWsClient resourceWsClient) {
-		return resourceWsClient.put(resource, synchronizationSubscription);
+
+		//todo ajout atexo
+		//convertion object
+		if ("SDM".equals(synchronizationSubscription.getApplication().getName())){
+			SdmAgent agentSDM = new SdmAgent();
+
+			agentSDM.setIdentifiant(resource.getUsername());
+			//todo voir ce qu'il faut mettre dans rôle pour la salle des marchés
+			for (Role role : resource.getRoles()){
+				if ("SDM".equals(role.getApplication().getName())){
+					agentSDM.setIdProfil(role.getExternalId());
+				}
+			}
+
+
+/*
+			if (resource.getRoles() !=null && resource.getRoles().size() >0){
+				agentSDM.setIdProfil(resource.getRoles().get(0).getExternalId());
+			}
+*/
+			agentSDM.setEmail(resource.getEmail());
+			agentSDM.setNom(resource.getUser().getLastname());
+			agentSDM.setPrenom(resource.getUser().getFirstname());
+			agentSDM.setActif(resource.isEnabled());
+			agentSDM.setTelephone(resource.getPhone());
+			agentSDM.setFax(resource.getFax());
+			agentSDM.setDateCreation(new Date());
+			agentSDM.setDateModification(agentSDM.getDateCreation());
+			agentSDM.setAcronymeOrganisme(resource.getOrganismDepartment().getOrganism().getAcronym());
+
+			SdmService serviceSDM= new SdmService();
+			serviceSDM.setIdExterne(resource.getOrganismDepartment().getExternalId());
+			agentSDM.setService(serviceSDM);
+
+			SdmWsClientImpl sdmWsClient = (SdmWsClientImpl) resourceWsClient;
+
+			return sdmWsClient.post(resource,agentSDM, synchronizationSubscription);
+
+		}else {
+			return resourceWsClient.put(resource, synchronizationSubscription);
+		}
+
 	}
 
 }

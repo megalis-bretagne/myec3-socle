@@ -1,26 +1,27 @@
 package org.myec3.socle.core.domain.sdm.model;
 
+import java.util.Date;
 import java.util.List;
 
-public class SdmEntreprise {
+public class SdmEntreprise extends SdmResource  {
 
-    private String id;
+    private long id;
     private String siren;
     private String effectif;
     private SdmAdresse adresse;
     private String formeJuridique;
     private String codeAPE;
-    private String dateModification;
+    private Date dateModification;
     private String capitalSocial;
     private String raisonSociale;
     private String email;
     private List<SdmEtablissement> etablisssements;
 
-    public String getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(long id) {
         this.id = id;
     }
 
@@ -34,6 +35,14 @@ public class SdmEntreprise {
 
     public String getEffectif() {
         return effectif;
+    }
+
+    public Date getDateModification() {
+        return dateModification;
+    }
+
+    public void setDateModification(Date dateModification) {
+        this.dateModification = dateModification;
     }
 
     public void setEffectif(String effectif) {
@@ -62,14 +71,6 @@ public class SdmEntreprise {
 
     public void setCodeAPE(String codeAPE) {
         this.codeAPE = codeAPE;
-    }
-
-    public String getDateModification() {
-        return dateModification;
-    }
-
-    public void setDateModification(String dateModification) {
-        this.dateModification = dateModification;
     }
 
     public String getCapitalSocial() {
