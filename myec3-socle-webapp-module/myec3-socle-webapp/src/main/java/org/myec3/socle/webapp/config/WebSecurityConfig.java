@@ -29,10 +29,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
 	@Override
 	public void configure(final WebSecurity web) throws Exception {
-		web.ignoring()
-				.antMatchers(
-						"/health"
-				);
+		web.ignoring().antMatchers("/health","/resources/errorAccess.html");
 	}
 
 	@Override
