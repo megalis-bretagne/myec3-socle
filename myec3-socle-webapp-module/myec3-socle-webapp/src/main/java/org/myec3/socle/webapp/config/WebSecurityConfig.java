@@ -112,8 +112,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 				.hasAnyAuthority("ROLE_SUPER_ADMIN", "ROLE_ADMIN", "ROLE_MANAGER_EMPLOYEE", "ROLE_DEFAULT", "ROLE_ANONYMOUS")
 
 				// The next one is needed for tapestry pager (*/*)
-				.antMatchers("/company/establishment/create*/*").anonymous()
-				.antMatchers("/company/establishment/create/*").anonymous()
+				.antMatchers("/company/establishment/create*/*")
+				.hasAnyAuthority("ROLE_SUPER_ADMIN", "ROLE_ADMIN", "ROLE_MANAGER_EMPLOYEE", "ROLE_DEFAULT", "ROLE_ANONYMOUS")
+				.antMatchers("/company/establishment/create/*")
+				.hasAnyAuthority("ROLE_SUPER_ADMIN", "ROLE_ADMIN", "ROLE_MANAGER_EMPLOYEE", "ROLE_DEFAULT", "ROLE_ANONYMOUS")
 
 				.antMatchers("/company/employee/modify/**")
 				.hasAnyAuthority("ROLE_SUPER_ADMIN", "ROLE_ADMIN", "ROLE_MANAGER_EMPLOYEE", "ROLE_DEFAULT")
