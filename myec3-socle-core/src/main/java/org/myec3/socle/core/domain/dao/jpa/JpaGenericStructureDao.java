@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.NoResultException;
+import javax.persistence.NonUniqueResultException;
 import javax.persistence.Query;
 
 import org.myec3.socle.core.domain.dao.GenericStructureDao;
@@ -127,6 +128,9 @@ public abstract class JpaGenericStructureDao<T extends Structure> extends JpaRes
 		} catch (NoResultException re) {
 			// No result found, we return null instead of errors
 			getLog().warn("findBySiren returned no result.");
+			return null;}
+		catch (NonUniqueResultException e){
+			getLog().warn("findBySiren returned NonUniqueResultException.");
 			return null;
 		} catch (RuntimeException re) {
 			getLog().error("findBySiren failed.", re);

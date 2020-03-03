@@ -1,20 +1,44 @@
 package org.myec3.socle.core.domain.sdm.model;
 
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
 import java.util.Date;
 import java.util.List;
 
+@XmlRootElement
 public class SdmEntreprise extends SdmResource  {
 
+    @XmlElement(required = true)
     private long id;
+
+    @XmlElement(required = true)
     private String siren;
+
+    @XmlElement(required = false)
     private String effectif;
+
+    @XmlElement(required = false)
     private SdmAdresse adresse;
+
+    @XmlElement(required = false)
     private String formeJuridique;
+
+    @XmlElement(required = false)
     private String codeAPE;
+
+    @XmlElement(required = false)
     private Date dateModification;
+
+    @XmlElement(required = false)
     private String capitalSocial;
+
+    @XmlElement(required = false)
     private String raisonSociale;
+
+    @XmlElement(required = true)
     private String email;
+
+    @XmlElement(required = false)
     private List<SdmEtablissement> etablisssements;
 
     public long getId() {

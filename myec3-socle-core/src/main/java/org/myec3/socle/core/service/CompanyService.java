@@ -82,4 +82,6 @@ public interface CompanyService extends GenericStructureService<Company> {
 
 	List<Company> findAllByCriteria(String label, String acronym, String siren, String postalCode, String city);
 
+	Company findCompanyByIdSdm(long idSdm);
+
 }
