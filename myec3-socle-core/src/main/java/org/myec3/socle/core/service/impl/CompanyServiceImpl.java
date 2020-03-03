@@ -292,4 +292,9 @@ public class CompanyServiceImpl extends GenericStructureServiceImpl<Company, Com
 	public List<Company> findAllByCriteria(String label, String acronym, String siren, String postalCode, String city) {
 		return this.dao.findAllByCriteria(label, acronym, siren, postalCode, city);
 	}
+
+	@Override
+	public Company findCompanyByIdSdm(long idSdm) {
+		return this.dao.findCompanyByIdSdm(idSdm);
+	}
 }

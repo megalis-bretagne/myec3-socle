@@ -98,4 +98,6 @@ public interface ResourceService<T extends Resource> extends IGenericService<T> 
 	 * @throws RuntimeException in case of errors
 	 */
 	List<T> findAllByPartialLabel(String label);
+
+
 }

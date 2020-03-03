@@ -232,7 +232,7 @@ public class ResourceWsClientImpl implements ResourceWsClient {
 	@Override
 	public Response get(Resource resource, SynchronizationSubscription synchronizationSubscription) {
 		WebTarget webResource = getClientWs()
-				.target(synchronizationSubscription.getUri() + resource.getId().toString());
+				.target(synchronizationSubscription.getUri() +"/" + resource.getId().toString());
 		Builder builder = webResource.request().accept(MediaType.APPLICATION_XML);
 		try {
 			return builder.get();
@@ -248,7 +248,7 @@ public class ResourceWsClientImpl implements ResourceWsClient {
 	 */
 	@Override
 	public Response get(Long id, SynchronizationSubscription synchronizationSubscription) {
-		WebTarget webResource = getClientWs().target(synchronizationSubscription.getUri() + id.toString());
+		WebTarget webResource = getClientWs().target(synchronizationSubscription.getUri() +"/" + id.toString());
 		Builder builder = webResource.request().accept(MediaType.APPLICATION_XML);
 		try {
 			return builder.get();
@@ -296,7 +296,7 @@ public class ResourceWsClientImpl implements ResourceWsClient {
 	 */
 	@Override
 	public ResponseMessage put(Resource resource, SynchronizationSubscription synchronizationSubscription) {
-		WebTarget webResource = getClientWs().target(synchronizationSubscription.getUri() + resource.getId());
+		WebTarget webResource = getClientWs().target(synchronizationSubscription.getUri() +"/" + resource.getId());
 		Builder builder = webResource.request().accept(MediaType.APPLICATION_XML);
 
 		try {
@@ -326,7 +326,7 @@ public class ResourceWsClientImpl implements ResourceWsClient {
 	 */
 	@Override
 	public ResponseMessage putComplete(Resource resource, SynchronizationSubscription synchronizationSubscription) {
-		WebTarget webResource = getClientWs().target(synchronizationSubscription.getUri() + resource.getId());
+		WebTarget webResource = getClientWs().target(synchronizationSubscription.getUri() +"/" + resource.getId());
 		Builder builder = webResource.request().accept(MediaType.APPLICATION_XML);
 
 		prepareHeader(builder, resource);
@@ -358,7 +358,7 @@ public class ResourceWsClientImpl implements ResourceWsClient {
 	 */
 	@Override
 	public ResponseMessage delete(Resource resource, SynchronizationSubscription synchronizationSubscription) {
-		WebTarget webResource = getClientWs().target(synchronizationSubscription.getUri() + resource.getId());
+		WebTarget webResource = getClientWs().target(synchronizationSubscription.getUri() +"/" + resource.getId());
 		Builder builder = webResource.request().accept(MediaType.APPLICATION_XML);
 
 		prepareHeader(builder, resource);

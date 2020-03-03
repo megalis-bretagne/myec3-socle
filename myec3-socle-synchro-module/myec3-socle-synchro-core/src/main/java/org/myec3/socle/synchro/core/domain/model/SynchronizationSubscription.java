@@ -97,7 +97,7 @@ public class SynchronizationSubscription implements Serializable, PE {
 	 * @return the {@link Application} subscribed at the synchronization process.
 	 */
 	@ManyToOne
-	@JoinColumn(nullable = false)
+	@JoinColumn(nullable = false,name = "")
 	public Application getApplication() {
 		return application;
 	}

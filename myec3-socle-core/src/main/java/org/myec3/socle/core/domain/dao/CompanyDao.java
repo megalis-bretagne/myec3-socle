@@ -36,4 +36,5 @@ public interface CompanyDao extends GenericStructureDao<Company> {
     List<Company> findAllByCriteria(String label, String acronym, String siren,
 	    String postalCode, String city);
 
+    Company findCompanyByIdSdm(long idSdm);
 }
