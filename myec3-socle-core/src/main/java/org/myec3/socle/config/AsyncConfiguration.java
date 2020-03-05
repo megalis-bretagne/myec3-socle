@@ -1,4 +1,4 @@
-package org.myec3.socle.webapp.config;
+package org.myec3.socle.config;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.AsyncConfigurer;
