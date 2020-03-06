@@ -6,21 +6,21 @@ Java 8, Maven, MySQL Server 5.6
 
 
 ### MySQL
-In MySQL create database/schema __ebou_socle__ and __ebou_synchro__.
+In MySQL create database/schema __em_socle__ and __em_synchro__.
  
  mysql -u root -p
- CREATE DATABASE ebou_socle;
- CREATE DATABASE ebou_synchro;
+ CREATE DATABASE em_socle;
+ CREATE DATABASE em_synchro;
  CREATE DATABASE keycloak;
 
 
 Import preprod dump
 
- mysql -u root -p ebou_socle < /dump/em_socle_preprod_20200108.sql
+ mysql -u root -p em_socle < /dump/em_socle_preprod_20200108.sql
  
 Import structure quartz dump
  
- mysql -u root -p ebou_synchro < /dump/Structure_Synchro.sql
+ mysql -u root -p em_synchro < /dump/Structure_Synchro.sql
 
 
 ## Build Project
