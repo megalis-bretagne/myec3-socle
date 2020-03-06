@@ -8,6 +8,12 @@ apt-get install -y curl && \
 apt-get install -y vim && \
 apt-get clean
 
+#ajout agent glowroot
+RUN cd /  && \
+wget https://github.com/glowroot/glowroot/releases/download/v0.13.5/glowroot-0.13.5-dist.zip && \
+unzip glowroot-0.13.5-dist.zip && \
+echo "collector.address=http://glowroot:8181" > /glowroot/glowroot.properties && \
+echo "multi.dir=true" >> /glowroot/glowroot.properties
 
 #recupération de nexus de l'artifact
 # TODO : récupérer la version du pom.xml
