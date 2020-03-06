@@ -4,6 +4,7 @@ import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRegistration;
 
+import org.myec3.socle.synchro.config.SynchroAppConfig;
 import org.myec3.socle.synchro.core.config.SynchroCoreConfig;
 import org.myec3.socle.synchro.scheduler.config.SynchroSchedulerConfig;
 import org.springframework.web.WebApplicationInitializer;
@@ -15,7 +16,7 @@ public class MainWebAppInitializer implements WebApplicationInitializer {
 	@Override
 	public void onStartup(ServletContext servletContext) throws ServletException {
 		AnnotationConfigWebApplicationContext ctx = new AnnotationConfigWebApplicationContext();
-		ctx.register(SynchroCoreConfig.class, SynchroSchedulerConfig.class);
+		ctx.register(SynchroCoreConfig.class, SynchroSchedulerConfig.class, SynchroAppConfig.class);
 		ctx.setServletContext(servletContext);
 		ServletRegistration.Dynamic servlet = servletContext.addServlet("dispatcher", new DispatcherServlet(ctx));
 		servlet.setLoadOnStartup(1);

@@ -1,6 +1,7 @@
 package org.myec3.socle.webapp.controller;
 
 import org.myec3.socle.core.domain.model.Application;
+import org.myec3.socle.core.domain.model.enums.ResourceType;
 import org.myec3.socle.core.service.ApplicationService;
 import org.myec3.socle.synchro.core.service.SynchroIdentifiantExterneDeltaService;
 import org.myec3.socle.synchro.core.service.SynchroIdentifiantExterneService;
@@ -47,9 +48,9 @@ public class SdmInitController {
     @Qualifier("sdmSynchroService")
     private SdmSynchroService sdmSynchroService;
 
-    @RequestMapping(value = "/sdmInit/truncate", method = {RequestMethod.GET})
+    @RequestMapping(value = "/sdmInit/truncate/all", method = {RequestMethod.GET})
     @Transactional
-    public String truncate() {
+    public String truncateAll() {
         synchroIdentifiantExterneDeltaService.truncate();
         logger.info("tuncate synchroIdentifiantExterneDelta ok");
         synchroIdentifiantExterneService.truncate();
@@ -58,6 +59,67 @@ public class SdmInitController {
         return "truncate synchroIdentifiantExterneDelta et synchroIdentifiantExterneService ok";
 
     }
+
+    @RequestMapping(value = "/sdmInit/truncate/agents", method = {RequestMethod.GET})
+    @Transactional
+    public String truncateAgents() {
+        return deleteResource(ResourceType.AGENT_PROFILE);
+    }
+
+    @RequestMapping(value = "/sdmInit/truncate/organismes", method = {RequestMethod.GET})
+    @Transactional
+    public String truncateOrganismes() {
+        return deleteResource(ResourceType.ORGANISM);
+    }
+
+    @RequestMapping(value = "/sdmInit/truncate/services", method = {RequestMethod.GET})
+    @Transactional
+    public String truncateServices() {
+        return deleteResource(ResourceType.ORGANISM_DEPARTMENT);
+    }
+
+
+    @RequestMapping(value = "/sdmInit/truncate/etablissements", method = {RequestMethod.GET})
+    @Transactional
+    public String truncateetEablissements() {
+        return deleteResource(ResourceType.ESTABLISHMENT);
+    }
+
+    @RequestMapping(value = "/sdmInit/truncate/entreprises", method = {RequestMethod.GET})
+    @Transactional
+    public String truncateEntreprises() {
+        return deleteResource(ResourceType.COMPANY);
+    }
+
+    @RequestMapping(value = "/sdmInit/truncate/inscrit", method = {RequestMethod.GET})
+    @Transactional
+    public String truncateInscrit() {
+        return deleteResource(ResourceType.EMPLOYEE_PROFILE);
+    }
+
+    public String deleteResource(ResourceType type) {
+        return "truncate "+type.getLabel() +" dans synchroIdentifiantExterneDelta et synchroIdentifiantExterneService ok";
+
+    }
+    @RequestMapping(value = "/sdmInit/all", method = {RequestMethod.GET})
+    public String sdmInitAll() {
+
+        //Etape 1 : on vide les tables
+        String result = this.truncateAll();
+
+        result+= this.sdmInitOrgannismes();
+        result += this.sdmInitServices();
+        result+= this.sdmInitAgents();
+        result+= this.sdmInitEntreprises();
+        result+= this.sdmInitEtablissements();
+
+        //retour+= this.sdmInitInscrit();
+
+        return result;
+
+    }
+
+
 
 
     @RequestMapping(value = "/sdmInit/agents", method = {RequestMethod.GET})

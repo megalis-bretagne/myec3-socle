@@ -40,6 +40,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 				.and().authorizeRequests()
 				.antMatchers("/*").permitAll()
 				.antMatchers("/Init").hasAuthority("ROLE_SUPER_ADMIN")
+				.antMatchers("/sdmInit/**").hasAuthority("ROLE_SUPER_ADMIN")
 				.antMatchers("/customer/**").hasAuthority("ROLE_SUPER_ADMIN")
 				.antMatchers("/structure/relation/**").hasAnyAuthority("ROLE_SUPER_ADMIN", "ROLE_ADMIN")
 				.antMatchers("/user/admin/**").hasAuthority("ROLE_SUPER_ADMIN")
