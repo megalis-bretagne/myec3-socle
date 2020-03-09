@@ -50,17 +50,6 @@ buildSocleWebapp:
     - echo "push ${CI_REGISTRY_IMAGE}:latest" && docker push ${CI_REGISTRY_IMAGE}:latest
     - echo "push ${CI_REGISTRY_IMAGE}:${CI_COMMIT_SHA:0:8}" && docker push ${CI_REGISTRY_IMAGE}:${CI_COMMIT_SHA:0:8}
 
-buildSocleWS:
-  image: docker:stable-dind
-  stage: buildImages
-  variables:
-    CI_REGISTRY_IMAGE: "klask.sib.fr:52100/megalis/socle-ws/${CI_COMMIT_REF_NAME}"
-  script:
-    - docker build -f Dockerfile_ws.stages -t ${CI_REGISTRY_IMAGE} .
-    - docker tag ${CI_REGISTRY_IMAGE} ${CI_REGISTRY_IMAGE}:${CI_COMMIT_SHA:0:8}
-    - echo "push ${CI_REGISTRY_IMAGE}:latest" && docker push ${CI_REGISTRY_IMAGE}:latest
-    - echo "push ${CI_REGISTRY_IMAGE}:${CI_COMMIT_SHA:0:8}" && docker push ${CI_REGISTRY_IMAGE}:${CI_COMMIT_SHA:0:8}
-
 deploy_dev:
   stage: deploy
   only:
@@ -80,8 +69,6 @@ deploy_preprod:
     - docker push klask.sib.fr:5000/megalis/socle-webapp/master:latest
     - docker build -f Dockerfile_synchro.stages -t klask.sib.fr:5000/megalis/socle-synchro .
     - docker push klask.sib.fr:5000/megalis/socle-synchro/master:latest
-    - docker build -f Dockerfile_ws.stages -t klask.sib.fr:5000/megalis/socle-ws .
-    - docker push klask.sib.fr:5000/megalis/socle-ws/master:latest
     - ssh megalis@10.253.104.100 "export URL_DOCKER=edipro.sib.fr:443;docker stack deploy --with-registry-auth -c /data/livraison/megalis-stack-pre-prod.yml megalis"
   when: manual
 
