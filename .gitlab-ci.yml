@@ -26,9 +26,9 @@ buildSocleESB:
     - docker build -f Dockerfile_esb.stages -t ${CI_REGISTRY_IMAGE} .
     - docker tag ${CI_REGISTRY_IMAGE} ${CI_REGISTRY_IMAGE}:${CI_COMMIT_SHA:0:8}
     - docker tag ${CI_REGISTRY_IMAGE} ${CI_REGISTRY_IMAGE}:${CI_COMMIT_REF_NAME}
-    - docker push ${CI_REGISTRY_IMAGE}
-    - docker push ${CI_REGISTRY_IMAGE}:${CI_COMMIT_SHA:0:8}
-    - docker push ${CI_REGISTRY_IMAGE}:${CI_COMMIT_REF_NAME}
+    - echo "push ${CI_REGISTRY_IMAGE}:latest" && docker push ${CI_REGISTRY_IMAGE}:latest
+    - echo "push ${CI_REGISTRY_IMAGE}:${CI_COMMIT_SHA:0:8}" && docker push ${CI_REGISTRY_IMAGE}:${CI_COMMIT_SHA:0:8}
+    - echo "push ${CI_REGISTRY_IMAGE}:${CI_COMMIT_REF_NAME}" && docker push ${CI_REGISTRY_IMAGE}:${CI_COMMIT_REF_NAME}
 
 buildSocleSynchro:
   image: docker:stable-dind
