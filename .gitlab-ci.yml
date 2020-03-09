@@ -82,13 +82,13 @@ deploy_preprod:
   only:
     - master
   script:
-    - docker build -f Dockerfile_esb.stages -t klask.sib.fr:5000/megalis/socle-esb .
+    - docker build -f Dockerfile_esb.stages -t klask.sib.fr:5000/megalis/socle-esb:master .
     - docker push klask.sib.fr:5000/megalis/socle-esb:master
-    - docker build -f myec3-socle-webapp-module/myec3-socle-webapp/Dockerfile.stages -t klask.sib.fr:5000/megalis/socle-webapp .
+    - docker build -f myec3-socle-webapp-module/myec3-socle-webapp/Dockerfile.stages -t klask.sib.fr:5000/megalis/socle-webapp:master .
     - docker push klask.sib.fr:5000/megalis/socle-webapp:master
-    - docker build -f Dockerfile_synchro.stages -t klask.sib.fr:5000/megalis/socle-synchro .
+    - docker build -f Dockerfile_synchro.stages -t klask.sib.fr:5000/megalis/socle-synchro:master .
     - docker push klask.sib.fr:5000/megalis/socle-synchro:master
-    - docker build -f Dockerfile_ws.stages -t klask.sib.fr:5000/megalis/socle-ws .
+    - docker build -f Dockerfile_ws.stages -t klask.sib.fr:5000/megalis/socle-ws:master .
     - docker push klask.sib.fr:5000/megalis/socle-ws:master
     - ssh megalis@10.253.104.100 "export URL_DOCKER=edipro.sib.fr:443;docker stack deploy --with-registry-auth -c /data/livraison/megalis-stack-pre-prod.yml megalis"
   when: manual
