@@ -34,7 +34,7 @@ buildSocleSynchro:
   variables:
     CI_REGISTRY_IMAGE: "klask.sib.fr:52100/megalis/socle-synchro/${CI_COMMIT_REF_NAME}"
   script:
-    - docker build -f Dockerfile_esb.stages -t ${CI_REGISTRY_IMAGE} .
+    - docker build -f Dockerfile_synchro.stages -t ${CI_REGISTRY_IMAGE} .
     - docker tag ${CI_REGISTRY_IMAGE} ${CI_REGISTRY_IMAGE}:${CI_COMMIT_SHA:0:8}
     - echo "push ${CI_REGISTRY_IMAGE}:latest" && docker push ${CI_REGISTRY_IMAGE}:latest
     - echo "push ${CI_REGISTRY_IMAGE}:${CI_COMMIT_SHA:0:8}" && docker push ${CI_REGISTRY_IMAGE}:${CI_COMMIT_SHA:0:8}
@@ -45,7 +45,7 @@ buildSocleWebapp:
   variables:
     CI_REGISTRY_IMAGE: "klask.sib.fr:52100/megalis/socle-webapp/${CI_COMMIT_REF_NAME}"
   script:
-    - docker build -f Dockerfile_esb.stages -t ${CI_REGISTRY_IMAGE} .
+    - docker build -f myec3-socle-webapp-module/myec3-socle-webapp/Dockerfile.stages -t ${CI_REGISTRY_IMAGE} .
     - docker tag ${CI_REGISTRY_IMAGE} ${CI_REGISTRY_IMAGE}:${CI_COMMIT_SHA:0:8}
     - echo "push ${CI_REGISTRY_IMAGE}:latest" && docker push ${CI_REGISTRY_IMAGE}:latest
     - echo "push ${CI_REGISTRY_IMAGE}:${CI_COMMIT_SHA:0:8}" && docker push ${CI_REGISTRY_IMAGE}:${CI_COMMIT_SHA:0:8}
@@ -56,7 +56,7 @@ buildSocleWS:
   variables:
     CI_REGISTRY_IMAGE: "klask.sib.fr:52100/megalis/socle-ws/${CI_COMMIT_REF_NAME}"
   script:
-    - docker build -f Dockerfile_esb.stages -t ${CI_REGISTRY_IMAGE} .
+    - docker build -f Dockerfile_ws.stages -t ${CI_REGISTRY_IMAGE} .
     - docker tag ${CI_REGISTRY_IMAGE} ${CI_REGISTRY_IMAGE}:${CI_COMMIT_SHA:0:8}
     - echo "push ${CI_REGISTRY_IMAGE}:latest" && docker push ${CI_REGISTRY_IMAGE}:latest
     - echo "push ${CI_REGISTRY_IMAGE}:${CI_COMMIT_SHA:0:8}" && docker push ${CI_REGISTRY_IMAGE}:${CI_COMMIT_SHA:0:8}
