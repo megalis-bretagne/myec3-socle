@@ -39,9 +39,9 @@ buildSocleSynchro:
     - docker build -f Dockerfile_esb.stages -t ${CI_REGISTRY_IMAGE} .
     - docker tag ${CI_REGISTRY_IMAGE} ${CI_REGISTRY_IMAGE}:${CI_COMMIT_SHA:0:8}
     - docker tag ${CI_REGISTRY_IMAGE} ${CI_REGISTRY_IMAGE}:${CI_COMMIT_REF_NAME}
-    - docker push ${CI_REGISTRY_IMAGE}
-    - docker push ${CI_REGISTRY_IMAGE}:${CI_COMMIT_SHA:0:8}
-    - docker push ${CI_REGISTRY_IMAGE}:${CI_COMMIT_REF_NAME}
+    - echo "push ${CI_REGISTRY_IMAGE}:latest" && docker push ${CI_REGISTRY_IMAGE}:latest
+    - echo "push ${CI_REGISTRY_IMAGE}:${CI_COMMIT_SHA:0:8}" && docker push ${CI_REGISTRY_IMAGE}:${CI_COMMIT_SHA:0:8}
+    - echo "push ${CI_REGISTRY_IMAGE}:${CI_COMMIT_SHA:0:8}" && docker push ${CI_REGISTRY_IMAGE}:${CI_COMMIT_REF_NAME}
 
 buildSocleWebapp:
   image: docker:stable-dind
@@ -52,9 +52,9 @@ buildSocleWebapp:
     - docker build -f Dockerfile_esb.stages -t ${CI_REGISTRY_IMAGE} .
     - docker tag ${CI_REGISTRY_IMAGE} ${CI_REGISTRY_IMAGE}:${CI_COMMIT_SHA:0:8}
     - docker tag ${CI_REGISTRY_IMAGE} ${CI_REGISTRY_IMAGE}:${CI_COMMIT_REF_NAME}
-    - docker push ${CI_REGISTRY_IMAGE}
-    - docker push ${CI_REGISTRY_IMAGE}:${CI_COMMIT_SHA:0:8}
-    - docker push ${CI_REGISTRY_IMAGE}:${CI_COMMIT_REF_NAME}
+    - echo "push ${CI_REGISTRY_IMAGE}:latest" && docker push ${CI_REGISTRY_IMAGE}:latest
+    - echo "push ${CI_REGISTRY_IMAGE}:${CI_COMMIT_SHA:0:8}" && docker push ${CI_REGISTRY_IMAGE}:${CI_COMMIT_SHA:0:8}
+    - echo "push ${CI_REGISTRY_IMAGE}:${CI_COMMIT_SHA:0:8}" && docker push ${CI_REGISTRY_IMAGE}:${CI_COMMIT_REF_NAME}
 
 buildSocleWS:
   image: docker:stable-dind
@@ -65,9 +65,9 @@ buildSocleWS:
     - docker build -f Dockerfile_esb.stages -t ${CI_REGISTRY_IMAGE} .
     - docker tag ${CI_REGISTRY_IMAGE} ${CI_REGISTRY_IMAGE}:${CI_COMMIT_SHA:0:8}
     - docker tag ${CI_REGISTRY_IMAGE} ${CI_REGISTRY_IMAGE}:${CI_COMMIT_REF_NAME}
-    - docker push ${CI_REGISTRY_IMAGE}
-    - docker push ${CI_REGISTRY_IMAGE}:${CI_COMMIT_SHA:0:8}
-    - docker push ${CI_REGISTRY_IMAGE}:${CI_COMMIT_REF_NAME}
+    - echo "push ${CI_REGISTRY_IMAGE}:latest" && docker push ${CI_REGISTRY_IMAGE}:latest
+    - echo "push ${CI_REGISTRY_IMAGE}:${CI_COMMIT_SHA:0:8}" && docker push ${CI_REGISTRY_IMAGE}:${CI_COMMIT_SHA:0:8}
+    - echo "push ${CI_REGISTRY_IMAGE}:${CI_COMMIT_SHA:0:8}" && docker push ${CI_REGISTRY_IMAGE}:${CI_COMMIT_REF_NAME}
 
 deploy_dev:
   stage: deploy
@@ -83,13 +83,13 @@ deploy_preprod:
     - master
   script:
     - docker build -f Dockerfile_esb.stages -t klask.sib.fr:5000/megalis/socle-esb .
-    - docker push klask.sib.fr:5000/megalis/socle-esb
+    - docker push klask.sib.fr:5000/megalis/socle-esb:master
     - docker build -f myec3-socle-webapp-module/myec3-socle-webapp/Dockerfile.stages -t klask.sib.fr:5000/megalis/socle-webapp .
-    - docker push klask.sib.fr:5000/megalis/socle-webapp
+    - docker push klask.sib.fr:5000/megalis/socle-webapp:master
     - docker build -f Dockerfile_synchro.stages -t klask.sib.fr:5000/megalis/socle-synchro .
-    - docker push klask.sib.fr:5000/megalis/socle-synchro
+    - docker push klask.sib.fr:5000/megalis/socle-synchro:master
     - docker build -f Dockerfile_ws.stages -t klask.sib.fr:5000/megalis/socle-ws .
-    - docker push klask.sib.fr:5000/megalis/socle-ws
+    - docker push klask.sib.fr:5000/megalis/socle-ws:master
     - ssh megalis@10.253.104.100 "export URL_DOCKER=edipro.sib.fr:443;docker stack deploy --with-registry-auth -c /data/livraison/megalis-stack-pre-prod.yml megalis"
   when: manual
 
