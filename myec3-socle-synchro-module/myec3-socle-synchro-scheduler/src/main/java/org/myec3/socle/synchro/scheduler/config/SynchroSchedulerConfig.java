@@ -23,7 +23,7 @@ import org.springframework.scheduling.quartz.SchedulerFactoryBean;
 import org.springframework.scheduling.quartz.SpringBeanJobFactory;
 
 @Configuration
-@PropertySource({ "classpath:socleCore.properties", "classpath:database.properties",
+@PropertySource({ "classpath:socleCore.properties", "classpath:db.properties", "classpath:database.properties",
 		"classpath:synchronization.properties", "classpath:quartzParallelScheduler.properties",
 		"classpath:quartzScheduler.properties" })
 @ComponentScan(basePackages = { "org.myec3.socle.synchro.scheduler" })

@@ -19,7 +19,7 @@ import org.springframework.scheduling.quartz.SchedulerFactoryBean;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 @Configuration
-@PropertySource({ "classpath:database.properties", "classpath:mpsUpdate.properties" })
+@PropertySource({ "classpath:db.properties", "classpath:database.properties", "classpath:mpsUpdate.properties" })
 @ComponentScan(basePackages = { "org.myec3.socle.ws.server" })
 @Import({ CoreConfig.class, SocleClientConfig.class })
 @EnableWebMvc

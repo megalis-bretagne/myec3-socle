@@ -36,7 +36,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.util.StreamUtils;
 
 @Configuration
-@PropertySource({ "classpath:socleCore.properties", "classpath:database.properties" })
+@PropertySource({ "classpath:socleCore.properties", "classpath:db.properties", "classpath:database.properties" })
 @ComponentScan(basePackages = { "org.myec3.socle.core", "org.myec3.socle.synchro.api" })
 @EnableTransactionManagement
 public class CoreConfig {
