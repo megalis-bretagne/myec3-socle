@@ -1,11 +1,18 @@
 package org.myec3.socle.synchro.core.config;
 
+import java.io.IOException;
+import java.nio.charset.Charset;
 import java.util.Properties;
 
 import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 
 import org.apache.commons.dbcp.BasicDataSource;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.myec3.socle.config.CoreConfig;
+import org.myec3.socle.core.util.UtilTechException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -14,6 +21,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.core.env.Environment;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.Resource;
 import org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.JpaVendorAdapter;
@@ -21,6 +30,7 @@ import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
+import org.springframework.util.StreamUtils;
 
 @Configuration
 @PropertySource({ "classpath:socleCore.properties", "classpath:database.properties" })
@@ -28,6 +38,8 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 		"org.myec3.socle.synchro.core.service" })
 @EnableTransactionManagement
 public class SynchroCoreConfig {
+
+	private static final Log logger = LogFactory.getLog(CoreConfig.class);
 
 	@Autowired
 	private Environment env;
@@ -41,8 +53,11 @@ public class SynchroCoreConfig {
 	@Value("${dataSource.username}")
 	private String dataSourceUsername;
 
-	@Value("${dataSource.password}")
+	@Value("${dataSource.password:#{null}}")
 	private String dataSourcePassword;
+
+	@Value("${dataSource.password.path:#{null}}")
+	private String dataSourcePasswordPath;
 
 	@Value("${dataSource.maxActive}")
 	private Integer dataSourceMaxActive;
@@ -79,11 +94,30 @@ public class SynchroCoreConfig {
 
 	@Bean
 	public DataSource dataSource() {
+		String password = dataSourcePassword;
+		if (StringUtils.isEmpty(password)){
+			String pwdSecretPath = dataSourcePasswordPath;
+			Resource resource = new FileSystemResource(pwdSecretPath);
+			if (resource.exists()) {
+				if (logger.isInfoEnabled()) {
+					logger.info("Recuperation du mdp bdd depuis le secret " + pwdSecretPath);
+				}
+				try {
+					password = StreamUtils.copyToString(resource.getInputStream(), Charset.defaultCharset());
+				} catch (IOException e) {
+					throw new UtilTechException("Erreur lors de l'acces au fichier " + pwdSecretPath,e);
+				}
+			}
+		}
+		else {
+			logger.info("Recuperation du mdp bdd depuis la propriete dataSourcePassword");
+		}
+
 		BasicDataSource dataSource = new BasicDataSource();
 		dataSource.setDriverClassName(driverClassName);
 		dataSource.setUrl(dataSourceUrl);
 		dataSource.setUsername(dataSourceUsername);
-		dataSource.setPassword(dataSourcePassword);
+		dataSource.setPassword(password);
 		dataSource.setMaxActive(dataSourceMaxActive);
 		dataSource.setMaxWait(dataSourceMaxWait);
 		dataSource.setPoolPreparedStatements(poolPreparedStatements);
