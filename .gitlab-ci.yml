@@ -54,7 +54,7 @@ buildSocleWS:
   image: docker:stable-dind
   stage: buildImages
   variables:
-    CI_REGISTRY_IMAGE: "klask.sib.fr:52100/megalis/socle-ws//${CI_COMMIT_REF_NAME}"
+    CI_REGISTRY_IMAGE: "klask.sib.fr:52100/megalis/socle-ws/${CI_COMMIT_REF_NAME}"
   script:
     - docker build -f Dockerfile_esb.stages -t ${CI_REGISTRY_IMAGE} .
     - docker tag ${CI_REGISTRY_IMAGE} ${CI_REGISTRY_IMAGE}:${CI_COMMIT_SHA:0:8}
