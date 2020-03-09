@@ -11,7 +11,6 @@ import org.apache.commons.dbcp.BasicDataSource;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.myec3.socle.core.util.DockerSecretsDatabasePasswordProcessor;
 import org.myec3.socle.core.util.UtilTechException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
