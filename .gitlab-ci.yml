@@ -9,8 +9,7 @@ before_script:
 stages:
   - build
   - buildImages
-  - deploy_dev
-  - deploy_preprod
+  - deploy
 
 build:
   image : maven:3-jdk-8
@@ -18,52 +17,71 @@ build:
   script :
     - mvn -B deploy
 
-buildImages :
+buildSocleESB:
   image: docker:stable-dind
   stage: buildImages
+  variables:
+    CI_REGISTRY_IMAGE: "klask.sib.fr:52100/megalis/socle-esb/${CI_COMMIT_REF_NAME}"
   script:
-    - docker build -f Dockerfile_esb.stages -t klask.sib.fr:52100/megalis/socle-esb .
-    - docker build -f Dockerfile_esb.stages -t klask.sib.fr:52100/megalis/socle-esb:${CI_COMMIT_SHA:0:8} .
-    - docker push klask.sib.fr:52100/megalis/socle-esb
-    - docker push klask.sib.fr:52100/megalis/socle-esb:${CI_COMMIT_SHA:0:8}
+    - docker build -f Dockerfile_esb.stages -t ${CI_REGISTRY_IMAGE} .
+    - docker tag ${CI_REGISTRY_IMAGE} ${CI_REGISTRY_IMAGE}:${CI_COMMIT_SHA:0:8}
+    - echo "push ${CI_REGISTRY_IMAGE}:latest" && docker push ${CI_REGISTRY_IMAGE}:latest
+    - echo "push ${CI_REGISTRY_IMAGE}:${CI_COMMIT_SHA:0:8}" && docker push ${CI_REGISTRY_IMAGE}:${CI_COMMIT_SHA:0:8}
 
-    - docker build -f Dockerfile_synchro.stages -t klask.sib.fr:52100/megalis/socle-synchro .
-    - docker build -f Dockerfile_synchro.stages -t klask.sib.fr:52100/megalis/socle-synchro:${CI_COMMIT_SHA:0:8} .
-    - docker push klask.sib.fr:52100/megalis/socle-synchro
-    - docker push klask.sib.fr:52100/megalis/socle-synchro:${CI_COMMIT_SHA:0:8}
+buildSocleSynchro:
+  image: docker:stable-dind
+  stage: buildImages
+  variables:
+    CI_REGISTRY_IMAGE: "klask.sib.fr:52100/megalis/socle-synchro/${CI_COMMIT_REF_NAME}"
+  script:
+    - docker build -f Dockerfile_esb.stages -t ${CI_REGISTRY_IMAGE} .
+    - docker tag ${CI_REGISTRY_IMAGE} ${CI_REGISTRY_IMAGE}:${CI_COMMIT_SHA:0:8}
+    - echo "push ${CI_REGISTRY_IMAGE}:latest" && docker push ${CI_REGISTRY_IMAGE}:latest
+    - echo "push ${CI_REGISTRY_IMAGE}:${CI_COMMIT_SHA:0:8}" && docker push ${CI_REGISTRY_IMAGE}:${CI_COMMIT_SHA:0:8}
 
-    - docker build -f myec3-socle-webapp-module/myec3-socle-webapp/Dockerfile.stages -t klask.sib.fr:52100/megalis/socle-webapp .
-    - docker build -f myec3-socle-webapp-module/myec3-socle-webapp/Dockerfile.stages -t klask.sib.fr:52100/megalis/socle-webapp:${CI_COMMIT_SHA:0:8} .
-    - docker push klask.sib.fr:52100/megalis/socle-webapp
-    - docker push klask.sib.fr:52100/megalis/socle-webapp:${CI_COMMIT_SHA:0:8}
+buildSocleWebapp:
+  image: docker:stable-dind
+  stage: buildImages
+  variables:
+    CI_REGISTRY_IMAGE: "klask.sib.fr:52100/megalis/socle-webapp/${CI_COMMIT_REF_NAME}"
+  script:
+    - docker build -f Dockerfile_esb.stages -t ${CI_REGISTRY_IMAGE} .
+    - docker tag ${CI_REGISTRY_IMAGE} ${CI_REGISTRY_IMAGE}:${CI_COMMIT_SHA:0:8}
+    - echo "push ${CI_REGISTRY_IMAGE}:latest" && docker push ${CI_REGISTRY_IMAGE}:latest
+    - echo "push ${CI_REGISTRY_IMAGE}:${CI_COMMIT_SHA:0:8}" && docker push ${CI_REGISTRY_IMAGE}:${CI_COMMIT_SHA:0:8}
 
-    - docker build -f Dockerfile_ws.stages -t klask.sib.fr:52100/megalis/socle-ws .
-    - docker build -f Dockerfile_ws.stages -t klask.sib.fr:52100/megalis/socle-ws:${CI_COMMIT_SHA:0:8} .
-    - docker push klask.sib.fr:52100/megalis/socle-ws
-    - docker push klask.sib.fr:52100/megalis/socle-ws:${CI_COMMIT_SHA:0:8}
-
+buildSocleWS:
+  image: docker:stable-dind
+  stage: buildImages
+  variables:
+    CI_REGISTRY_IMAGE: "klask.sib.fr:52100/megalis/socle-ws/${CI_COMMIT_REF_NAME}"
+  script:
+    - docker build -f Dockerfile_esb.stages -t ${CI_REGISTRY_IMAGE} .
+    - docker tag ${CI_REGISTRY_IMAGE} ${CI_REGISTRY_IMAGE}:${CI_COMMIT_SHA:0:8}
+    - echo "push ${CI_REGISTRY_IMAGE}:latest" && docker push ${CI_REGISTRY_IMAGE}:latest
+    - echo "push ${CI_REGISTRY_IMAGE}:${CI_COMMIT_SHA:0:8}" && docker push ${CI_REGISTRY_IMAGE}:${CI_COMMIT_SHA:0:8}
 
 deploy_dev:
-  stage: deploy_dev
+  stage: deploy
+  only:
+    - develop
   script:
-    - sshpass -V
-    - export SSHPASS=centos
-    - sshpass -e ssh -o StrictHostKeyChecking=no root@sangoku.sib.fr "export URL_DOCKER=klask.sib.fr:52100;docker stack deploy --with-registry-auth -c /sillage/megalis/megalis-stack.yml megalis"
+    - ssh megalis@sangoku.sib.fr "export URL_DOCKER=klask.sib.fr:52100;docker stack deploy --with-registry-auth -c /sillage/megalis/megalis-stack.yml megalis"
 
 deploy_preprod:
   image: docker:stable-dind
-  stage: deploy_preprod
+  stage: deploy
+  only:
+    - master
   script:
-    - docker build -f Dockerfile_esb.stages -t klask.sib.fr:5000/megalis/socle-esb .
-    - docker push klask.sib.fr:5000/megalis/socle-esb
+    - docker build -f Dockerfile_esb.stages -t klask.sib.fr:5000/megalis/socle-esb/master .
+    - docker push klask.sib.fr:5000/megalis/socle-esb/master:latest
     - docker build -f myec3-socle-webapp-module/myec3-socle-webapp/Dockerfile.stages -t klask.sib.fr:5000/megalis/socle-webapp .
-    - docker push klask.sib.fr:5000/megalis/socle-webapp
+    - docker push klask.sib.fr:5000/megalis/socle-webapp/master:latest
     - docker build -f Dockerfile_synchro.stages -t klask.sib.fr:5000/megalis/socle-synchro .
-    - docker push klask.sib.fr:5000/megalis/socle-synchro
+    - docker push klask.sib.fr:5000/megalis/socle-synchro/master:latest
     - docker build -f Dockerfile_ws.stages -t klask.sib.fr:5000/megalis/socle-ws .
-    - docker push klask.sib.fr:5000/megalis/socle-ws
-    - sshpass -V
-    - export SSHPASS=7rEjdDLFyE
-    - sshpass -e ssh -o StrictHostKeyChecking=no root@10.253.104.100 "export URL_DOCKER=edipro.sib.fr:443;docker stack deploy --with-registry-auth -c /data/livraison/megalis-stack-pre-prod.yml megalis"
+    - docker push klask.sib.fr:5000/megalis/socle-ws/master:latest
+    - ssh megalis@10.253.104.100 "export URL_DOCKER=edipro.sib.fr:443;docker stack deploy --with-registry-auth -c /data/livraison/megalis-stack-pre-prod.yml megalis"
   when: manual
 
