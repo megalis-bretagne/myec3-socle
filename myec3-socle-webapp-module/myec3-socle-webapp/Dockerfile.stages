@@ -15,9 +15,6 @@ unzip glowroot-0.13.5-dist.zip && \
 echo "collector.address=http://glowroot:8181" > /glowroot/glowroot.properties && \
 echo "multi.dir=true" >> /glowroot/glowroot.properties
 
-ENV JPDA_ADDRESS=8000
-ENV JPDA_TRANSPORT=dt_socket
-
 #recupération de nexus de l'artifact
 # TODO : récupérer la version du pom.xml
 ADD "http://nexus.sib.fr:8081/nexus/service/local/artifact/maven/redirect?r=sib-group&g=org.myec3.socle&a=myec3-socle-webapp&v=5.6.2-MEGALIS-SNAPSHOT&p=war" /usr/local/tomcat/webapps/ROOT.war
