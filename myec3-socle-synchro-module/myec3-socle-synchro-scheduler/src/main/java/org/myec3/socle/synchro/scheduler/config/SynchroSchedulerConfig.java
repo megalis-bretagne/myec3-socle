@@ -22,13 +22,16 @@ import org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean;
 import org.springframework.scheduling.quartz.SchedulerFactoryBean;
 import org.springframework.scheduling.quartz.SpringBeanJobFactory;
 
+import javax.sql.DataSource;
+
 @Configuration
-@PropertySource({ "classpath:socleCore.properties", "classpath:db.properties", "classpath:database.properties",
+@PropertySource({ "classpath:socleCore.properties", "classpath:db.properties", "classpath:pwd.properties", "classpath:database.properties",
 		"classpath:synchronization.properties", "classpath:quartzParallelScheduler.properties",
 		"classpath:quartzScheduler.properties" })
 @ComponentScan(basePackages = { "org.myec3.socle.synchro.scheduler" })
 @Import({ SocleClientConfig.class })
 public class SynchroSchedulerConfig {
+
 
 	@Value("${refreshConnection.startDelay}")
 	private int refreshConnectionStartDelay;
@@ -103,19 +106,21 @@ public class SynchroSchedulerConfig {
 	}
 
 	@Bean
-	public SchedulerFactoryBean quartzScheduler() {
+	public SchedulerFactoryBean quartzScheduler(DataSource dataSourceSynchro) {
 		SchedulerFactoryBean schedulerFactoryBean = new SchedulerFactoryBean();
 		schedulerFactoryBean.setJobFactory(new SpringBeanJobFactory());
 		schedulerFactoryBean.setConfigLocation(new ClassPathResource("quartzScheduler.properties"));
+		schedulerFactoryBean.setDataSource(dataSourceSynchro);
 		schedulerFactoryBean.setWaitForJobsToCompleteOnShutdown(true);
 		return schedulerFactoryBean;
 	}
 
 	@Bean
-	public SchedulerFactoryBean parallelScheduler() {
+	public SchedulerFactoryBean parallelScheduler(DataSource dataSourceSynchroParallel) {
 		SchedulerFactoryBean schedulerFactoryBean = new SchedulerFactoryBean();
 		schedulerFactoryBean.setJobFactory(new SpringBeanJobFactory());
 		schedulerFactoryBean.setConfigLocation(new ClassPathResource("quartzParallelScheduler.properties"));
+		schedulerFactoryBean.setDataSource(dataSourceSynchroParallel);
 		schedulerFactoryBean.setWaitForJobsToCompleteOnShutdown(true);
 		return schedulerFactoryBean;
 	}

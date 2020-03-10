@@ -68,7 +68,7 @@ import org.springframework.util.Assert;
  * Implementation of synchronization service used to send JMS messages to the
  * remote ESB queue IN.
  * 
- * @see SynchronizationService.class
+ * @see SynchronizationService
  * 
  * @author Matthieu Proboeuf <matthieu.proboeuf@atosorigin.com>
  * @author Denis Cucchietti <denis.cucchietti@atosorigin.com>
