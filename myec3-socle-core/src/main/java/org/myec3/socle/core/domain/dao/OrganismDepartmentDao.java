@@ -61,4 +61,6 @@ public interface OrganismDepartmentDao extends ResourceDao<OrganismDepartment> {
 	List<OrganismDepartment> findAllChildrenDepartment(
 			OrganismDepartment department);
 
+	OrganismDepartment findOrganismDepartmentByIdSdm(long idSdm);
+
 }

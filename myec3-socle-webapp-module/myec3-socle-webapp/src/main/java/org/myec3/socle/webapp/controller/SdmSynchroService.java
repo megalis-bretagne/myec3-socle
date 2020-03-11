@@ -118,7 +118,10 @@ public class SdmSynchroService {
             String acronyme = (String) sdmJsonOrganisme.get("acronyme");
 
             try {
-                Organism organismSocle = organismService.findByAcronym(acronyme);
+                Organism organismSocle =null;
+                if (acronyme!=null){
+                    organismSocle = organismService.findByAcronym(acronyme);
+                }
 
                 if (organismSocle != null) {
                     SynchroIdentifiantExterne synchro = new SynchroIdentifiantExterne();

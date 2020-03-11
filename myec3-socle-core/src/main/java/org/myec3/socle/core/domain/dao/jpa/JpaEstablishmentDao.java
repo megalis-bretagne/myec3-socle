@@ -29,6 +29,7 @@ import org.myec3.socle.core.constants.MyEc3MpsUpdateConstants;
 import org.myec3.socle.core.domain.dao.EstablishmentDao;
 import org.myec3.socle.core.domain.model.Company;
 import org.myec3.socle.core.domain.model.Establishment;
+import org.myec3.socle.core.domain.model.enums.ResourceType;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -203,6 +204,26 @@ public class JpaEstablishmentDao extends JpaResourceDao<Establishment> implement
 			return null;
 		} catch (RuntimeException re) {
 			getLog().error("findByNic failed.", re);
+			return null;
+		}
+	}
+
+	@Override
+	public Establishment findEstablishmentyIdSdm(long idSdm) {
+		Query q = this.getEm().createQuery("select c from " + this.getDomainClass().getSimpleName() + " c" + " JOIN SynchroIdentifiantExterne s on c.id=s.idSocle"
+				+ " WHERE s.idAppliExterne= :idSdm AND s.typeRessource= :typeResource");
+		q.setParameter("idSdm", idSdm);
+		q.setParameter("typeResource", ResourceType.ESTABLISHMENT);
+		try{
+			//Company results = (Company) q.getSingleResult();
+			Establishment result = (Establishment) q.getSingleResult();
+			getLog().debug("findEstablishmentyIdSdm successfull.");
+			return result;
+		} catch (NoResultException nre) {
+			getLog().warn("findEstablishmentyIdSdm returned no results.");
+			return null;
+		} catch (RuntimeException re) {
+			getLog().error("findEstablishmentyIdSdm failed.", re);
 			return null;
 		}
 	}

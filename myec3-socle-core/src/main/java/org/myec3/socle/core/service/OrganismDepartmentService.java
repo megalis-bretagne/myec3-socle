@@ -19,6 +19,7 @@ package org.myec3.socle.core.service;
 
 import java.util.List;
 
+import org.myec3.socle.core.domain.model.Establishment;
 import org.myec3.socle.core.domain.model.Organism;
 import org.myec3.socle.core.domain.model.OrganismDepartment;
 
@@ -124,4 +125,7 @@ public interface OrganismDepartmentService extends
 	 * @return TRUE if current department has sub departments else return FALSE
 	 */
 	Boolean hasSubDepartments(OrganismDepartment department);
+
+
+	OrganismDepartment findOrganismDepartmentByIdSdm(long idSdm);
 }

@@ -24,13 +24,7 @@ import java.util.List;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.myec3.socle.core.domain.dao.EmployeeProfileDao;
-import org.myec3.socle.core.domain.model.Application;
-import org.myec3.socle.core.domain.model.Company;
-import org.myec3.socle.core.domain.model.CompanyDepartment;
-import org.myec3.socle.core.domain.model.EmployeeProfile;
-import org.myec3.socle.core.domain.model.Establishment;
-import org.myec3.socle.core.domain.model.Role;
-import org.myec3.socle.core.domain.model.User;
+import org.myec3.socle.core.domain.model.*;
 import org.myec3.socle.core.domain.model.enums.ProfileTypeValue;
 import org.myec3.socle.core.domain.model.meta.ProfileType;
 import org.myec3.socle.core.service.CompanyService;
@@ -273,5 +267,10 @@ public class EmployeeProfileServiceImpl extends GenericProfileServiceImpl<Employ
 	public List<EmployeeProfile> findAllGuAdministratorEnabledByCompanyId(Long companyId) {
 		Assert.notNull(companyId, "companyId is mandatory. null value is forbidden");
 		return this.dao.findAllGuAdministratorEnabledByCompanyId(companyId);
+	}
+
+	@Override
+	public EmployeeProfile findEmployeeProfileByIdSdm(long idSdm) {
+		return this.dao.findEmployeeProfileByIdSdm(idSdm);
 	}
 }

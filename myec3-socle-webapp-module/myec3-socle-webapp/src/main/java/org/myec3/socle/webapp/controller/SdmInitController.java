@@ -105,9 +105,9 @@ public class SdmInitController {
     public String sdmInitAll() {
 
         //Etape 1 : on vide les tables
-        String result = this.truncateAll();
+        //String result = this.truncateAll();
 
-        result+= this.sdmInitOrgannismes();
+        String result= this.sdmInitOrgannismes();
         result += this.sdmInitServices();
         result+= this.sdmInitAgents();
         result+= this.sdmInitEntreprises();

@@ -18,6 +18,7 @@
 package org.myec3.socle.core.domain.dao;
 
 import org.myec3.socle.core.domain.model.AgentProfile;
+import org.myec3.socle.core.domain.model.Company;
 import org.myec3.socle.core.domain.model.Organism;
 import org.myec3.socle.core.domain.model.OrganismDepartment;
 
@@ -115,4 +116,6 @@ public interface AgentProfileDao extends GenericProfileDao<AgentProfile> {
 	 * @return
 	 */
 	Long findAnnuaireCount(String filter, String competences, Boolean enableFilter);
+
+	AgentProfile findAgentProfileByIdSdm(long idSdm);
 }

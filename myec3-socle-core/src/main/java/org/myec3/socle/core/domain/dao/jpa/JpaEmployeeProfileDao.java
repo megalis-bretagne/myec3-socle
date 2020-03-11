@@ -24,9 +24,11 @@ import javax.persistence.NoResultException;
 import javax.persistence.Query;
 
 import org.myec3.socle.core.domain.dao.EmployeeProfileDao;
+import org.myec3.socle.core.domain.model.Company;
 import org.myec3.socle.core.domain.model.CompanyDepartment;
 import org.myec3.socle.core.domain.model.EmployeeProfile;
 import org.myec3.socle.core.domain.model.Establishment;
+import org.myec3.socle.core.domain.model.enums.ResourceType;
 import org.myec3.socle.core.domain.model.enums.RoleProfile;
 import org.springframework.stereotype.Repository;
 
@@ -142,6 +144,26 @@ public class JpaEmployeeProfileDao extends JpaGenericProfileDao<EmployeeProfile>
 			return new ArrayList<EmployeeProfile>();
 		} catch (RuntimeException re) {
 			this.getLog().error("findAllGuAdministratorEnabledByCompanyId failed.", re);
+			return null;
+		}
+	}
+
+	@Override
+	public EmployeeProfile findEmployeeProfileByIdSdm(long idSdm) {
+		Query q = this.getEm().createQuery("select c from " + this.getDomainClass().getSimpleName() + " c" + " JOIN SynchroIdentifiantExterne s on c.id=s.idSocle"
+				+ " WHERE s.idAppliExterne= :idSdm AND s.typeRessource= :typeResource");
+		q.setParameter("idSdm", idSdm);
+		q.setParameter("typeResource", ResourceType.EMPLOYEE_PROFILE);
+		try{
+			//Company results = (Company) q.getSingleResult();
+			EmployeeProfile result = (EmployeeProfile) q.getSingleResult();
+			getLog().debug("findEmployeeProfileByIdSdm successfull.");
+			return result;
+		} catch (NoResultException nre) {
+			getLog().warn("findEmployeeProfileByIdSdm returned no results.");
+			return null;
+		} catch (RuntimeException re) {
+			getLog().error("findEmployeeProfileByIdSdm failed.", re);
 			return null;
 		}
 	}

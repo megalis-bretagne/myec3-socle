@@ -43,17 +43,24 @@ public class JcmsInitService {
     @Async
     public void insertAgentInParallelScheduler(List<AgentProfile> listeAgents) {
 
+
         Application applicationASynchroniser = applicationService.findByName("portail megalisbretagne");
-        List<Long> listApplicationIdToResynchronize= new ArrayList<>();
+        List<Long> listApplicationIdToResynchronize = new ArrayList<>();
         listApplicationIdToResynchronize.add(applicationASynchroniser.getId());
+        SynchronizationType synchronizationType = SynchronizationType.SYNCHRONIZATION;
+        String sendingApplication = "GU";
 
-        SynchronizationType synchronizationType=SynchronizationType.SYNCHRONIZATION;
-        String sendingApplication ="GU";
+        for (AgentProfile resource : listeAgents) {
+            try {
+                agentSynchronizer.synchronizeCreation(resource, listApplicationIdToResynchronize, synchronizationType, sendingApplication);
+                logger.info("synchro agent {}", resource.getUsername());
 
-        for (AgentProfile resource : listeAgents){
-            agentSynchronizer.synchronizeCreation(resource,listApplicationIdToResynchronize,synchronizationType,sendingApplication);
-            logger.info("synchro agent {}",resource.getUsername());
+            } catch (Exception e) {
+                logger.error("probleme lot init", e);
+            }
         }
+
+
     }
 
 }

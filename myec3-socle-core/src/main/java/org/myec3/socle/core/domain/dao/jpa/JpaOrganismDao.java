@@ -24,8 +24,10 @@ import javax.persistence.NoResultException;
 import javax.persistence.Query;
 
 import org.myec3.socle.core.domain.dao.OrganismDao;
+import org.myec3.socle.core.domain.model.Company;
 import org.myec3.socle.core.domain.model.Customer;
 import org.myec3.socle.core.domain.model.Organism;
+import org.myec3.socle.core.domain.model.enums.ResourceType;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -118,6 +120,26 @@ public class JpaOrganismDao extends JpaGenericStructureDao<Organism> implements 
 			// No result found, we return null instead of errors
 			getLog().warn("findAllByCriteria returned no result.");
 			return new ArrayList<Organism>();
+		}
+	}
+
+	@Override
+	public Organism findOrganismByIdSdm(long idSdm) {
+		Query q = this.getEm().createQuery("select c from " + this.getDomainClass().getSimpleName() + " c" + " JOIN SynchroIdentifiantExterne s on c.id=s.idSocle"
+				+ " WHERE s.idAppliExterne= :idSdm AND s.typeRessource= :typeResource");
+		q.setParameter("idSdm", idSdm);
+		q.setParameter("typeResource", ResourceType.ORGANISM);
+		try{
+			//Company results = (Company) q.getSingleResult();
+			Organism result = (Organism) q.getSingleResult();
+			getLog().debug("findOrganismByIdSdm successfull.");
+			return result;
+		} catch (NoResultException nre) {
+			getLog().warn("findOrganismByIdSdm returned no results.");
+			return null;
+		} catch (RuntimeException re) {
+			getLog().error("findOrganismByIdSdm failed.", re);
+			return null;
 		}
 	}
 
