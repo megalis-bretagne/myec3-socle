@@ -18,6 +18,7 @@
 package org.myec3.socle.core.service;
 
 import org.myec3.socle.core.domain.model.AgentProfile;
+import org.myec3.socle.core.domain.model.Company;
 import org.myec3.socle.core.domain.model.Organism;
 import org.myec3.socle.core.domain.model.OrganismDepartment;
 
@@ -154,5 +155,7 @@ public interface AgentProfileService extends GenericProfileService<AgentProfile>
 	* @return
 	*/
 	OrganismDepartment getOrganismDepartmentByAgentProfileId(Long agentProfileId);
+
+	AgentProfile findAgentProfileByIdSdm(long idSdm);
 
 }

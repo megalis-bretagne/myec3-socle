@@ -40,11 +40,12 @@ public class JcmsInitAgentsController {
 
         List<AgentProfile> listeAgents =agentProfileService.findAll();
 
-        List<List<AgentProfile>> parts = chopped(listeAgents, 1000);
+        List<List<AgentProfile>> parts = chopped(listeAgents, 500);
 
         for (List<AgentProfile> pack: parts){
             jcmsInitService.insertAgentInParallelScheduler(pack);
         }
+
         return "import des "+ listeAgents.size()+" agents en cours dans JCMS ";
     }
 

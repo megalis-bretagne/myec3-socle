@@ -402,6 +402,11 @@ public class AgentProfileServiceImpl extends GenericProfileServiceImpl<AgentProf
 	public OrganismDepartment getOrganismDepartmentByAgentProfileId(Long agentProfileId) {
 		return this.findOne(agentProfileId).getOrganismDepartment();
 	}
-	
-	
+
+	@Override
+	public AgentProfile findAgentProfileByIdSdm(long idSdm) {
+		return this.dao.findAgentProfileByIdSdm(idSdm);
+	}
+
+
 }

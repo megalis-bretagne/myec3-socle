@@ -19,8 +19,10 @@ package org.myec3.socle.core.domain.dao.jpa;
 
 import org.myec3.socle.core.domain.dao.AgentProfileDao;
 import org.myec3.socle.core.domain.model.AgentProfile;
+import org.myec3.socle.core.domain.model.Company;
 import org.myec3.socle.core.domain.model.Organism;
 import org.myec3.socle.core.domain.model.OrganismDepartment;
+import org.myec3.socle.core.domain.model.enums.ResourceType;
 import org.myec3.socle.core.domain.model.enums.RoleProfile;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.StringUtils;
@@ -239,6 +241,26 @@ public class JpaAgentProfileDao extends JpaGenericProfileDao<AgentProfile> imple
 				"WHERE  (u.lastname LIKE :filter OR u.firstname LIKE :filter OR ap.email LIKE :filter) " + competencesClause + enabledClause;
 
 
+	}
+
+
+	@Override
+	public AgentProfile findAgentProfileByIdSdm(long idSdm) {
+		Query q = this.getEm().createQuery("select c from " + this.getDomainClass().getSimpleName() + " c" + " JOIN SynchroIdentifiantExterne s on c.id=s.idSocle"
+				+ " WHERE s.idAppliExterne= :idSdm AND s.typeRessource= :typeResource");
+		q.setParameter("idSdm", idSdm);
+		q.setParameter("typeResource", ResourceType.AGENT_PROFILE);
+		try{
+			AgentProfile result = (AgentProfile) q.getSingleResult();
+			getLog().debug("findAgentProfileByIdSdm successfull.");
+			return result;
+		} catch (NoResultException nre) {
+			getLog().warn("findAgentProfileByIdSdm returned no results.");
+			return null;
+		} catch (RuntimeException re) {
+			getLog().error("findAgentProfileByIdSdm failed.", re);
+			return null;
+		}
 	}
 
 }

@@ -19,10 +19,7 @@ package org.myec3.socle.core.service;
 
 import java.util.List;
 
-import org.myec3.socle.core.domain.model.Company;
-import org.myec3.socle.core.domain.model.CompanyDepartment;
-import org.myec3.socle.core.domain.model.EmployeeProfile;
-import org.myec3.socle.core.domain.model.Establishment;
+import org.myec3.socle.core.domain.model.*;
 
 /**
  * Interface defining Business Services methods and providing
@@ -116,4 +113,7 @@ public interface EmployeeProfileService extends
 	 */
 	List<EmployeeProfile> findAllGuAdministratorEnabledByCompanyId(
 			Long companyId);
+
+
+	EmployeeProfile findEmployeeProfileByIdSdm(long idSdm);
 }

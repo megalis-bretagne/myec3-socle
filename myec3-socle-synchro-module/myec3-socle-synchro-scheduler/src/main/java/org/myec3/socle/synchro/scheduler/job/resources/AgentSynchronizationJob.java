@@ -22,10 +22,14 @@ import org.myec3.socle.core.domain.model.Profile;
 import org.myec3.socle.core.domain.model.Role;
 import org.myec3.socle.core.domain.sdm.model.SdmAgent;
 import org.myec3.socle.core.domain.sdm.model.SdmService;
+import org.myec3.socle.core.service.AgentProfileService;
+import org.myec3.socle.core.service.CompanyService;
 import org.myec3.socle.core.sync.api.ResponseMessage;
 import org.myec3.socle.synchro.core.domain.model.SynchronizationSubscription;
 import org.myec3.socle.ws.client.ResourceWsClient;
 import org.myec3.socle.ws.client.impl.SdmWsClientImpl;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 import javax.ws.rs.client.Entity;
@@ -48,6 +52,10 @@ import java.util.Date;
 @Component
 public class AgentSynchronizationJob extends
 		ResourcesSynchronizationJob<AgentProfile> {
+
+	@Autowired
+	@Qualifier("agentProfileService")
+	private AgentProfileService agentProfileService;
 
 	/**
 	 * {@inheritDoc}
@@ -78,10 +86,10 @@ public class AgentSynchronizationJob extends
 			agentSDM.setDateCreation(new Date());
 			agentSDM.setDateModification(agentSDM.getDateCreation());
 			agentSDM.setAcronymeOrganisme(resource.getOrganismDepartment().getOrganism().getAcronym());
+
 			SdmService serviceSDM= new SdmService();
 			serviceSDM.setIdExterne(resource.getOrganismDepartment().getExternalId());
 			agentSDM.setService(serviceSDM);
-
 			SdmWsClientImpl sdmWsClient = (SdmWsClientImpl) resourceWsClient;
 
 			return sdmWsClient.post(resource,agentSDM, synchronizationSubscription);
@@ -118,13 +126,7 @@ public class AgentSynchronizationJob extends
 
 			agentSDM.setIdentifiant(resource.getUsername());
 			//todo voir ce qu'il faut mettre dans rôle pour la salle des marchés
-			for (Role role : resource.getRoles()){
-				if ("SDM".equals(role.getApplication().getName())){
-					agentSDM.setIdProfil(role.getExternalId());
-				}
-			}
-
-
+			agentSDM.setIdProfil(2);
 /*
 			if (resource.getRoles() !=null && resource.getRoles().size() >0){
 				agentSDM.setIdProfil(resource.getRoles().get(0).getExternalId());
@@ -143,7 +145,6 @@ public class AgentSynchronizationJob extends
 			SdmService serviceSDM= new SdmService();
 			serviceSDM.setIdExterne(resource.getOrganismDepartment().getExternalId());
 			agentSDM.setService(serviceSDM);
-
 			SdmWsClientImpl sdmWsClient = (SdmWsClientImpl) resourceWsClient;
 
 			return sdmWsClient.post(resource,agentSDM, synchronizationSubscription);

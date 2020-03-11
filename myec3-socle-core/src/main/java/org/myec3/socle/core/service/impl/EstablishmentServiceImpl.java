@@ -242,4 +242,10 @@ public class EstablishmentServiceImpl extends ResourceServiceImpl<Establishment,
 	public Establishment findByNic(String siren, String nic) {
 		return this.dao.findByNic(siren, nic);
 	}
+
+	@Override
+	public Establishment findEstablishmentByIdSdm(long idSdm) {
+		return this.dao.findEstablishmentyIdSdm(idSdm);
+	}
+
 }

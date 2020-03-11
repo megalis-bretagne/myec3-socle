@@ -19,6 +19,7 @@ package org.myec3.socle.core.domain.dao;
 
 import java.util.List;
 
+import org.myec3.socle.core.domain.model.AgentProfile;
 import org.myec3.socle.core.domain.model.Company;
 import org.myec3.socle.core.domain.model.Establishment;
 
@@ -59,5 +60,7 @@ public interface EstablishmentDao extends ResourceDao<Establishment> {
 	Establishment findLastForeignCreatedDao(String nationalId);
 	
 	Establishment findByNic(String siren, String nic);
+
+	Establishment findEstablishmentyIdSdm(long idSdm);
 
 }

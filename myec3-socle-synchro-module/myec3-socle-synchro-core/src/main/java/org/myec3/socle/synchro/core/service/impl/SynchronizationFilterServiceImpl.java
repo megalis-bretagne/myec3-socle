@@ -144,12 +144,16 @@ public class SynchronizationFilterServiceImpl
 		// We send only current department of agent with parent department. We
 		// don't transmit the entire tree
 		if (!agentProfile.getOrganismDepartment().isRootDepartment()) {
-			agentProfile.getOrganismDepartment().getParentDepartment().setParentDepartment(null);
+
 			agentProfile.getOrganismDepartment().setRootDepartment(Boolean.FALSE);
 
-			// We don't send the list of applications of parentDepartment
-			agentProfile.getOrganismDepartment().getParentDepartment().getOrganism()
-					.setApplications(new ArrayList<Application>());
+			if (agentProfile.getOrganismDepartment()!=null && agentProfile.getOrganismDepartment().getParentDepartment() !=null){
+				agentProfile.getOrganismDepartment().getParentDepartment().setParentDepartment(null);
+				// We don't send the list of applications of parentDepartment
+				agentProfile.getOrganismDepartment().getParentDepartment().getOrganism()
+						.setApplications(new ArrayList<Application>());
+			}
+
 		}
 
 		// We don't send the list of applications of an organism department
