@@ -19,6 +19,7 @@ package org.myec3.socle.core.domain.dao;
 
 import java.util.List;
 
+import org.myec3.socle.core.domain.model.AgentProfile;
 import org.myec3.socle.core.domain.model.Customer;
 import org.myec3.socle.core.domain.model.Organism;
 
@@ -60,4 +61,6 @@ public interface OrganismDao extends GenericStructureDao<Organism> {
 	 */
 	List<Organism> findAllByCriteria(String label, String siren,
 			String postalCode, String city, Customer customer);
+
+	Organism findOrganismByIdSdm(long idSdm);
 }

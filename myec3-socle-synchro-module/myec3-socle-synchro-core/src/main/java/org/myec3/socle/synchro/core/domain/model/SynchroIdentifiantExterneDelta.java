@@ -27,7 +27,7 @@ public class SynchroIdentifiantExterneDelta implements Serializable, PE {
     @Column(nullable = true)
     private Long idAppliExterne;
 
-    @Column(nullable = true)
+    @Column(nullable = true,length = 10000)
     private String json;
 
     public long getId() {

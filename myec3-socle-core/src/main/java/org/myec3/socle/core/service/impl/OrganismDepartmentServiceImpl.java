@@ -241,4 +241,9 @@ public class OrganismDepartmentServiceImpl extends ResourceServiceImpl<OrganismD
 		}
 		return Boolean.TRUE;
 	}
+
+	@Override
+	public OrganismDepartment findOrganismDepartmentByIdSdm(long idSdm) {
+		return this.dao.findOrganismDepartmentByIdSdm(idSdm);
+	}
 }

@@ -20,6 +20,7 @@ package org.myec3.socle.core.service;
 import java.util.List;
 
 import org.myec3.socle.core.domain.model.Company;
+import org.myec3.socle.core.domain.model.EmployeeProfile;
 import org.myec3.socle.core.domain.model.Establishment;
 import org.myec3.socle.core.domain.model.MpsUpdateJob;
 import org.myec3.socle.core.domain.model.enums.MpsUpdateTypeValue;
@@ -106,4 +107,6 @@ public interface EstablishmentService extends ResourceService<Establishment> {
 	Establishment findLastForeignCreated(String nationalId);
 	
 	Establishment findByNic(String siren, String nic);
+
+	Establishment findEstablishmentByIdSdm(long idSdm);
 }

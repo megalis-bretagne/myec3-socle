@@ -155,15 +155,10 @@ public class JpaCompanyDao extends JpaGenericStructureDao<Company> implements Co
 		q.setParameter("idSdm", idSdm);
 		q.setParameter("typeResource", ResourceType.COMPANY);
 		try{
-
 			//Company results = (Company) q.getSingleResult();
 			Company result = (Company) q.getSingleResult();
-
-
 			getLog().debug("getCompanyToUpdate successfull.");
 			return result;
-
-
 		} catch (NoResultException nre) {
 			getLog().warn("findCompanyByIdSdm returned no results.");
 			return null;

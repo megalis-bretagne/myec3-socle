@@ -24,8 +24,10 @@ import javax.persistence.NoResultException;
 import javax.persistence.Query;
 
 import org.myec3.socle.core.domain.dao.OrganismDepartmentDao;
+import org.myec3.socle.core.domain.model.Company;
 import org.myec3.socle.core.domain.model.Organism;
 import org.myec3.socle.core.domain.model.OrganismDepartment;
+import org.myec3.socle.core.domain.model.enums.ResourceType;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -99,6 +101,27 @@ public class JpaOrganismDepartmentDao extends JpaResourceDao<OrganismDepartment>
 		} catch (RuntimeException re) {
 			this.getLog().error("findAllChildrenDepartment failed.", re);
 			return new ArrayList<OrganismDepartment>();
+		}
+	}
+
+	@Override
+	public OrganismDepartment findOrganismDepartmentByIdSdm(long idSdm) {
+
+		Query q = this.getEm().createQuery("select c from " + this.getDomainClass().getSimpleName() + " c" + " JOIN SynchroIdentifiantExterne s on c.id=s.idSocle"
+				+ " WHERE s.idAppliExterne= :idSdm AND s.typeRessource= :typeResource");
+		q.setParameter("idSdm", idSdm);
+		q.setParameter("typeResource", ResourceType.ORGANISM_DEPARTMENT);
+		try{
+			//Company results = (Company) q.getSingleResult();
+			OrganismDepartment result = (OrganismDepartment) q.getSingleResult();
+			getLog().debug("findOrganismDepartmentByIdSdm successfull.");
+			return result;
+		} catch (NoResultException nre) {
+			getLog().warn("findOrganismDepartmentByIdSdm returned no results.");
+			return null;
+		} catch (RuntimeException re) {
+			getLog().error("findOrganismDepartmentByIdSdm failed.", re);
+			return null;
 		}
 	}
 

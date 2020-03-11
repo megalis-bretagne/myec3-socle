@@ -34,10 +34,10 @@ public class SdmInitResourceClientimpl {
     private void prepareHeaderAtexo(Invocation.Builder builder) {
 
         WebTarget webResource = getClientWs()
-                .target("https://marches-preprod.megalis.bretagne.bzh/api.php/ws/authentification/connexion/userCGI/Vg5Kyw54");
+                .target("https://marches-preprod.megalis.bretagne.bzh/api.php/ws/authentification/connexion/mpe_client_sf3_production/P0rt41l_C114n7SF_pR3Fr0du7t31oN");
         Invocation.Builder builderToken = webResource.request().accept(MediaType.APPLICATION_JSON);
-        builderToken.header("externalid", 1122);
-        builderToken.header("usertype", "AGENT");
+/*        builderToken.header("externalid", 1122);
+        builderToken.header("usertype", "AGENT");*/
 
         Response response = builderToken.get();
         String responseToString = response.readEntity(String.class);
@@ -45,8 +45,8 @@ public class SdmInitResourceClientimpl {
         String[] tab2 = StringUtils.split(tab[1], "</ticket>");
 
         builder.header("Authorization", "Bearer " + tab2[0]);
-        builder.header("externalid", 1122);
-        builder.header("usertype", "AGENT");
+/*        builder.header("externalid", 1122);
+        builder.header("usertype", "AGENT");*/
     }
 
     private Invocation.Builder getInvocationBuilder(String url, Map<String, String> queryParameters) {

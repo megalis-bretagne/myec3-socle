@@ -232,4 +232,9 @@ public class OrganismServiceImpl extends GenericStructureServiceImpl<Organism, O
 		organism.setParentStructures(new ArrayList<Structure>());
 
 	}
+
+	@Override
+	public Organism findOrganismByIdSdm(long idSdm) {
+		return this.dao.findOrganismByIdSdm(idSdm);
+	}
 }

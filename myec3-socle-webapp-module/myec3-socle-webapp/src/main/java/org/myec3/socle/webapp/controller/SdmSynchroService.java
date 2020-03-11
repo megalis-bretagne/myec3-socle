@@ -118,7 +118,10 @@ public class SdmSynchroService {
             String acronyme = (String) sdmJsonOrganisme.get("acronyme");
 
             try {
-                Organism organismSocle = organismService.findByAcronym(acronyme);
+                Organism organismSocle =null;
+                if (acronyme!=null){
+                    organismSocle = organismService.findByAcronym(acronyme);
+                }
 
                 if (organismSocle != null) {
                     SynchroIdentifiantExterne synchro = new SynchroIdentifiantExterne();
@@ -264,6 +267,8 @@ public class SdmSynchroService {
         return new AsyncResult<>(Boolean.TRUE);
     }
 
+    @Transactional
+    @Async
     public Future<Boolean> traiterListeEtablissementsListeSdm(List<LinkedHashMap<String, Object>> etablissementsListe, int numPage) {
         Application sdmApplication = applicationService.findByName("SDM");
 
@@ -329,5 +334,63 @@ public class SdmSynchroService {
         return new AsyncResult<>(Boolean.TRUE);
 
 
+    }
+
+    @Transactional
+    @Async
+    public Future<Boolean> traiterListeInscritsListeSdm(List<LinkedHashMap<String, Object>> inscritsListe, int page) {
+
+        Application sdmApplication = applicationService.findByName("SDM");
+
+        for (LinkedHashMap<String, Object> sdmJsonEntreprise : inscritsListe) {
+
+            Integer idSdm = (Integer) sdmJsonEntreprise.get("id");
+            String login = (String) sdmJsonEntreprise.get("login");
+
+            try {
+                User userSocle=null;
+                try {
+                    userSocle = userService.findByUsername(login);
+                } catch (IncorrectResultSizeDataAccessException e) {
+                    logger.error("PAGE {} - le siren: {} n'est pas unique dans la base du socle",page,login);
+                    userSocle=null;
+                }
+
+                if (userSocle != null) {
+                    SynchroIdentifiantExterne synchro = new SynchroIdentifiantExterne();
+                    synchro.setApplication(sdmApplication);
+                    synchro.setTypeRessource(ResourceType.EMPLOYEE_PROFILE);
+                    synchro.setIdSocle(userSocle.getId());
+                    synchro.setIdAppliExterne(Long.valueOf(idSdm));
+
+                    synchroIdentifiantExterneService.create(synchro);
+
+                } else {
+
+                    //cas je ne trouve pas le user dans le socle, on alimente la table synchro delta
+                    SynchroIdentifiantExterneDelta delta = new SynchroIdentifiantExterneDelta();
+
+                    delta.setApplication(sdmApplication);
+                    delta.setTypeRessource(ResourceType.EMPLOYEE_PROFILE);
+                    delta.setIdSocle(null);
+                    delta.setIdAppliExterne(Long.valueOf(idSdm));
+                    ObjectMapper mapper = new ObjectMapper();
+                    Map<String, String> map = new HashMap<>();
+                    String json = null;
+                    try {
+                        json = mapper.writeValueAsString(sdmJsonEntreprise);
+                        delta.setJson(json);
+                    } catch (JsonProcessingException ex) {
+                        logger.error("convertion en json de la employee :{} - colonne JSON de la table delta =NULL", idSdm);
+                    }
+
+                    synchroIdentifiantExterneDeltaService.create(delta);
+                }
+
+            } catch (Exception e) {
+                logger.error("PAGE {} - Exception.message : {}",page,e.getMessage());
+            }
+        }
+        return new AsyncResult<>(Boolean.TRUE);
     }
 }

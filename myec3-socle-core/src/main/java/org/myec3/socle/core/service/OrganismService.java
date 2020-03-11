@@ -21,6 +21,7 @@ import java.util.List;
 
 import org.myec3.socle.core.domain.model.Customer;
 import org.myec3.socle.core.domain.model.Organism;
+import org.myec3.socle.core.domain.model.OrganismDepartment;
 import org.myec3.socle.core.service.exceptions.AllAcronymsUsedException;
 import org.myec3.socle.core.service.exceptions.OrganismCreationException;
 
@@ -92,4 +93,7 @@ public interface OrganismService extends GenericStructureService<Organism> {
 	 * @throws IllegalArgumentException if organism is null
 	 */
 	void cleanCollections(Organism organism);
+
+
+	Organism findOrganismByIdSdm(long idSdm);
 }

@@ -19,10 +19,7 @@ package org.myec3.socle.core.domain.dao;
 
 import java.util.List;
 
-import org.myec3.socle.core.domain.model.Company;
-import org.myec3.socle.core.domain.model.CompanyDepartment;
-import org.myec3.socle.core.domain.model.EmployeeProfile;
-import org.myec3.socle.core.domain.model.Establishment;
+import org.myec3.socle.core.domain.model.*;
 
 /**
  * This interface define methods to perform specific queries on
@@ -87,4 +84,6 @@ public interface EmployeeProfileDao extends GenericProfileDao<EmployeeProfile> {
 	 */
 	List<EmployeeProfile> findAllGuAdministratorEnabledByCompanyId(
 			Long companyId);
+
+	EmployeeProfile findEmployeeProfileByIdSdm(long idSdm);
 }

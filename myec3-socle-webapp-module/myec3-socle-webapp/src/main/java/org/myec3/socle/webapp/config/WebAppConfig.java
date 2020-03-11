@@ -1,5 +1,6 @@
 package org.myec3.socle.webapp.config;
 
+import org.myec3.socle.config.AsyncConfiguration;
 import org.myec3.socle.config.CoreConfig;
 import org.myec3.socle.config.HealthCheckConfig;
 import org.myec3.socle.synchro.core.config.SynchroCoreConfig;
@@ -19,7 +20,7 @@ import org.springframework.web.servlet.resource.PathResourceResolver;
 @Configuration
 @EnableWebMvc
 @ComponentScan(basePackages = { "org.myec3.socle.webapp.controller" })
-@Import({ CoreConfig.class, WebSecurityConfig.class, SynchroCoreConfig.class, HealthCheckConfig.class})
+@Import({ CoreConfig.class, WebSecurityConfig.class, SynchroCoreConfig.class, HealthCheckConfig.class, AsyncConfiguration.class})
 @ImportResource("classpath:pwdExpirationNotificationMyec3Context.xml")
 public class WebAppConfig implements WebMvcConfigurer {
 
