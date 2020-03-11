@@ -324,18 +324,14 @@ public class SdmInitController {
 
         String retour = "<h2> Import des entreprises</h2></br>";
 
-        Application sdmApplication = applicationService.findByName("SDM");
         int page = 1;
+        int nb_probleme=0;
 
         boolean resteDesPages = true;
-
         HashMap<Integer,Future<Boolean>> resultFuture = new HashMap();
-
-
         while (resteDesPages) {
 
             List<LinkedHashMap<String, Object>> entreprisesListe = null;
-
             try {
                 Object response = clientMps.get("https://marches-preprod.megalis.bretagne.bzh/app.php/api/v1/entreprises.json", page);
                 LinkedHashMap<String, Object> services = (LinkedHashMap<String, Object>) response;
@@ -348,6 +344,11 @@ public class SdmInitController {
 
             if (entreprisesListe == null) {
                 page++;
+                nb_probleme++;
+                if(nb_probleme > 5){
+                    //si on rencntre plus de 5 page en erreurs on sort
+                    resteDesPages=false;
+                }
             } else {
                 if (entreprisesListe.size() > 0) {
                     resultFuture.put(page,sdmSynchroService.traiterListeEntreprisesListeSdm(entreprisesListe,page));
@@ -372,6 +373,70 @@ public class SdmInitController {
             logger.error("Erreur traitement async pour la page {}",pageKey);
 
         }
+
+        }
+
+
+        return retour;
+    }
+
+
+    @RequestMapping(value = "/sdmInit/inscrits", method = {RequestMethod.GET})
+    public String sdmInitInscrits() {
+
+        String retour = "<h2> Import des inscrits</h2></br>";
+
+        Application sdmApplication = applicationService.findByName("SDM");
+        int page = 1;
+        int nb_probleme=0;
+
+        boolean resteDesPages = true;
+        HashMap<Integer,Future<Boolean>> resultFuture = new HashMap();
+
+        while (resteDesPages) {
+
+            List<LinkedHashMap<String, Object>> inscritsListe = null;
+            try {
+                Object response = clientMps.get("https://marches-preprod.megalis.bretagne.bzh/app.php/api/v1/inscrits.json", page);
+                LinkedHashMap<String, Object> services = (LinkedHashMap<String, Object>) response;
+                inscritsListe = (List<LinkedHashMap<String, Object>>) services.get("inscrits");
+
+            } catch (Exception e) {
+                retour += "taitement page:" + page + "en erreur</br>";
+                logger.error("probleme sur la page {}", page);
+            }
+
+            if (inscritsListe == null) {
+                page++;
+                nb_probleme++;
+                if(nb_probleme > 5){
+                    //si on rencntre plus de 5 page en erreurs on sort
+                    resteDesPages=false;
+                }
+            } else {
+                if (inscritsListe.size() > 0) {
+                    resultFuture.put(page,sdmSynchroService.traiterListeInscritsListeSdm(inscritsListe,page));
+                    page++;
+
+                } else {
+                    resteDesPages = false;
+                }
+            }
+
+        }
+
+        for(Integer pageKey : resultFuture.keySet()){
+            try{
+                resultFuture.get(pageKey).get();
+                retour += "taitement page:" + pageKey + "ok</br>";
+                logger.info("traitement inscrits ok  page:{}", pageKey);
+            }
+
+            catch (InterruptedException | ExecutionException e){
+                retour += "taitement async page:" + pageKey + " en erreur</br>";
+                logger.error("Erreur traitement async pour la page {}",pageKey);
+
+            }
 
         }
 
