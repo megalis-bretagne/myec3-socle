@@ -24,4 +24,6 @@ EXPOSE 61616/tcp
 #pour ne pas lancer le tomcat au lancement du conteneur et pour que ce dernier ne s'arrête pas lors de l'arrêt du tomcat
 #CMD tail -f /dev/null
 
+CMD ["docker-entrypoint.sh"]
+
 #HEALTHCHECK --interval=1m --timeout=5m --start-period=2m --retries=3 CMD curl -f http://localhost:8080/health || exit
