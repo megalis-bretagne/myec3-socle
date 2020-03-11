@@ -24,6 +24,6 @@ COPY myec3-socle-synchro-module/myec3-socle-synchro/docker-entrypoint.sh /usr/lo
 RUN chmod u+x /usr/local/bin/docker-entrypoint.sh
 RUN mkdir /configGen
 
-CMD ["docker-entrypoint.sh"]
+CMD ["docker-entrypoint.sh", "${HOSTNAME}"]
 
 #HEALTHCHECK --interval=1m --timeout=5m --start-period=2m --retries=3 CMD curl -f http://localhost:8080/health || exit
