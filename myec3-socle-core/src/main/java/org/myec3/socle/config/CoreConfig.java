@@ -36,7 +36,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.util.StreamUtils;
 
 @Configuration
-@PropertySource({ "classpath:socleCore.properties", "classpath:db.properties", "classpath:database.properties" })
+@PropertySource({ "classpath:socleCore.properties", "classpath:db.properties", "classpath:pwd.properties", "classpath:database.properties" })
 @ComponentScan(basePackages = { "org.myec3.socle.core", "org.myec3.socle.synchro.api" })
 @EnableTransactionManagement
 public class CoreConfig {
@@ -47,7 +47,7 @@ public class CoreConfig {
 	private Environment env;
 
 	@Value("${dataSource.driverClassName}")
-	private String driverClassName;
+	private String dataSourceDriverClassName;
 
 	@Value("${dataSource.url}")
 	private String dataSourceUrl;
@@ -55,11 +55,8 @@ public class CoreConfig {
 	@Value("${dataSource.username}")
 	private String dataSourceUsername;
 
-	@Value("${dataSource.password:#{null}}")
+	@Value("${dataSource.password}")
 	private String dataSourcePassword;
-
-	@Value("${dataSource.password.path:#{null}}")
-	private String dataSourcePasswordPath;
 
 	@Value("${dataSource.maxActive}")
 	private Integer dataSourceMaxActive;
@@ -68,13 +65,43 @@ public class CoreConfig {
 	private Integer dataSourceMaxWait;
 
 	@Value("${dataSource.poolPreparedStatements}")
-	private Boolean poolPreparedStatements;
+	private Boolean dataSourcePoolPreparedStatements;
 
 	@Value("${dataSource.testOnBorrow}")
-	private Boolean testOnBorrow;
+	private Boolean dataSourceTestOnBorrow;
 
 	@Value("${dataSource.testWhileIdle}")
-	private Boolean testWhileIdle;
+	private Boolean dataSourceTestWhileIdle;
+
+	@Value("${dataSourceSynchro.driverClassName}")
+	private String dataSourceSynchroDriverClassName;
+
+	@Value("${dataSourceSynchro.url}")
+	private String dataSourceSynchroUrl;
+
+	@Value("${dataSourceSynchro.username}")
+	private String dataSourceSynchroUsername;
+
+	@Value("${dataSourceSynchro.password}")
+	private String dataSourceSynchroPassword;
+
+	@Value("${dataSourceSynchro.maxActive}")
+	private Integer dataSourceSynchroMaxActive;
+
+	@Value("${dataSourceSynchroParallel.maxActive}")
+	private Integer dataSourceSynchroParallelMaxActive;
+
+	@Value("${dataSourceSynchro.maxWait}")
+	private Integer dataSourceSynchroMaxWait;
+
+	@Value("${dataSourceSynchro.poolPreparedStatements}")
+	private Boolean dataSourceSynchroPoolPreparedStatements;
+
+	@Value("${dataSourceSynchro.testOnBorrow}")
+	private Boolean dataSourceSynchroTestOnBorrow;
+
+	@Value("${dataSourceSynchro.testWhileIdle}")
+	private Boolean dataSourceSynchroTestWhileIdle;
 
 	@Bean
 	public static PropertySourcesPlaceholderConfigurer propertyConfigInDev() {
@@ -95,37 +122,43 @@ public class CoreConfig {
 
 	@Bean
 	public DataSource dataSource() {
-		String password = dataSourcePassword;
-		if (StringUtils.isEmpty(password)){
-			String pwdSecretPath = dataSourcePasswordPath;
-			Resource resource = new FileSystemResource(pwdSecretPath);
-			if (resource.exists()) {
-				if (logger.isInfoEnabled()) {
-					logger.info("Recuperation du mdp bdd depuis le secret " + pwdSecretPath);
-				}
-				try {
-					password = StreamUtils.copyToString(resource.getInputStream(), Charset.defaultCharset());
-				} catch (IOException e) {
-					throw new UtilTechException("Erreur lors de l'acces au fichier " + pwdSecretPath,e);
-				}
-			}
-		}
-		else {
-			logger.info("Recuperation du mdp bdd depuis la propriete dataSourcePassword");
-		}
-
 		BasicDataSource dataSource = new BasicDataSource();
-		dataSource.setDriverClassName(driverClassName);
+		dataSource.setDriverClassName(dataSourceDriverClassName);
 		dataSource.setUrl(dataSourceUrl);
 		dataSource.setUsername(dataSourceUsername);
-		dataSource.setPassword(password);
+		dataSource.setPassword(dataSourcePassword);
 		dataSource.setMaxActive(dataSourceMaxActive);
 		dataSource.setMaxWait(dataSourceMaxWait);
-		dataSource.setPoolPreparedStatements(poolPreparedStatements);
+		dataSource.setPoolPreparedStatements(dataSourcePoolPreparedStatements);
 		dataSource.setValidationQuery("SELECT 1");
-		dataSource.setTestOnBorrow(testOnBorrow);
-		dataSource.setTestWhileIdle(testWhileIdle);
+		dataSource.setTestOnBorrow(dataSourceTestOnBorrow);
+		dataSource.setTestWhileIdle(dataSourceTestWhileIdle);
 
+		return dataSource;
+	}
+
+	@Bean
+	public DataSource dataSourceSynchro() {
+		return dataSourceSynchro(dataSourceSynchroMaxActive);
+	}
+
+	@Bean
+	public DataSource dataSourceSynchroParallel() {
+		return dataSourceSynchro(dataSourceSynchroParallelMaxActive);
+	}
+
+	private DataSource dataSourceSynchro(int maxActive){
+		BasicDataSource dataSource = new BasicDataSource();
+		dataSource.setDriverClassName(dataSourceSynchroDriverClassName);
+		dataSource.setUrl(dataSourceSynchroUrl);
+		dataSource.setUsername(dataSourceSynchroUsername);
+		dataSource.setPassword(dataSourceSynchroPassword);
+		dataSource.setMaxActive(maxActive);
+		dataSource.setMaxWait(dataSourceSynchroMaxWait);
+		dataSource.setPoolPreparedStatements(dataSourceSynchroPoolPreparedStatements);
+		dataSource.setValidationQuery("SELECT 1");
+		dataSource.setTestOnBorrow(dataSourceSynchroTestOnBorrow);
+		dataSource.setTestWhileIdle(dataSourceSynchroTestWhileIdle);
 		return dataSource;
 	}
 
@@ -175,11 +208,11 @@ public class CoreConfig {
 	}
 
 	@Bean
-	public SchedulerFactoryBean jmsScheduler() {
+	public SchedulerFactoryBean jmsScheduler(DataSource dataSourceSynchroParallel) {
 		SchedulerFactoryBean scheduler = new SchedulerFactoryBean();
 		scheduler.setJobFactory(new SpringBeanJobFactory());
-
 		scheduler.setConfigLocation(new ClassPathResource("socleCore.properties"));
+		scheduler.setDataSource(dataSourceSynchroParallel);
 		scheduler.setWaitForJobsToCompleteOnShutdown(true);
 		return scheduler;
 	}

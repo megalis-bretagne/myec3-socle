@@ -7,68 +7,99 @@ before_script:
   - apk update && apk add sshpass openssh-client bash
 
 stages:
+  - mvn_deploy
   - build
-  - buildImages
   - deploy
 
 build:
   image : maven:3-jdk-8
-  stage : build
+  stage : mvn_deploy
   script :
     - mvn -B deploy
 
-buildSocleESB:
+buildSocleESB_dev:
   image: docker:stable-dind
-  stage: buildImages
+  stage: build
+  only:
+    - develop
   variables:
-    CI_REGISTRY_IMAGE: "klask.sib.fr:52100/megalis/socle-esb/${CI_COMMIT_REF_NAME}"
+    CI_REGISTRY_IMAGE: "klask.sib.fr:52100/megalis/socle-esb/develop"
   script:
     - docker build -f Dockerfile_esb.stages -t ${CI_REGISTRY_IMAGE} .
     - docker tag ${CI_REGISTRY_IMAGE} ${CI_REGISTRY_IMAGE}:${CI_COMMIT_SHA:0:8}
     - echo "push ${CI_REGISTRY_IMAGE}:latest" && docker push ${CI_REGISTRY_IMAGE}:latest
     - echo "push ${CI_REGISTRY_IMAGE}:${CI_COMMIT_SHA:0:8}" && docker push ${CI_REGISTRY_IMAGE}:${CI_COMMIT_SHA:0:8}
 
-buildSocleSynchro:
+buildSocleESB_preprod:
   image: docker:stable-dind
-  stage: buildImages
+  stage: build
+  only:
+    - master
   variables:
-    CI_REGISTRY_IMAGE: "klask.sib.fr:52100/megalis/socle-synchro/${CI_COMMIT_REF_NAME}"
+    CI_REGISTRY_IMAGE_PUBLIC: "klask.sib.fr:5000/megalis/socle-esb/master"
+  script:
+    - docker build -f Dockerfile_esb.stages -t ${CI_REGISTRY_IMAGE_PUBLIC} .
+    - echo "push ${CI_REGISTRY_IMAGE_PUBLIC}:latest" && docker push ${CI_REGISTRY_IMAGE_PUBLIC}:latest
+
+buildSocleSynchro_dev:
+  image: docker:stable-dind
+  stage: build
+  only:
+    - develop
+  variables:
+    CI_REGISTRY_IMAGE: "klask.sib.fr:52100/megalis/socle-synchro/develop"
   script:
     - docker build -f myec3-socle-synchro-module/myec3-socle-synchro/Dockerfile.stages -t ${CI_REGISTRY_IMAGE} .
     - docker tag ${CI_REGISTRY_IMAGE} ${CI_REGISTRY_IMAGE}:${CI_COMMIT_SHA:0:8}
     - echo "push ${CI_REGISTRY_IMAGE}:latest" && docker push ${CI_REGISTRY_IMAGE}:latest
     - echo "push ${CI_REGISTRY_IMAGE}:${CI_COMMIT_SHA:0:8}" && docker push ${CI_REGISTRY_IMAGE}:${CI_COMMIT_SHA:0:8}
 
-buildSocleWebapp:
+buildSocleSynchro_preprod:
   image: docker:stable-dind
-  stage: buildImages
+  stage: build
+  only:
+    - master
   variables:
-    CI_REGISTRY_IMAGE: "klask.sib.fr:52100/megalis/socle-webapp/${CI_COMMIT_REF_NAME}"
+    CI_REGISTRY_IMAGE_PUBLIC: "klask.sib.fr:5000/megalis/socle-synchro/master"
+  script:
+    - docker build -f myec3-socle-synchro-module/myec3-socle-synchro/Dockerfile.stages -t ${CI_REGISTRY_IMAGE_PUBLIC} .
+    - echo "push ${CI_REGISTRY_IMAGE_PUBLIC}:latest" && docker push ${CI_REGISTRY_IMAGE_PUBLIC}:latest
+
+buildSocleWebapp_dev:
+  image: docker:stable-dind
+  stage: build
+  only:
+    - develop
+  variables:
+    CI_REGISTRY_IMAGE: "klask.sib.fr:52100/megalis/socle-webapp/develop"
   script:
     - docker build -f myec3-socle-webapp-module/myec3-socle-webapp/Dockerfile.stages -t ${CI_REGISTRY_IMAGE} .
     - docker tag ${CI_REGISTRY_IMAGE} ${CI_REGISTRY_IMAGE}:${CI_COMMIT_SHA:0:8}
     - echo "push ${CI_REGISTRY_IMAGE}:latest" && docker push ${CI_REGISTRY_IMAGE}:latest
     - echo "push ${CI_REGISTRY_IMAGE}:${CI_COMMIT_SHA:0:8}" && docker push ${CI_REGISTRY_IMAGE}:${CI_COMMIT_SHA:0:8}
 
+buildSocleWebapp_preprod:
+  image: docker:stable-dind
+  stage: build
+  only:
+    - master
+  variables:
+    CI_REGISTRY_IMAGE_PUBLIC: "klask.sib.fr:5000/megalis/socle-webapp/master"
+  script:
+    - docker build -f myec3-socle-webapp-module/myec3-socle-webapp/Dockerfile.stages -t ${CI_REGISTRY_IMAGE_PUBLIC} .
+    - echo "push ${CI_REGISTRY_IMAGE_PUBLIC}:latest" && docker push ${CI_REGISTRY_IMAGE_PUBLIC}:latest
+
 deploy_dev:
   stage: deploy
   only:
     - develop
   script:
-    - ssh megalis@sangoku.sib.fr "export URL_DOCKER=klask.sib.fr:52100;docker stack deploy --with-registry-auth -c /sillage/megalis/megalis-stack.yml megalis"
+    - ssh megalis@sangoku.sib.fr "/sillage/megalis/deploy.sh socle develop ${CI_COMMIT_SHA:0:8}"
 
 deploy_preprod:
-  image: docker:stable-dind
   stage: deploy
   only:
     - master
   script:
-    - docker build -f Dockerfile_esb.stages -t klask.sib.fr:5000/megalis/socle-esb/master .
-    - docker push klask.sib.fr:5000/megalis/socle-esb/master:latest
-    - docker build -f myec3-socle-webapp-module/myec3-socle-webapp/Dockerfile.stages -t klask.sib.fr:5000/megalis/socle-webapp .
-    - docker push klask.sib.fr:5000/megalis/socle-webapp/master:latest
-    - docker build -f Dockerfile_synchro.stages -t klask.sib.fr:5000/megalis/socle-synchro .
-    - docker push klask.sib.fr:5000/megalis/socle-synchro/master:latest
-    - ssh megalis@10.253.104.100 "export URL_DOCKER=edipro.sib.fr:443;docker stack deploy --with-registry-auth -c /data/livraison/megalis-stack-pre-prod.yml megalis"
+    - ssh megalis@10.253.104.100 "/data/livraison/deploy.sh socle preprod"
   when: manual
-

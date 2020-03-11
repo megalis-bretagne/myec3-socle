@@ -33,7 +33,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.util.StreamUtils;
 
 @Configuration
-@PropertySource({ "classpath:socleCore.properties", "classpath:db.properties", "classpath:database.properties" })
+@PropertySource({ "classpath:socleCore.properties", "classpath:db.properties", "classpath:pwd.properties", "classpath:database.properties" })
 @ComponentScan(basePackages = { "org.myec3.socle.core", "org.myec3.socle.synchro.core.domain",
 		"org.myec3.socle.synchro.core.service" })
 @EnableTransactionManagement
@@ -53,11 +53,8 @@ public class SynchroCoreConfig {
 	@Value("${dataSource.username}")
 	private String dataSourceUsername;
 
-	@Value("${dataSource.password:#{null}}")
+	@Value("${dataSource.password}")
 	private String dataSourcePassword;
-
-	@Value("${dataSource.password.path:#{null}}")
-	private String dataSourcePasswordPath;
 
 	@Value("${dataSource.maxActive}")
 	private Integer dataSourceMaxActive;
@@ -94,30 +91,11 @@ public class SynchroCoreConfig {
 
 	@Bean
 	public DataSource dataSource() {
-		String password = dataSourcePassword;
-		if (StringUtils.isEmpty(password)){
-			String pwdSecretPath = dataSourcePasswordPath;
-			Resource resource = new FileSystemResource(pwdSecretPath);
-			if (resource.exists()) {
-				if (logger.isInfoEnabled()) {
-					logger.info("Recuperation du mdp bdd depuis le secret " + pwdSecretPath);
-				}
-				try {
-					password = StreamUtils.copyToString(resource.getInputStream(), Charset.defaultCharset());
-				} catch (IOException e) {
-					throw new UtilTechException("Erreur lors de l'acces au fichier " + pwdSecretPath,e);
-				}
-			}
-		}
-		else {
-			logger.info("Recuperation du mdp bdd depuis la propriete dataSourcePassword");
-		}
-
 		BasicDataSource dataSource = new BasicDataSource();
 		dataSource.setDriverClassName(driverClassName);
 		dataSource.setUrl(dataSourceUrl);
 		dataSource.setUsername(dataSourceUsername);
-		dataSource.setPassword(password);
+		dataSource.setPassword(dataSourcePassword);
 		dataSource.setMaxActive(dataSourceMaxActive);
 		dataSource.setMaxWait(dataSourceMaxWait);
 		dataSource.setPoolPreparedStatements(poolPreparedStatements);
