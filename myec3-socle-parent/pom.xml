@@ -19,7 +19,7 @@
 	<!-- This pom is a parent pom. DECLARE DEPENDENCIES HERE ! -->
 
 	<properties>
-		<mysql-connector-java-version>5.1.36</mysql-connector-java-version>
+		<mariadb-connector-java-version>2.5.4</mariadb-connector-java-version>
 		<log4j-version>2.11.1</log4j-version>
 		<slf4j-version>1.7.25</slf4j-version>
 		<junit-version>4.12</junit-version>
@@ -200,17 +200,10 @@
 				<version>${commons-dbcp-version}</version>
 			</dependency>
 
-			<!-- DB -->
-			<dependency>
-				<groupId>mysql</groupId>
-				<artifactId>mysql-connector-java</artifactId>
-				<version>${mysql-connector-java-version}</version>
-			</dependency>
-			<!-- https://mvnrepository.com/artifact/org.mariadb.jdbc/mariadb-java-client -->
 			<dependency>
 				<groupId>org.mariadb.jdbc</groupId>
 				<artifactId>mariadb-java-client</artifactId>
-				<version>2.5.4</version>
+				<version>${mariadb-connector-java-version}</version>
 			</dependency>
 
 
