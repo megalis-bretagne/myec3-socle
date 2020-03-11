@@ -1,6 +1,7 @@
 #!/bin/bash
 
-NODE_HOSTNAME=$1
+ENV NODE_HOSTNAME
+
 BDD_PASSWORD=$(cat /run/secrets/db_password)
 echo "bdd.pwd = $BDD_PASSWORD" > /configGen/pwd.properties
 
