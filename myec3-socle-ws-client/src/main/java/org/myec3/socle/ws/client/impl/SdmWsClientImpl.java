@@ -11,6 +11,7 @@ import org.myec3.socle.core.sync.api.Error;
 import org.myec3.socle.core.sync.api.*;
 import org.myec3.socle.synchro.core.domain.model.SynchronizationSubscription;
 import org.myec3.socle.ws.client.ResourceWsClient;
+import org.myec3.socle.ws.client.constants.WsConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -64,8 +65,7 @@ public class SdmWsClientImpl implements ResourceWsClient {
 	private void prepareHeaderAtexo(Invocation.Builder builder) {
 
 
-		WebTarget webResource = getClientWs()
-				.target("https://marches-preprod.megalis.bretagne.bzh/api.php/ws/authentification/connexion/userCGI/Vg5Kyw54");
+		WebTarget webResource = getClientWs().target(WsConstants.SDM_TOKEN_URL);
 		Invocation.Builder builderToken = webResource.request().accept(MediaType.APPLICATION_JSON);
 		builderToken.header("externalid", 1122);
 		builderToken.header("usertype", "AGENT");
