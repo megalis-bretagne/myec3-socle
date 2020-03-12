@@ -19,8 +19,8 @@ echo "multi.dir=true" >> /glowroot/glowroot.properties
 # TODO : récupérer la version du pom.xml
 ADD "http://nexus.sib.fr:8081/nexus/service/local/artifact/maven/redirect?r=sib-group&g=org.myec3.socle&a=myec3-socle-synchro&v=5.6.2-MEGALIS-SNAPSHOT&p=war" /usr/local/tomcat/webapps/myec3-socle-synchro.war
 
-COPY myec3-socle-synchro-module/myec3-socle-synchro/setenv.sh /usr/local/tomcat/bin/
-COPY myec3-socle-synchro-module/myec3-socle-synchro/docker-entrypoint.sh /usr/local/bin/
+COPY setenv.sh /usr/local/tomcat/bin/
+COPY docker-entrypoint.sh /usr/local/bin/
 RUN chmod u+x /usr/local/bin/docker-entrypoint.sh
 RUN mkdir /configGen
 
