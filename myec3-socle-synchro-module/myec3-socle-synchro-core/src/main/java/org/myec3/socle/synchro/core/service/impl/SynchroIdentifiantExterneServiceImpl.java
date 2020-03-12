@@ -1,5 +1,6 @@
 package org.myec3.socle.synchro.core.service.impl;
 
+import org.myec3.socle.core.domain.model.enums.ResourceType;
 import org.myec3.socle.core.service.impl.AbstractGenericServiceImpl;
 import org.myec3.socle.synchro.core.domain.dao.SynchroIdentifiantExterneDao;
 import org.myec3.socle.synchro.core.domain.model.SynchroIdentifiantExterne;
@@ -12,5 +13,10 @@ public class SynchroIdentifiantExterneServiceImpl extends AbstractGenericService
     @Override
     public void truncate() {
         dao.truncate();
+    }
+
+    @Override
+    public SynchroIdentifiantExterne findByIdSocle(long idSocle,ResourceType resourceType) {
+        return dao.findByIdSocle(idSocle, resourceType);
     }
 }

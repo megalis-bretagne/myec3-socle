@@ -10,6 +10,9 @@ public class SdmAgent extends SdmResource {
 
       private long idProfil;
 
+      @XmlElement(required = false)
+      private long id;
+
       @XmlElement(required = true)
       private String identifiant;
 
@@ -42,6 +45,14 @@ public class SdmAgent extends SdmResource {
 
       @XmlElement(required = true)
       private SdmService service;
+
+      public long getId() {
+            return id;
+      }
+
+      public void setId(long id) {
+            this.id = id;
+      }
 
       public long getIdProfil() {
             return idProfil;
