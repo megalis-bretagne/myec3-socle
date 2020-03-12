@@ -51,7 +51,7 @@ buildSocleSynchro_dev:
   only:
     - develop
   variables:
-    DOCKER_FILE: "myec3-socle-synchro-module/myec3-socle-synchro/Dockerfile.stages"
+    DOCKER_FILE: "myec3-socle-synchro-module/myec3-socle-synchro/Dockerfile"
     BUILD_CONTEXT: "myec3-socle-synchro-module/myec3-socle-synchro"
     CI_REGISTRY_IMAGE: "klask.sib.fr:52100/megalis/socle-synchro/develop"
   script:
@@ -66,7 +66,7 @@ buildSocleSynchro_preprod:
   only:
     - master
   variables:
-    DOCKER_FILE: "myec3-socle-synchro-module/myec3-socle-synchro/Dockerfile.stages"
+    DOCKER_FILE: "myec3-socle-synchro-module/myec3-socle-synchro/Dockerfile"
     BUILD_CONTEXT: "myec3-socle-synchro-module/myec3-socle-synchro"
     CI_REGISTRY_IMAGE_PUBLIC: "klask.sib.fr:5000/megalis/socle-synchro/master"
   script:
