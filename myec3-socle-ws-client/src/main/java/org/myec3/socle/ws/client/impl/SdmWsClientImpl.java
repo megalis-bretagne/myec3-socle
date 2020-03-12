@@ -11,6 +11,7 @@ import org.myec3.socle.core.sync.api.Error;
 import org.myec3.socle.core.sync.api.*;
 import org.myec3.socle.synchro.core.domain.model.SynchronizationSubscription;
 import org.myec3.socle.ws.client.ResourceWsClient;
+import org.myec3.socle.ws.client.constants.WsConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -188,50 +189,6 @@ public class SdmWsClientImpl implements ResourceWsClient {
 
 		return responseMsg;
 	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public Response get(Resource resource, SynchronizationSubscription synchronizationSubscription) {
-		WebTarget webResource = getClientWs()
-				.target(synchronizationSubscription.getUri() + resource.getId().toString());
-		Invocation.Builder builder = webResource.request().accept(MediaType.APPLICATION_XML);
-		try {
-			return builder.get();
-		} catch (Exception ex) {
-			logger.error(ex.getMessage());
-			Response.ResponseBuilder errorResponse = Response.status(Response.Status.SERVICE_UNAVAILABLE);
-			return errorResponse.build();
-		}
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public Response get(Long id, SynchronizationSubscription synchronizationSubscription) {
-		WebTarget webResource = getClientWs().target(synchronizationSubscription.getUri() + id.toString());
-		Invocation.Builder builder = webResource.request().accept(MediaType.APPLICATION_XML);
-		try {
-			return builder.get();
-		} catch (Exception ex) {
-			logger.error(ex.getMessage());
-			Response.ResponseBuilder errorResponse = Response.status(Response.Status.SERVICE_UNAVAILABLE);
-			return errorResponse.build();
-		}
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public ResponseMessage post(Resource resource, SynchronizationSubscription synchronizationSubscription) {
-		WebTarget webResource = getClientWs().target(synchronizationSubscription.getUri());
-
-		throw new UnsupportedOperationException("Not implemented.");
-	}
-
 	public ResponseMessage post(Resource resource, SdmResource resourceSDM,SynchronizationSubscription synchronizationSubscription) {
 		WebTarget webResource = getClientWs().target(synchronizationSubscription.getUri());
 
@@ -263,51 +220,36 @@ public class SdmWsClientImpl implements ResourceWsClient {
 		}
 	}
 
+	public ResponseMessage put(Resource resource, SdmResource resourceSDM,SynchronizationSubscription synchronizationSubscription) {
+		WebTarget webResource = getClientWs().target(synchronizationSubscription.getUri());
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public ResponseMessage put(Resource resource, SynchronizationSubscription synchronizationSubscription) {
-		WebTarget webResource = getClientWs().target(synchronizationSubscription.getUri() + resource.getId());
-
-		Invocation.Builder builder = webResource.request().accept(MediaType.APPLICATION_XML);
-		if (synchronizationSubscription.getApplication().getId().equals(3l))
-			prepareHeaderAtexo(builder);
-
+		Invocation.Builder builder = webResource.request().accept(MediaType.APPLICATION_JSON);
+		//patch pour ajouter les trucs dans le header
+		//Authorization, externalId et usertype
+		prepareHeaderAtexo(builder);
 		try {
-			logger.debug("[PUT] on URI : {}", synchronizationSubscription.getUri());
+			logger.debug("[PUT] on URI: {}", synchronizationSubscription.getUri());
+			Response response = builder.put(Entity.json(resourceSDM));
 
-			Response response = builder.put(Entity.json(resource));
-			return buildResponseMessage(response, MethodType.PUT);
+			return buildResponseMessage(response, MethodType.POST);
 		} catch (ClientErrorException ex) {
 			if (ex.getMessage().contains(CONNECTION_EXCEPTION)) {
 				logger.error("[PUT][ConnectException] Server Unavailable HTTP status 503", ex);
-				return this.buildServerErrorMessage(resource, HttpStatus.SERVER_UNAVAILABLE, null, MethodType.PUT,
+				return this.buildServerErrorMessage(resource, HttpStatus.SERVER_UNAVAILABLE, null, MethodType.POST,
 						SERVER_UNVAILABLE_ERROR_LABEL, SERVER_UNVAILABLE_ERROR_MESSAGE);
 			} else {
-				logger.error("[PUT] Syncmerc error:", ex);
+				logger.error("[PUT] Exception in sync", ex);
 				return this.buildServerErrorMessage(resource, HttpStatus.BAD_REQUEST,
-						ErrorCodeType.INTERNAL_CLIENT_ERROR, MethodType.PUT, CLIENT_EXCEPTION_ERROR_LABEL,
+						ErrorCodeType.INTERNAL_CLIENT_ERROR, MethodType.POST, CLIENT_EXCEPTION_ERROR_LABEL,
 						ex.getMessage());
 			}
 		} catch (Exception ex) {
-			logger.error("[PUT] Sync error:", ex);
-			return this.buildServerErrorMessage(resource, HttpStatus.BAD_REQUEST, ErrorCodeType.INTERNAL_CLIENT_ERROR,
-					MethodType.PUT, CLIENT_EXCEPTION_ERROR_LABEL, ex.getMessage());
+			logger.error("[PUT] Exception in sync", ex);
+			return this.buildServerErrorMessage(resource, HttpStatus.BAD_REQUEST,
+					ErrorCodeType.INTERNAL_CLIENT_ERROR,
+					MethodType.POST, CLIENT_EXCEPTION_ERROR_LABEL, ex.getMessage());
 		}
 	}
-
-	@Override
-	public ResponseMessage putComplete(Resource resource, SynchronizationSubscription synchronizationSubscription) {
-		throw new UnsupportedOperationException("Not implemented.");
-	}
-
-	@Override
-	public ResponseMessage delete(Resource resource, SynchronizationSubscription synchronizationSubscription) {
-		throw new UnsupportedOperationException("Not implemented.");
-	}
-
 
 	/**
 	 * This method allows to log the content of the client response received
@@ -324,6 +266,51 @@ public class SdmWsClientImpl implements ResourceWsClient {
 		} catch (Exception e) {
 			logger.error("Failed to write response content : ", e);
 		}
+	}
+
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public Response get(Resource resource, SynchronizationSubscription synchronizationSubscription) {
+		throw new UnsupportedOperationException("Not implemented.");
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public Response get(Long id, SynchronizationSubscription synchronizationSubscription) {
+		throw new UnsupportedOperationException("Not implemented.");
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public ResponseMessage post(Resource resource, SynchronizationSubscription synchronizationSubscription) {
+		WebTarget webResource = getClientWs().target(synchronizationSubscription.getUri());
+
+		throw new UnsupportedOperationException("Not implemented.");
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public ResponseMessage put(Resource resource, SynchronizationSubscription synchronizationSubscription) {
+		throw new UnsupportedOperationException("Not implemented.");
+	}
+
+	@Override
+	public ResponseMessage putComplete(Resource resource, SynchronizationSubscription synchronizationSubscription) {
+		throw new UnsupportedOperationException("Not implemented.");
+	}
+
+	@Override
+	public ResponseMessage delete(Resource resource, SynchronizationSubscription synchronizationSubscription) {
+		throw new UnsupportedOperationException("Not implemented.");
 	}
 
 }
