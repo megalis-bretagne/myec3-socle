@@ -5,7 +5,7 @@ FROM tomcat:9.0.30-jdk8-openjdk
 RUN apt-get update -y && \
 apt-get upgrade -y && \
 apt-get install -y curl && \
-apt-get install -y vim && \
+apt-get install -y nano && \
 apt-get clean
 
 #ajout agent glowroot
@@ -17,11 +17,13 @@ echo "multi.dir=true" >> /glowroot/glowroot.properties
 
 #recupération de nexus de l'artifact
 # TODO : récupérer la version du pom.xml
-ADD "http://nexus.sib.fr:8081/nexus/service/local/artifact/maven/redirect?r=sib-group&g=org.myec3.socle&a=myec3-socle-esb&v=5.6.2-MEGALIS-SNAPSHOT&p=war" /usr/local/tomcat/webapps/myec3-socle-esb.war
+ADD "http://nexus.sib.fr:8081/nexus/service/local/artifact/maven/redirect?r=sib-group&g=org.myec3.socle&a=myec3-socle-synchro&v=5.6.2-MEGALIS-SNAPSHOT&p=war" /usr/local/tomcat/webapps/myec3-socle-synchro.war
 
-EXPOSE 61616/tcp
+COPY setenv.sh /usr/local/tomcat/bin/
+COPY docker-entrypoint.sh /usr/local/bin/
+RUN chmod u+x /usr/local/bin/docker-entrypoint.sh
+RUN mkdir /configGen
 
-#pour ne pas lancer le tomcat au lancement du conteneur et pour que ce dernier ne s'arrête pas lors de l'arrêt du tomcat
-#CMD tail -f /dev/null
+CMD ["docker-entrypoint.sh", "${HOSTNAME}"]
 
 #HEALTHCHECK --interval=1m --timeout=5m --start-period=2m --retries=3 CMD curl -f http://localhost:8080/health || exit

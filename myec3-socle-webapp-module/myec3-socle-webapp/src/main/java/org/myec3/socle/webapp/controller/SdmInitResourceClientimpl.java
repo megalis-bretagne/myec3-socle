@@ -2,6 +2,7 @@ package org.myec3.socle.webapp.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.glassfish.jersey.client.JerseyClientBuilder;
+import org.myec3.socle.webapp.constants.GuWebAppConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -34,7 +35,7 @@ public class SdmInitResourceClientimpl {
     private void prepareHeaderAtexo(Invocation.Builder builder) {
 
         WebTarget webResource = getClientWs()
-                .target("https://marches-preprod.megalis.bretagne.bzh/api.php/ws/authentification/connexion/mpe_client_sf3_production/P0rt41l_C114n7SF_pR3Fr0du7t31oN");
+                .target(GuWebAppConstants.SDM_TOKEN_URL);
         Invocation.Builder builderToken = webResource.request().accept(MediaType.APPLICATION_JSON);
 /*        builderToken.header("externalid", 1122);
         builderToken.header("usertype", "AGENT");*/

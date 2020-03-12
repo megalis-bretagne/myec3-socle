@@ -62,14 +62,35 @@ public class SdmWsClientImpl implements ResourceWsClient {
 	 * @param builder  : the builder used to create the request
 	 */
 	private void prepareHeaderAtexo(Invocation.Builder builder) {
-		WebTarget webResource = getClientWs()
-				.target("https://marches-preprod.megalis.bretagne.bzh/api.php/ws/authentification/connexion/mpe_client_sf3_production/P0rt41l_C114n7SF_pR3Fr0du7t31oN");
+
+
+		WebTarget webResource = getClientWs().target(WsConstants.SDM_TOKEN_URL);
 		Invocation.Builder builderToken = webResource.request().accept(MediaType.APPLICATION_JSON);
+		builderToken.header("externalid", 1122);
+		builderToken.header("usertype", "AGENT");
+
 		Response response = builderToken.get();
 		String responseToString = response.readEntity(String.class);
-		String[] tab = StringUtils.split(responseToString, "<ticket>");
-		String[] tab2 = StringUtils.split(tab[1], "</ticket>");
+		String[] tab= StringUtils.split(responseToString,"<ticket>");
+		String[] tab2 =StringUtils.split(tab[1],"</ticket>");
+
 		builder.header("Authorization", "Bearer " + tab2[0]);
+		builder.header("externalid", 1122);
+		builder.header("usertype", "AGENT");
+
+	}
+
+	/**
+	 * Return the name of a resource
+	 *
+	 * @param resource : the resource to send
+	 * @return the resource's name
+	 */
+	private String getResourceName(Resource resource) {
+		logger.debug("Processing method getResourceName...");
+		String resourceName = null;
+		resourceName = resource.getClass().getSimpleName();
+		return resourceName.substring(0, 1).toLowerCase() + resourceName.substring(1);
 	}
 
 	/**
@@ -201,8 +222,17 @@ public class SdmWsClientImpl implements ResourceWsClient {
 		}
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public ResponseMessage post(Resource resource, SynchronizationSubscription synchronizationSubscription) {
+		WebTarget webResource = getClientWs().target(synchronizationSubscription.getUri());
 
-	public ResponseMessage put(Resource resource, SdmResource resourceSDM,SynchronizationSubscription synchronizationSubscription) {
+		throw new UnsupportedOperationException("Not implemented.");
+	}
+
+	public ResponseMessage post(Resource resource, SdmResource resourceSDM,SynchronizationSubscription synchronizationSubscription) {
 		WebTarget webResource = getClientWs().target(synchronizationSubscription.getUri());
 
 		Invocation.Builder builder = webResource.request().accept(MediaType.APPLICATION_JSON);
@@ -211,7 +241,7 @@ public class SdmWsClientImpl implements ResourceWsClient {
 		prepareHeaderAtexo(builder);
 		try {
 			logger.debug("[POST] on URI: {}", synchronizationSubscription.getUri());
-			Response response = builder.put(Entity.json(resourceSDM));
+			Response response = builder.post(Entity.json(resourceSDM));
 
 			return buildResponseMessage(response, MethodType.POST);
 		} catch (ClientErrorException ex) {
@@ -234,14 +264,20 @@ public class SdmWsClientImpl implements ResourceWsClient {
 	}
 
 
-	public ResponseMessage post(Resource resource, SdmResource resourceSDM,SynchronizationSubscription synchronizationSubscription) {
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public ResponseMessage put(Resource resource, SynchronizationSubscription synchronizationSubscription) {
 		WebTarget webResource = getClientWs().target(synchronizationSubscription.getUri() + resource.getId());
 
 		Invocation.Builder builder = webResource.request().accept(MediaType.APPLICATION_XML);
-		prepareHeaderAtexo(builder);
+		if (synchronizationSubscription.getApplication().getId().equals(3l))
+			prepareHeaderAtexo(builder);
 
 		try {
 			logger.debug("[PUT] on URI : {}", synchronizationSubscription.getUri());
+
 			Response response = builder.put(Entity.json(resource));
 			return buildResponseMessage(response, MethodType.PUT);
 		} catch (ClientErrorException ex) {
@@ -262,6 +298,15 @@ public class SdmWsClientImpl implements ResourceWsClient {
 		}
 	}
 
+	@Override
+	public ResponseMessage putComplete(Resource resource, SynchronizationSubscription synchronizationSubscription) {
+		throw new UnsupportedOperationException("Not implemented.");
+	}
+
+	@Override
+	public ResponseMessage delete(Resource resource, SynchronizationSubscription synchronizationSubscription) {
+		throw new UnsupportedOperationException("Not implemented.");
+	}
 
 
 	/**
@@ -279,32 +324,6 @@ public class SdmWsClientImpl implements ResourceWsClient {
 		} catch (Exception e) {
 			logger.error("Failed to write response content : ", e);
 		}
-	}
-
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public ResponseMessage post(Resource resource, SynchronizationSubscription synchronizationSubscription) {
-
-		throw new UnsupportedOperationException("Not implemented.");
-	}
-
-	@Override
-	public ResponseMessage put(Resource resource, SynchronizationSubscription synchronizationSubscription) {
-		throw new UnsupportedOperationException("Not implemented.");
-	}
-
-
-	@Override
-	public ResponseMessage putComplete(Resource resource, SynchronizationSubscription synchronizationSubscription) {
-		throw new UnsupportedOperationException("Not implemented.");
-	}
-
-	@Override
-	public ResponseMessage delete(Resource resource, SynchronizationSubscription synchronizationSubscription) {
-		throw new UnsupportedOperationException("Not implemented.");
 	}
 
 }

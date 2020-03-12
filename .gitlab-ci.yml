@@ -23,9 +23,11 @@ buildSocleESB_dev:
   only:
     - develop
   variables:
+    DOCKER_FILE: "myec3-socle-esb/Dockerfile"
+    BUILD_CONTEXT: "myec3-socle-esb"
     CI_REGISTRY_IMAGE: "klask.sib.fr:52100/megalis/socle-esb/develop"
   script:
-    - docker build -f Dockerfile_esb.stages -t ${CI_REGISTRY_IMAGE} .
+    - docker build -f ${DOCKER_FILE} -t ${CI_REGISTRY_IMAGE} ${BUILD_CONTEXT}
     - docker tag ${CI_REGISTRY_IMAGE} ${CI_REGISTRY_IMAGE}:${CI_COMMIT_SHA:0:8}
     - echo "push ${CI_REGISTRY_IMAGE}:latest" && docker push ${CI_REGISTRY_IMAGE}:latest
     - echo "push ${CI_REGISTRY_IMAGE}:${CI_COMMIT_SHA:0:8}" && docker push ${CI_REGISTRY_IMAGE}:${CI_COMMIT_SHA:0:8}
@@ -36,9 +38,11 @@ buildSocleESB_preprod:
   only:
     - master
   variables:
+    DOCKER_FILE: "myec3-socle-esb/Dockerfile"
+    BUILD_CONTEXT: "myec3-socle-esb"
     CI_REGISTRY_IMAGE_PUBLIC: "klask.sib.fr:5000/megalis/socle-esb/master"
   script:
-    - docker build -f Dockerfile_esb.stages -t ${CI_REGISTRY_IMAGE_PUBLIC} .
+    - docker build -f ${DOCKER_FILE} -t ${CI_REGISTRY_IMAGE_PUBLIC} ${BUILD_CONTEXT}
     - echo "push ${CI_REGISTRY_IMAGE_PUBLIC}:latest" && docker push ${CI_REGISTRY_IMAGE_PUBLIC}:latest
 
 buildSocleSynchro_dev:
@@ -47,9 +51,11 @@ buildSocleSynchro_dev:
   only:
     - develop
   variables:
+    DOCKER_FILE: "myec3-socle-synchro-module/myec3-socle-synchro/Dockerfile"
+    BUILD_CONTEXT: "myec3-socle-synchro-module/myec3-socle-synchro"
     CI_REGISTRY_IMAGE: "klask.sib.fr:52100/megalis/socle-synchro/develop"
   script:
-    - docker build -f myec3-socle-synchro-module/myec3-socle-synchro/Dockerfile.stages -t ${CI_REGISTRY_IMAGE} .
+    - docker build -f ${DOCKER_FILE} -t ${CI_REGISTRY_IMAGE} ${BUILD_CONTEXT}
     - docker tag ${CI_REGISTRY_IMAGE} ${CI_REGISTRY_IMAGE}:${CI_COMMIT_SHA:0:8}
     - echo "push ${CI_REGISTRY_IMAGE}:latest" && docker push ${CI_REGISTRY_IMAGE}:latest
     - echo "push ${CI_REGISTRY_IMAGE}:${CI_COMMIT_SHA:0:8}" && docker push ${CI_REGISTRY_IMAGE}:${CI_COMMIT_SHA:0:8}
@@ -60,9 +66,11 @@ buildSocleSynchro_preprod:
   only:
     - master
   variables:
+    DOCKER_FILE: "myec3-socle-synchro-module/myec3-socle-synchro/Dockerfile"
+    BUILD_CONTEXT: "myec3-socle-synchro-module/myec3-socle-synchro"
     CI_REGISTRY_IMAGE_PUBLIC: "klask.sib.fr:5000/megalis/socle-synchro/master"
   script:
-    - docker build -f myec3-socle-synchro-module/myec3-socle-synchro/Dockerfile.stages -t ${CI_REGISTRY_IMAGE_PUBLIC} .
+    - docker build -f ${DOCKER_FILE} -t ${CI_REGISTRY_IMAGE_PUBLIC} ${BUILD_CONTEXT}
     - echo "push ${CI_REGISTRY_IMAGE_PUBLIC}:latest" && docker push ${CI_REGISTRY_IMAGE_PUBLIC}:latest
 
 buildSocleWebapp_dev:
@@ -71,9 +79,11 @@ buildSocleWebapp_dev:
   only:
     - develop
   variables:
+    DOCKER_FILE: "myec3-socle-webapp-module/myec3-socle-webapp/Dockerfile"
+    BUILD_CONTEXT: "myec3-socle-webapp-module/myec3-socle-webapp"
     CI_REGISTRY_IMAGE: "klask.sib.fr:52100/megalis/socle-webapp/develop"
   script:
-    - docker build -f myec3-socle-webapp-module/myec3-socle-webapp/Dockerfile.stages -t ${CI_REGISTRY_IMAGE} .
+    - docker build -f ${DOCKER_FILE} -t ${CI_REGISTRY_IMAGE} ${BUILD_CONTEXT}
     - docker tag ${CI_REGISTRY_IMAGE} ${CI_REGISTRY_IMAGE}:${CI_COMMIT_SHA:0:8}
     - echo "push ${CI_REGISTRY_IMAGE}:latest" && docker push ${CI_REGISTRY_IMAGE}:latest
     - echo "push ${CI_REGISTRY_IMAGE}:${CI_COMMIT_SHA:0:8}" && docker push ${CI_REGISTRY_IMAGE}:${CI_COMMIT_SHA:0:8}
@@ -84,9 +94,11 @@ buildSocleWebapp_preprod:
   only:
     - master
   variables:
+    DOCKER_FILE: "myec3-socle-webapp-module/myec3-socle-webapp/Dockerfile"
+    BUILD_CONTEXT: "myec3-socle-webapp-module/myec3-socle-webapp"
     CI_REGISTRY_IMAGE_PUBLIC: "klask.sib.fr:5000/megalis/socle-webapp/master"
   script:
-    - docker build -f myec3-socle-webapp-module/myec3-socle-webapp/Dockerfile.stages -t ${CI_REGISTRY_IMAGE_PUBLIC} .
+    - docker build -f ${DOCKER_FILE} -t ${CI_REGISTRY_IMAGE_PUBLIC} ${BUILD_CONTEXT}
     - echo "push ${CI_REGISTRY_IMAGE_PUBLIC}:latest" && docker push ${CI_REGISTRY_IMAGE_PUBLIC}:latest
 
 deploy_dev:
