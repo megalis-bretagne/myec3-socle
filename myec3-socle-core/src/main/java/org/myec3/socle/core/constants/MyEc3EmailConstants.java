@@ -22,14 +22,14 @@ import java.util.ResourceBundle;
 /**
  * Constants class used to manage email
  * 
- * @see EmailService.class
- * @see EmailServiceImpl.class
+ * @see org.myec3.socle.core.service.EmailService
+ * @see org.myec3.socle.core.service.impl.EmailServiceImpl
  * 
  * @author Denis Cucchietti <denis.cucchietti@atosorigin.com>
  */
 public final class MyEc3EmailConstants {
 
-	private static final String EMAIL_BUNDLE_NAME = "socleCore";
+	private static final String EMAIL_BUNDLE_NAME = "email";
 	private static final ResourceBundle EMAIL_BUNDLE = ResourceBundle
 			.getBundle(EMAIL_BUNDLE_NAME);
 
@@ -52,13 +52,6 @@ public final class MyEc3EmailConstants {
 	 */
 	public static String getSender() {
 		return EMAIL_BUNDLE.getString("email.sender");
-	}
-
-	/**
-	 * @return the default signature used when you send an email
-	 */
-	public static String getSignature() {
-		return EMAIL_BUNDLE.getString("email.signature");
 	}
 
 	/**

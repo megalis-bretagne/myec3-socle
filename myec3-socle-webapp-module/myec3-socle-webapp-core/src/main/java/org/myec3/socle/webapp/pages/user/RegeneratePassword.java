@@ -605,7 +605,7 @@ public class RegeneratePassword extends AbstractPage {
 			URLEncoder urlEncoder = new URLEncoderImpl();
 
 			// HOT FIX for PHTEBEXPLOIT-206
-			url = GuWebAppConstants.NEW_PASSWORD_URL
+			url = GuWebAppConstants.MYEC3_BASE_URL + "/user/newpassword"
 					+ "/"
 					+ urlEncoder.encode(externalId)
 					+ "/"
