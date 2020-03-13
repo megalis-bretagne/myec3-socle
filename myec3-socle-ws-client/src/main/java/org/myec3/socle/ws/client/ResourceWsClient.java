@@ -20,6 +20,7 @@ package org.myec3.socle.ws.client;
 import javax.ws.rs.core.Response;
 
 import org.myec3.socle.core.domain.model.Resource;
+import org.myec3.socle.core.domain.sdm.model.SdmResource;
 import org.myec3.socle.core.sync.api.ResponseMessage;
 import org.myec3.socle.synchro.core.domain.model.SynchronizationSubscription;
 import org.myec3.socle.ws.client.impl.ResourceWsClientImpl;
@@ -103,5 +104,4 @@ public interface ResourceWsClient {
 	 *         error has occured during the operation.
 	 */
 	public ResponseMessage delete(Resource resource, SynchronizationSubscription synchronizationSubscription);
-
 }

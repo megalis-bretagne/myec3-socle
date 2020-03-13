@@ -20,12 +20,16 @@ package org.myec3.socle.synchro.scheduler.job.resources;
 import org.myec3.socle.core.domain.model.AgentProfile;
 import org.myec3.socle.core.domain.model.Profile;
 import org.myec3.socle.core.domain.model.Role;
+import org.myec3.socle.core.domain.model.enums.ResourceType;
 import org.myec3.socle.core.domain.sdm.model.SdmAgent;
 import org.myec3.socle.core.domain.sdm.model.SdmService;
 import org.myec3.socle.core.service.AgentProfileService;
 import org.myec3.socle.core.service.CompanyService;
 import org.myec3.socle.core.sync.api.ResponseMessage;
+import org.myec3.socle.synchro.core.domain.model.SynchroIdentifiantExterne;
 import org.myec3.socle.synchro.core.domain.model.SynchronizationSubscription;
+import org.myec3.socle.synchro.core.service.SynchroIdentifiantExterneDeltaService;
+import org.myec3.socle.synchro.core.service.SynchroIdentifiantExterneService;
 import org.myec3.socle.ws.client.ResourceWsClient;
 import org.myec3.socle.ws.client.impl.SdmWsClientImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,6 +60,12 @@ public class AgentSynchronizationJob extends
 	@Autowired
 	@Qualifier("agentProfileService")
 	private AgentProfileService agentProfileService;
+
+
+	@Autowired
+	@Qualifier("synchroIdentifiantExterneService")
+	private SynchroIdentifiantExterneService synchroIdentifiantExterneService;
+
 
 	/**
 	 * {@inheritDoc}
@@ -123,6 +133,8 @@ public class AgentSynchronizationJob extends
 		//convertion object
 		if ("SDM".equals(synchronizationSubscription.getApplication().getName())){
 			SdmAgent agentSDM = new SdmAgent();
+			SynchroIdentifiantExterne synchroIdentifiantExterne = synchroIdentifiantExterneService.findByIdSocle(resource.getId(), ResourceType.AGENT_PROFILE);
+			agentSDM.setId(synchroIdentifiantExterne.getIdAppliExterne());
 
 			agentSDM.setIdentifiant(resource.getUsername());
 			//todo voir ce qu'il faut mettre dans rôle pour la salle des marchés
@@ -147,7 +159,7 @@ public class AgentSynchronizationJob extends
 			agentSDM.setService(serviceSDM);
 			SdmWsClientImpl sdmWsClient = (SdmWsClientImpl) resourceWsClient;
 
-			return sdmWsClient.post(resource,agentSDM, synchronizationSubscription);
+			return sdmWsClient.put(resource,agentSDM, synchronizationSubscription);
 
 		}else {
 			return resourceWsClient.put(resource, synchronizationSubscription);
