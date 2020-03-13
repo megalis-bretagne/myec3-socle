@@ -136,7 +136,7 @@ public class EmailServiceImpl implements EmailService {
 		Assert.notNull(organism,
 				"organism is mandatory. null value is forbidden.");
 
-		if (organism.getOrganismStatus() != null) {
+		if (organism.getOrganismStatus() != null && !organism.getOrganismStatus().isEmpty()) {
 			// If the organism is a prospect or disabled or don we don't send
 			// the mail containing
 			// login and password for the new user
