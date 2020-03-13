@@ -31,16 +31,6 @@ public class CustomerSynchronizationJob extends
 	public ResponseMessage create(Customer resource,
 			SynchronizationSubscription synchronizationSubscription,
 			ResourceWsClient resourceWsClient) {
-
-		if ("SDM".equals(synchronizationSubscription.getApplication().getName())) {
-			SdmService serviceSDM = new SdmService();
-			//resource.get
-			//todo
-
-			SdmWsClientImpl sdmWsClient = (SdmWsClientImpl) resourceWsClient;
-
-			return sdmWsClient.post(resource, serviceSDM, synchronizationSubscription);
-		}
 		return resourceWsClient.post(resource, synchronizationSubscription);
 	}
 
