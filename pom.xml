@@ -25,7 +25,6 @@
 		<module>myec3-socle-contract</module>
 		<module>myec3-socle-core</module>
 		<module>myec3-socle-ws-client</module>
-		<module>myec3-socle-ws-server-module</module>
 		<module>myec3-socle-synchro-module</module>
 		<module>myec3-socle-webapp-module</module>
 		<module>myec3-socle-esb</module>

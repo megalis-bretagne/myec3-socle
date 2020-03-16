@@ -8,7 +8,7 @@ import java.util.Date;
 public class SdmEtablissement extends SdmResource  {
 
     @XmlElement(required = true)
-    private String id;
+    private long id;
 
     private String siege;
 
@@ -22,11 +22,11 @@ public class SdmEtablissement extends SdmResource  {
     @XmlElement(required = false)
     private SdmAdresse adresse;
 
-    public String getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(long id) {
         this.id = id;
     }
 

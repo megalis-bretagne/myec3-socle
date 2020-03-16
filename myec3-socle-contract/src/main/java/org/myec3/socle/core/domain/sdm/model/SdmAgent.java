@@ -8,10 +8,11 @@ import java.util.Date;
 public class SdmAgent extends SdmResource {
 
 
-      private long idProfil;
-
       @XmlElement(required = false)
       private long id;
+
+      @XmlElement(required = false)
+      private long idProfil;
 
       @XmlElement(required = true)
       private String identifiant;
