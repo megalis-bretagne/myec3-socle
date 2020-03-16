@@ -1,123 +1,41 @@
-image: alpine:latest
-
-before_script:
-  - export http_proxy=http://pro01.sib.fr:3128
-  - export https_proxy=http://pro01.sib.fr:3128
-  - export no_proxy=sib.fr
-  - apk update && apk add sshpass openssh-client bash
+include:
+  - 'https://gitlab.sib.fr/megalis/megalis-template/raw/master/.docker-template.yml'
 
 stages:
   - mvn_deploy
   - build
   - deploy
 
-build:
+mvnDeploy:
   image : maven:3-jdk-8
   stage : mvn_deploy
   script :
     - mvn -B deploy
 
-buildSocleESB_dev:
-  image: docker:stable-dind
-  stage: build
-  only:
-    - develop
+buildSocleEsb:
+  extends: .build
   variables:
-    DOCKER_FILE: "myec3-socle-esb/Dockerfile"
     BUILD_CONTEXT: "myec3-socle-esb"
-    CI_REGISTRY_IMAGE: "klask.sib.fr:52100/megalis/socle-esb/develop"
-  script:
-    - docker build -f ${DOCKER_FILE} -t ${CI_REGISTRY_IMAGE} ${BUILD_CONTEXT}
-    - docker tag ${CI_REGISTRY_IMAGE} ${CI_REGISTRY_IMAGE}:${CI_COMMIT_SHA:0:8}
-    - echo "push ${CI_REGISTRY_IMAGE}:latest" && docker push ${CI_REGISTRY_IMAGE}:latest
-    - echo "push ${CI_REGISTRY_IMAGE}:${CI_COMMIT_SHA:0:8}" && docker push ${CI_REGISTRY_IMAGE}:${CI_COMMIT_SHA:0:8}
+    IMAGE_NAME: "megalis/socle-esb"
 
-buildSocleESB_preprod:
-  image: docker:stable-dind
-  stage: build
-  only:
-    - master
+buildSocleSynchro:
+  extends: .build
   variables:
-    DOCKER_FILE: "myec3-socle-esb/Dockerfile"
-    BUILD_CONTEXT: "myec3-socle-esb"
-    CI_REGISTRY_IMAGE_PUBLIC: "klask.sib.fr:5000/megalis/socle-esb/master"
-  script:
-    - docker build -f ${DOCKER_FILE} -t ${CI_REGISTRY_IMAGE_PUBLIC} ${BUILD_CONTEXT}
-    - docker tag ${CI_REGISTRY_IMAGE_PUBLIC} ${CI_REGISTRY_IMAGE_PUBLIC}:${CI_COMMIT_SHA:0:8}
-    - echo "push ${CI_REGISTRY_IMAGE_PUBLIC}:latest" && docker push ${CI_REGISTRY_IMAGE_PUBLIC}:latest
-    - echo "push ${CI_REGISTRY_IMAGE_PUBLIC}:${CI_COMMIT_SHA:0:8}" && docker push ${CI_REGISTRY_IMAGE_PUBLIC}:${CI_COMMIT_SHA:0:8}
+    BUILD_CONTEXT: "myec3-socle-synchro"
+    IMAGE_NAME: "megalis/socle-synchro"
 
-buildSocleSynchro_dev:
-  image: docker:stable-dind
-  stage: build
-  only:
-    - develop
+buildSocleWebapp:
+  extends: .build
   variables:
-    DOCKER_FILE: "myec3-socle-synchro-module/myec3-socle-synchro/Dockerfile"
-    BUILD_CONTEXT: "myec3-socle-synchro-module/myec3-socle-synchro"
-    CI_REGISTRY_IMAGE: "klask.sib.fr:52100/megalis/socle-synchro/develop"
-  script:
-    - docker build -f ${DOCKER_FILE} -t ${CI_REGISTRY_IMAGE} ${BUILD_CONTEXT}
-    - docker tag ${CI_REGISTRY_IMAGE} ${CI_REGISTRY_IMAGE}:${CI_COMMIT_SHA:0:8}
-    - echo "push ${CI_REGISTRY_IMAGE}:latest" && docker push ${CI_REGISTRY_IMAGE}:latest
-    - echo "push ${CI_REGISTRY_IMAGE}:${CI_COMMIT_SHA:0:8}" && docker push ${CI_REGISTRY_IMAGE}:${CI_COMMIT_SHA:0:8}
+    BUILD_CONTEXT: "myec3-socle-webapp"
+    IMAGE_NAME: "megalis/socle-webapp"
 
-buildSocleSynchro_preprod:
-  image: docker:stable-dind
-  stage: build
-  only:
-    - master
+deploy:
+  extends: .deployDev
   variables:
-    DOCKER_FILE: "myec3-socle-synchro-module/myec3-socle-synchro/Dockerfile"
-    BUILD_CONTEXT: "myec3-socle-synchro-module/myec3-socle-synchro"
-    CI_REGISTRY_IMAGE_PUBLIC: "klask.sib.fr:5000/megalis/socle-synchro/master"
-  script:
-    - docker build -f ${DOCKER_FILE} -t ${CI_REGISTRY_IMAGE_PUBLIC} ${BUILD_CONTEXT}
-    - docker tag ${CI_REGISTRY_IMAGE_PUBLIC} ${CI_REGISTRY_IMAGE_PUBLIC}:${CI_COMMIT_SHA:0:8}
-    - echo "push ${CI_REGISTRY_IMAGE_PUBLIC}:latest" && docker push ${CI_REGISTRY_IMAGE_PUBLIC}:latest
-    - echo "push ${CI_REGISTRY_IMAGE_PUBLIC}:${CI_COMMIT_SHA:0:8}" && docker push ${CI_REGISTRY_IMAGE_PUBLIC}:${CI_COMMIT_SHA:0:8}
+    STACK_NAME: "socle"
 
-buildSocleWebapp_dev:
-  image: docker:stable-dind
-  stage: build
-  only:
-    - develop
+deployPreprod:
+  extends: .deployPreprod
   variables:
-    DOCKER_FILE: "myec3-socle-webapp-module/myec3-socle-webapp/Dockerfile"
-    BUILD_CONTEXT: "myec3-socle-webapp-module/myec3-socle-webapp"
-    CI_REGISTRY_IMAGE: "klask.sib.fr:52100/megalis/socle-webapp/develop"
-  script:
-    - docker build -f ${DOCKER_FILE} -t ${CI_REGISTRY_IMAGE} ${BUILD_CONTEXT}
-    - docker tag ${CI_REGISTRY_IMAGE} ${CI_REGISTRY_IMAGE}:${CI_COMMIT_SHA:0:8}
-    - echo "push ${CI_REGISTRY_IMAGE}:latest" && docker push ${CI_REGISTRY_IMAGE}:latest
-    - echo "push ${CI_REGISTRY_IMAGE}:${CI_COMMIT_SHA:0:8}" && docker push ${CI_REGISTRY_IMAGE}:${CI_COMMIT_SHA:0:8}
-
-buildSocleWebapp_preprod:
-  image: docker:stable-dind
-  stage: build
-  only:
-    - master
-  variables:
-    DOCKER_FILE: "myec3-socle-webapp-module/myec3-socle-webapp/Dockerfile"
-    BUILD_CONTEXT: "myec3-socle-webapp-module/myec3-socle-webapp"
-    CI_REGISTRY_IMAGE_PUBLIC: "klask.sib.fr:5000/megalis/socle-webapp/master"
-  script:
-    - docker build -f ${DOCKER_FILE} -t ${CI_REGISTRY_IMAGE_PUBLIC} ${BUILD_CONTEXT}
-    - docker tag ${CI_REGISTRY_IMAGE_PUBLIC} ${CI_REGISTRY_IMAGE_PUBLIC}:${CI_COMMIT_SHA:0:8}
-    - echo "push ${CI_REGISTRY_IMAGE_PUBLIC}:latest" && docker push ${CI_REGISTRY_IMAGE_PUBLIC}:latest
-    - echo "push ${CI_REGISTRY_IMAGE_PUBLIC}:${CI_COMMIT_SHA:0:8}" && docker push ${CI_REGISTRY_IMAGE_PUBLIC}:${CI_COMMIT_SHA:0:8}
-
-deploy_dev:
-  stage: deploy
-  only:
-    - develop
-  script:
-    - ssh megalis@sangoku.sib.fr "/sillage/megalis/deploy.sh socle develop ${CI_COMMIT_SHA:0:8}"
-
-deploy_preprod:
-  stage: deploy
-  only:
-    - master
-  script:
-    - ssh megalis@10.253.104.100 "/data/livraison/deploy.sh socle preprod ${CI_COMMIT_SHA:0:8}"
-  when: manual
+    STACK_NAME: "socle"
