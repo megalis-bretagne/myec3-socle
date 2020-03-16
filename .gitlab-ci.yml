@@ -21,13 +21,13 @@ buildSocleEsb:
 buildSocleSynchro:
   extends: .build
   variables:
-    BUILD_CONTEXT: "myec3-socle-synchro"
+    BUILD_CONTEXT: "myec3-socle-synchro-module/myec3-socle-synchro"
     IMAGE_NAME: "megalis/socle-synchro"
 
 buildSocleWebapp:
   extends: .build
   variables:
-    BUILD_CONTEXT: "myec3-socle-webapp"
+    BUILD_CONTEXT: "myec3-socle-webapp-module/myec3-socle-webapp"
     IMAGE_NAME: "megalis/socle-webapp"
 
 deploy:
