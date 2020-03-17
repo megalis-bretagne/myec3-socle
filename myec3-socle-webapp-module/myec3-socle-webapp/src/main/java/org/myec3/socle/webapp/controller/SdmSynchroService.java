@@ -20,6 +20,7 @@ import org.springframework.scheduling.annotation.AsyncResult;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 import javax.persistence.NonUniqueResultException;
 import java.util.HashMap;
@@ -73,8 +74,10 @@ public class SdmSynchroService {
             String identifiant = (String) sdmJsonAgent.get("identifiant");
 
             try {
-                User userSocle = userService.findByUsername(identifiant);
-
+                User userSocle=null;
+                if (!StringUtils.isEmpty(identifiant)) {
+                    userSocle = userService.findByUsername(identifiant);
+                }
                 if (userSocle != null) {
                     SynchroIdentifiantExterne synchro = new SynchroIdentifiantExterne();
                     synchro.setApplication(sdmApplication);
@@ -123,10 +126,9 @@ public class SdmSynchroService {
 
             try {
                 Organism organismSocle =null;
-                if (acronyme!=null){
+                if (!StringUtils.isEmpty(acronyme)){
                     organismSocle = organismService.findByAcronym(acronyme);
                 }
-
                 if (organismSocle != null) {
                     SynchroIdentifiantExterne synchro = new SynchroIdentifiantExterne();
                     synchro.setApplication(sdmApplication);
@@ -174,7 +176,10 @@ public class SdmSynchroService {
             String idExterne = (String) sdmJsonService.get("idExterne");
 
             try {
-                OrganismDepartment organismDepartmentSocle = organismDepartmentService.findByExternalId(Long.valueOf(idExterne));
+                OrganismDepartment organismDepartmentSocle =null;
+                if (!StringUtils.isEmpty(idExterne)){
+                    organismDepartmentSocle = organismDepartmentService.findByExternalId(Long.valueOf(idExterne));
+                }
 
                 if (organismDepartmentSocle != null) {
                     SynchroIdentifiantExterne synchro = new SynchroIdentifiantExterne();
@@ -182,7 +187,6 @@ public class SdmSynchroService {
                     synchro.setTypeRessource(ResourceType.ORGANISM_DEPARTMENT);
                     synchro.setIdSocle(organismDepartmentSocle.getId());
                     synchro.setIdAppliExterne(Long.valueOf(idSdm));
-
                     synchroIdentifiantExterneService.create(synchro);
 
                 } else {
@@ -226,11 +230,13 @@ public class SdmSynchroService {
 
             try {
                 Company company=null;
-                try {
-                 company = companyService.findBySiren(siren);
-                } catch (IncorrectResultSizeDataAccessException e) {
-                    logger.error("PAGE {} - le siren: {} n'est pas unique dans la base du socle",numPage,siren);
-                    company=null;
+                if (!StringUtils.isEmpty(siren)){
+                    try {
+                        company = companyService.findBySiren(siren);
+                    } catch (IncorrectResultSizeDataAccessException e) {
+                        logger.error("PAGE {} - le siren: {} n'est pas unique dans la base du socle",numPage,siren);
+                        company=null;
+                    }
                 }
 
                 if (company != null) {
@@ -282,15 +288,15 @@ public class SdmSynchroService {
             String siret = (String) sdmJsonEtablissement.get("siret");
 
             try {
-                Establishment establishment=null;
-                try {
 
-                    if (siret!=null && siret.length() == 14   ){
+                Establishment establishment=null;
+                if (!StringUtils.isEmpty(siret) && siret.length() == 14  ){
+                    try {
                         establishment = establishmentService.findByNic(siret.substring(0,9),siret.substring(9,14));
+                    } catch (IncorrectResultSizeDataAccessException e) {
+                        logger.error("PAGE {} - le siren: {} n'est pas unique dans la base du socle",numPage,siret);
+                        establishment=null;
                     }
-                } catch (IncorrectResultSizeDataAccessException e) {
-                    logger.error("PAGE {} - le siren: {} n'est pas unique dans la base du socle",numPage,siret);
-                    establishment=null;
                 }
 
                 if (establishment != null) {
@@ -346,12 +352,15 @@ public class SdmSynchroService {
             String login = (String) sdmJsonEntreprise.get("login");
 
             try {
+
                 User userSocle=null;
-                try {
-                    userSocle = userService.findByUsername(login);
-                } catch (IncorrectResultSizeDataAccessException e) {
-                    logger.error("PAGE {} - le siren: {} n'est pas unique dans la base du socle",page,login);
-                    userSocle=null;
+                if (!StringUtils.isEmpty(login)){
+                    try {
+                        userSocle = userService.findByUsername(login);
+                    } catch (IncorrectResultSizeDataAccessException e) {
+                        logger.error("PAGE {} - le siren: {} n'est pas unique dans la base du socle",page,login);
+                        userSocle=null;
+                    }
                 }
 
                 if (userSocle != null) {
