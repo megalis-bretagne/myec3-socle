@@ -287,15 +287,13 @@ public class MessageEmail {
 		// account (no customer linked). In this case we are looking into file
 		// app.properties to fill
 		// logoUrl and hotlinePhone values.
-		String logoUrl = null;
+		String logoUrl = GuWebAppConstants.MYEC3_BASE_URL + "/static/images/logoformail.png";;
 		String hotlinePhone = null;
 
 		// set logo url and hotlinePhone
 		if (customer != null) {
-			logoUrl = GU_BUNDLE.getString("filer.logo.mail.url");// customer.getLogoUrl();
 			hotlinePhone = customer.getHotlinePhone();
 		} else {
-			logoUrl = GU_BUNDLE.getString("filer.logo.mail.url");
 			hotlinePhone = getMessage(messages, "telephone-content-email");
 		}
 

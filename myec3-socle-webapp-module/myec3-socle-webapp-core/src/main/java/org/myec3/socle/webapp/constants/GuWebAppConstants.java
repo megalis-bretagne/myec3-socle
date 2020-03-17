@@ -98,9 +98,6 @@ public final class GuWebAppConstants {
     public static final String FILER_LOGO_CUSTOMERS_FOLDER = "customers/";
     public static final String CUSTOMER_FOLDER_NAME = "customer";
 
-    // New password URL
-    public static final String NEW_PASSWORD_URL = GU_BUNDLE.getString("new.password.url");
-
     // URL after password regeneration
     public static final String URL_AFTER_PASSWORD_REGENERATION = GU_BUNDLE.getString("urlafterregen");
 
