@@ -105,9 +105,14 @@ public class AgentSynchronizationJob extends
         if ("SDM".equals(synchronizationSubscription.getApplication().getName())) {
             SdmAgent agentSDM = convertToSdmAgent(resource);
             SynchroIdentifiantExterne synchroIdentifiantExterne = synchroIdentifiantExterneService.findByIdSocle(resource.getId(), ResourceType.AGENT_PROFILE);
-            agentSDM.setId(synchroIdentifiantExterne.getIdAppliExterne());
+
             SdmWsClientImpl sdmWsClient = (SdmWsClientImpl) resourceWsClient;
-            return sdmWsClient.put(resource, agentSDM, synchronizationSubscription);
+            if (synchroIdentifiantExterne !=null){
+                agentSDM.setId(synchroIdentifiantExterne.getIdAppliExterne());
+                return sdmWsClient.put(resource, agentSDM, synchronizationSubscription);
+            }else{
+                return sdmWsClient.post(resource, agentSDM, synchronizationSubscription);
+            }
 
         } else {
             return resourceWsClient.put(resource, synchronizationSubscription);
@@ -134,7 +139,11 @@ public class AgentSynchronizationJob extends
         agentSDM.setDateModification(agentSDM.getDateCreation());
         agentSDM.setAcronymeOrganisme(resource.getOrganismDepartment().getOrganism().getAcronym());
         SdmService serviceSDM = new SdmService();
-        serviceSDM.setIdExterne(resource.getOrganismDepartment().getId());
+        SynchroIdentifiantExterne synchroIdentifiantExterne = synchroIdentifiantExterneService.findByIdSocle(resource.getOrganismDepartment().getId(), ResourceType.ORGANISM_DEPARTMENT);
+        if (synchroIdentifiantExterne !=null){
+            serviceSDM.setId(synchroIdentifiantExterne.getIdAppliExterne());
+        }
+
         agentSDM.setService(serviceSDM);
         return agentSDM;
     }

@@ -10,10 +10,13 @@ import org.myec3.socle.core.domain.sdm.model.SdmResource;
 import org.myec3.socle.core.sync.api.Error;
 import org.myec3.socle.core.sync.api.*;
 import org.myec3.socle.synchro.core.domain.model.SynchronizationSubscription;
+import org.myec3.socle.synchro.core.service.SynchroIdentifiantExterneService;
 import org.myec3.socle.ws.client.ResourceWsClient;
 import org.myec3.socle.ws.client.constants.WsConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
@@ -44,6 +47,10 @@ public class SdmWsClientImpl implements ResourceWsClient {
 	private static final String CLIENT_EXCEPTION_ERROR_LABEL = "Client WS Exception";
 
 	private Client clientWs = null;
+
+	@Autowired
+	@Qualifier("synchroIdentifiantExterneService")
+	private SynchroIdentifiantExterneService synchroIdentifiantExterneService;
 
 	/**
 	 * Creates and returns JerseyClient
@@ -144,17 +151,23 @@ public class SdmWsClientImpl implements ResourceWsClient {
 
 				logger.debug("Content of response in string : " + responseToString);
 
+/*
 				ObjectMapper mapper = new XmlMapper();
 				mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
 				mapper.registerModule(new JaxbAnnotationModule());
 				Error error = mapper.readValue(responseToString, Error.class);
+*/
 
-				responseMsg.setError(error);
+				//responseMsg.setError(error);
 
 				// Fill the method used during the request
 				responseMsg.getError().setMethodType(methodType);
 			} else {
 				// No error occurred during the request
+				String responseToString = response.readEntity(String.class);
+				// Display response content
+				logResponseContent(responseToString);
+
 				responseMsg.setError(null);
 			}
 		} else {
@@ -257,15 +270,17 @@ public class SdmWsClientImpl implements ResourceWsClient {
 	 * @param response : the Response body received as a string
 	 */
 	private void logResponseContent(String response) {
-		try {
-			// We display the content of inputStream
-			OutputStream outStream = System.out;
-			try (Writer w = new OutputStreamWriter(outStream, "UTF-8")) {
-				w.write(response);
-			}
-		} catch (Exception e) {
-			logger.error("Failed to write response content : ", e);
-		}
+//		try {
+//			// We display the content of inputStream
+//			OutputStream outStream = System.out;
+//			try (Writer w = new OutputStreamWriter(outStream, "UTF-8")) {
+//				w.write(response);
+//			}
+//		} catch (Exception e) {
+//			logger.error("Failed to write response content : ", e);
+//		}
+
+		System.out.println(response);
 	}
 
 

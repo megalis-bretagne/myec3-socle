@@ -1,11 +1,15 @@
 package org.myec3.socle.core.domain.sdm.model;
 
 
+import com.fasterxml.jackson.annotation.JsonRootName;
+
+import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement
 public class SdmService extends SdmResource  {
 
+    @XmlElement(required = true)
     private long id;
     private long idParent;
     private long idExterne;

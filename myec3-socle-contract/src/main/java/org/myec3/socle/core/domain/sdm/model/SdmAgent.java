@@ -1,5 +1,8 @@
 package org.myec3.socle.core.domain.sdm.model;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.util.Date;
@@ -44,7 +47,7 @@ public class SdmAgent extends SdmResource {
       @XmlElement(required = true)
       private Date dateModification;
 
-      @XmlElement(required = true)
+      //@XmlElement(required = true)
       private SdmService service;
 
       public long getId() {

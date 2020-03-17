@@ -82,11 +82,14 @@ public class SdmInitResourceClientimpl {
             Object o = map.get("mpe");
             LinkedHashMap<String, Object> o1 = (LinkedHashMap<String, Object>) o;
             Object o2 = o1.get("reponse");
-            ArrayList<Object> o3 = (ArrayList<Object>) o2;
-            Object statutReponse = o3.get(0);
+
+            //Map<String, Object> o3 = ( Map<String, Object>) o2;
+
+            return o2;
+/*                    Object statutReponse = o3.get("response");
 
             Object resourceSDM = o3.get(1);
-            return resourceSDM;
+            return resourceSDM;*/
 
         } catch (Exception e) {
             logger.error(e.getMessage());
