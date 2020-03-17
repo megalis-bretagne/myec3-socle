@@ -1,6 +1,5 @@
 #!/bin/bash
 
-ENV NODE_HOSTNAME
 export NODE_HOSTNAME=$(echo "$NODE_HOSTNAME"|sed 's/\"//g'|sed 's/ //g')
 echo "NODE_HOSTNAME: $NODE_HOSTNAME"
 
