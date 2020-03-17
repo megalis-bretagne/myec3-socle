@@ -50,6 +50,10 @@ public class SdmSynchroService {
     private OrganismService organismService;
 
     @Autowired
+    @Qualifier("establishmentService")
+    private EstablishmentService establishmentService;
+
+    @Autowired
     @Qualifier("organismDepartmentService")
     private OrganismDepartmentService organismDepartmentService;
 
@@ -275,23 +279,18 @@ public class SdmSynchroService {
         for (LinkedHashMap<String, Object> sdmJsonEtablissement : etablissementsListe) {
 
             Integer idSdm = (Integer) sdmJsonEtablissement.get("id");
-            Integer idEntreprise = (Integer) sdmJsonEtablissement.get("idEntreprise");
+            String siret = (String) sdmJsonEtablissement.get("siret");
 
             try {
-                Company company=null;
-                Establishment establishment= null;
+                Establishment establishment=null;
                 try {
-                    //TODO solution temporaire
-                    //je récupère la compagny et si il y a que 1 establishment alors je l'utilise dans mon mapping
-                    company =companyService.findCompanyByIdSdm(Long.valueOf(idEntreprise));
-                    //company = companyService.findByAcronym()
-                    if ( company !=null && company.getEstablishments() !=null && company.getEstablishments().size() ==1) {
-                        establishment = company.getEstablishments().get(0);
-                    }
 
+                    if (siret!=null && siret.length() == 14   ){
+                        establishment = establishmentService.findByNic(siret.substring(0,9),siret.substring(9,14));
+                    }
                 } catch (IncorrectResultSizeDataAccessException e) {
-                    logger.error("PAGE {} - l'idEntreprise SDM: {} n'est pas unique dans la base du socle",numPage,idEntreprise);
-                    company=null;
+                    logger.error("PAGE {} - le siren: {} n'est pas unique dans la base du socle",numPage,siret);
+                    establishment=null;
                 }
 
                 if (establishment != null) {
@@ -312,7 +311,6 @@ public class SdmSynchroService {
                     delta.setTypeRessource(ResourceType.ESTABLISHMENT);
                     delta.setIdSocle(null);
                     delta.setIdAppliExterne(Long.valueOf(idSdm));
-                    delta.setIdAppliExterne(Long.valueOf(idSdm));
                     ObjectMapper mapper = new ObjectMapper();
                     Map<String, String> map = new HashMap<>();
                     String json = null;
@@ -320,7 +318,7 @@ public class SdmSynchroService {
                         json = mapper.writeValueAsString(sdmJsonEtablissement);
                         delta.setJson(json);
                     } catch (JsonProcessingException ex) {
-                        logger.error("convertion en json de la company :{} - colonne JSON de la table delta =NULL", idSdm);
+                        logger.error("convertion en json de la establishment :{} - colonne JSON de la table delta =NULL", idSdm);
                     }
 
                     synchroIdentifiantExterneDeltaService.create(delta);
