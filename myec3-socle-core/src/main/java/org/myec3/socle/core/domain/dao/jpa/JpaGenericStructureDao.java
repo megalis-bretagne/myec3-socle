@@ -1,17 +1,17 @@
 /**
  * Copyright (c) 2011 Atos Bourgogne
- * 
+ *
  * This file is part of MyEc3.
- * 
+ *
  * MyEc3 is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License version 3 as published by
  * the Free Software Foundation.
- * 
+ *
  * MyEc3 is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public License
  * along with MyEc3. If not, see <http://www.gnu.org/licenses/>.
  */
@@ -30,9 +30,9 @@ import org.myec3.socle.core.domain.model.Structure;
 /**
  * This class implements methods to perform queries on {@link Structure} objects
  * or objects extending structures.
- * 
+ *
  * @author Baptiste Meurant <baptiste.meurant@atosorigin.com>
- * 
+ *
  * @param <T> instance, child of Profile to query on
  */
 public abstract class JpaGenericStructureDao<T extends Structure> extends JpaResourceDao<T>
@@ -155,6 +155,9 @@ public abstract class JpaGenericStructureDao<T extends Structure> extends JpaRes
 		} catch (NoResultException re) {
 			// No result found, we return null instead of errors
 			getLog().warn("findByAcronym returned no result.");
+			return null;
+		}	 catch (NonUniqueResultException e) {
+			this.getLog().error("findByAcronym returned more than one result.", e);
 			return null;
 		} catch (RuntimeException re) {
 			getLog().error("findByAcronym failed.", re);

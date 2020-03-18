@@ -1,17 +1,17 @@
 /**
  * Copyright (c) 2011 Atos Bourgogne
- * 
+ *
  * This file is part of MyEc3.
- * 
+ *
  * MyEc3 is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License version 3 as published by
  * the Free Software Foundation.
- * 
+ *
  * MyEc3 is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public License
  * along with MyEc3. If not, see <http://www.gnu.org/licenses/>.
  */
@@ -23,6 +23,7 @@ import java.util.Calendar;
 import java.util.List;
 
 import javax.persistence.NoResultException;
+import javax.persistence.NonUniqueResultException;
 import javax.persistence.Query;
 
 import org.myec3.socle.core.constants.MyEc3MpsUpdateConstants;
@@ -36,7 +37,7 @@ import org.springframework.stereotype.Repository;
  * This interface define methods to perform specific queries on
  * {@link Establishment} objects. It only provides new specific methods and
  * inherits methods from {@link JpaResourceDao}.
- * 
+ *
  * @author Nicolas Buisson <nicolas.buisson@worldline.com>
  */
 @Repository("establishmentDao")
@@ -201,6 +202,9 @@ public class JpaEstablishmentDao extends JpaResourceDao<Establishment> implement
 			return result;
 		} catch (NoResultException nre) {
 			getLog().warn("findByNic returned no result.");
+			return null;
+		} catch (NonUniqueResultException e){
+			getLog().warn("findByNic returned NonUniqueResultException.");
 			return null;
 		} catch (RuntimeException re) {
 			getLog().error("findByNic failed.", re);

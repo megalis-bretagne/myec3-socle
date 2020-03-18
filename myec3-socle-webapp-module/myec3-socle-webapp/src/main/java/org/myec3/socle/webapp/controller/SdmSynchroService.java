@@ -20,6 +20,7 @@ import org.springframework.scheduling.annotation.AsyncResult;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 import javax.persistence.NonUniqueResultException;
 import java.util.HashMap;
@@ -50,6 +51,10 @@ public class SdmSynchroService {
     private OrganismService organismService;
 
     @Autowired
+    @Qualifier("establishmentService")
+    private EstablishmentService establishmentService;
+
+    @Autowired
     @Qualifier("organismDepartmentService")
     private OrganismDepartmentService organismDepartmentService;
 
@@ -62,15 +67,20 @@ public class SdmSynchroService {
     private ApplicationService applicationService;
 
     @Transactional
-    public void traiterListeAgentsSdm(Application sdmApplication, List<LinkedHashMap<String, Object>> agentsListe) {
+    @Async
+    public Future<Boolean> traiterListeAgentsSdm(List<LinkedHashMap<String, Object>> agentsListe, int page) {
+        Application sdmApplication = applicationService.findByName("SDM");
+
         for (LinkedHashMap<String, Object> sdmJsonAgent : agentsListe) {
 
             Integer idSdm = (Integer) sdmJsonAgent.get("id");
             String identifiant = (String) sdmJsonAgent.get("identifiant");
 
             try {
-                User userSocle = userService.findByUsername(identifiant);
-
+                User userSocle=null;
+                if (!StringUtils.isEmpty(identifiant)) {
+                    userSocle = userService.findByUsername(identifiant);
+                }
                 if (userSocle != null) {
                     SynchroIdentifiantExterne synchro = new SynchroIdentifiantExterne();
                     synchro.setApplication(sdmApplication);
@@ -94,7 +104,11 @@ public class SdmSynchroService {
                     String json = null;
                     try {
                         json = mapper.writeValueAsString(sdmJsonAgent);
-                        delta.setJson(json);
+                        if (json.length() > 9999){
+                            delta.setJson(json.substring(0,9998));
+                        }else{
+                            delta.setJson(json);
+                        }
                     } catch (JsonProcessingException ex) {
                         logger.error("convertion en json de l'agent :{} - colonne JSON de la table delta =NULL", idSdm);
                     }
@@ -103,14 +117,17 @@ public class SdmSynchroService {
                 }
 
             } catch (Exception e) {
-                e.printStackTrace();
+                logger.error("PAGE {} - Exception.message : {}",page,e.getMessage());
             }
         }
+
+        return new AsyncResult<>(Boolean.TRUE);
     }
 
     @Transactional
-    public void traiterListeOrganismesListeSdm(Application sdmApplication, List<LinkedHashMap<String, Object>> organismesListe) {
-
+    @Async
+    public Future<Boolean> traiterListeOrganismesListeSdm(List<LinkedHashMap<String, Object>> organismesListe, int page) {
+        Application sdmApplication = applicationService.findByName("SDM");
 
         for (LinkedHashMap<String, Object> sdmJsonOrganisme : organismesListe) {
 
@@ -119,10 +136,9 @@ public class SdmSynchroService {
 
             try {
                 Organism organismSocle =null;
-                if (acronyme!=null){
+                if (!StringUtils.isEmpty(acronyme)){
                     organismSocle = organismService.findByAcronym(acronyme);
                 }
-
                 if (organismSocle != null) {
                     SynchroIdentifiantExterne synchro = new SynchroIdentifiantExterne();
                     synchro.setApplication(sdmApplication);
@@ -146,23 +162,29 @@ public class SdmSynchroService {
                     String json = null;
                     try {
                         json = mapper.writeValueAsString(sdmJsonOrganisme);
-                        delta.setJson(json);
+                        if (json.length() > 9999){
+                            delta.setJson(json.substring(0,9998));
+                        }else{
+                            delta.setJson(json);
+                        }
                     } catch (JsonProcessingException ex) {
-                        logger.error("convertion en json de l'agent :{} - colonne JSON de la table delta =NULL", idSdm);
+                        logger.error("convertion en json de l'organisme :{} - colonne JSON de la table delta =NULL", idSdm);
                     }
 
                     synchroIdentifiantExterneDeltaService.create(delta);
                 }
 
             } catch (Exception e) {
-                e.printStackTrace();
+                logger.error("PAGE {} - Exception.message : {}",page,e.getMessage());
             }
         }
-
+        return new AsyncResult<>(Boolean.TRUE);
     }
 
     @Transactional
-    public void traiterListeServicesListeSdm(Application sdmApplication, List<LinkedHashMap<String, Object>> servicesListe) {
+    @Async
+    public Future<Boolean> traiterListeServicesListeSdm(List<LinkedHashMap<String, Object>> servicesListe, int page) {
+        Application sdmApplication = applicationService.findByName("SDM");
 
         for (LinkedHashMap<String, Object> sdmJsonService : servicesListe) {
 
@@ -170,7 +192,10 @@ public class SdmSynchroService {
             String idExterne = (String) sdmJsonService.get("idExterne");
 
             try {
-                OrganismDepartment organismDepartmentSocle = organismDepartmentService.findByExternalId(Long.valueOf(idExterne));
+                OrganismDepartment organismDepartmentSocle =null;
+                if (!StringUtils.isEmpty(idExterne)){
+                    organismDepartmentSocle = organismDepartmentService.findByExternalId(Long.valueOf(idExterne));
+                }
 
                 if (organismDepartmentSocle != null) {
                     SynchroIdentifiantExterne synchro = new SynchroIdentifiantExterne();
@@ -178,7 +203,6 @@ public class SdmSynchroService {
                     synchro.setTypeRessource(ResourceType.ORGANISM_DEPARTMENT);
                     synchro.setIdSocle(organismDepartmentSocle.getId());
                     synchro.setIdAppliExterne(Long.valueOf(idSdm));
-
                     synchroIdentifiantExterneService.create(synchro);
 
                 } else {
@@ -195,18 +219,23 @@ public class SdmSynchroService {
                     String json = null;
                     try {
                         json = mapper.writeValueAsString(sdmJsonService);
-                        delta.setJson(json);
+                        if (json.length() > 9999){
+                            delta.setJson(json.substring(0,9998));
+                        }else{
+                            delta.setJson(json);
+                        }
                     } catch (JsonProcessingException ex) {
-                        logger.error("convertion en json de l'agent :{} - colonne JSON de la table delta =NULL", idSdm);
+                        logger.error("convertion en json du service :{} - colonne JSON de la table delta =NULL", idSdm);
                     }
 
                     synchroIdentifiantExterneDeltaService.create(delta);
                 }
 
             } catch (Exception e) {
-                e.printStackTrace();
+                logger.error("PAGE {} - Exception.message : {}",page,e.getMessage());
             }
         }
+        return new AsyncResult<>(Boolean.TRUE);
     }
 
     @Transactional
@@ -222,11 +251,8 @@ public class SdmSynchroService {
 
             try {
                 Company company=null;
-                try {
-                 company = companyService.findBySiren(siren);
-                } catch (IncorrectResultSizeDataAccessException e) {
-                    logger.error("PAGE {} - le siren: {} n'est pas unique dans la base du socle",numPage,siren);
-                    company=null;
+                if (!StringUtils.isEmpty(siren)){
+                    company = companyService.findBySiren(siren);
                 }
 
                 if (company != null) {
@@ -252,7 +278,11 @@ public class SdmSynchroService {
                     String json = null;
                     try {
                         json = mapper.writeValueAsString(sdmJsonEntreprise);
-                        delta.setJson(json);
+                        if (json.length() > 9999){
+                            delta.setJson(json.substring(0,9998));
+                        }else{
+                            delta.setJson(json);
+                        }
                     } catch (JsonProcessingException ex) {
                         logger.error("convertion en json de la company :{} - colonne JSON de la table delta =NULL", idSdm);
                     }
@@ -275,23 +305,13 @@ public class SdmSynchroService {
         for (LinkedHashMap<String, Object> sdmJsonEtablissement : etablissementsListe) {
 
             Integer idSdm = (Integer) sdmJsonEtablissement.get("id");
-            Integer idEntreprise = (Integer) sdmJsonEtablissement.get("idEntreprise");
+            String siret = (String) sdmJsonEtablissement.get("siret");
 
             try {
-                Company company=null;
-                Establishment establishment= null;
-                try {
-                    //TODO solution temporaire
-                    //je récupère la compagny et si il y a que 1 establishment alors je l'utilise dans mon mapping
-                    company =companyService.findCompanyByIdSdm(Long.valueOf(idEntreprise));
-                    //company = companyService.findByAcronym()
-                    if ( company !=null && company.getEstablishments() !=null && company.getEstablishments().size() ==1) {
-                        establishment = company.getEstablishments().get(0);
-                    }
 
-                } catch (IncorrectResultSizeDataAccessException e) {
-                    logger.error("PAGE {} - l'idEntreprise SDM: {} n'est pas unique dans la base du socle",numPage,idEntreprise);
-                    company=null;
+                Establishment establishment=null;
+                if (!StringUtils.isEmpty(siret) && siret.length() == 14  ){
+                    establishment = establishmentService.findByNic(siret.substring(0,9),siret.substring(9,14));
                 }
 
                 if (establishment != null) {
@@ -312,15 +332,18 @@ public class SdmSynchroService {
                     delta.setTypeRessource(ResourceType.ESTABLISHMENT);
                     delta.setIdSocle(null);
                     delta.setIdAppliExterne(Long.valueOf(idSdm));
-                    delta.setIdAppliExterne(Long.valueOf(idSdm));
                     ObjectMapper mapper = new ObjectMapper();
                     Map<String, String> map = new HashMap<>();
                     String json = null;
                     try {
                         json = mapper.writeValueAsString(sdmJsonEtablissement);
-                        delta.setJson(json);
+                        if (json.length() > 9999){
+                            delta.setJson(json.substring(0,9998));
+                        }else{
+                            delta.setJson(json);
+                        }
                     } catch (JsonProcessingException ex) {
-                        logger.error("convertion en json de la company :{} - colonne JSON de la table delta =NULL", idSdm);
+                        logger.error("convertion en json de la establishment :{} - colonne JSON de la table delta =NULL", idSdm);
                     }
 
                     synchroIdentifiantExterneDeltaService.create(delta);
@@ -342,18 +365,16 @@ public class SdmSynchroService {
 
         Application sdmApplication = applicationService.findByName("SDM");
 
-        for (LinkedHashMap<String, Object> sdmJsonEntreprise : inscritsListe) {
+        for (LinkedHashMap<String, Object> sdmJsonInscrit : inscritsListe) {
 
-            Integer idSdm = (Integer) sdmJsonEntreprise.get("id");
-            String login = (String) sdmJsonEntreprise.get("login");
+            Integer idSdm = (Integer) sdmJsonInscrit.get("id");
+            String login = (String) sdmJsonInscrit.get("login");
 
             try {
+
                 User userSocle=null;
-                try {
+                if (!StringUtils.isEmpty(login)){
                     userSocle = userService.findByUsername(login);
-                } catch (IncorrectResultSizeDataAccessException e) {
-                    logger.error("PAGE {} - le siren: {} n'est pas unique dans la base du socle",page,login);
-                    userSocle=null;
                 }
 
                 if (userSocle != null) {
@@ -378,8 +399,12 @@ public class SdmSynchroService {
                     Map<String, String> map = new HashMap<>();
                     String json = null;
                     try {
-                        json = mapper.writeValueAsString(sdmJsonEntreprise);
-                        delta.setJson(json);
+                        json = mapper.writeValueAsString(sdmJsonInscrit);
+                        if (json.length() > 9999){
+                            delta.setJson(json.substring(0,9998));
+                        }else{
+                            delta.setJson(json);
+                        }
                     } catch (JsonProcessingException ex) {
                         logger.error("convertion en json de la employee :{} - colonne JSON de la table delta =NULL", idSdm);
                     }
