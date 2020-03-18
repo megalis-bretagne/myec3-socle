@@ -104,7 +104,11 @@ public class SdmSynchroService {
                     String json = null;
                     try {
                         json = mapper.writeValueAsString(sdmJsonAgent);
-                        delta.setJson(json);
+                        if (json.length() > 9999){
+                            delta.setJson(json.substring(0,9998));
+                        }else{
+                            delta.setJson(json);
+                        }
                     } catch (JsonProcessingException ex) {
                         logger.error("convertion en json de l'agent :{} - colonne JSON de la table delta =NULL", idSdm);
                     }
@@ -158,7 +162,11 @@ public class SdmSynchroService {
                     String json = null;
                     try {
                         json = mapper.writeValueAsString(sdmJsonOrganisme);
-                        delta.setJson(json);
+                        if (json.length() > 9999){
+                            delta.setJson(json.substring(0,9998));
+                        }else{
+                            delta.setJson(json);
+                        }
                     } catch (JsonProcessingException ex) {
                         logger.error("convertion en json de l'organisme :{} - colonne JSON de la table delta =NULL", idSdm);
                     }
@@ -211,7 +219,11 @@ public class SdmSynchroService {
                     String json = null;
                     try {
                         json = mapper.writeValueAsString(sdmJsonService);
-                        delta.setJson(json);
+                        if (json.length() > 9999){
+                            delta.setJson(json.substring(0,9998));
+                        }else{
+                            delta.setJson(json);
+                        }
                     } catch (JsonProcessingException ex) {
                         logger.error("convertion en json du service :{} - colonne JSON de la table delta =NULL", idSdm);
                     }
@@ -266,7 +278,11 @@ public class SdmSynchroService {
                     String json = null;
                     try {
                         json = mapper.writeValueAsString(sdmJsonEntreprise);
-                        delta.setJson(json);
+                        if (json.length() > 9999){
+                            delta.setJson(json.substring(0,9998));
+                        }else{
+                            delta.setJson(json);
+                        }
                     } catch (JsonProcessingException ex) {
                         logger.error("convertion en json de la company :{} - colonne JSON de la table delta =NULL", idSdm);
                     }
@@ -321,7 +337,11 @@ public class SdmSynchroService {
                     String json = null;
                     try {
                         json = mapper.writeValueAsString(sdmJsonEtablissement);
-                        delta.setJson(json);
+                        if (json.length() > 9999){
+                            delta.setJson(json.substring(0,9998));
+                        }else{
+                            delta.setJson(json);
+                        }
                     } catch (JsonProcessingException ex) {
                         logger.error("convertion en json de la establishment :{} - colonne JSON de la table delta =NULL", idSdm);
                     }
@@ -345,10 +365,10 @@ public class SdmSynchroService {
 
         Application sdmApplication = applicationService.findByName("SDM");
 
-        for (LinkedHashMap<String, Object> sdmJsonEntreprise : inscritsListe) {
+        for (LinkedHashMap<String, Object> sdmJsonInscrit : inscritsListe) {
 
-            Integer idSdm = (Integer) sdmJsonEntreprise.get("id");
-            String login = (String) sdmJsonEntreprise.get("login");
+            Integer idSdm = (Integer) sdmJsonInscrit.get("id");
+            String login = (String) sdmJsonInscrit.get("login");
 
             try {
 
@@ -379,7 +399,7 @@ public class SdmSynchroService {
                     Map<String, String> map = new HashMap<>();
                     String json = null;
                     try {
-                        json = mapper.writeValueAsString(sdmJsonEntreprise);
+                        json = mapper.writeValueAsString(sdmJsonInscrit);
                         if (json.length() > 9999){
                             delta.setJson(json.substring(0,9998));
                         }else{
