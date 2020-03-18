@@ -380,7 +380,11 @@ public class SdmSynchroService {
                     String json = null;
                     try {
                         json = mapper.writeValueAsString(sdmJsonEntreprise);
-                        delta.setJson(json);
+                        if (json.length() > 9999){
+                            delta.setJson(json.substring(0,9998));
+                        }else{
+                            delta.setJson(json);
+                        }
                     } catch (JsonProcessingException ex) {
                         logger.error("convertion en json de la employee :{} - colonne JSON de la table delta =NULL", idSdm);
                     }
