@@ -17,6 +17,8 @@
  */
 package org.myec3.socle.core.constants;
 
+import org.apache.commons.lang3.BooleanUtils;
+
 import java.util.ResourceBundle;
 
 /**
@@ -32,6 +34,10 @@ public final class MyEc3EmailConstants {
 	private static final String EMAIL_BUNDLE_NAME = "email";
 	private static final ResourceBundle EMAIL_BUNDLE = ResourceBundle
 			.getBundle(EMAIL_BUNDLE_NAME);
+
+	public static boolean getEmailActivate(){
+		return BooleanUtils.toBoolean(EMAIL_BUNDLE.getString("email.activate"));
+	}
 
 	/**
 	 * @return the SMPT relay url used to send the email

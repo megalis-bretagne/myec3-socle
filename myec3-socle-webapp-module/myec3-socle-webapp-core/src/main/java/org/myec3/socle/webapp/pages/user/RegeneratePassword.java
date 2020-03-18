@@ -631,7 +631,7 @@ public class RegeneratePassword extends AbstractPage {
 					messageEmail.generateContent(this.getMessages(), customer));
 		} catch (MessagingException e) {
 			this.errorMessage = this.getMessages().get("sending-mail-error");
-			logger.error(this.getMessages().get("sending-mail-error") + e);
+			logger.error(this.getMessages().get("sending-mail-error"), e);
 		}
 
 	}

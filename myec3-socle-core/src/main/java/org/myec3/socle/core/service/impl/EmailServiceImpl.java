@@ -22,6 +22,7 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.Properties;
 import java.util.Set;
+import java.util.logging.Logger;
 
 import javax.mail.Message;
 import javax.mail.MessagingException;
@@ -64,6 +65,11 @@ public class EmailServiceImpl implements EmailService {
 	@Override
 	public final void sendMail(String sender, String from, String[] recipients, String subject, String message)
 			throws MessagingException {
+
+		if (!MyEc3EmailConstants.getEmailActivate()){
+			logger.warn("Envoie d'email desactive, l'email suivant ne sera pas envoye : subject : " + subject + ",to : " + Arrays.toString(recipients));
+			return;
+		}
 
 		// validate parameters
 		Assert.notNull(from, "from is mandatory. null value is forbidden.");
