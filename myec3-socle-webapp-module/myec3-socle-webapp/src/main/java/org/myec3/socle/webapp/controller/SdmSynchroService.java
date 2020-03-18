@@ -67,7 +67,10 @@ public class SdmSynchroService {
     private ApplicationService applicationService;
 
     @Transactional
-    public void traiterListeAgentsSdm(Application sdmApplication, List<LinkedHashMap<String, Object>> agentsListe) {
+    @Async
+    public Future<Boolean> traiterListeAgentsSdm(List<LinkedHashMap<String, Object>> agentsListe, int page) {
+        Application sdmApplication = applicationService.findByName("SDM");
+
         for (LinkedHashMap<String, Object> sdmJsonAgent : agentsListe) {
 
             Integer idSdm = (Integer) sdmJsonAgent.get("id");
@@ -110,14 +113,17 @@ public class SdmSynchroService {
                 }
 
             } catch (Exception e) {
-                e.printStackTrace();
+                logger.error("PAGE {} - Exception.message : {}",page,e.getMessage());
             }
         }
+
+        return new AsyncResult<>(Boolean.TRUE);
     }
 
     @Transactional
-    public void traiterListeOrganismesListeSdm(Application sdmApplication, List<LinkedHashMap<String, Object>> organismesListe) {
-
+    @Async
+    public Future<Boolean> traiterListeOrganismesListeSdm(List<LinkedHashMap<String, Object>> organismesListe, int page) {
+        Application sdmApplication = applicationService.findByName("SDM");
 
         for (LinkedHashMap<String, Object> sdmJsonOrganisme : organismesListe) {
 
@@ -154,21 +160,23 @@ public class SdmSynchroService {
                         json = mapper.writeValueAsString(sdmJsonOrganisme);
                         delta.setJson(json);
                     } catch (JsonProcessingException ex) {
-                        logger.error("convertion en json de l'agent :{} - colonne JSON de la table delta =NULL", idSdm);
+                        logger.error("convertion en json de l'organisme :{} - colonne JSON de la table delta =NULL", idSdm);
                     }
 
                     synchroIdentifiantExterneDeltaService.create(delta);
                 }
 
             } catch (Exception e) {
-                e.printStackTrace();
+                logger.error("PAGE {} - Exception.message : {}",page,e.getMessage());
             }
         }
-
+        return new AsyncResult<>(Boolean.TRUE);
     }
 
     @Transactional
-    public void traiterListeServicesListeSdm(Application sdmApplication, List<LinkedHashMap<String, Object>> servicesListe) {
+    @Async
+    public Future<Boolean> traiterListeServicesListeSdm(List<LinkedHashMap<String, Object>> servicesListe, int page) {
+        Application sdmApplication = applicationService.findByName("SDM");
 
         for (LinkedHashMap<String, Object> sdmJsonService : servicesListe) {
 
@@ -205,16 +213,17 @@ public class SdmSynchroService {
                         json = mapper.writeValueAsString(sdmJsonService);
                         delta.setJson(json);
                     } catch (JsonProcessingException ex) {
-                        logger.error("convertion en json de l'agent :{} - colonne JSON de la table delta =NULL", idSdm);
+                        logger.error("convertion en json du service :{} - colonne JSON de la table delta =NULL", idSdm);
                     }
 
                     synchroIdentifiantExterneDeltaService.create(delta);
                 }
 
             } catch (Exception e) {
-                e.printStackTrace();
+                logger.error("PAGE {} - Exception.message : {}",page,e.getMessage());
             }
         }
+        return new AsyncResult<>(Boolean.TRUE);
     }
 
     @Transactional
@@ -231,12 +240,7 @@ public class SdmSynchroService {
             try {
                 Company company=null;
                 if (!StringUtils.isEmpty(siren)){
-                    try {
-                        company = companyService.findBySiren(siren);
-                    } catch (IncorrectResultSizeDataAccessException e) {
-                        logger.error("PAGE {} - le siren: {} n'est pas unique dans la base du socle",numPage,siren);
-                        company=null;
-                    }
+                    company = companyService.findBySiren(siren);
                 }
 
                 if (company != null) {
@@ -291,12 +295,7 @@ public class SdmSynchroService {
 
                 Establishment establishment=null;
                 if (!StringUtils.isEmpty(siret) && siret.length() == 14  ){
-                    try {
-                        establishment = establishmentService.findByNic(siret.substring(0,9),siret.substring(9,14));
-                    } catch (IncorrectResultSizeDataAccessException e) {
-                        logger.error("PAGE {} - le siren: {} n'est pas unique dans la base du socle",numPage,siret);
-                        establishment=null;
-                    }
+                    establishment = establishmentService.findByNic(siret.substring(0,9),siret.substring(9,14));
                 }
 
                 if (establishment != null) {
@@ -355,12 +354,7 @@ public class SdmSynchroService {
 
                 User userSocle=null;
                 if (!StringUtils.isEmpty(login)){
-                    try {
-                        userSocle = userService.findByUsername(login);
-                    } catch (IncorrectResultSizeDataAccessException e) {
-                        logger.error("PAGE {} - le siren: {} n'est pas unique dans la base du socle",page,login);
-                        userSocle=null;
-                    }
+                    userSocle = userService.findByUsername(login);
                 }
 
                 if (userSocle != null) {

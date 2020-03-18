@@ -1,28 +1,22 @@
 package org.myec3.socle.webapp.controller;
 
-import org.myec3.socle.core.domain.model.Application;
 import org.myec3.socle.core.domain.model.enums.ResourceType;
-import org.myec3.socle.core.service.ApplicationService;
 import org.myec3.socle.synchro.core.service.SynchroIdentifiantExterneDeltaService;
 import org.myec3.socle.synchro.core.service.SynchroIdentifiantExterneService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.transaction.UnexpectedRollbackException;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
 
 @RestController
 public class SdmInitController {
@@ -31,10 +25,6 @@ public class SdmInitController {
 
     @Autowired
     private SdmInitResourceClientimpl clientMps;
-
-    @Autowired
-    @Qualifier("applicationService")
-    private ApplicationService applicationService;
 
     @Autowired
     @Qualifier("synchroIdentifiantExterneDeltaService")
@@ -119,27 +109,24 @@ public class SdmInitController {
 
     }
 
-
-
-
     @RequestMapping(value = "/sdmInit/agents", method = {RequestMethod.GET})
     public String sdmInitAgents() {
 
         String retour = "<h1> Import des Agents</h1></br></br>";
 
-        Application sdmApplication = applicationService.findByName("SDM");
         int page = 1;
+        int nb_probleme=0;
 
         boolean resteDesPages = true;
+        HashMap<Integer,Future<Boolean>> resultFuture = new HashMap();
 
         while (resteDesPages) {
 
             List<LinkedHashMap<String, Object>> agentsListe = null;
-
             try {
                 Object response = clientMps.get("https://marches-preprod.megalis.bretagne.bzh/app.php/api/v1/agents.json", page);
-                LinkedHashMap<String, Object> agents = (LinkedHashMap<String, Object>) response;
-                agentsListe = (List<LinkedHashMap<String, Object>>) agents.get("agents");
+                LinkedHashMap<String, Object> services = (LinkedHashMap<String, Object>) response;
+                agentsListe = (List<LinkedHashMap<String, Object>>) services.get("agents");
 
             } catch (Exception e) {
                 retour += "taitement page:" + page + "en erreur</br>";
@@ -148,12 +135,14 @@ public class SdmInitController {
 
             if (agentsListe == null) {
                 page++;
+                nb_probleme++;
+                if(nb_probleme > 5){
+                    //si on rencntre plus de 5 page en erreurs on sort
+                    resteDesPages=false;
+                }
             } else {
                 if (agentsListe.size() > 0) {
-
-                    sdmSynchroService.traiterListeAgentsSdm(sdmApplication, agentsListe);
-                    retour += "taitement page:" + page + "ok</br>";
-                    logger.info("traitement agent ok  page:{}", page);
+                    resultFuture.put(page,sdmSynchroService.traiterListeAgentsSdm(agentsListe,page));
                     page++;
 
                 } else {
@@ -161,6 +150,19 @@ public class SdmInitController {
                 }
             }
 
+        }
+
+        for(Integer pageKey : resultFuture.keySet()){
+            try{
+                resultFuture.get(pageKey).get();
+                retour += "taitement page:" + pageKey + "ok</br>";
+                logger.info("traitement agents ok  page:{}", pageKey);
+            }
+
+            catch (InterruptedException | ExecutionException e){
+                retour += "taitement async page:" + pageKey + " en erreur</br>";
+                logger.error("Erreur traitement async pour la page {}",pageKey);
+            }
         }
         return retour;
     }
@@ -171,10 +173,11 @@ public class SdmInitController {
 
         String retour = "<h1> Import des Organismes</h1></br></br>";
 
-        Application sdmApplication = applicationService.findByName("SDM");
         int page = 1;
+        int nb_probleme=0;
 
         boolean resteDesPages = true;
+        HashMap<Integer,Future<Boolean>> resultFuture = new HashMap();
 
         while (resteDesPages) {
 
@@ -192,37 +195,52 @@ public class SdmInitController {
 
             if (organismesListe == null) {
                 page++;
+                nb_probleme++;
+                if(nb_probleme > 5){
+                    //si on rencntre plus de 5 page en erreurs on sort
+                    resteDesPages=false;
+                }
             } else {
                 if (organismesListe.size() > 0) {
-
-                    sdmSynchroService.traiterListeOrganismesListeSdm(sdmApplication, organismesListe);
-                    retour += "taitement page:" + page + "ok</br>";
-                    logger.info("traitement organismes ok  page:{}", page);
+                    resultFuture.put(page,sdmSynchroService.traiterListeOrganismesListeSdm(organismesListe,page));
                     page++;
 
                 } else {
                     resteDesPages = false;
                 }
             }
+        }
 
+        for(Integer pageKey : resultFuture.keySet()){
+            try{
+                resultFuture.get(pageKey).get();
+                retour += "taitement page:" + pageKey + "ok</br>";
+                logger.info("traitement organismes ok  page:{}", pageKey);
+            }
+
+            catch (InterruptedException | ExecutionException e){
+                retour += "taitement async page:" + pageKey + " en erreur</br>";
+                logger.error("Erreur traitement async pour la page {}",pageKey);
+
+            }
         }
         return retour;
     }
+
 
     @RequestMapping(value = "/sdmInit/services", method = {RequestMethod.GET})
     public String sdmInitServices() {
 
         String retour = "<h2> Import des services</h2></br>";
-
-        Application sdmApplication = applicationService.findByName("SDM");
         int page = 1;
+        int nb_probleme=0;
 
         boolean resteDesPages = true;
+        HashMap<Integer,Future<Boolean>> resultFuture = new HashMap();
 
         while (resteDesPages) {
 
             List<LinkedHashMap<String, Object>> servicesListe = null;
-
             try {
                 Object response = clientMps.get("https://marches-preprod.megalis.bretagne.bzh/app.php/api/v1/services.json", page);
                 LinkedHashMap<String, Object> services = (LinkedHashMap<String, Object>) response;
@@ -235,34 +253,47 @@ public class SdmInitController {
 
             if (servicesListe == null) {
                 page++;
+                nb_probleme++;
+                if(nb_probleme > 5){
+                    //si on rencntre plus de 5 page en erreurs on sort
+                    resteDesPages=false;
+                }
             } else {
                 if (servicesListe.size() > 0) {
-
-                    sdmSynchroService.traiterListeServicesListeSdm(sdmApplication, servicesListe);
-                    retour += "taitement page:" + page + "ok</br>";
-                    logger.info("traitement services ok  page:{}", page);
+                    resultFuture.put(page,sdmSynchroService.traiterListeServicesListeSdm(servicesListe,page));
                     page++;
 
                 } else {
                     resteDesPages = false;
                 }
             }
+        }
 
+        for(Integer pageKey : resultFuture.keySet()){
+            try{
+                resultFuture.get(pageKey).get();
+                retour += "taitement page:" + pageKey + "ok</br>";
+                logger.info("traitement services ok  page:{}", pageKey);
+            }
+
+            catch (InterruptedException | ExecutionException e){
+                retour += "taitement async page:" + pageKey + " en erreur</br>";
+                logger.error("Erreur traitement async pour la page {}",pageKey);
+
+            }
         }
         return retour;
     }
-
 
     @RequestMapping(value = "/sdmInit/etablissements", method = {RequestMethod.GET})
     public String sdmInitEtablissements() {
 
         String retour = "<h2> Import des etablissements</h2></br>";
 
-        Application sdmApplication = applicationService.findByName("SDM");
         int page = 1;
+        int nb_probleme=0;
 
         boolean resteDesPages = true;
-
         HashMap<Integer,Future<Boolean>> resultFuture = new HashMap();
 
         while (resteDesPages) {
@@ -271,21 +302,20 @@ public class SdmInitController {
 
             try {
                 Object response = clientMps.get("https://marches-preprod.megalis.bretagne.bzh/app.php/api/v1/etablissements.json", page);
-                if (response == null ){
-                    //problème lors de l'appel
-                    break;
-                }
-
-                LinkedHashMap<String, Object> etablissements = (LinkedHashMap<String, Object>) response;
-                etablissementsListe = (List<LinkedHashMap<String, Object>>) etablissements.get("etablissements");
-
+                LinkedHashMap<String, Object> services = (LinkedHashMap<String, Object>) response;
+                etablissementsListe = (List<LinkedHashMap<String, Object>>) services.get("etablissements");
             } catch (Exception e) {
                 retour += "taitement page:" + page + "en erreur</br>";
-                logger.error("Probleme lors du parsing JSOn retourné par ATXEXO pour la page {}", page);
+                logger.error("probleme sur la page {}", page);
             }
 
             if (etablissementsListe == null) {
                 page++;
+                nb_probleme++;
+                if(nb_probleme > 5){
+                    //si on rencntre plus de 5 page en erreurs on sort
+                    resteDesPages=false;
+                }
             } else {
                 if (etablissementsListe.size() > 0) {
                     resultFuture.put(page,sdmSynchroService.traiterListeEtablissementsListeSdm(etablissementsListe,page));
@@ -295,7 +325,6 @@ public class SdmInitController {
                     resteDesPages = false;
                 }
             }
-
         }
 
         for(Integer pageKey : resultFuture.keySet()){
@@ -306,16 +335,14 @@ public class SdmInitController {
             }
 
             catch (InterruptedException | ExecutionException e){
-                retour += "taitement etablissements async page: " + pageKey + " en erreur</br>";
+                retour += "taitement async page:" + pageKey + " en erreur</br>";
                 logger.error("Erreur traitement async pour la page {}",pageKey);
 
             }
-
         }
-
-
         return retour;
     }
+
 
 
 
@@ -368,11 +395,11 @@ public class SdmInitController {
                 logger.info("traitement entreprises ok  page:{}", pageKey);
             }
 
-         catch (InterruptedException | ExecutionException e){
-             retour += "taitement async page:" + pageKey + " en erreur</br>";
-            logger.error("Erreur traitement async pour la page {}",pageKey);
+            catch (InterruptedException | ExecutionException e){
+                retour += "taitement async page:" + pageKey + " en erreur</br>";
+                logger.error("Erreur traitement async pour la page {}",pageKey);
 
-        }
+            }
 
         }
 
@@ -386,7 +413,6 @@ public class SdmInitController {
 
         String retour = "<h2> Import des inscrits</h2></br>";
 
-        Application sdmApplication = applicationService.findByName("SDM");
         int page = 1;
         int nb_probleme=0;
 
@@ -422,7 +448,6 @@ public class SdmInitController {
                     resteDesPages = false;
                 }
             }
-
         }
 
         for(Integer pageKey : resultFuture.keySet()){
@@ -437,10 +462,7 @@ public class SdmInitController {
                 logger.error("Erreur traitement async pour la page {}",pageKey);
 
             }
-
         }
-
-
         return retour;
     }
 
