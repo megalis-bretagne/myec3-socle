@@ -18,6 +18,8 @@ echo "multi.dir=true" >> /glowroot/glowroot.properties
 #recupération de nexus de l'artifact
 # TODO : récupérer la version du pom.xml
 ADD "http://nexus.sib.fr:8081/nexus/service/local/artifact/maven/redirect?r=sib-group&g=org.myec3.socle&a=myec3-socle-webapp&v=5.6.2-MEGALIS-SNAPSHOT&p=war" /usr/local/tomcat/webapps/ROOT.war
+#livrairies de l'adapter keycloak a copier directement dans le repertoire lib du tomcat
+COPY tomcat/* /usr/local/tomcat/lib/
 
 COPY setenv.sh /usr/local/tomcat/bin/
 COPY docker-entrypoint.sh /usr/local/bin/
