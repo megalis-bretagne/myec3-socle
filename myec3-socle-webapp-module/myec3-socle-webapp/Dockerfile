@@ -21,6 +21,7 @@ ADD "http://nexus.sib.fr:8081/nexus/service/local/artifact/maven/redirect?r=sib-
 #livrairies de l'adapter keycloak a copier directement dans le repertoire lib du tomcat
 COPY tomcat/* /usr/local/tomcat/lib/
 
+COPY server.xml /usr/local/tomcat/conf/
 COPY setenv.sh /usr/local/tomcat/bin/
 COPY docker-entrypoint.sh /usr/local/bin/
 RUN chmod u+x /usr/local/bin/docker-entrypoint.sh
