@@ -59,8 +59,6 @@ public class JcmsInitService {
                 logger.error("probleme lot init", e);
             }
         }
-
-
     }
 
 }

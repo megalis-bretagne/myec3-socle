@@ -1,9 +1,6 @@
 package org.myec3.socle.ws.client.impl;
 
-import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.dataformat.xml.XmlMapper;
-import com.fasterxml.jackson.module.jaxb.JaxbAnnotationModule;
 import org.glassfish.jersey.client.JerseyClientBuilder;
 import org.myec3.socle.core.domain.model.Resource;
 import org.myec3.socle.core.domain.sdm.model.SdmResource;
@@ -27,9 +24,9 @@ import javax.ws.rs.client.Invocation;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.io.Writer;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 
 /**
@@ -126,11 +123,12 @@ public class SdmWsClientImpl implements ResourceWsClient {
 	 *
 	 * @param response   : the response returned by the ws client
 	 * @param methodType : the {@link MethodType} used to perform the request
+	 * @param resource
 	 * @return a {@link ResponseMessage} used by the synchronization module in order
 	 *         to log the request and perform error handling if necessary
 	 * @throws Exception
 	 */
-	private ResponseMessage buildResponseMessage(Response response, MethodType methodType) throws Exception {
+	private ResponseMessage buildResponseMessage(Response response, MethodType methodType, Resource resource) throws Exception {
 		ResponseMessage responseMsg = new ResponseMessage();
 		// Set HttpStatus depending on client response value
 		responseMsg.setHttpStatus(this.retrieveHttpStatus(response));
@@ -159,6 +157,34 @@ public class SdmWsClientImpl implements ResourceWsClient {
 */
 
 				//responseMsg.setError(error);
+
+
+				//exemple erreur
+				//{"mpe":{"reponse":{"errors":["Aucun service avec l'id 0 dans l'organisme b3v"],"status":400,"type":"http:\/\/localhost:8000\/docs\/errors#validation_error","title":"There was a validation error","statutReponse":"KO"}}}
+				ObjectMapper mapper = new ObjectMapper();
+				Map<String, String> map = mapper.readValue(responseToString, Map.class);
+				Object mpe = map.get("mpe");
+				LinkedHashMap<String, Object> mpeHM = (LinkedHashMap<String, Object>) mpe;
+
+				Object reponse = mpeHM.get("reponse");
+				LinkedHashMap<String, Object> reponseHM = (LinkedHashMap<String, Object>) reponse;
+
+				ArrayList<String> listeDesErreurs = (ArrayList<String>)reponseHM.get("errors");
+
+				Integer status = (Integer)reponseHM.get("status");
+				String type = (String)reponseHM.get("type");
+				String title = (String)reponseHM.get("title");
+				String statutReponse = (String)reponseHM.get("statutReponse");
+
+				Error error = new Error();
+				responseMsg.setError(error);
+				error.setErrorMessage(String.join("-",listeDesErreurs));
+				error.setErrorLabel(title);
+
+				//mapping à faire
+				error.setErrorCode(ErrorCodeType.FORMAT_ERROR);
+
+
 
 				// Fill the method used during the request
 				responseMsg.getError().setMethodType(methodType);
@@ -213,7 +239,7 @@ public class SdmWsClientImpl implements ResourceWsClient {
 			logger.debug("[POST] on URI: {}", synchronizationSubscription.getUri());
 			Response response = builder.post(Entity.json(resourceSDM));
 
-			return buildResponseMessage(response, MethodType.POST);
+			return buildResponseMessage(response, MethodType.POST, resource);
 		} catch (ClientErrorException ex) {
 			if (ex.getMessage().contains(CONNECTION_EXCEPTION)) {
 				logger.error("[POST][ConnectException] Server Unavailable HTTP status 503", ex);
@@ -244,7 +270,7 @@ public class SdmWsClientImpl implements ResourceWsClient {
 			logger.debug("[PUT] on URI: {}", synchronizationSubscription.getUri());
 			Response response = builder.put(Entity.json(resourceSDM));
 
-			return buildResponseMessage(response, MethodType.POST);
+			return buildResponseMessage(response, MethodType.POST, resource);
 		} catch (ClientErrorException ex) {
 			if (ex.getMessage().contains(CONNECTION_EXCEPTION)) {
 				logger.error("[PUT][ConnectException] Server Unavailable HTTP status 503", ex);
