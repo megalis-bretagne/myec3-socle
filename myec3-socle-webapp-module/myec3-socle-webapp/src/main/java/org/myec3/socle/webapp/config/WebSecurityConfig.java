@@ -37,7 +37,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     public void configure(final WebSecurity web) throws Exception {
-        web.ignoring().antMatchers("/health", "/resources/errorAccess.html", "/static/**");
+        web.ignoring().antMatchers("/health", "/resources/errorAccess.html", "/static/**", "/assets/**", "/modules.gz/t5/core/**");
     }
 
     @Override
@@ -150,7 +150,7 @@ class KeycloakPreAuthenticatedProcessingFilter extends AbstractPreAuthenticatedP
     protected Object getPreAuthenticatedPrincipal(HttpServletRequest request) {
         Principal princ = request.getUserPrincipal();
         if (princ == null || ! (princ instanceof KeycloakPrincipal)){
-            throw new ConfigTechException("Incoherence de configuration pour l'URL " + request.getRequestURL() + " entre la security-constraint et spring-security");
+            return null;
         }
         return ((KeycloakPrincipal<KeycloakSecurityContext>)request.getUserPrincipal()).getKeycloakSecurityContext().getToken().getPreferredUsername();
     }

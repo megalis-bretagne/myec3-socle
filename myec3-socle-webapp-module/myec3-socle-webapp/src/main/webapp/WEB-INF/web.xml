@@ -21,6 +21,8 @@
         <web-resource-collection>
             <web-resource-name>MyEC3</web-resource-name>
             <url-pattern>/static/*</url-pattern>
+            <url-pattern>/assets/*</url-pattern>
+            <url-pattern>/modules.gz/t5/core/*</url-pattern>
             <url-pattern>/company/siren</url-pattern>
             <url-pattern>/company/siren.modification_form</url-pattern>
             <url-pattern>/company/siren.modification_foreign_form</url-pattern>
@@ -31,7 +33,7 @@
             <url-pattern>/company/create</url-pattern>
             <url-pattern>/company/create.modification_form</url-pattern>
             <url-pattern>/company/view</url-pattern>
-            <url-pattern>/user/regeneratepassword</url-pattern>  <!-- OK -->
+            <url-pattern>/user/regeneratepassword</url-pattern>
             <url-pattern>/user/regeneratepassword.regenerate_password_form</url-pattern>
             <url-pattern>/user/newpassword</url-pattern>
         </web-resource-collection>
