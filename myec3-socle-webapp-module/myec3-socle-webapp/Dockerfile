@@ -1,5 +1,5 @@
 #on part d'une image tomcat:9.0.30-jdk8-openjdk
-FROM tomcat:9.0.30-jdk8-openjdk
+FROM tomcat:8.5.51-jdk8-openjdk
 
 #mise a jour des packets, installation de curl, suppression du cache de apt
 RUN apt-get update -y && \
@@ -18,7 +18,10 @@ echo "multi.dir=true" >> /glowroot/glowroot.properties
 #recupération de nexus de l'artifact
 # TODO : récupérer la version du pom.xml
 ADD "http://nexus.sib.fr:8081/nexus/service/local/artifact/maven/redirect?r=sib-group&g=org.myec3.socle&a=myec3-socle-webapp&v=5.6.2-MEGALIS-SNAPSHOT&p=war" /usr/local/tomcat/webapps/ROOT.war
+#livrairies de l'adapter keycloak a copier directement dans le repertoire lib du tomcat
+COPY tomcat/* /usr/local/tomcat/lib/
 
+COPY server.xml /usr/local/tomcat/conf/
 COPY setenv.sh /usr/local/tomcat/bin/
 COPY docker-entrypoint.sh /usr/local/bin/
 RUN chmod u+x /usr/local/bin/docker-entrypoint.sh

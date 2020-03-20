@@ -109,11 +109,11 @@ public class AbstractPage {
 		}
 
 		session = this.request.getSession(true);
-		String userType = request.getHeader("userType");
+//		String userType = request.getHeader("userType");
 
 		// If user is a project user, he doesn't have access to socle
 		// so we do well.... nothing !
-		if (userType != null && !PROJECT_USER.equals(userType)) {
+//		if (userType != null && !PROJECT_USER.equals(userType)) {
 			if (null != session) {
 				context = (SecurityContext) session.getAttribute("SPRING_SECURITY_CONTEXT");
 			} else {
@@ -129,7 +129,7 @@ public class AbstractPage {
 			} else {
 				logger.debug("No profile found");
 			}
-		}
+//		}
 	}
 
 	/**

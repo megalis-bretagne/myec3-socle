@@ -29,6 +29,7 @@
 		<javax-validation-version>2.0.0.Final</javax-validation-version>
 		<javax-ws-version>2.1.1</javax-ws-version>
 		<spring-security-version>5.1.2.RELEASE</spring-security-version>
+		<keycloak-version>6.0.1</keycloak-version>
 		<hibernate-version>5.4.0.Final</hibernate-version>
 		<hibernate-validator-version>6.0.2.Final</hibernate-validator-version>
 		<glassfish-version>2.2.6</glassfish-version>
@@ -233,6 +234,14 @@
 				<groupId>org.springframework.security</groupId>
 				<artifactId>spring-security-web</artifactId>
 				<version>${spring-security-version}</version>
+			</dependency>
+
+			<!-- keycloak -->
+			<dependency>
+				<groupId>org.keycloak</groupId>
+				<artifactId>keycloak-core</artifactId>
+				<version>${keycloak-version}</version>
+				<scope>provided</scope>
 			</dependency>
 
 			<!-- Hibernate cache-->
