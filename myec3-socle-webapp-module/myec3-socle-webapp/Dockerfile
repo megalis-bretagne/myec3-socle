@@ -1,5 +1,5 @@
 #on part d'une image tomcat:9.0.30-jdk8-openjdk
-FROM tomcat:9.0.30-jdk8-openjdk
+FROM tomcat:8.5.51-jdk8-openjdk
 
 #mise a jour des packets, installation de curl, suppression du cache de apt
 RUN apt-get update -y && \

@@ -1,0 +1,65 @@
+
+
+<web-app xmlns="http://java.sun.com/xml/ns/javaee"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
+         version="3.0">
+
+    <module-name>customer-portal</module-name>
+
+    <security-constraint>
+        <web-resource-collection>
+            <web-resource-name>MyEC3</web-resource-name>
+            <url-pattern>/*</url-pattern>
+        </web-resource-collection>
+        <auth-constraint>
+            <role-name>user</role-name>
+        </auth-constraint>
+    </security-constraint>
+
+    <security-constraint>
+        <web-resource-collection>
+            <web-resource-name>MyEC3</web-resource-name>
+            <url-pattern>/static/*</url-pattern>
+            <url-pattern>/company/siren</url-pattern>
+            <url-pattern>/company/siren.modification_form</url-pattern>
+            <url-pattern>/company/siren.modification_foreign_form</url-pattern>
+            <url-pattern>/company/init</url-pattern>
+            <url-pattern>/company/init.modification_form</url-pattern>
+            <url-pattern>/company/establishment</url-pattern>
+            <url-pattern>/company/establishment/create.modification_form</url-pattern>
+            <url-pattern>/company/create</url-pattern>
+            <url-pattern>/company/create.modification_form</url-pattern>
+            <url-pattern>/company/view</url-pattern>
+            <url-pattern>/user/regeneratepassword</url-pattern>  <!-- OK -->
+            <url-pattern>/user/regeneratepassword.regenerate_password_form</url-pattern>
+            <url-pattern>/user/newpassword</url-pattern>
+        </web-resource-collection>
+    </security-constraint>
+
+    <login-config>
+        <auth-method>BASIC</auth-method>
+        <realm-name>this is ignored currently</realm-name>
+    </login-config>
+
+    <security-role>
+        <role-name>user</role-name>
+    </security-role>
+</web-app>
+
+
+<!--
+TODO : les règles suivantes n'ont pas été reprise du https.conf pour le moment, cf. https://dev.sib.fr/bts/browse/EC-47
+
+# Autorisations création d'entreprise en mode non connecté
+<Location /*.ico>
+  Require all granted
+</Location>
+<Location /modules.gz/t5/core/>
+  Require all granted
+</Location>
+
+<Location /assets/>
+  Require all granted
+</Location>
+-->

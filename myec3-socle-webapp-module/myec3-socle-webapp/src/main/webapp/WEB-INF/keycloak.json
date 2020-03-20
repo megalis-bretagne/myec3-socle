@@ -1,0 +1,10 @@
+{
+  "realm": "megalis",
+  "auth-server-url": "${env.BASE_URL_SSO}/auth",
+  "ssl-required": "external",
+  "resource": "myec3",
+  "credentials": {
+    "secret": "${env.SECRET_CLIENT_SOCLE}"
+  },
+  "confidential-port": 0
+}
