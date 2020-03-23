@@ -56,7 +56,7 @@ public class TestSycnhroSDMController {
     private ResourceSynchronizationManager<AgentProfile> agentSynchronizer;
 
     @Autowired
-    @Qualifier("agentSynchronizer")
+    @Qualifier("employeeSynchronizer")
     private ResourceSynchronizationManager<EmployeeProfile> employeeSynchronizer;
 
     @Autowired
@@ -68,7 +68,7 @@ public class TestSycnhroSDMController {
     private ResourceSynchronizationManager<OrganismDepartment> organismDepartmentSynchronizer;
 
     @Autowired
-    @Qualifier("organismSynchronizer")
+    @Qualifier("companySynchronizer")
     private ResourceSynchronizationManager<Company> companySynchronizer;
 
     @Autowired
