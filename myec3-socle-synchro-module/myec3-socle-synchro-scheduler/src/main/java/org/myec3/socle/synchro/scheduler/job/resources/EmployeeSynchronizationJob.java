@@ -119,7 +119,7 @@ public class EmployeeSynchronizationJob extends
 
     private SdmInscrit convertToSdmInscrit(EmployeeProfile resource) {
         SdmInscrit inscritSDM = new SdmInscrit();
-        inscritSDM.setIdExterne(resource.getId());
+        //inscritSDM.setIdExterne(resource.getId());
         inscritSDM.setLogin(resource.getUsername());
         inscritSDM.setEmail(resource.getEmail());
         inscritSDM.setNom(resource.getUser().getLastname());

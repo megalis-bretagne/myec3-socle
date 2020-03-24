@@ -175,13 +175,15 @@ public class SdmWsClientImpl implements ResourceWsClient {
 					if (reponseHM.get("errors") instanceof ArrayList){
 						ArrayList<String> listeDesErreurs = (ArrayList<String>)reponseHM.get("errors");
 						erreurs=String.join("-",listeDesErreurs);
-					}else if (reponseHM.get("errors")  instanceof LinkedHashMap){
-						//LinkedHashMap<String,Object> listeDesErreurs (LinkedHashMap<String, Object>) reponseHM.get("errors");
-						erreurs	="";
+					}else if (reponseHM.get("errors") instanceof LinkedHashMap){
+						Object listeDesErreurs = reponseHM.get("errors");
+						LinkedHashMap<String, ArrayList<String>> listeDesErreursHM = (LinkedHashMap<String, ArrayList<String>>) listeDesErreurs;
+						for(String key :listeDesErreursHM.keySet()){
+							erreurs+=" " + String.join("-",listeDesErreursHM.get(key));
+						}
 					}else if (reponseHM.get("errors")  instanceof String ){
-					erreurs= (String)reponseHM.get("errors");
-
-				}
+						erreurs= (String)reponseHM.get("errors");
+					}
 
 					Integer status = (Integer)reponseHM.get("status");
 					String type = (String)reponseHM.get("type");
