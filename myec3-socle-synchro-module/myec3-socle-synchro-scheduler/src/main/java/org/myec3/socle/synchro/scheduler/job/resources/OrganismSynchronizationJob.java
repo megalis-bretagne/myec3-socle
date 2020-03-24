@@ -84,10 +84,9 @@ public class OrganismSynchronizationJob extends
                                   ResourceWsClient resourceWsClient) {
         if ("SDM".equals(synchronizationSubscription.getApplication().getName())) {
             SdmOrganisme organismeSDM = convertSdmOrganisme(resource);
-            SynchroIdentifiantExterne synchroIdentifiantExterne = synchroIdentifiantExterneService.findByIdSocle(resource.getId(), ResourceType.AGENT_PROFILE);
+            SynchroIdentifiantExterne synchroIdentifiantExterne = synchroIdentifiantExterneService.findByIdSocle(resource.getId(), ResourceType.ORGANISM);
             organismeSDM.setId(synchroIdentifiantExterne.getIdAppliExterne());
             //organismeSDM.setActif(false);
-
             SdmWsClientImpl sdmWsClient = (SdmWsClientImpl) resourceWsClient;
             return sdmWsClient.put(resource, organismeSDM, synchronizationSubscription);
         }
@@ -103,11 +102,14 @@ public class OrganismSynchronizationJob extends
                                   ResourceWsClient resourceWsClient) {
         if ("SDM".equals(synchronizationSubscription.getApplication().getName())) {
             SdmOrganisme organismeSDM = convertSdmOrganisme(resource);
-            SynchroIdentifiantExterne synchroIdentifiantExterne = synchroIdentifiantExterneService.findByIdSocle(resource.getId(), ResourceType.AGENT_PROFILE);
-            organismeSDM.setId(synchroIdentifiantExterne.getIdAppliExterne());
-
+            SynchroIdentifiantExterne synchroIdentifiantExterne = synchroIdentifiantExterneService.findByIdSocle(resource.getId(), ResourceType.ORGANISM);
             SdmWsClientImpl sdmWsClient = (SdmWsClientImpl) resourceWsClient;
-            return sdmWsClient.put(resource, organismeSDM, synchronizationSubscription);
+            if (synchroIdentifiantExterne !=null){
+                organismeSDM.setId(synchroIdentifiantExterne.getIdAppliExterne());
+                return sdmWsClient.put(resource, organismeSDM, synchronizationSubscription);
+            }else{
+                return sdmWsClient.post(resource, organismeSDM, synchronizationSubscription);
+            }
         }
         return resourceWsClient.put(resource, synchronizationSubscription);
     }

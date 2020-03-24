@@ -82,9 +82,9 @@ public class TestSycnhroSDMController {
 
     @RequestMapping(value = "/sdm/agent/", method = {RequestMethod.GET})
     @Transactional
-    public String agent(@RequestParam long idAgent) {
+    public String agent(@RequestParam long id) {
 
-        AgentProfile agent =agentProfileService.findOne(idAgent);
+        AgentProfile agent =agentProfileService.findOne(id);
 
         Application applicationASynchroniser = applicationService.findByName("SDM");
         List<Long> listApplicationIdToResynchronize = new ArrayList<>();
@@ -101,8 +101,8 @@ public class TestSycnhroSDMController {
 
     @RequestMapping(value = "/sdm/organism/", method = {RequestMethod.GET})
     @Transactional
-    public String organisme(@RequestParam long idorganism) {
-        Organism organism =organismService.findOne(idorganism);
+    public String organisme(@RequestParam long id) {
+        Organism organism =organismService.findOne(id);
 
         Application applicationASynchroniser = applicationService.findByName("SDM");
         List<Long> listApplicationIdToResynchronize = new ArrayList<>();
@@ -112,13 +112,13 @@ public class TestSycnhroSDMController {
 
         organismSynchronizer.synchronizeUpdate(organism, listApplicationIdToResynchronize, synchronizationType, sendingApplication);
 
-        return "synchro emplyoee "+ organism.getName();
+        return "synchro organisme "+ organism.getName();
     }
 
     @RequestMapping(value = "/sdm/organismDepartment/", method = {RequestMethod.GET})
     @Transactional
-    public String organismDepartment(@RequestParam long idOrganismDepartment) {
-        OrganismDepartment organismDepartment =organismDepartmentService.findOne(idOrganismDepartment);
+    public String organismDepartment(@RequestParam long id) {
+        OrganismDepartment organismDepartment =organismDepartmentService.findOne(id);
 
         Application applicationASynchroniser = applicationService.findByName("SDM");
         List<Long> listApplicationIdToResynchronize = new ArrayList<>();
@@ -128,14 +128,14 @@ public class TestSycnhroSDMController {
 
         organismDepartmentSynchronizer.synchronizeUpdate(organismDepartment, listApplicationIdToResynchronize, synchronizationType, sendingApplication);
 
-        return "synchro emplyoee "+ organismDepartment.getName();
+        return "synchro organismDepartment "+ organismDepartment.getName();
     }
 
 
     @RequestMapping(value = "/sdm/employee/", method = {RequestMethod.GET})
     @Transactional
-    public String employee(@RequestParam long idEmployee) {
-        EmployeeProfile employeeProfile =employeeProfileService.findOne(idEmployee);
+    public String employee(@RequestParam long id) {
+        EmployeeProfile employeeProfile =employeeProfileService.findOne(id);
 
         Application applicationASynchroniser = applicationService.findByName("SDM");
         List<Long> listApplicationIdToResynchronize = new ArrayList<>();
@@ -145,13 +145,13 @@ public class TestSycnhroSDMController {
 
         employeeSynchronizer.synchronizeUpdate(employeeProfile, listApplicationIdToResynchronize, synchronizationType, sendingApplication);
 
-        return "synchro emplyoee "+ employeeProfile.getName();
+        return "synchro employee "+ employeeProfile.getName();
     }
 
     @RequestMapping(value = "/sdm/company/", method = {RequestMethod.GET})
     @Transactional
-    public String company(@RequestParam long idCompagny) {
-        Company company =companyService.findOne(idCompagny);
+    public String company(@RequestParam long id) {
+        Company company =companyService.findOne(id);
 
         Application applicationASynchroniser = applicationService.findByName("SDM");
         List<Long> listApplicationIdToResynchronize = new ArrayList<>();
@@ -167,8 +167,8 @@ public class TestSycnhroSDMController {
 
     @RequestMapping(value = "/sdm/establishment/", method = {RequestMethod.GET})
     @Transactional
-    public String establishment(@RequestParam long idEstablishment) {
-        Establishment establishment =establishmentService.findOne(idEstablishment);
+    public String establishment(@RequestParam long id) {
+        Establishment establishment =establishmentService.findOne(id);
 
         Application applicationASynchroniser = applicationService.findByName("SDM");
         List<Long> listApplicationIdToResynchronize = new ArrayList<>();

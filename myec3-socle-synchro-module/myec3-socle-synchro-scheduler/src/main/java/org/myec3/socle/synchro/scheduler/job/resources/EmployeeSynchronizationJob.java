@@ -103,9 +103,14 @@ public class EmployeeSynchronizationJob extends
         if ("SDM".equals(synchronizationSubscription.getApplication().getName())) {
             SdmInscrit inscritSDM = convertToSdmInscrit(resource);
             SynchroIdentifiantExterne synchroIdentifiantExterne = synchroIdentifiantExterneService.findByIdSocle(resource.getId(), ResourceType.EMPLOYEE_PROFILE);
-            inscritSDM.setId(synchroIdentifiantExterne.getIdAppliExterne());
+
             SdmWsClientImpl sdmWsClient = (SdmWsClientImpl) resourceWsClient;
-            return sdmWsClient.put(resource, inscritSDM, synchronizationSubscription);
+            if (synchroIdentifiantExterne !=null){
+                inscritSDM.setId(synchroIdentifiantExterne.getIdAppliExterne());
+                return sdmWsClient.put(resource, inscritSDM, synchronizationSubscription);
+            }else{
+                return sdmWsClient.post(resource, inscritSDM, synchronizationSubscription);
+            }
         } else {
             return resourceWsClient.put(resource, synchronizationSubscription);
         }
@@ -122,9 +127,20 @@ public class EmployeeSynchronizationJob extends
         inscritSDM.setTelephone(resource.getPhone());
         inscritSDM.setMotdePasse(resource.getUser().getPassword());
         inscritSDM.setTypeHash("sha256");
-        SynchroIdentifiantExterne synchro = synchroIdentifiantExterneService.findByIdSocle(inscritSDM.getIdEtablissement(), ResourceType.ESTABLISHMENT);
-        inscritSDM.setIdEtablissement(synchro.getIdSocle());
-        inscritSDM.setSiret(resource.getEstablishment().getSiret());
+        if(resource.getEstablishment()!=null){
+            SynchroIdentifiantExterne synchro = synchroIdentifiantExterneService.findByIdSocle(resource.getEstablishment().getId(), ResourceType.ESTABLISHMENT);
+            if (synchro!= null ){
+
+                inscritSDM.setIdEtablissement(synchro.getIdSocle());
+            }else{
+                getLogger().warn("Pas d'établissement dans la synchroIdentifiantExterneService pour l'id etablissement :{}",resource.getEstablishment().getId());
+            }
+        }else{
+            getLogger().warn("Pas d'établissement resource.getEstablishment().getId() pour l'emplyoye:{}",resource.getId());
+        }
+
+        inscritSDM.setSiret("");
+        //inscritSDM.setSiret(resource.getEstablishment().getSiret());
         //inscritSDM.setInscritAnnuaireDefense();
         return inscritSDM;
     }

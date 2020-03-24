@@ -22,6 +22,17 @@ public class SdmEtablissement extends SdmResource  {
     @XmlElement(required = false)
     private SdmAdresse adresse;
 
+    @XmlElement(required = true)
+    private String idEntreprise;
+
+    public String getIdEntreprise() {
+        return idEntreprise;
+    }
+
+    public void setIdEntreprise(String idEntreprise) {
+        this.idEntreprise = idEntreprise;
+    }
+
     public long getId() {
         return id;
     }
