@@ -101,10 +101,13 @@ public class CompanySynchronizationJob extends
 		if ("SDM".equals(synchronizationSubscription.getApplication().getName())) {
 			SdmEntreprise entrepriseSDM = convertSdmEntreprise(resource);
 			SynchroIdentifiantExterne synchroIdentifiantExterne = synchroIdentifiantExterneService.findByIdSocle(resource.getId(), ResourceType.COMPANY);
-			entrepriseSDM.setId(synchroIdentifiantExterne.getIdAppliExterne());
 			SdmWsClientImpl sdmWsClient = (SdmWsClientImpl) resourceWsClient;
-			return sdmWsClient.put(resource, entrepriseSDM, synchronizationSubscription);
-
+			if (synchroIdentifiantExterne !=null){
+				entrepriseSDM.setId(synchroIdentifiantExterne.getIdAppliExterne());
+				return sdmWsClient.put(resource, entrepriseSDM, synchronizationSubscription);
+			}else{
+				return sdmWsClient.post(resource, entrepriseSDM, synchronizationSubscription);
+			}
 		} else {
 			return resourceWsClient.put(resource, synchronizationSubscription);
 		}
@@ -113,17 +116,18 @@ public class CompanySynchronizationJob extends
 
 	private SdmEntreprise convertSdmEntreprise(Company resource) {
 		SdmEntreprise entrepriseSDM = new SdmEntreprise();
-		//zéro car creation
+
 		entrepriseSDM.setSiren(resource.getSiren());
 		//entrepriseSDM.setEffectif(resource.get);
 		entrepriseSDM.setFormeJuridique(resource.getApeCode());
 		entrepriseSDM.setCodeAPE(resource.getApeCode());
 		entrepriseSDM.setDateModification(new Date());
+		entrepriseSDM.setEmail(resource.getEmail());
 		//entrepriseSDM.setCapitalSocial();
 
-		//entrepriseSDM.setRaisonSociale(resource.getStructureType().getValue());
+		entrepriseSDM.setRaisonSociale(resource.getLegalCategory().toString());
 
-		for (Establishment establishment :resource.getEstablishments()){
+/*		for (Establishment establishment :resource.getEstablishments()){
 
 			SdmEtablissement etablissementSDM = new SdmEtablissement();
 			//etablissementSDM.setId("");
@@ -143,7 +147,7 @@ public class CompanySynchronizationJob extends
 			etablissementSDM.setDateCreation(new Date());
 			etablissementSDM.setDateModification(etablissementSDM.getDateCreation());
 
-		}
+		}*/
 
 		if (resource.getAddress() != null){
 			SdmAdresse adresseSDM = new SdmAdresse ();

@@ -26,6 +26,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 
@@ -67,22 +68,21 @@ public class SdmWsClientImpl implements ResourceWsClient {
 	 * @param builder  : the builder used to create the request
 	 */
 	private void prepareHeaderAtexo(Invocation.Builder builder) {
-
-
 		WebTarget webResource = getClientWs().target(WsConstants.SDM_TOKEN_URL);
 		Invocation.Builder builderToken = webResource.request().accept(MediaType.APPLICATION_JSON);
 		builderToken.header("externalid", 1122);
 		builderToken.header("usertype", "AGENT");
-
-		Response response = builderToken.get();
-		String responseToString = response.readEntity(String.class);
-		String[] tab= StringUtils.split(responseToString,"<ticket>");
-		String[] tab2 =StringUtils.split(tab[1],"</ticket>");
-
-		builder.header("Authorization", "Bearer " + tab2[0]);
-		builder.header("externalid", 1122);
-		builder.header("usertype", "AGENT");
-
+		try{
+			Response response = builderToken.get();
+			String responseToString = response.readEntity(String.class);
+			String[] tab= StringUtils.split(responseToString,"<ticket>");
+			String[] tab2 =StringUtils.split(tab[1],"</ticket>");
+			builder.header("Authorization", "Bearer " + tab2[0]);
+			builder.header("externalid", 1122);
+			builder.header("usertype", "AGENT");
+		}catch (Exception e){
+			logger.error("Erreur lors de la récupération du token SDM",e);
+		}
 	}
 
 	/**
@@ -161,31 +161,48 @@ public class SdmWsClientImpl implements ResourceWsClient {
 
 				//exemple erreur
 				//{"mpe":{"reponse":{"errors":["Aucun service avec l'id 0 dans l'organisme b3v"],"status":400,"type":"http:\/\/localhost:8000\/docs\/errors#validation_error","title":"There was a validation error","statutReponse":"KO"}}}
-				ObjectMapper mapper = new ObjectMapper();
-				Map<String, String> map = mapper.readValue(responseToString, Map.class);
-				Object mpe = map.get("mpe");
-				LinkedHashMap<String, Object> mpeHM = (LinkedHashMap<String, Object>) mpe;
 
-				Object reponse = mpeHM.get("reponse");
-				LinkedHashMap<String, Object> reponseHM = (LinkedHashMap<String, Object>) reponse;
+				if ( !StringUtils.isEmpty(responseToString)){
+					ObjectMapper mapper = new ObjectMapper();
+					Map<String, String> map = mapper.readValue(responseToString, Map.class);
+					Object mpe = map.get("mpe");
+					LinkedHashMap<String, Object> mpeHM = (LinkedHashMap<String, Object>) mpe;
 
-				ArrayList<String> listeDesErreurs = (ArrayList<String>)reponseHM.get("errors");
+					Object reponse = mpeHM.get("reponse");
+					LinkedHashMap<String, Object> reponseHM = (LinkedHashMap<String, Object>) reponse;
 
-				Integer status = (Integer)reponseHM.get("status");
-				String type = (String)reponseHM.get("type");
-				String title = (String)reponseHM.get("title");
-				String statutReponse = (String)reponseHM.get("statutReponse");
+					String erreurs = "";
+					if (reponseHM.get("errors") instanceof ArrayList){
+						ArrayList<String> listeDesErreurs = (ArrayList<String>)reponseHM.get("errors");
+						erreurs=String.join("-",listeDesErreurs);
+					}else if (reponseHM.get("errors")  instanceof LinkedHashMap){
+						//LinkedHashMap<String,Object> listeDesErreurs (LinkedHashMap<String, Object>) reponseHM.get("errors");
+						erreurs	="";
+					}else if (reponseHM.get("errors")  instanceof String ){
+					erreurs= (String)reponseHM.get("errors");
 
-				Error error = new Error();
-				responseMsg.setError(error);
-				error.setErrorMessage(String.join("-",listeDesErreurs));
-				error.setErrorLabel(title);
+				}
 
-				//mapping à faire
-				error.setErrorCode(ErrorCodeType.FORMAT_ERROR);
+					Integer status = (Integer)reponseHM.get("status");
+					String type = (String)reponseHM.get("type");
+					String title = (String)reponseHM.get("title");
+					String statutReponse = (String)reponseHM.get("statutReponse");
 
+					Error error = new Error();
+					responseMsg.setError(error);
+					error.setErrorMessage(erreurs);
+					error.setErrorLabel(title);
 
-
+					//mapping à faire
+					error.setErrorCode(ErrorCodeType.FORMAT_ERROR);
+				} else{
+					Error error = new Error();
+					responseMsg.setError(error);
+					error.setErrorMessage("Pas de message d'erreur");
+					error.setErrorLabel("Pas de message d'erreur");
+					//mapping à faire
+					error.setErrorCode(ErrorCodeType.INTERNAL_CLIENT_ERROR);
+				}
 				// Fill the method used during the request
 				responseMsg.getError().setMethodType(methodType);
 			} else {
@@ -270,11 +287,11 @@ public class SdmWsClientImpl implements ResourceWsClient {
 			logger.debug("[PUT] on URI: {}", synchronizationSubscription.getUri());
 			Response response = builder.put(Entity.json(resourceSDM));
 
-			return buildResponseMessage(response, MethodType.POST, resource);
+			return buildResponseMessage(response, MethodType.PUT, resource);
 		} catch (ClientErrorException ex) {
 			if (ex.getMessage().contains(CONNECTION_EXCEPTION)) {
 				logger.error("[PUT][ConnectException] Server Unavailable HTTP status 503", ex);
-				return this.buildServerErrorMessage(resource, HttpStatus.SERVER_UNAVAILABLE, null, MethodType.POST,
+				return this.buildServerErrorMessage(resource, HttpStatus.SERVER_UNAVAILABLE, null, MethodType.PUT,
 						SERVER_UNVAILABLE_ERROR_LABEL, SERVER_UNVAILABLE_ERROR_MESSAGE);
 			} else {
 				logger.error("[PUT] Exception in sync", ex);

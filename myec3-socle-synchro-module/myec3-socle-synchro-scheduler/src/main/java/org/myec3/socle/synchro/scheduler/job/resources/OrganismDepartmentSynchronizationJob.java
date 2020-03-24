@@ -31,6 +31,7 @@ import org.myec3.socle.ws.client.impl.SdmWsClientImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 
 import java.util.Date;
 
@@ -83,7 +84,7 @@ public class OrganismDepartmentSynchronizationJob extends
 
         if ("SDM".equals(synchronizationSubscription.getApplication().getName())) {
             SdmService sdmService = convertToSdmService(resource);
-            SynchroIdentifiantExterne synchroIdentifiantExterne = synchroIdentifiantExterneService.findByIdSocle(resource.getId(), ResourceType.AGENT_PROFILE);
+            SynchroIdentifiantExterne synchroIdentifiantExterne = synchroIdentifiantExterneService.findByIdSocle(resource.getId(), ResourceType.ORGANISM_DEPARTMENT);
             sdmService.setId(synchroIdentifiantExterne.getIdAppliExterne());
             SdmWsClientImpl sdmWsClient = (SdmWsClientImpl) resourceWsClient;
             return sdmWsClient.put(resource, sdmService, synchronizationSubscription);
@@ -100,16 +101,44 @@ public class OrganismDepartmentSynchronizationJob extends
                                   ResourceWsClient resourceWsClient) {
         if ("SDM".equals(synchronizationSubscription.getApplication().getName())) {
             SdmService sdmService = convertToSdmService(resource);
-            SynchroIdentifiantExterne synchroIdentifiantExterne = synchroIdentifiantExterneService.findByIdSocle(resource.getId(), ResourceType.AGENT_PROFILE);
-            sdmService.setId(synchroIdentifiantExterne.getIdAppliExterne());
+            SynchroIdentifiantExterne synchroIdentifiantExterne = synchroIdentifiantExterneService.findByIdSocle(resource.getId(), ResourceType.ORGANISM_DEPARTMENT);
             SdmWsClientImpl sdmWsClient = (SdmWsClientImpl) resourceWsClient;
-            return sdmWsClient.put(resource, sdmService, synchronizationSubscription);
+            if (synchroIdentifiantExterne !=null){
+                sdmService.setId(synchroIdentifiantExterne.getIdAppliExterne());
+                return sdmWsClient.put(resource, sdmService, synchronizationSubscription);
+            }else{
+                return sdmWsClient.post(resource, sdmService, synchronizationSubscription);
+            }
         }
         return resourceWsClient.put(resource, synchronizationSubscription);
     }
 
     private SdmService convertToSdmService(OrganismDepartment resource) {
         SdmService serviceSDM = new SdmService();
+
+        serviceSDM.setLibelle(resource.getLabel());
+        if (StringUtils.isEmpty(resource.getAbbreviation())){
+            serviceSDM.setSigle("ZZZ");
+        }else{
+            serviceSDM.setSigle(resource.getAbbreviation());
+        }
+
+        serviceSDM.setSigle("");
+
+        serviceSDM.setIdExterne(resource.getId());
+        serviceSDM.setSiren(resource.getSiren());
+        if (resource.getOrganism() !=null){
+            serviceSDM.setComplement(resource.getOrganism().getNic());
+            serviceSDM.setFormeJuridique(resource.getOrganism().getStrutureLegalCategory().toString());
+            serviceSDM.setFormeJuridiqueCode(resource.getOrganism().getLegalCategory().toString());
+            serviceSDM.setAcronymeOrganisme(resource.getOrganism().getAcronym());
+        }
+        serviceSDM.setEmail(resource.getEmail());
+
+        if (resource.getParentDepartment() !=null){
+            serviceSDM.setIdExterneParent(resource.getParentDepartment().getId());
+        }
+
         return serviceSDM;
     }
 

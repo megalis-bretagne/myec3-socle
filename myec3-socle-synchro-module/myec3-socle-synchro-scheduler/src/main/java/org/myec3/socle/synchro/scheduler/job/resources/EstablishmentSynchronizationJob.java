@@ -104,7 +104,12 @@ public class EstablishmentSynchronizationJob extends
             SynchroIdentifiantExterne synchroIdentifiantExterne = synchroIdentifiantExterneService.findByIdSocle(resource.getId(), ResourceType.ESTABLISHMENT);
             etablissementSDM.setId(synchroIdentifiantExterne.getIdAppliExterne());
             SdmWsClientImpl sdmWsClient = (SdmWsClientImpl) resourceWsClient;
-            return sdmWsClient.put(resource, etablissementSDM, synchronizationSubscription);
+            if (synchroIdentifiantExterne !=null){
+                etablissementSDM.setId(synchroIdentifiantExterne.getIdAppliExterne());
+                return sdmWsClient.put(resource, etablissementSDM, synchronizationSubscription);
+            }else{
+                return sdmWsClient.post(resource, etablissementSDM, synchronizationSubscription);
+            }
         } else {
             return resourceWsClient.put(resource, synchronizationSubscription);
         }
@@ -114,6 +119,13 @@ public class EstablishmentSynchronizationJob extends
         SdmEtablissement etablissementSDM = new SdmEtablissement();
 
         etablissementSDM.setSiege("");
+        etablissementSDM.setSiret(resource.getSiret());
+        if (resource.getCompany() !=null && resource.getCompany().getId() != null){
+            SynchroIdentifiantExterne synchroIdentifiantExterne = synchroIdentifiantExterneService.findByIdSocle(resource.getId(), ResourceType.ESTABLISHMENT);
+            if (synchroIdentifiantExterne !=null){
+                etablissementSDM.setIdEntreprise(String.valueOf(synchroIdentifiantExterne.getIdAppliExterne()));
+            }
+        }
 
         if (resource.getAddress() != null) {
             SdmAdresse adresseSDM = new SdmAdresse();
