@@ -10,6 +10,9 @@ public class SdmInscrit extends SdmResource {
     @XmlElement(required = false)
     private long id;
 
+    @XmlElement(required = false)
+    private long idExterne;
+
     @XmlElement(required = true)
     private long idEtablissement;
 
@@ -45,6 +48,14 @@ public class SdmInscrit extends SdmResource {
 
     @XmlElement(required = false)
     private String typeHash;
+
+    public long getIdExterne() {
+        return idExterne;
+    }
+
+    public void setIdExterne(long idExterne) {
+        this.idExterne = idExterne;
+    }
 
     public long getId() {
         return id;

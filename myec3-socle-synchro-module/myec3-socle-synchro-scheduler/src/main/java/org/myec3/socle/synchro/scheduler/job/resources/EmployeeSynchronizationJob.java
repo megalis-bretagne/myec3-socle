@@ -119,6 +119,7 @@ public class EmployeeSynchronizationJob extends
 
     private SdmInscrit convertToSdmInscrit(EmployeeProfile resource) {
         SdmInscrit inscritSDM = new SdmInscrit();
+        inscritSDM.setIdExterne(resource.getId());
         inscritSDM.setLogin(resource.getUsername());
         inscritSDM.setEmail(resource.getEmail());
         inscritSDM.setNom(resource.getUser().getLastname());
@@ -128,19 +129,16 @@ public class EmployeeSynchronizationJob extends
         inscritSDM.setMotdePasse(resource.getUser().getPassword());
         inscritSDM.setTypeHash("sha256");
         if(resource.getEstablishment()!=null){
+            inscritSDM.setSiret(resource.getEstablishment().getSiret());
             SynchroIdentifiantExterne synchro = synchroIdentifiantExterneService.findByIdSocle(resource.getEstablishment().getId(), ResourceType.ESTABLISHMENT);
             if (synchro!= null ){
-
-                inscritSDM.setIdEtablissement(synchro.getIdSocle());
+                inscritSDM.setIdEtablissement(synchro.getIdAppliExterne());
             }else{
                 getLogger().warn("Pas d'établissement dans la synchroIdentifiantExterneService pour l'id etablissement :{}",resource.getEstablishment().getId());
             }
         }else{
             getLogger().warn("Pas d'établissement resource.getEstablishment().getId() pour l'emplyoye:{}",resource.getId());
         }
-
-        inscritSDM.setSiret("");
-        //inscritSDM.setSiret(resource.getEstablishment().getSiret());
         //inscritSDM.setInscritAnnuaireDefense();
         return inscritSDM;
     }
