@@ -71,6 +71,22 @@
                     <resource>
                         <directory>${basedir}/src/main/config/local</directory>
                     </resource>
+                    <resource>
+                        <directory>${basedir}/src/main/config/local/db/server</directory>
+                    </resource>
+                </resources>
+            </build>
+        </profile>
+        <profile>
+            <id>dblocal</id>
+            <build>
+                <resources>
+                    <resource>
+                        <directory>${basedir}/src/main/config/local</directory>
+                    </resource>
+                    <resource>
+                        <directory>${basedir}/src/main/config/local/db/local</directory>
+                    </resource>
                 </resources>
             </build>
         </profile>
