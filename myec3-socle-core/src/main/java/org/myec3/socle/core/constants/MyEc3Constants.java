@@ -40,7 +40,7 @@ public final class MyEc3Constants {
 	public static final String HEAD_OFFICE_ESTABLISHMENT_LABEL_POSTFIX = " - Siège social";
 
 	// opensso default logout URL
-	public static final String J_SPRING_SECURITY_LOGOUT = "/j_spring_security_logout";
+	public static final String J_SPRING_SECURITY_LOGOUT = "/Logout";
 
 	// Default agent dashboard
 	public static final String DEFAULT_DASHBOARD = "[[1],[6], [5, 7]]";
