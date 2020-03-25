@@ -1,5 +1,6 @@
 package org.myec3.socle.ws.client.impl;
 
+import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.glassfish.jersey.client.JerseyClientBuilder;
 import org.myec3.socle.core.domain.model.*;
@@ -167,52 +168,63 @@ public class SdmWsClientImpl implements ResourceWsClient {
 
 				//exemple erreur
 				//{"mpe":{"reponse":{"errors":["Aucun service avec l'id 0 dans l'organisme b3v"],"status":400,"type":"http:\/\/localhost:8000\/docs\/errors#validation_error","title":"There was a validation error","statutReponse":"KO"}}}
+				try {
+					if (!StringUtils.isEmpty(responseToString)) {
+						ObjectMapper mapper = new ObjectMapper();
+						Map<String, String> map = mapper.readValue(responseToString, Map.class);
+						Object mpe = map.get("mpe");
+						LinkedHashMap<String, Object> mpeHM = (LinkedHashMap<String, Object>) mpe;
 
-				if ( !StringUtils.isEmpty(responseToString)){
-					ObjectMapper mapper = new ObjectMapper();
-					Map<String, String> map = mapper.readValue(responseToString, Map.class);
-					Object mpe = map.get("mpe");
-					LinkedHashMap<String, Object> mpeHM = (LinkedHashMap<String, Object>) mpe;
+						Object reponse = mpeHM.get("reponse");
+						LinkedHashMap<String, Object> reponseHM = (LinkedHashMap<String, Object>) reponse;
 
-					Object reponse = mpeHM.get("reponse");
-					LinkedHashMap<String, Object> reponseHM = (LinkedHashMap<String, Object>) reponse;
-
-					String erreurs = "";
-					if (reponseHM.get("errors") instanceof ArrayList){
-						ArrayList<String> listeDesErreurs = (ArrayList<String>)reponseHM.get("errors");
-						erreurs=String.join("-",listeDesErreurs);
-					}else if (reponseHM.get("errors") instanceof LinkedHashMap){
-						Object listeDesErreurs = reponseHM.get("errors");
-						LinkedHashMap<String, ArrayList<String>> listeDesErreursHM = (LinkedHashMap<String, ArrayList<String>>) listeDesErreurs;
-						for(String key :listeDesErreursHM.keySet()){
-							erreurs+=" " + String.join("-",listeDesErreursHM.get(key));
+						String erreurs = "";
+						if (reponseHM.get("errors") instanceof ArrayList) {
+							ArrayList<String> listeDesErreurs = (ArrayList<String>) reponseHM.get("errors");
+							erreurs = String.join("-", listeDesErreurs);
+						} else if (reponseHM.get("errors") instanceof LinkedHashMap) {
+							Object listeDesErreurs = reponseHM.get("errors");
+							LinkedHashMap<String, ArrayList<String>> listeDesErreursHM = (LinkedHashMap<String, ArrayList<String>>) listeDesErreurs;
+							for (String key : listeDesErreursHM.keySet()) {
+								erreurs += " " + String.join("-", listeDesErreursHM.get(key));
+							}
+						} else if (reponseHM.get("errors") instanceof String) {
+							erreurs = (String) reponseHM.get("errors");
 						}
-					}else if (reponseHM.get("errors")  instanceof String ){
-						erreurs= (String)reponseHM.get("errors");
+
+						Integer status = (Integer) reponseHM.get("status");
+						String type = (String) reponseHM.get("type");
+						String title = (String) reponseHM.get("title");
+						String statutReponse = (String) reponseHM.get("statutReponse");
+
+						Error error = new Error();
+						responseMsg.setError(error);
+						error.setErrorMessage(erreurs);
+						error.setErrorLabel(title);
+
+						//mapping à faire
+						error.setErrorCode(ErrorCodeType.FORMAT_ERROR);
+					} else {
+						Error error = new Error();
+						responseMsg.setError(error);
+						error.setErrorMessage("Pas de message d'erreur");
+						error.setErrorLabel("Pas de message d'erreur");
+						//mapping à faire
+						error.setErrorCode(ErrorCodeType.INTERNAL_CLIENT_ERROR);
 					}
 
-					Integer status = (Integer)reponseHM.get("status");
-					String type = (String)reponseHM.get("type");
-					String title = (String)reponseHM.get("title");
-					String statutReponse = (String)reponseHM.get("statutReponse");
-
+				}catch (Exception e){
 					Error error = new Error();
 					responseMsg.setError(error);
-					error.setErrorMessage(erreurs);
-					error.setErrorLabel(title);
-
-					//mapping à faire
-					error.setErrorCode(ErrorCodeType.FORMAT_ERROR);
-				} else{
-					Error error = new Error();
-					responseMsg.setError(error);
-					error.setErrorMessage("Pas de message d'erreur");
-					error.setErrorLabel("Pas de message d'erreur");
+					error.setErrorMessage("Erreur lors du parsing de la réponse de la SDM");
+					error.setErrorLabel("Erreur lors du parsing de la réponse de la SDM");
 					//mapping à faire
 					error.setErrorCode(ErrorCodeType.INTERNAL_CLIENT_ERROR);
 				}
 				// Fill the method used during the request
 				responseMsg.getError().setMethodType(methodType);
+
+
 			} else {
 				// No error occurred during the request
 				String responseToString = response.readEntity(String.class);
