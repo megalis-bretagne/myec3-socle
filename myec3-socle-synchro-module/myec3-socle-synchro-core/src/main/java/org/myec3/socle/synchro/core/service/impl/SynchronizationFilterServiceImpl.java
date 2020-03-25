@@ -84,25 +84,25 @@ public class SynchronizationFilterServiceImpl
 			this.adminProfileFilter((AdminProfile) resource, subscription);
 		}
 		if (AgentProfile.class.equals(resource.getClass())) {
-			this.agentProfileFilter((AgentProfile) resource, subscription);
+			//this.agentProfileFilter((AgentProfile) resource, subscription);
 		}
 		if (EmployeeProfile.class.equals(resource.getClass())) {
-			this.employeeProfileFilter((EmployeeProfile) resource, subscription);
+			//this.employeeProfileFilter((EmployeeProfile) resource, subscription);
 		}
 		if (Organism.class.equals(resource.getClass())) {
-			this.organismFilter((Organism) resource, subscription);
+			//this.organismFilter((Organism) resource, subscription);
 		}
 		if (Company.class.equals(resource.getClass())) {
-			this.companyFilter((Company) resource, subscription);
+			//this.companyFilter((Company) resource, subscription);
 		}
 		if (OrganismDepartment.class.equals(resource.getClass())) {
-			this.organismDepartmentFilter((OrganismDepartment) resource, subscription);
+			//this.organismDepartmentFilter((OrganismDepartment) resource, subscription);
 		}
 		if (CompanyDepartment.class.equals(resource.getClass())) {
-			this.companyDepartmentFilter((CompanyDepartment) resource, subscription);
+			//this.companyDepartmentFilter((CompanyDepartment) resource, subscription);
 		}
 		if (Establishment.class.equals(resource.getClass())) {
-			this.establishmentFilter((Establishment) resource, subscription);
+			//this.establishmentFilter((Establishment) resource, subscription);
 		}
 	}
 
