@@ -28,6 +28,9 @@ public class SynchroIdentifiantExterne implements Serializable, PE {
     @Column(nullable = true)
     private Long idAppliExterne;
 
+    @Column(nullable = true)
+    private String acronyme;
+
     public Application getApplication() {
         return application;
     }
@@ -58,5 +61,21 @@ public class SynchroIdentifiantExterne implements Serializable, PE {
 
     public void setIdAppliExterne(Long idAppliExterne) {
         this.idAppliExterne = idAppliExterne;
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public String getAcronyme() {
+        return acronyme;
+    }
+
+    public void setAcronyme(String acronyme) {
+        this.acronyme = acronyme;
     }
 }

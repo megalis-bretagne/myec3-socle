@@ -104,7 +104,7 @@ public class EmployeeSynchronizationJob extends
             SdmInscrit inscritSDM = convertToSdmInscrit(resource);
             SynchroIdentifiantExterne synchroIdentifiantExterne = synchroIdentifiantExterneService.findByIdSocle(resource.getId(), ResourceType.EMPLOYEE_PROFILE);
 
-            SdmWsClientImpl sdmWsClient = (SdmWsClientImpl) resourceWsClient;
+             SdmWsClientImpl sdmWsClient = (SdmWsClientImpl) resourceWsClient;
             if (synchroIdentifiantExterne !=null){
                 inscritSDM.setId(synchroIdentifiantExterne.getIdAppliExterne());
                 return sdmWsClient.put(resource, inscritSDM, synchronizationSubscription);
@@ -119,7 +119,6 @@ public class EmployeeSynchronizationJob extends
 
     private SdmInscrit convertToSdmInscrit(EmployeeProfile resource) {
         SdmInscrit inscritSDM = new SdmInscrit();
-        //inscritSDM.setIdExterne(resource.getId());
         inscritSDM.setLogin(resource.getUsername());
         inscritSDM.setEmail(resource.getEmail());
         inscritSDM.setNom(resource.getUser().getLastname());

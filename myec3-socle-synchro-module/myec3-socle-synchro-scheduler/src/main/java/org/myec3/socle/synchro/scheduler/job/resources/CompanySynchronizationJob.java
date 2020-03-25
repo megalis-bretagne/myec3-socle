@@ -18,9 +18,9 @@
 package org.myec3.socle.synchro.scheduler.job.resources;
 
 import org.myec3.socle.core.domain.model.Company;
-import org.myec3.socle.core.domain.model.Establishment;
 import org.myec3.socle.core.domain.model.enums.ResourceType;
-import org.myec3.socle.core.domain.sdm.model.*;
+import org.myec3.socle.core.domain.sdm.model.SdmAdresse;
+import org.myec3.socle.core.domain.sdm.model.SdmEntreprise;
 import org.myec3.socle.core.sync.api.ResponseMessage;
 import org.myec3.socle.synchro.core.domain.model.SynchroIdentifiantExterne;
 import org.myec3.socle.synchro.core.domain.model.SynchronizationSubscription;

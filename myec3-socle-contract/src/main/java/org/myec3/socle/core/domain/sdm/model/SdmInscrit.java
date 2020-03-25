@@ -10,9 +10,6 @@ public class SdmInscrit extends SdmResource {
     @XmlElement(required = false)
     private long id;
 
-    @XmlElement(required = false)
-    private long idExterne;
-
     @XmlElement(required = true)
     private long idEtablissement;
 
@@ -32,9 +29,6 @@ public class SdmInscrit extends SdmResource {
     private String prenom;
 
     @XmlElement(required = true)
-    private String acronymeOrganisme;
-
-    @XmlElement(required = true)
     boolean actif;
 
     @XmlElement(required = false)
@@ -48,14 +42,6 @@ public class SdmInscrit extends SdmResource {
 
     @XmlElement(required = false)
     private String typeHash;
-
-    public long getIdExterne() {
-        return idExterne;
-    }
-
-    public void setIdExterne(long idExterne) {
-        this.idExterne = idExterne;
-    }
 
     public long getId() {
         return id;
@@ -111,14 +97,6 @@ public class SdmInscrit extends SdmResource {
 
     public void setPrenom(String prenom) {
         this.prenom = prenom;
-    }
-
-    public String getAcronymeOrganisme() {
-        return acronymeOrganisme;
-    }
-
-    public void setAcronymeOrganisme(String acronymeOrganisme) {
-        this.acronymeOrganisme = acronymeOrganisme;
     }
 
     public boolean isActif() {
