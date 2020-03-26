@@ -85,7 +85,7 @@ public class AgentSynchronizationJob extends
                                   ResourceWsClient resourceWsClient) {
         if ("SDM".equals(synchronizationSubscription.getApplication().getName())) {
 			SdmAgent agentSDM = convertToSdmAgent(resource);
-			SynchroIdentifiantExterne synchroIdentifiantExterne = synchroIdentifiantExterneService.findByIdSocle(resource.getId(), ResourceType.AGENT_PROFILE);
+			SynchroIdentifiantExterne synchroIdentifiantExterne = synchroIdentifiantExterneService.findByIdSocle(resource.getUser().getId(), ResourceType.AGENT_PROFILE);
 			agentSDM.setId(synchroIdentifiantExterne.getIdAppliExterne());
 			agentSDM.setActif(false);
 			SdmWsClientImpl sdmWsClient = (SdmWsClientImpl) resourceWsClient;
@@ -104,7 +104,7 @@ public class AgentSynchronizationJob extends
                                   ResourceWsClient resourceWsClient) {
         if ("SDM".equals(synchronizationSubscription.getApplication().getName())) {
             SdmAgent agentSDM = convertToSdmAgent(resource);
-            SynchroIdentifiantExterne synchroIdentifiantExterne = synchroIdentifiantExterneService.findByIdSocle(resource.getId(), ResourceType.AGENT_PROFILE);
+            SynchroIdentifiantExterne synchroIdentifiantExterne = synchroIdentifiantExterneService.findByIdSocle(resource.getUser().getId(), ResourceType.AGENT_PROFILE);
 
             SdmWsClientImpl sdmWsClient = (SdmWsClientImpl) resourceWsClient;
             if (synchroIdentifiantExterne !=null){

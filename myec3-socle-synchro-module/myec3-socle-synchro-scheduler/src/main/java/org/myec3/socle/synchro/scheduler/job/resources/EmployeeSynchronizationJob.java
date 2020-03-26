@@ -82,7 +82,7 @@ public class EmployeeSynchronizationJob extends
                                   ResourceWsClient resourceWsClient) {
         if ("SDM".equals(synchronizationSubscription.getApplication().getName())) {
             SdmInscrit inscritSDM = convertToSdmInscrit(resource);
-            SynchroIdentifiantExterne synchroIdentifiantExterne = synchroIdentifiantExterneService.findByIdSocle(resource.getId(), ResourceType.EMPLOYEE_PROFILE);
+            SynchroIdentifiantExterne synchroIdentifiantExterne = synchroIdentifiantExterneService.findByIdSocle(resource.getUser().getId(), ResourceType.EMPLOYEE_PROFILE);
             inscritSDM.setId(synchroIdentifiantExterne.getIdAppliExterne());
             inscritSDM.setActif(false);
             SdmWsClientImpl sdmWsClient = (SdmWsClientImpl) resourceWsClient;
@@ -102,7 +102,7 @@ public class EmployeeSynchronizationJob extends
 
         if ("SDM".equals(synchronizationSubscription.getApplication().getName())) {
             SdmInscrit inscritSDM = convertToSdmInscrit(resource);
-            SynchroIdentifiantExterne synchroIdentifiantExterne = synchroIdentifiantExterneService.findByIdSocle(resource.getId(), ResourceType.EMPLOYEE_PROFILE);
+            SynchroIdentifiantExterne synchroIdentifiantExterne = synchroIdentifiantExterneService.findByIdSocle(resource.getUser().getId(), ResourceType.EMPLOYEE_PROFILE);
 
              SdmWsClientImpl sdmWsClient = (SdmWsClientImpl) resourceWsClient;
             if (synchroIdentifiantExterne !=null){
