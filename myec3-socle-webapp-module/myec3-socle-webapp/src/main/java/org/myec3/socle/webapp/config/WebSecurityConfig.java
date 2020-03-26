@@ -23,6 +23,8 @@ import org.springframework.security.web.authentication.preauth.RequestHeaderAuth
 import org.springframework.security.web.authentication.preauth.j2ee.J2eePreAuthenticatedProcessingFilter;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.security.web.util.matcher.OrRequestMatcher;
+import org.springframework.security.web.util.matcher.RequestMatcher;
 
 import javax.servlet.http.HttpServletRequest;
 import java.security.Principal;
@@ -100,7 +102,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/company/siren/").hasAnyAuthority("ROLE_SUPER_ADMIN", "ROLE_ADMIN", "ROLE_MANAGER_EMPLOYEE", "ROLE_DEFAULT", "ROLE_ANONYMOUS")
 
                 .and().logout()
-                .logoutRequestMatcher(new AntPathRequestMatcher("/toto", "GET"))
+                .logoutRequestMatcher(new OrRequestMatcher(new KeycloakLogoutRequestMatcher(),new AntPathRequestMatcher("/toto", "GET")))
                 .invalidateHttpSession(true).logoutSuccessUrl("/Logout");
     }
 
@@ -149,10 +151,10 @@ class KeycloakPreAuthenticatedProcessingFilter extends AbstractPreAuthenticatedP
     @Override
     protected Object getPreAuthenticatedPrincipal(HttpServletRequest request) {
         Principal princ = request.getUserPrincipal();
-        if (princ == null || ! (princ instanceof KeycloakPrincipal)){
+        if (!(princ instanceof KeycloakPrincipal)){
             return null;
         }
-        return ((KeycloakPrincipal<KeycloakSecurityContext>)request.getUserPrincipal()).getKeycloakSecurityContext().getToken().getPreferredUsername();
+        return ((KeycloakPrincipal<KeycloakSecurityContext>)princ).getKeycloakSecurityContext().getToken().getPreferredUsername();
     }
 
     @Override
@@ -160,3 +162,18 @@ class KeycloakPreAuthenticatedProcessingFilter extends AbstractPreAuthenticatedP
         return "N/A";
     }
 }
+
+/**
+ * Ajout d'une condition au {@link org.springframework.security.web.authentication.logout.LogoutFilter} pour déconnecter l'utilisateur
+ * si le contexte d'authentification de keyclaok n'est plus présent. Ce qui arrive lors d'une déconnextion depuis une autre application comme
+ * le portail par exemle. Dans ce cas, keyclaok fait un appel serveur vers une url du socle interceptée par la valve, cette dernière détruisant
+ * le contexte d'authentification de keyclaok.
+ */
+class KeycloakLogoutRequestMatcher implements RequestMatcher{
+
+    @Override
+    public boolean matches(HttpServletRequest request) {
+        return !(request.getUserPrincipal() instanceof KeycloakPrincipal);
+    }
+}
+
