@@ -34,6 +34,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 import java.util.Date;
+import java.util.Objects;
 
 /**
  * Concrete job implementation used when the resource to synchronize is an
@@ -102,7 +103,6 @@ public class EstablishmentSynchronizationJob extends
         if ("SDM".equals(synchronizationSubscription.getApplication().getName())) {
             SdmEtablissement etablissementSDM = convertSdmEtablissement(resource);
             SynchroIdentifiantExterne synchroIdentifiantExterne = synchroIdentifiantExterneService.findByIdSocle(resource.getId(), ResourceType.ESTABLISHMENT);
-            etablissementSDM.setId(synchroIdentifiantExterne.getIdAppliExterne());
             SdmWsClientImpl sdmWsClient = (SdmWsClientImpl) resourceWsClient;
             if (synchroIdentifiantExterne !=null){
                 etablissementSDM.setId(synchroIdentifiantExterne.getIdAppliExterne());
@@ -121,7 +121,7 @@ public class EstablishmentSynchronizationJob extends
         etablissementSDM.setSiege("");
         etablissementSDM.setSiret(resource.getSiret());
         if (resource.getCompany() !=null && resource.getCompany().getId() != null){
-            SynchroIdentifiantExterne synchroIdentifiantExterne = synchroIdentifiantExterneService.findByIdSocle(resource.getId(), ResourceType.ESTABLISHMENT);
+            SynchroIdentifiantExterne synchroIdentifiantExterne = synchroIdentifiantExterneService.findByIdSocle(resource.getCompany().getId() , ResourceType.COMPANY);
             if (synchroIdentifiantExterne !=null){
                 etablissementSDM.setIdEntreprise(String.valueOf(synchroIdentifiantExterne.getIdAppliExterne()));
             }
@@ -129,14 +129,15 @@ public class EstablishmentSynchronizationJob extends
 
         if (resource.getAddress() != null) {
             SdmAdresse adresseSDM = new SdmAdresse();
-            adresseSDM.setCodePostal(resource.getAddress().getPostalCode());
+            adresseSDM.setCodePostal(Objects.toString(resource.getAddress().getPostalCode(),""));
             if (resource.getAddress().getCountry() != null) {
-                adresseSDM.setPays(resource.getAddress().getCountry().getLabel());
+                adresseSDM.setPays(Objects.toString(resource.getAddress().getCountry().getLabel(),""));
             }
-            adresseSDM.setRue(resource.getAddress().getStreetName());
-            adresseSDM.setVille(resource.getAddress().getCity());
-            adresseSDM.setAcronymePays(resource.getAddress().getInsee());
-
+            adresseSDM.setRue(Objects.toString(resource.getAddress().getPostalAddress(),""));
+            adresseSDM.setVille(Objects.toString(resource.getAddress().getCity(),""));
+            if (resource.getAddress().getCountry() !=null){
+                adresseSDM.setAcronymePays(Objects.toString(resource.getAddress().getCountry().name(),""));
+            }
             etablissementSDM.setAdresse(adresseSDM);
         }
 
