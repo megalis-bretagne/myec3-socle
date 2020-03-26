@@ -184,6 +184,8 @@ class KeycloakPreAuthenticatedProcessingFilter extends AbstractPreAuthenticatedP
  * le portail par exemle. Dans ce cas, keyclaok fait un appel serveur vers l'url /k_logout du socle interceptée par la valve, cette dernière détruisant
  * le contexte d'authentification de keyclaok.
  */
+//pas sure que ce matcher soit nécessaire, car depuis l'ajout de la conf suivante : ".sessionManagement().sessionFixation().none()", l'appel à /k_logout depuis keycloak
+//détruit bien la session et Spring security est donc bien déconnecté.
 class KeycloakLogoutRequestMatcher implements RequestMatcher {
 
     @Override
