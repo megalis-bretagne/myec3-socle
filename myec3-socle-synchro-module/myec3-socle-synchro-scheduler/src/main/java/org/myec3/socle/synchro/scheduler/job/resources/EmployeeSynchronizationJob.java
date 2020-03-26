@@ -125,7 +125,7 @@ public class EmployeeSynchronizationJob extends
         inscritSDM.setPrenom(resource.getUser().getFirstname());
         inscritSDM.setActif(resource.isEnabled());
         inscritSDM.setTelephone(resource.getPhone());
-        inscritSDM.setMotdePasse(resource.getUser().getPassword());
+        inscritSDM.setMotDePasse(resource.getUser().getPassword());
         inscritSDM.setTypeHash("sha256");
         if(resource.getEstablishment()!=null){
             inscritSDM.setSiret(resource.getEstablishment().getSiret());

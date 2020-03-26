@@ -19,4 +19,5 @@ public class SynchroIdentifiantExterneServiceImpl extends AbstractGenericService
     public SynchroIdentifiantExterne findByIdSocle(long idSocle,ResourceType resourceType) {
         return dao.findByIdSocle(idSocle, resourceType);
     }
+
 }

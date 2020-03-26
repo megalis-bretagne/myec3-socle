@@ -17,7 +17,7 @@ public class SdmInscrit extends SdmResource {
     private String login;
 
     @XmlElement(required = true)
-    private String motdePasse;
+    private String motDePasse;
 
     @XmlElement(required = true)
     private String email;
@@ -43,6 +43,14 @@ public class SdmInscrit extends SdmResource {
     @XmlElement(required = false)
     private String typeHash;
 
+    public String getMotDePasse() {
+        return motDePasse;
+    }
+
+    public void setMotDePasse(String motDePasse) {
+        this.motDePasse = motDePasse;
+    }
+
     public long getId() {
         return id;
     }
@@ -65,14 +73,6 @@ public class SdmInscrit extends SdmResource {
 
     public void setLogin(String login) {
         this.login = login;
-    }
-
-    public String getMotdePasse() {
-        return motdePasse;
-    }
-
-    public void setMotdePasse(String motdePasse) {
-        this.motdePasse = motdePasse;
     }
 
     public String getEmail() {
