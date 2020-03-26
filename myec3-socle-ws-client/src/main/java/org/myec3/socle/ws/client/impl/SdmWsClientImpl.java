@@ -1,6 +1,6 @@
 package org.myec3.socle.ws.client.impl;
 
-import com.fasterxml.jackson.core.JsonParseException;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.glassfish.jersey.client.JerseyClientBuilder;
 import org.myec3.socle.core.domain.model.*;
@@ -467,8 +467,14 @@ public class SdmWsClientImpl implements ResourceWsClient {
 		prepareHeaderAtexo(builder);
 		try {
 			logger.debug("[POST] on URI: {}", synchronizationSubscription.getUri());
+			try{
+				ObjectMapper mapper = new ObjectMapper();
+				String json = mapper.writeValueAsString(resourceSDM);
+				System.out.println("REQUETE :"+json);
+			}catch (Exception e){
+				logger.warn("probleme pour afficher la requete");
+			}
 			Response response = builder.post(Entity.json(resourceSDM));
-
 			return buildResponseMessage(response, MethodType.POST, resource);
 		} catch (ClientErrorException ex) {
 			if (ex.getMessage().contains(CONNECTION_EXCEPTION)) {
@@ -498,8 +504,14 @@ public class SdmWsClientImpl implements ResourceWsClient {
 		prepareHeaderAtexo(builder);
 		try {
 			logger.debug("[PUT] on URI: {}", synchronizationSubscription.getUri());
+			try{
+				ObjectMapper mapper = new ObjectMapper();
+				String json = mapper.writeValueAsString(resourceSDM);
+				System.out.println("REQUETE :"+json);
+			}catch (Exception e){
+				logger.warn("probleme pour afficher la requete");
+			}
 			Response response = builder.put(Entity.json(resourceSDM));
-
 			return buildResponseMessage(response, MethodType.PUT, resource);
 		} catch (ClientErrorException ex) {
 			if (ex.getMessage().contains(CONNECTION_EXCEPTION)) {
@@ -526,16 +538,6 @@ public class SdmWsClientImpl implements ResourceWsClient {
 	 * @param response : the Response body received as a string
 	 */
 	private void logResponseContent(String response) {
-//		try {
-//			// We display the content of inputStream
-//			OutputStream outStream = System.out;
-//			try (Writer w = new OutputStreamWriter(outStream, "UTF-8")) {
-//				w.write(response);
-//			}
-//		} catch (Exception e) {
-//			logger.error("Failed to write response content : ", e);
-//		}
-
 		System.out.println(response);
 	}
 
