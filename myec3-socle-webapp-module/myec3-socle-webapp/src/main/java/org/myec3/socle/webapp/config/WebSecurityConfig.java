@@ -111,7 +111,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
                 .and().logout()
                 //deux possiblités pour le logout, soit l'utilisateur a été déconnecté depuis une autre application de keyclaok, soit l'utilisateur se déconnecte explicitement depuis le socle
-                .logoutRequestMatcher(new OrRequestMatcher(new KeycloakLogoutRequestMatcher(), new AntPathRequestMatcher(MyEc3Constants.J_SPRING_SECURITY_LOGOUT, "GET")))
+                .logoutRequestMatcher( new AntPathRequestMatcher(MyEc3Constants.J_SPRING_SECURITY_LOGOUT, "GET"))
                 .invalidateHttpSession(true)
                 .logoutSuccessHandler(customKeyclaokLogoutSucessHandler("/"))
                 .logoutSuccessUrl("/");
@@ -175,22 +175,6 @@ class KeycloakPreAuthenticatedProcessingFilter extends AbstractPreAuthenticatedP
     @Override
     protected Object getPreAuthenticatedCredentials(HttpServletRequest request) {
         return "N/A";
-    }
-}
-
-/**
- * Ajout d'une condition au {@link org.springframework.security.web.authentication.logout.LogoutFilter} pour déconnecter l'utilisateur
- * si le contexte d'authentification de keyclaok n'est plus présent. Ce qui arrive lors d'une déconnextion depuis une autre application comme
- * le portail par exemle. Dans ce cas, keyclaok fait un appel serveur vers l'url /k_logout du socle interceptée par la valve, cette dernière détruisant
- * le contexte d'authentification de keyclaok.
- */
-//pas sure que ce matcher soit nécessaire, car depuis l'ajout de la conf suivante : ".sessionManagement().sessionFixation().none()", l'appel à /k_logout depuis keycloak
-//détruit bien la session et Spring security est donc bien déconnecté.
-class KeycloakLogoutRequestMatcher implements RequestMatcher {
-
-    @Override
-    public boolean matches(HttpServletRequest request) {
-        return !(request.getUserPrincipal() instanceof KeycloakPrincipal);
     }
 }
 

@@ -9,7 +9,7 @@
 
     <security-constraint>
         <web-resource-collection>
-            <web-resource-name>MyEC3</web-resource-name>
+            <web-resource-name>private</web-resource-name>
             <url-pattern>/*</url-pattern>
         </web-resource-collection>
         <auth-constraint>
@@ -19,7 +19,7 @@
 
     <security-constraint>
         <web-resource-collection>
-            <web-resource-name>MyEC3</web-resource-name>
+            <web-resource-name>public</web-resource-name>
             <url-pattern>/static/*</url-pattern>
             <url-pattern>/assets/*</url-pattern>
             <url-pattern>/modules.gz/t5/core/*</url-pattern>
