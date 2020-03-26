@@ -44,13 +44,15 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     @Override
-    public void configure(final WebSecurity web)  {
+    public void configure(final WebSecurity web) {
         web.ignoring().antMatchers("/health", "/resources/errorAccess.html", "/static/**", "/assets/**", "/modules.gz/t5/core/**");
     }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.csrf().disable()
+        http
+                .csrf().disable()
+                .sessionManagement().sessionFixation().none().and()
                 .addFilterAt(customFilter(), BasicAuthenticationFilter.class)
                 .exceptionHandling().accessDeniedPage("/errorAccess")
                 .and().authorizeRequests()
@@ -179,7 +181,7 @@ class KeycloakPreAuthenticatedProcessingFilter extends AbstractPreAuthenticatedP
 /**
  * Ajout d'une condition au {@link org.springframework.security.web.authentication.logout.LogoutFilter} pour déconnecter l'utilisateur
  * si le contexte d'authentification de keyclaok n'est plus présent. Ce qui arrive lors d'une déconnextion depuis une autre application comme
- * le portail par exemle. Dans ce cas, keyclaok fait un appel serveur vers une url du socle interceptée par la valve, cette dernière détruisant
+ * le portail par exemle. Dans ce cas, keyclaok fait un appel serveur vers l'url /k_logout du socle interceptée par la valve, cette dernière détruisant
  * le contexte d'authentification de keyclaok.
  */
 class KeycloakLogoutRequestMatcher implements RequestMatcher {
