@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonRootName;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
+import java.util.Objects;
 
 @XmlRootElement
 public class SdmService extends SdmResource  {
@@ -60,7 +61,7 @@ public class SdmService extends SdmResource  {
     }
 
     public void setLibelle(String libelle) {
-        this.libelle = libelle;
+        this.libelle =  Objects.toString(libelle,"");
     }
 
     public String getAcronymeOrganisme() {
@@ -68,7 +69,7 @@ public class SdmService extends SdmResource  {
     }
 
     public void setAcronymeOrganisme(String acronymeOrganisme) {
-        this.acronymeOrganisme = acronymeOrganisme;
+        this.acronymeOrganisme =  Objects.toString(acronymeOrganisme,"");
     }
 
     public String getSigle() {
@@ -76,7 +77,7 @@ public class SdmService extends SdmResource  {
     }
 
     public void setSigle(String sigle) {
-        this.sigle = sigle;
+        this.sigle =  Objects.toString(sigle,"");
     }
 
     public String getSiren() {
@@ -84,7 +85,7 @@ public class SdmService extends SdmResource  {
     }
 
     public void setSiren(String siren) {
-        this.siren = siren;
+        this.siren =  Objects.toString(siren,"");
     }
 
     public String getComplement() {
@@ -92,7 +93,7 @@ public class SdmService extends SdmResource  {
     }
 
     public void setComplement(String complement) {
-        this.complement = complement;
+        this.complement =  Objects.toString(complement,"");
     }
 
     public String getEmail() {
@@ -100,7 +101,7 @@ public class SdmService extends SdmResource  {
     }
 
     public void setEmail(String email) {
-        this.email = email;
+        this.email =  Objects.toString(email,"");
     }
 
     public String getFormeJuridique() {
@@ -108,7 +109,7 @@ public class SdmService extends SdmResource  {
     }
 
     public void setFormeJuridique(String formeJuridique) {
-        this.formeJuridique = formeJuridique;
+        this.formeJuridique =  Objects.toString(formeJuridique,"");
     }
 
     public String getFormeJuridiqueCode() {
@@ -116,6 +117,6 @@ public class SdmService extends SdmResource  {
     }
 
     public void setFormeJuridiqueCode(String formeJuridiqueCode) {
-        this.formeJuridiqueCode = formeJuridiqueCode;
+        this.formeJuridiqueCode =  Objects.toString(formeJuridiqueCode,"");
     }
 }

@@ -17,6 +17,7 @@
  */
 package org.myec3.socle.synchro.scheduler.job.resources;
 
+import org.myec3.socle.core.domain.model.Address;
 import org.myec3.socle.core.domain.model.Establishment;
 import org.myec3.socle.core.domain.model.enums.ResourceType;
 import org.myec3.socle.core.domain.sdm.model.SdmAdresse;
@@ -29,6 +30,8 @@ import org.myec3.socle.synchro.core.domain.model.SynchronizationSubscription;
 import org.myec3.socle.synchro.core.service.SynchroIdentifiantExterneService;
 import org.myec3.socle.ws.client.ResourceWsClient;
 import org.myec3.socle.ws.client.impl.SdmWsClientImpl;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
@@ -52,6 +55,8 @@ import java.util.Objects;
 @Component
 public class EstablishmentSynchronizationJob extends
         ResourcesSynchronizationJob<Establishment> {
+
+    private static final Logger logger = LoggerFactory.getLogger(EstablishmentSynchronizationJob.class);
 
     @Autowired
     @Qualifier("synchroIdentifiantExterneService")
@@ -83,10 +88,16 @@ public class EstablishmentSynchronizationJob extends
         if ("SDM".equals(synchronizationSubscription.getApplication().getName())) {
             SdmEtablissement etablissementSDM = convertSdmEtablissement(resource);
             SynchroIdentifiantExterne synchroIdentifiantExterne = synchroIdentifiantExterneService.findByIdSocle(resource.getId(), ResourceType.ESTABLISHMENT);
-            etablissementSDM.setId(synchroIdentifiantExterne.getIdAppliExterne());
-            //etablissementSDM.setActif(false);
             SdmWsClientImpl sdmWsClient = (SdmWsClientImpl) resourceWsClient;
-            return sdmWsClient.put(resource, etablissementSDM, synchronizationSubscription);
+            if (synchroIdentifiantExterne !=null){
+                //etablissementSDM.setActif(false);
+                etablissementSDM.setId(synchroIdentifiantExterne.getIdAppliExterne());
+                return sdmWsClient.put(resource, etablissementSDM, synchronizationSubscription);
+            }else{
+                logger.warn("Establishment id: {} n'a pas d'idApplicationExterne (SDM) dans la table synchroIdentifiantExterneService",resource.getId());
+                //todo return null à voir si ça fonctionne dans ce cas
+                return null;
+            }
         } else {
             return resourceWsClient.delete(resource, synchronizationSubscription);
         }
@@ -115,34 +126,28 @@ public class EstablishmentSynchronizationJob extends
         }
     }
 
+    /**
+     * Conversion d'un Establishment socle dans un Etablissement pour la SDM
+     * @param resource
+     * @return
+     */
     private SdmEtablissement convertSdmEtablissement(Establishment resource) {
+
         SdmEtablissement etablissementSDM = new SdmEtablissement();
 
         etablissementSDM.setSiege("");
         etablissementSDM.setSiret(resource.getSiret());
+
         if (resource.getCompany() !=null && resource.getCompany().getId() != null){
             SynchroIdentifiantExterne synchroIdentifiantExterne = synchroIdentifiantExterneService.findByIdSocle(resource.getCompany().getId() , ResourceType.COMPANY);
             if (synchroIdentifiantExterne !=null){
                 etablissementSDM.setIdEntreprise(String.valueOf(synchroIdentifiantExterne.getIdAppliExterne()));
+            }else{
+                logger.warn("Establishment id: {} n'a pas de COMPANY SDM dans la table synchroIdentifiantExterneService pour l'idSocle ",resource.getId(),resource.getCompany().getId());
             }
         }
-
-        if (resource.getAddress() != null) {
-            SdmAdresse adresseSDM = new SdmAdresse();
-            adresseSDM.setCodePostal(Objects.toString(resource.getAddress().getPostalCode(),""));
-            if (resource.getAddress().getCountry() != null) {
-                adresseSDM.setPays(Objects.toString(resource.getAddress().getCountry().getLabel(),""));
-            }
-            adresseSDM.setRue(Objects.toString(resource.getAddress().getPostalAddress(),""));
-            adresseSDM.setVille(Objects.toString(resource.getAddress().getCity(),""));
-            if (resource.getAddress().getCountry() !=null){
-                adresseSDM.setAcronymePays(Objects.toString(resource.getAddress().getCountry().name(),""));
-            }
-            etablissementSDM.setAdresse(adresseSDM);
-        }
-
-        etablissementSDM.setDateCreation(new Date());
-        etablissementSDM.setDateModification(etablissementSDM.getDateCreation());
+        etablissementSDM.setAdresse(convertToSdmAdresse(resource.getAddress()));
         return etablissementSDM;
     }
+
 }

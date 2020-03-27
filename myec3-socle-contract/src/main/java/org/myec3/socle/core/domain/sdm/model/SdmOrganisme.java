@@ -2,6 +2,7 @@ package org.myec3.socle.core.domain.sdm.model;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 public class SdmOrganisme extends SdmResource  {
 
@@ -28,7 +29,7 @@ public class SdmOrganisme extends SdmResource  {
     }
 
     public void setAcronyme(String acronyme) {
-        this.acronyme = acronyme;
+        this.acronyme = Objects.toString(acronyme,"");
     }
 
     public String getCategorieInsee() {
@@ -36,7 +37,7 @@ public class SdmOrganisme extends SdmResource  {
     }
 
     public void setCategorieInsee(String categorieInsee) {
-        this.categorieInsee = categorieInsee;
+        this.categorieInsee = Objects.toString(categorieInsee,"");
     }
 
     public String getSigle() {
@@ -44,7 +45,7 @@ public class SdmOrganisme extends SdmResource  {
     }
 
     public void setSigle(String sigle) {
-        this.sigle = sigle;
+        this.sigle = Objects.toString(sigle,"");
     }
 
     public String getSiren() {
@@ -52,7 +53,7 @@ public class SdmOrganisme extends SdmResource  {
     }
 
     public void setSiren(String siren) {
-        this.siren = siren;
+        this.siren = Objects.toString(siren,"");
     }
 
     public String getDenomination() {
@@ -60,7 +61,7 @@ public class SdmOrganisme extends SdmResource  {
     }
 
     public void setDenomination(String denomination) {
-        this.denomination = denomination;
+        this.denomination = Objects.toString(denomination,"");
     }
 
     public String getNic() {
@@ -68,7 +69,7 @@ public class SdmOrganisme extends SdmResource  {
     }
 
     public void setNic(String nic) {
-        this.nic = nic;
+        this.nic = Objects.toString(nic,"");
     }
 
     public SdmAdresse getAdresse() {
@@ -84,6 +85,6 @@ public class SdmOrganisme extends SdmResource  {
     }
 
     public void setDescription(String description) {
-        this.description = description;
+        this.description = Objects.toString(description,"");
     }
 }

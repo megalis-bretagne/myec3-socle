@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.util.Date;
+import java.util.Objects;
 
 @XmlRootElement
 public class SdmAgent extends SdmResource {
@@ -33,7 +34,7 @@ public class SdmAgent extends SdmResource {
       private String acronymeOrganisme;
 
       @XmlElement(required = true)
-      boolean actif;
+      boolean actif=true;
 
       @XmlElement(required = false)
       private String telephone;
@@ -42,12 +43,6 @@ public class SdmAgent extends SdmResource {
       private String fax;
 
       @XmlElement(required = true)
-      private Date dateCreation;
-
-      @XmlElement(required = true)
-      private Date dateModification;
-
-      //@XmlElement(required = true)
       private SdmService service;
 
       public long getId() {
@@ -71,7 +66,7 @@ public class SdmAgent extends SdmResource {
       }
 
       public void setIdentifiant(String identifiant) {
-            this.identifiant = identifiant;
+            this.identifiant = Objects.toString(identifiant,"");
       }
 
       public String getEmail() {
@@ -79,7 +74,7 @@ public class SdmAgent extends SdmResource {
       }
 
       public void setEmail(String email) {
-            this.email = email;
+            this.email = Objects.toString(email,"");
       }
 
       public String getNom() {
@@ -87,7 +82,7 @@ public class SdmAgent extends SdmResource {
       }
 
       public void setNom(String nom) {
-            this.nom = nom;
+            this.nom = Objects.toString(nom,"");
       }
 
       public String getPrenom() {
@@ -95,7 +90,7 @@ public class SdmAgent extends SdmResource {
       }
 
       public void setPrenom(String prenom) {
-            this.prenom = prenom;
+            this.prenom = Objects.toString(prenom,"");
       }
 
       public String getAcronymeOrganisme() {
@@ -103,7 +98,7 @@ public class SdmAgent extends SdmResource {
       }
 
       public void setAcronymeOrganisme(String acronymeOrganisme) {
-            this.acronymeOrganisme = acronymeOrganisme;
+            this.acronymeOrganisme = Objects.toString(acronymeOrganisme,"");
       }
 
       public boolean isActif() {
@@ -119,7 +114,7 @@ public class SdmAgent extends SdmResource {
       }
 
       public void setTelephone(String telephone) {
-            this.telephone = telephone;
+            this.telephone = Objects.toString(telephone,"");
       }
 
       public String getFax() {
@@ -127,23 +122,7 @@ public class SdmAgent extends SdmResource {
       }
 
       public void setFax(String fax) {
-            this.fax = fax;
-      }
-
-      public Date getDateCreation() {
-            return dateCreation;
-      }
-
-      public void setDateCreation(Date dateCreation) {
-            this.dateCreation = dateCreation;
-      }
-
-      public Date getDateModification() {
-            return dateModification;
-      }
-
-      public void setDateModification(Date dateModification) {
-            this.dateModification = dateModification;
+            this.fax = Objects.toString(fax,"");
       }
 
       public SdmService getService() {

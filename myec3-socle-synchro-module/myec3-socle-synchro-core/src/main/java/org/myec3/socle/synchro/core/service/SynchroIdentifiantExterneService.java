@@ -10,4 +10,6 @@ public interface SynchroIdentifiantExterneService extends IGenericService<Synchr
 
     SynchroIdentifiantExterne findByIdSocle(long idSocle,ResourceType resourceType);
 
+    SynchroIdentifiantExterne findByAcronyme(String acronyme,ResourceType resourceType);
+
 }

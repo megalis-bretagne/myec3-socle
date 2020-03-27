@@ -27,6 +27,8 @@ import org.myec3.socle.synchro.core.domain.model.SynchronizationSubscription;
 import org.myec3.socle.synchro.core.service.SynchroIdentifiantExterneService;
 import org.myec3.socle.ws.client.ResourceWsClient;
 import org.myec3.socle.ws.client.impl.SdmWsClientImpl;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
@@ -51,6 +53,8 @@ import java.util.Date;
 public class CompanySynchronizationJob extends
 		ResourcesSynchronizationJob<Company> {
 
+	private static final Logger logger = LoggerFactory.getLogger(CompanySynchronizationJob.class);
+
 	@Autowired
 	@Qualifier("synchroIdentifiantExterneService")
 	private SynchroIdentifiantExterneService synchroIdentifiantExterneService;
@@ -62,7 +66,6 @@ public class CompanySynchronizationJob extends
 	public ResponseMessage create(Company resource,
 								  SynchronizationSubscription synchronizationSubscription,
 								  ResourceWsClient resourceWsClient) {
-
 		if ("SDM".equals(synchronizationSubscription.getApplication().getName())) {
 			SdmEntreprise entrepriseSDM = convertSdmEntreprise(resource);
 			SdmWsClientImpl sdmWsClient = (SdmWsClientImpl) resourceWsClient;
@@ -79,12 +82,20 @@ public class CompanySynchronizationJob extends
 								  SynchronizationSubscription synchronizationSubscription,
 								  ResourceWsClient resourceWsClient) {
 		if ("SDM".equals(synchronizationSubscription.getApplication().getName())) {
+
 			SdmEntreprise entrepriseSDM = convertSdmEntreprise(resource);
 			SynchroIdentifiantExterne synchroIdentifiantExterne = synchroIdentifiantExterneService.findByIdSocle(resource.getId(), ResourceType.COMPANY);
-			entrepriseSDM.setId(synchroIdentifiantExterne.getIdAppliExterne());
 			SdmWsClientImpl sdmWsClient = (SdmWsClientImpl) resourceWsClient;
-			return sdmWsClient.put(resource, entrepriseSDM, synchronizationSubscription);
-
+			if (synchroIdentifiantExterne !=null){
+				entrepriseSDM.setId(synchroIdentifiantExterne.getIdAppliExterne());
+				//todo pas de flag actif dans le model SDM comment faire pour désactiver une entreprise ??
+				//entrepriseSDM.setActif(false);
+				return sdmWsClient.put(resource, entrepriseSDM, synchronizationSubscription);
+			}else{
+				logger.warn("Company id: {} n'a pas d'idApplicationExterne (SDM) dans la table synchroIdentifiantExterneService",resource.getId());
+				//todo return null à voir si ça fonctionne dans ce cas
+				return null;
+			}
 		} else {
 			return resourceWsClient.delete(resource, synchronizationSubscription);
 		}
@@ -118,16 +129,17 @@ public class CompanySynchronizationJob extends
 		SdmEntreprise entrepriseSDM = new SdmEntreprise();
 
 		entrepriseSDM.setSiren(resource.getSiren());
-		entrepriseSDM.setEffectif("");
 		entrepriseSDM.setFormeJuridique(resource.getApeCode());
 		entrepriseSDM.setCodeAPE(resource.getApeCode());
-		entrepriseSDM.setDateModification(new Date());
 		entrepriseSDM.setEmail(resource.getEmail());
+		//pas de mapping trouvé pour les deux champs ci-dessous
 		entrepriseSDM.setCapitalSocial("");
-
+		entrepriseSDM.setEffectif("");
 		entrepriseSDM.setRaisonSociale(resource.getLegalCategory().toString());
 
-/*		for (Establishment establishment :resource.getEstablishments()){
+		entrepriseSDM.setAdresse(convertToSdmAdresse(resource.getAddress()));
+
+		/*		for (Establishment establishment :resource.getEstablishments()){
 
 			SdmEtablissement etablissementSDM = new SdmEtablissement();
 			//etablissementSDM.setId("");
@@ -148,19 +160,6 @@ public class CompanySynchronizationJob extends
 			etablissementSDM.setDateModification(etablissementSDM.getDateCreation());
 
 		}*/
-
-		if (resource.getAddress() != null){
-			SdmAdresse adresseSDM = new SdmAdresse ();
-			adresseSDM.setCodePostal(resource.getAddress().getPostalCode());
-			if (resource.getAddress().getCountry() !=null){
-				adresseSDM.setPays(resource.getAddress().getCountry().getLabel());
-			}
-			adresseSDM.setRue(resource.getAddress().getStreetName());
-			adresseSDM.setVille(resource.getAddress().getCity());
-			adresseSDM.setAcronymePays(resource.getAddress().getInsee());
-
-			entrepriseSDM.setAdresse(adresseSDM);
-		}
 		return entrepriseSDM;
 	}
 }

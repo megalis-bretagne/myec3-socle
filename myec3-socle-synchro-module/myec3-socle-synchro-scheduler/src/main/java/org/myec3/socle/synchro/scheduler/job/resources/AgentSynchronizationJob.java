@@ -32,6 +32,8 @@ import org.myec3.socle.synchro.core.service.SynchroIdentifiantExterneDeltaServic
 import org.myec3.socle.synchro.core.service.SynchroIdentifiantExterneService;
 import org.myec3.socle.ws.client.ResourceWsClient;
 import org.myec3.socle.ws.client.impl.SdmWsClientImpl;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
@@ -54,6 +56,8 @@ import java.util.Date;
 @Component
 public class AgentSynchronizationJob extends
         ResourcesSynchronizationJob<AgentProfile> {
+
+    private static final Logger logger = LoggerFactory.getLogger(AgentSynchronizationJob.class);
 
     @Autowired
     @Qualifier("synchroIdentifiantExterneService")
@@ -84,12 +88,18 @@ public class AgentSynchronizationJob extends
                                   SynchronizationSubscription synchronizationSubscription,
                                   ResourceWsClient resourceWsClient) {
         if ("SDM".equals(synchronizationSubscription.getApplication().getName())) {
-			SdmAgent agentSDM = convertToSdmAgent(resource);
-			SynchroIdentifiantExterne synchroIdentifiantExterne = synchroIdentifiantExterneService.findByIdSocle(resource.getUser().getId(), ResourceType.AGENT_PROFILE);
-			agentSDM.setId(synchroIdentifiantExterne.getIdAppliExterne());
-			agentSDM.setActif(false);
-			SdmWsClientImpl sdmWsClient = (SdmWsClientImpl) resourceWsClient;
-			return sdmWsClient.put(resource, agentSDM, synchronizationSubscription);
+            SdmAgent agentSDM = convertToSdmAgent(resource);
+            SynchroIdentifiantExterne synchroIdentifiantExterne = synchroIdentifiantExterneService.findByIdSocle(resource.getUser().getId(), ResourceType.AGENT_PROFILE);
+            SdmWsClientImpl sdmWsClient = (SdmWsClientImpl) resourceWsClient;
+            if (synchroIdentifiantExterne !=null){
+                agentSDM.setId(synchroIdentifiantExterne.getIdAppliExterne());
+                agentSDM.setActif(false);
+                return sdmWsClient.put(resource, agentSDM, synchronizationSubscription);
+            }else{
+                logger.warn("AgentProfile id: {} n'a pas d'idAppliExterne (SDM) dans la table synchroIdentifiantExterneService",resource.getId());
+                //todo return null à voir si ça fonctionne dans ce cas
+                return null;
+            }
         } else {
             return resourceWsClient.delete(resource, synchronizationSubscription);
         }
@@ -105,7 +115,6 @@ public class AgentSynchronizationJob extends
         if ("SDM".equals(synchronizationSubscription.getApplication().getName())) {
             SdmAgent agentSDM = convertToSdmAgent(resource);
             SynchroIdentifiantExterne synchroIdentifiantExterne = synchroIdentifiantExterneService.findByIdSocle(resource.getUser().getId(), ResourceType.AGENT_PROFILE);
-
             SdmWsClientImpl sdmWsClient = (SdmWsClientImpl) resourceWsClient;
             if (synchroIdentifiantExterne !=null){
                 agentSDM.setId(synchroIdentifiantExterne.getIdAppliExterne());
@@ -117,16 +126,23 @@ public class AgentSynchronizationJob extends
         } else {
             return resourceWsClient.put(resource, synchronizationSubscription);
         }
-
     }
 
+    /**
+     * Conversion d'un AgentProfile socle dans un Agent pour la SDM
+     * @param resource
+     * @return
+     */
     private SdmAgent convertToSdmAgent(AgentProfile resource) {
         SdmAgent agentSDM = new SdmAgent();
+
         agentSDM.setIdentifiant(resource.getUsername());
+
         //mapping du role
         for (Role role :resource.getRoles() ){
 			if ("SDM".equals(role.getApplication().getName())){
 				agentSDM.setIdProfil(role.getExternalId());
+				break;
 			}
 		}
         agentSDM.setEmail(resource.getEmail());
@@ -135,16 +151,17 @@ public class AgentSynchronizationJob extends
         agentSDM.setActif(resource.isEnabled());
         agentSDM.setTelephone(resource.getPhone());
         agentSDM.setFax(resource.getFax());
-        agentSDM.setDateCreation(new Date());
-        agentSDM.setDateModification(agentSDM.getDateCreation());
         agentSDM.setAcronymeOrganisme(resource.getOrganismDepartment().getOrganism().getAcronym());
+
         SdmService serviceSDM = new SdmService();
         SynchroIdentifiantExterne synchroIdentifiantExterne = synchroIdentifiantExterneService.findByIdSocle(resource.getOrganismDepartment().getId(), ResourceType.ORGANISM_DEPARTMENT);
         if (synchroIdentifiantExterne !=null){
             serviceSDM.setId(synchroIdentifiantExterne.getIdAppliExterne());
+        }else{
+            logger.warn("Agent {} n'a pas de ORGANISM_DEPARTMENT SDM dans la table synchroIdentifiantExterneService pour l'idSocle ",resource.getId(),resource.getOrganismDepartment().getId());
         }
-
         agentSDM.setService(serviceSDM);
+
         return agentSDM;
     }
 

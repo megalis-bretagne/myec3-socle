@@ -53,4 +53,24 @@ public class JpaSynchroIdentifiantExterneDao extends JpaGenericSynchronizationDa
             throw re;
         }
     }
+
+    @Override
+    public SynchroIdentifiantExterne findByAcronyme(String acronyme, ResourceType resourceType) {
+        this.getLog().debug("Finding initial SynchroIdentifiantExterneService with acronyme : " + acronyme);
+        try {
+            Query query = this.getEm().createQuery("select s from " + this.getDomainClass().getSimpleName()
+                    + " s WHERE acronyme =:acronyme and typeRessource =:typeRessource" );
+            query.setParameter("acronyme", acronyme);
+            query.setParameter("typeRessource", resourceType);
+            SynchroIdentifiantExterne result = (SynchroIdentifiantExterne) query.getSingleResult();
+            this.getLog().debug("findByAcronyme successfull.");
+            return result;
+        } catch (NoResultException e) {
+            this.getLog().info("findByAcronyme returned no result");
+            return null;
+        } catch (RuntimeException re) {
+            this.getLog().error("findByAcronyme failed.", re);
+            throw re;
+        }
+    }
 }

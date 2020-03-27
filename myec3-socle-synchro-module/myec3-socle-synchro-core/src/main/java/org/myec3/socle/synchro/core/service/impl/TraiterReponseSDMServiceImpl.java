@@ -4,6 +4,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.myec3.socle.core.domain.model.*;
 import org.myec3.socle.core.domain.model.enums.ResourceType;
 import org.myec3.socle.core.service.ApplicationService;
+import org.myec3.socle.core.sync.api.Error;
+import org.myec3.socle.core.sync.api.ErrorCodeType;
+import org.myec3.socle.core.sync.api.ResponseMessage;
 import org.myec3.socle.synchro.core.domain.model.SynchroIdentifiantExterne;
 import org.myec3.socle.synchro.core.service.SynchroIdentifiantExterneService;
 import org.myec3.socle.synchro.core.service.TraiterReponseSDMService;
@@ -117,6 +120,8 @@ public class TraiterReponseSDMServiceImpl implements TraiterReponseSDMService {
                             }
                             if (orga.get("acronyme") !=null){
                                 synchro.setAcronyme(String.valueOf(orga.get("acronyme")));
+                                //Mise à jour de l'acronym avec le retour de la SDM
+                                ((Organism) resource).setAcronym(String.valueOf(orga.get("acronyme")));
                             }
                             synchroIdentifiantExterneService.create(synchro);
                         }else {
@@ -213,6 +218,56 @@ public class TraiterReponseSDMServiceImpl implements TraiterReponseSDMService {
                     logger.error("Probleme de parsing de la reponse OK {}",responseToString);
                 }
             }
+        }
+    }
+
+    public Error traiterReponseKo(String responseToString, ResponseMessage responseMsg) throws IOException {
+
+        if (!StringUtils.isEmpty(responseToString)) {
+            ObjectMapper mapper = new ObjectMapper();
+            Map<String, String> map = mapper.readValue(responseToString, Map.class);
+            Object mpe = map.get("mpe");
+            LinkedHashMap<String, Object> mpeHM = (LinkedHashMap<String, Object>) mpe;
+
+            Object reponse = mpeHM.get("reponse");
+            LinkedHashMap<String, Object> reponseHM = (LinkedHashMap<String, Object>) reponse;
+
+            String erreurs = "";
+            if (reponseHM.get("errors") instanceof ArrayList) {
+                ArrayList<String> listeDesErreurs = (ArrayList<String>) reponseHM.get("errors");
+                erreurs = String.join("-", listeDesErreurs);
+            } else if (reponseHM.get("errors") instanceof LinkedHashMap) {
+                Object listeDesErreurs = reponseHM.get("errors");
+                LinkedHashMap<String, ArrayList<String>> listeDesErreursHM = (LinkedHashMap<String, ArrayList<String>>) listeDesErreurs;
+                for (String key : listeDesErreursHM.keySet()) {
+                    erreurs += " " + String.join("-", listeDesErreursHM.get(key));
+                }
+            } else if (reponseHM.get("errors") instanceof String) {
+                erreurs = (String) reponseHM.get("errors");
+            }
+
+            //Integer status = (Integer) reponseHM.get("status");
+            //String type = (String) reponseHM.get("type");
+            //String statutReponse = (String) reponseHM.get("statutReponse");
+
+            String title = (String) reponseHM.get("title");
+            Error error = new Error();
+            responseMsg.setError(error);
+            error.setErrorMessage(erreurs);
+            error.setErrorLabel(title);
+
+            //mapping à faire
+            error.setErrorCode(ErrorCodeType.FORMAT_ERROR);
+
+            return error;
+        } else {
+            Error error = new Error();
+            responseMsg.setError(error);
+            error.setErrorMessage("Pas de message d'erreur");
+            error.setErrorLabel("Pas de message d'erreur");
+            //mapping à faire
+            error.setErrorCode(ErrorCodeType.INTERNAL_CLIENT_ERROR);
+            return error;
         }
     }
 }

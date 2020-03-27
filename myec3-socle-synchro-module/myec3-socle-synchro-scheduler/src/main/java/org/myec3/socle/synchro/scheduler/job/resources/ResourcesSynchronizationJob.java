@@ -1,17 +1,17 @@
 /**
  * Copyright (c) 2011 Atos Bourgogne
- * 
+ *
  * This file is part of MyEc3.
- * 
+ *
  * MyEc3 is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License version 3 as published by
  * the Free Software Foundation.
- * 
+ *
  * MyEc3 is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public License
  * along with MyEc3. If not, see <http://www.gnu.org/licenses/>.
  */
@@ -20,19 +20,9 @@ package org.myec3.socle.synchro.scheduler.job.resources;
 import java.util.Date;
 import java.util.List;
 
-import org.myec3.socle.core.domain.model.AdminProfile;
-import org.myec3.socle.core.domain.model.AgentProfile;
-import org.myec3.socle.core.domain.model.Company;
-import org.myec3.socle.core.domain.model.CompanyDepartment;
-import org.myec3.socle.core.domain.model.Customer;
-import org.myec3.socle.core.domain.model.EmployeeProfile;
-import org.myec3.socle.core.domain.model.Establishment;
-import org.myec3.socle.core.domain.model.Organism;
-import org.myec3.socle.core.domain.model.OrganismDepartment;
-import org.myec3.socle.core.domain.model.Profile;
-import org.myec3.socle.core.domain.model.Resource;
-import org.myec3.socle.core.domain.model.Role;
+import org.myec3.socle.core.domain.model.*;
 import org.myec3.socle.core.domain.model.enums.ResourceType;
+import org.myec3.socle.core.domain.sdm.model.SdmAdresse;
 import org.myec3.socle.core.service.AdminProfileService;
 import org.myec3.socle.core.service.AgentProfileService;
 import org.myec3.socle.core.service.CompanyDepartmentService;
@@ -81,7 +71,7 @@ import org.springframework.web.context.support.SpringBeanAutowiringSupport;
  * @author Matthieu Proboeuf <matthieu.proboeuf@atosorigin.com>
  * @author Denis Cucchietti <denis.cucchietti@atosorigin.com>
  * @author Baptiste Meurant <baptiste.meurant@atosorigin.com>
- * 
+ *
  * @param <T> : Concrete type of the resource to synchronize.
  */
 public abstract class ResourcesSynchronizationJob<T extends Resource> extends QuartzJobBean implements StatefulJob {
@@ -225,7 +215,7 @@ public abstract class ResourcesSynchronizationJob<T extends Resource> extends Qu
 
 	/**
 	 * Response message returned by the web service
-	 * 
+	 *
 	 * @see ResponseMessage
 	 */
 	private ResponseMessage responseMessage;
@@ -244,7 +234,7 @@ public abstract class ResourcesSynchronizationJob<T extends Resource> extends Qu
 
 	/**
 	 * Job Type of synchronization : CREATE, UPDATE, DELETE
-	 * 
+	 *
 	 * @see SynchronizationJobType
 	 */
 	private SynchronizationJobType synchronizationJobType;
@@ -252,7 +242,7 @@ public abstract class ResourcesSynchronizationJob<T extends Resource> extends Qu
 	/**
 	 * Type of synchronization : SYNCHRONIZATION, ERROR_HANDLING,
 	 * RESYNCHRONIZATION...
-	 * 
+	 *
 	 * @see SynchronizationType
 	 */
 	private SynchronizationType synchronizationType;
@@ -264,7 +254,7 @@ public abstract class ResourcesSynchronizationJob<T extends Resource> extends Qu
 
 	/**
 	 * The resource to synchronize
-	 * 
+	 *
 	 * @see Resource
 	 */
 	private T resource;
@@ -652,21 +642,21 @@ public abstract class ResourcesSynchronizationJob<T extends Resource> extends Qu
 	 * service and retrieve its response message
 	 */
 	public abstract ResponseMessage create(T resource, SynchronizationSubscription synchronizationSubscription,
-			ResourceWsClient resourceWsClient);
+										   ResourceWsClient resourceWsClient);
 
 	/**
 	 * Method called by the synchronization job. Calls PUT method of the web service
 	 * and retrieve its response message
 	 */
 	public abstract ResponseMessage update(T resource, SynchronizationSubscription synchronizationSubscription,
-			ResourceWsClient resourceWsClient);
+										   ResourceWsClient resourceWsClient);
 
 	/**
 	 * Method called by the synchronization job. Calls DELETE method of the web
 	 * service and retrieve its response message
 	 */
 	public abstract ResponseMessage delete(T resource, SynchronizationSubscription synchronizationSubscription,
-			ResourceWsClient resourceWsClient);
+										   ResourceWsClient resourceWsClient);
 
 	/**
 	 * Method inherited from quartz framework and called when job is ready to be
@@ -695,18 +685,18 @@ public abstract class ResourcesSynchronizationJob<T extends Resource> extends Qu
 		}
 
 		switch (this.getSynchronizationJobType()) {
-		case CREATE:
-			this.setResponseMessage(this.create(synchronizationResource, synchronizationSubscription,
-					this.getResourceWsClient(synchronizationSubscription)));
-			break;
-		case UPDATE:
-			this.setResponseMessage(this.update(synchronizationResource, synchronizationSubscription,
-					this.getResourceWsClient(synchronizationSubscription)));
-			break;
-		case DELETE:
-			this.setResponseMessage(this.delete(synchronizationResource, synchronizationSubscription,
-					this.getResourceWsClient(synchronizationSubscription)));
-			break;
+			case CREATE:
+				this.setResponseMessage(this.create(synchronizationResource, synchronizationSubscription,
+						this.getResourceWsClient(synchronizationSubscription)));
+				break;
+			case UPDATE:
+				this.setResponseMessage(this.update(synchronizationResource, synchronizationSubscription,
+						this.getResourceWsClient(synchronizationSubscription)));
+				break;
+			case DELETE:
+				this.setResponseMessage(this.delete(synchronizationResource, synchronizationSubscription,
+						this.getResourceWsClient(synchronizationSubscription)));
+				break;
 		}
 
 		// We check the response returned by the web service client
@@ -715,7 +705,7 @@ public abstract class ResourcesSynchronizationJob<T extends Resource> extends Qu
 	}
 
 	private ResourceWsClient getResourceWsClient(SynchronizationSubscription synchronizationSubscription) {
-		if ("SDM".equals(synchronizationSubscription.getApplication().getName())){
+		if ("SDM".equals(synchronizationSubscription.getApplication().getName())) {
 			return sdmWsClientImpl;
 		}
 		if (synchronizationSubscription.getHttps()) {
@@ -727,14 +717,14 @@ public abstract class ResourcesSynchronizationJob<T extends Resource> extends Qu
 
 	/**
 	 * Check the responseMessage returned by the web service client
-	 * 
+	 *
 	 * @param responseMessage             : the response returned by the WS client
 	 * @param resource                    : the {@link Resource} synchronized
 	 * @param synchronizationSubscription : the {@link SynchronizationSubscription}
 	 *                                    concerned by the synchronization
 	 */
 	protected void checkResponseMessage(ResponseMessage responseMessage, Resource resource,
-			SynchronizationSubscription synchronizationSubscription) {
+										SynchronizationSubscription synchronizationSubscription) {
 		logger.debug("Starting checkResponseMessage");
 
 		// Save synchronization log into the database (SUCCESS OR ERROR)
@@ -753,96 +743,96 @@ public abstract class ResourcesSynchronizationJob<T extends Resource> extends Qu
 
 		// Check the http status
 		switch (this.getResponseMessage().getHttpStatus()) {
-		// Success cases
-		case OK:
-			logger.info("[checkResponseMessage][OK] " + "HTTP Status 200 : synchronization successful to "
-					+ synchronizationSubscription.getApplication().getName());
-			break;
+			// Success cases
+			case OK:
+				logger.info("[checkResponseMessage][OK] " + "HTTP Status 200 : synchronization successful to "
+						+ synchronizationSubscription.getApplication().getName());
+				break;
 
-		case CREATED:
-			logger.info("[checkResponseMessage][CREATED] " + "HTTP Status 201 : synchronization successful to "
-					+ synchronizationSubscription.getApplication().getName());
-			break;
+			case CREATED:
+				logger.info("[checkResponseMessage][CREATED] " + "HTTP Status 201 : synchronization successful to "
+						+ synchronizationSubscription.getApplication().getName());
+				break;
 
-		case ACCEPTED:
-			logger.info("[checkResponseMessage][ACCEPTED] " + "HTTP Status 202 : synchronization successful to "
-					+ synchronizationSubscription.getApplication().getName());
-			break;
+			case ACCEPTED:
+				logger.info("[checkResponseMessage][ACCEPTED] " + "HTTP Status 202 : synchronization successful to "
+						+ synchronizationSubscription.getApplication().getName());
+				break;
 
-		case NO_CONTENT:
-			logger.info("[checkResponseMessage][NO CONTENT] " + "HTTP Status 204 : synchronization successful to "
-					+ synchronizationSubscription.getApplication().getName());
-			break;
+			case NO_CONTENT:
+				logger.info("[checkResponseMessage][NO CONTENT] " + "HTTP Status 204 : synchronization successful to "
+						+ synchronizationSubscription.getApplication().getName());
+				break;
 
-		// Error cases
-		case BAD_REQUEST:
-			logger.info("[checkResponseMessage][BAD_REQUEST][" + responseMessage.getError().getMethodType()
-					+ "] HTTP Status 400 : synchronization error ");
-			// check the error code type in order to know what is the action to
-			// perform
-			this.checkResponseMessageErrorCodeType(responseMessage, resource, synchronizationSubscription,
-					this.synchronizationJobType);
-			break;
+			// Error cases
+			case BAD_REQUEST:
+				logger.info("[checkResponseMessage][BAD_REQUEST][" + responseMessage.getError().getMethodType()
+						+ "] HTTP Status 400 : synchronization error ");
+				// check the error code type in order to know what is the action to
+				// perform
+				this.checkResponseMessageErrorCodeType(responseMessage, resource, synchronizationSubscription,
+						this.synchronizationJobType);
+				break;
 
-		case UNAUTHORIZED:
-			// Nothing to do, the synchronization error is already logged into
-			// the database
-			logger.info("[checkResponseMessage][UNAUTHORIZED][" + responseMessage.getError().getMethodType()
-					+ "] HTTP Status 401 : synchronization error ");
-			break;
+			case UNAUTHORIZED:
+				// Nothing to do, the synchronization error is already logged into
+				// the database
+				logger.info("[checkResponseMessage][UNAUTHORIZED][" + responseMessage.getError().getMethodType()
+						+ "] HTTP Status 401 : synchronization error ");
+				break;
 
-		case FORBIDDEN:
-			// Nothing to do, the synchronization error is already logged into
-			// the database
-			logger.info("[checkResponseMessage][FORBIDDEN][" + responseMessage.getError().getMethodType()
-					+ "] HTTP Status 403 : synchronization error ");
-			break;
+			case FORBIDDEN:
+				// Nothing to do, the synchronization error is already logged into
+				// the database
+				logger.info("[checkResponseMessage][FORBIDDEN][" + responseMessage.getError().getMethodType()
+						+ "] HTTP Status 403 : synchronization error ");
+				break;
 
-		case NOT_FOUND:
-			logger.info("[checkResponseMessage][NOT FOUND][" + responseMessage.getError().getMethodType()
-					+ "] HTTP Status 404 : synchronization error ");
-			// check the error code type in order to know what is the action to
-			// perform
-			this.checkResponseMessageErrorCodeType(responseMessage, resource, synchronizationSubscription,
-					this.synchronizationJobType);
-			break;
+			case NOT_FOUND:
+				logger.info("[checkResponseMessage][NOT FOUND][" + responseMessage.getError().getMethodType()
+						+ "] HTTP Status 404 : synchronization error ");
+				// check the error code type in order to know what is the action to
+				// perform
+				this.checkResponseMessageErrorCodeType(responseMessage, resource, synchronizationSubscription,
+						this.synchronizationJobType);
+				break;
 
-		case METHOD_NOT_ALLOWED:
-			// Nothing to do, the synchronization error is already logged into
-			// the database
-			logger.info("[checkResponseMessage][METHOD NOT ALLOWED][" + responseMessage.getError().getMethodType()
-					+ "] HTTP Status 405 : synchronization error ");
-			break;
+			case METHOD_NOT_ALLOWED:
+				// Nothing to do, the synchronization error is already logged into
+				// the database
+				logger.info("[checkResponseMessage][METHOD NOT ALLOWED][" + responseMessage.getError().getMethodType()
+						+ "] HTTP Status 405 : synchronization error ");
+				break;
 
-		case INTERNAL_SERVER_ERROR:
-			logger.info("[checkResponseMessage][INTERNAL SERVER ERROR][" + responseMessage.getError().getMethodType()
-					+ "] HTTP Status 500 : synchronization error ");
-			// check the error code type in order to know what is the action to
-			// perform
-			this.checkResponseMessageErrorCodeType(responseMessage, resource, synchronizationSubscription,
-					this.synchronizationJobType);
-			break;
+			case INTERNAL_SERVER_ERROR:
+				logger.info("[checkResponseMessage][INTERNAL SERVER ERROR][" + responseMessage.getError().getMethodType()
+						+ "] HTTP Status 500 : synchronization error ");
+				// check the error code type in order to know what is the action to
+				// perform
+				this.checkResponseMessageErrorCodeType(responseMessage, resource, synchronizationSubscription,
+						this.synchronizationJobType);
+				break;
 
-		case SERVER_UNAVAILABLE:
-			logger.info("[checkResponseMessage][SERVER UNAVAILABLE][" + responseMessage.getError().getMethodType()
-					+ "] HTTP Status 503 : synchronization error ");
+			case SERVER_UNAVAILABLE:
+				logger.info("[checkResponseMessage][SERVER UNAVAILABLE][" + responseMessage.getError().getMethodType()
+						+ "] HTTP Status 503 : synchronization error ");
 
-			// Log the error
-			logger.error(
-					"Impossible de contacter l'application " + synchronizationSubscription.getApplication().getName()
-							+ ". La synchronisation de la ressource d'id : " + resource.getId() + " a echoue.");
+				// Log the error
+				logger.error(
+						"Impossible de contacter l'application " + synchronizationSubscription.getApplication().getName()
+								+ ". La synchronisation de la ressource d'id : " + resource.getId() + " a echoue.");
 
-			// Manage the synchronization error in order to know what we must do
-			this.manageSynchronizationError(responseMessage, resource, synchronizationSubscription,
-					this.synchronizationJobType, null);
-			break;
+				// Manage the synchronization error in order to know what we must do
+				this.manageSynchronizationError(responseMessage, resource, synchronizationSubscription,
+						this.synchronizationJobType, null);
+				break;
 		}
 	}
 
 	/**
 	 * Check the error code type contained into the response message returned by the
 	 * web service client
-	 * 
+	 *
 	 * @param responseMessage             : the response returned by the WS client
 	 * @param resource                    : the {@link Resource} synchronized
 	 * @param synchronizationSubscription : the {@link SynchronizationSubscription}
@@ -851,87 +841,87 @@ public abstract class ResourcesSynchronizationJob<T extends Resource> extends Qu
 	 *                                    application (CREATE,UPDATE, DELETE...)
 	 */
 	protected void checkResponseMessageErrorCodeType(ResponseMessage responseMessage, Resource resource,
-			SynchronizationSubscription synchronizationSubscription, SynchronizationJobType synchronizationJobType) {
+													 SynchronizationSubscription synchronizationSubscription, SynchronizationJobType synchronizationJobType) {
 		logger.debug("Starting checkResponseMessageErrorCodeType");
 		ErrorCodeType errorCodeType = responseMessage.getError().getErrorCode();
 
 		if (errorCodeType != null) {
 			// check error code type contained into the response message
 			switch (errorCodeType) {
-			case SYNTAX_ERROR:
-				// Http code : 400, error code type : 001 (SYNTAX ERROR)
-				logger.info("[ERROR] 400 [ERROR_CODE_TYPE] 001 : syntax error");
-				// Manage the synchronization error
-				this.manageSynchronizationError(responseMessage, resource, synchronizationSubscription,
-						synchronizationJobType, ErrorCodeType.SYNTAX_ERROR);
-				break;
+				case SYNTAX_ERROR:
+					// Http code : 400, error code type : 001 (SYNTAX ERROR)
+					logger.info("[ERROR] 400 [ERROR_CODE_TYPE] 001 : syntax error");
+					// Manage the synchronization error
+					this.manageSynchronizationError(responseMessage, resource, synchronizationSubscription,
+							synchronizationJobType, ErrorCodeType.SYNTAX_ERROR);
+					break;
 
-			case FORMAT_ERROR:
-				// Http code : 400, error code type : 002
-				logger.info("[ERROR] 400 [ERROR_CODE_TYPE] 002 : Format error");
-				// Manage the synchronization error
-				this.manageSynchronizationError(responseMessage, resource, synchronizationSubscription,
-						synchronizationJobType, ErrorCodeType.FORMAT_ERROR);
-				break;
+				case FORMAT_ERROR:
+					// Http code : 400, error code type : 002
+					logger.info("[ERROR] 400 [ERROR_CODE_TYPE] 002 : Format error");
+					// Manage the synchronization error
+					this.manageSynchronizationError(responseMessage, resource, synchronizationSubscription,
+							synchronizationJobType, ErrorCodeType.FORMAT_ERROR);
+					break;
 
-			case RESOURCE_MISSING:
-				// Http code : 404, error code type : 003
-				// In this case the error returned is not important because we
-				// wanted to delete the resource
-				logger.info("[INFO] 404 [ERROR_CODE_TYPE] 003 : Resource missing");
-				break;
+				case RESOURCE_MISSING:
+					// Http code : 404, error code type : 003
+					// In this case the error returned is not important because we
+					// wanted to delete the resource
+					logger.info("[INFO] 404 [ERROR_CODE_TYPE] 003 : Resource missing");
+					break;
 
-			case RELATION_MISSING:
-				// Http code : 404, error code type : 004
-				logger.info("[ERROR] 404 [ERROR_CODE_TYPE] 004 : Relation missing");
+				case RELATION_MISSING:
+					// Http code : 404, error code type : 004
+					logger.info("[ERROR] 404 [ERROR_CODE_TYPE] 004 : Relation missing");
 
-				// We resynchronize the resource missing
-				this.reSynchronizeResourceDependency(responseMessage, synchronizationSubscription);
-				// Then we manage the synchronization error of the actual
-				// resource
-				this.manageSynchronizationError(responseMessage, resource, synchronizationSubscription,
-						synchronizationJobType, ErrorCodeType.RELATION_MISSING);
-				break;
+					// We resynchronize the resource missing
+					this.reSynchronizeResourceDependency(responseMessage, synchronizationSubscription);
+					// Then we manage the synchronization error of the actual
+					// resource
+					this.manageSynchronizationError(responseMessage, resource, synchronizationSubscription,
+							synchronizationJobType, ErrorCodeType.RELATION_MISSING);
+					break;
 
-			case RESOURCE_ALREADY_EXISTS:
-				// Http code : 400, error code type : 005
-				logger.info("[ERROR] 400 [ERROR_CODE_TYPE] 005 : Resource already exist");
-				// As the resource already exists we send a PUT to ensure that
-				// the resource is updated
-				responseMessage.getError().setMethodType(MethodType.PUT);
-				this.manageSynchronizationError(responseMessage, resource, synchronizationSubscription,
-						SynchronizationJobType.UPDATE, ErrorCodeType.RESOURCE_ALREADY_EXISTS);
+				case RESOURCE_ALREADY_EXISTS:
+					// Http code : 400, error code type : 005
+					logger.info("[ERROR] 400 [ERROR_CODE_TYPE] 005 : Resource already exist");
+					// As the resource already exists we send a PUT to ensure that
+					// the resource is updated
+					responseMessage.getError().setMethodType(MethodType.PUT);
+					this.manageSynchronizationError(responseMessage, resource, synchronizationSubscription,
+							SynchronizationJobType.UPDATE, ErrorCodeType.RESOURCE_ALREADY_EXISTS);
 
-				break;
+					break;
 
-			case INTERNAL_SERVER_ERROR:
-				// Http code : 500, error code type : 006
-				logger.info("[ERROR] 500 [ERROR_CODE_TYPE] 006 : Internal server errror");
+				case INTERNAL_SERVER_ERROR:
+					// Http code : 500, error code type : 006
+					logger.info("[ERROR] 500 [ERROR_CODE_TYPE] 006 : Internal server errror");
 
-				logger.error("La synchronisation de la ressource d'id : " + resource.getId() + " vers l'application "
-						+ synchronizationSubscription.getApplication().getName()
-						+ " a provoque une erreur interne au sein de l'application "
-						+ synchronizationSubscription.getApplication().getName());
+					logger.error("La synchronisation de la ressource d'id : " + resource.getId() + " vers l'application "
+							+ synchronizationSubscription.getApplication().getName()
+							+ " a provoque une erreur interne au sein de l'application "
+							+ synchronizationSubscription.getApplication().getName());
 
-				// Manage the synchronization error in order to know what we
-				// must do
-				this.manageSynchronizationError(responseMessage, resource, synchronizationSubscription,
-						synchronizationJobType, null);
-				break;
+					// Manage the synchronization error in order to know what we
+					// must do
+					this.manageSynchronizationError(responseMessage, resource, synchronizationSubscription,
+							synchronizationJobType, null);
+					break;
 
-			case INTERNAL_CLIENT_ERROR:
-				// Http code : 400, error code type : 007
-				logger.info("[ERROR] 400 [ERROR_CODE_TYPE] 007 : Internal client errror");
+				case INTERNAL_CLIENT_ERROR:
+					// Http code : 400, error code type : 007
+					logger.info("[ERROR] 400 [ERROR_CODE_TYPE] 007 : Internal client errror");
 
-				logger.error("La synchronisation de la ressource d'id : " + resource.getId() + " vers l'application "
-						+ synchronizationSubscription.getApplication().getName()
-						+ " a provoque une erreur au niveau du client webservice");
+					logger.error("La synchronisation de la ressource d'id : " + resource.getId() + " vers l'application "
+							+ synchronizationSubscription.getApplication().getName()
+							+ " a provoque une erreur au niveau du client webservice");
 
-				// Manage the synchronization error in order to know what we
-				// must do
-				this.manageSynchronizationError(responseMessage, resource, synchronizationSubscription,
-						synchronizationJobType, ErrorCodeType.INTERNAL_CLIENT_ERROR);
-				break;
+					// Manage the synchronization error in order to know what we
+					// must do
+					this.manageSynchronizationError(responseMessage, resource, synchronizationSubscription,
+							synchronizationJobType, ErrorCodeType.INTERNAL_CLIENT_ERROR);
+					break;
 			}
 		} else {
 			logger.error("Impossible to continue handling errors because errorCodeType is null");
@@ -941,7 +931,7 @@ public abstract class ResourcesSynchronizationJob<T extends Resource> extends Qu
 	/**
 	 * Check if this resource is contained in the synchronization table of the
 	 * database. Delete the corresponding synchronizationError row in this case
-	 * 
+	 *
 	 * @param resource : the resource synchronized
 	 */
 	public void manageSynchronizationSuccess(Resource resource) {
@@ -953,13 +943,13 @@ public abstract class ResourcesSynchronizationJob<T extends Resource> extends Qu
 
 	/**
 	 * Create and return new synchronization error (number of attempts = 1)
-	 * 
+	 *
 	 * @param resource               : the {@link Resource} synchronized
 	 * @param synchronizationJobType : the action to perform on the distant
 	 *                               application (CREATE,UPDATE, DELETE...)
 	 */
 	public SynchronizationError createNewSynchronizationError(Resource resource,
-			SynchronizationJobType synchronizationJobType) {
+															  SynchronizationJobType synchronizationJobType) {
 		logger.debug("Starting createNewSynchronizationError");
 		// Create new SynchronizationError
 		SynchronizationError newSynchronizationError = new SynchronizationError();
@@ -977,7 +967,7 @@ public abstract class ResourcesSynchronizationJob<T extends Resource> extends Qu
 	/**
 	 * Check the synchronization error and increase the number of attempts if less
 	 * than 5
-	 * 
+	 *
 	 * @param synchronizationJobType      : the action to perform on the distant
 	 *                                    application (CREATE,UPDATE, DELETE...)
 	 * @param resource                    : the {@link Resource} synchronized
@@ -985,7 +975,7 @@ public abstract class ResourcesSynchronizationJob<T extends Resource> extends Qu
 	 *                                    concerned by the synchronization
 	 */
 	public void checkSynchronizationError(SynchronizationJobType synchronizationJobType, Resource resource,
-			SynchronizationSubscription synchronizationSubscription, ErrorCodeType errorCodeType) {
+										  SynchronizationSubscription synchronizationSubscription, ErrorCodeType errorCodeType) {
 		logger.debug("Starting checkSynchronizationError");
 		// Find SynchronizationError from database
 		Long synchronisationErrorId = new Long(this.synchronizationErrorId);
@@ -1016,7 +1006,7 @@ public abstract class ResourcesSynchronizationJob<T extends Resource> extends Qu
 	/**
 	 * Create new synchronization error and lunch a new delayed job if it's the
 	 * first time that the error occured.
-	 * 
+	 *
 	 * @param responseMessage             : the response returned by the web service
 	 *                                    client
 	 * @param resource                    : the {@link Resource} synchronized
@@ -1028,8 +1018,8 @@ public abstract class ResourcesSynchronizationJob<T extends Resource> extends Qu
 	 *                                    application
 	 */
 	public void manageSynchronizationError(ResponseMessage responseMessage, Resource resource,
-			SynchronizationSubscription synchronizationSubscription, SynchronizationJobType synchronizationJobType,
-			ErrorCodeType errorCodeType) {
+										   SynchronizationSubscription synchronizationSubscription, SynchronizationJobType synchronizationJobType,
+										   ErrorCodeType errorCodeType) {
 		logger.debug("Starting manageSynchronizationError");
 		// if it is the first time the error occurs for this synchronization job
 		if (this.synchronizationErrorId == null) {
@@ -1051,7 +1041,7 @@ public abstract class ResourcesSynchronizationJob<T extends Resource> extends Qu
 	 * Return the delay to use before send and other request depending on the
 	 * synchronizationError, HttpStatus and the errorCodeType. Possible values are
 	 * defined into the file synchronization.properties !
-	 * 
+	 *
 	 * @param synchronizationError : the {@link SynchronizationError} concerning the
 	 *                             resource to synchronize
 	 * @param httpStatus           : the HttpStatus returned by the distant
@@ -1061,7 +1051,7 @@ public abstract class ResourcesSynchronizationJob<T extends Resource> extends Qu
 	 *                             application
 	 */
 	public Long getDelay(SynchronizationError synchronizationError, HttpStatus httpStatus,
-			ErrorCodeType errorCodeType) {
+						 ErrorCodeType errorCodeType) {
 		logger.debug("Starting getDelay");
 		// HTTP status between 400 and 405
 		if ((httpStatus.getValue() >= HttpStatus.BAD_REQUEST.getValue())
@@ -1124,7 +1114,7 @@ public abstract class ResourcesSynchronizationJob<T extends Resource> extends Qu
 	/**
 	 * Create a new delayed synchronization job in case of error, in order to
 	 * resynchronize correctly the {@link Resource} on the distant application.
-	 * 
+	 *
 	 * @param synchronizationError        : the {@link SynchronizationError}
 	 *                                    concerning the resource to synchronize
 	 * @param synchronizationJobType      : the action to perform on the distant
@@ -1135,12 +1125,11 @@ public abstract class ResourcesSynchronizationJob<T extends Resource> extends Qu
 	 *                                    resynchronize
 	 * @param delay                       : the delay to use before sending a new
 	 *                                    request
-	 * 
 	 * @see SchedulerServiceImpl
 	 */
 	public void createNewDelayedSynchronizationJob(SynchronizationError synchronizationError,
-			SynchronizationJobType synchronizationJobType, Resource resource,
-			SynchronizationSubscription synchronizationSubscription, Long delay) {
+												   SynchronizationJobType synchronizationJobType, Resource resource,
+												   SynchronizationSubscription synchronizationSubscription, Long delay) {
 		logger.info("Starting createNewDelayedSynchronizationJob");
 		logger.info("Creating new delayed Synchronization Job");
 		schedulerService.addDelayedResourceTrigger(this.initialSynchronizationId, synchronizationError, resource,
@@ -1155,14 +1144,14 @@ public abstract class ResourcesSynchronizationJob<T extends Resource> extends Qu
 	 * {@link EmployeeProfile} the distant application must know his {Company}. If the
 	 * distant application doesn't know the company of the employee we must send the
 	 * company and AFTER the employee!
-	 * 
+	 *
 	 * @param responseMessage             : the response returned by the WS client
 	 * @param synchronizationSubscription : the {@link SynchronizationSubscription}
 	 *                                    concerned by the synchronization
 	 */
 	@SuppressWarnings("unchecked")
 	public void reSynchronizeResourceDependency(ResponseMessage responseMessage,
-			SynchronizationSubscription synchronizationSubscription) {
+												SynchronizationSubscription synchronizationSubscription) {
 		logger.debug("Starting reSynchronizeResourceDependency");
 		// Get the resource dependency through the resource id contained in the
 		// response message
@@ -1217,7 +1206,7 @@ public abstract class ResourcesSynchronizationJob<T extends Resource> extends Qu
 
 	/**
 	 * Manage the synchronization error of a resource dependency.
-	 * 
+	 *
 	 * @param responseMessage             : the response returned by the WS client
 	 * @param resource                    : the dependendy of the main resource to
 	 *                                    synchronize
@@ -1227,15 +1216,15 @@ public abstract class ResourcesSynchronizationJob<T extends Resource> extends Qu
 	 *                                    application (CREATE,UPDATE, DELETE...)
 	 */
 	public void manageResourceDependencySynchronizationError(ResponseMessage responseMessage, Resource resource,
-			SynchronizationSubscription synchronizationSubscription, SynchronizationJobType synchronizationJobType) {
+															 SynchronizationSubscription synchronizationSubscription, SynchronizationJobType synchronizationJobType) {
 		logger.debug("Starting manageResourceDependencySynchronizationError");
 		// we check if it's the first time error for this resource dependency
 		if ((this.synchronizationErrorId == null)
 				|| ((this.synchronizationErrorId != null)
-						&& (!this.synchronizationJobType.equals(synchronizationJobType)))
+				&& (!this.synchronizationJobType.equals(synchronizationJobType)))
 				|| ((this.synchronizationErrorId != null)
-						&& (this.synchronizationJobType.equals(synchronizationJobType))
-						&& (!(this.resource.getClass().equals(resource.getClass()))))) {
+				&& (this.synchronizationJobType.equals(synchronizationJobType))
+				&& (!(this.resource.getClass().equals(resource.getClass()))))) {
 
 			SynchronizationError newSynchronizationError = createNewSynchronizationError(resource,
 					synchronizationJobType);
@@ -1258,31 +1247,31 @@ public abstract class ResourcesSynchronizationJob<T extends Resource> extends Qu
 		// We populate resource dependency's collection depending on its
 		// resourceType
 		switch (classType) {
-		case ADMIN_PROFILE:
-			this.adminProfileService.populateCollections((AdminProfile) resourceDependency);
-			break;
-		case AGENT_PROFILE:
-			this.agentProfileService.populateCollections((AgentProfile) resourceDependency);
-			break;
-		case EMPLOYEE_PROFILE:
-			this.employeeProfileService.populateCollections((EmployeeProfile) resourceDependency);
-			break;
-		case CUSTOMER:
-			break;
-		case ORGANISM:
-			this.organismService.populateCollections((Organism) resourceDependency);
-			break;
-		case ORGANISM_DEPARTMENT:
-			this.organismDepartmentService.populateCollections((OrganismDepartment) resourceDependency);
-			break;
-		case COMPANY:
-			this.companyService.populateCollections((Company) resourceDependency);
-			break;
-		case COMPANY_DEPARTMENT:
-			this.companyDepartmentService.populateCollections((CompanyDepartment) resourceDependency);
-			break;
-		case ESTABLISHMENT:
-			this.establishmentService.populateCollections((Establishment) resourceDependency);
+			case ADMIN_PROFILE:
+				this.adminProfileService.populateCollections((AdminProfile) resourceDependency);
+				break;
+			case AGENT_PROFILE:
+				this.agentProfileService.populateCollections((AgentProfile) resourceDependency);
+				break;
+			case EMPLOYEE_PROFILE:
+				this.employeeProfileService.populateCollections((EmployeeProfile) resourceDependency);
+				break;
+			case CUSTOMER:
+				break;
+			case ORGANISM:
+				this.organismService.populateCollections((Organism) resourceDependency);
+				break;
+			case ORGANISM_DEPARTMENT:
+				this.organismDepartmentService.populateCollections((OrganismDepartment) resourceDependency);
+				break;
+			case COMPANY:
+				this.companyService.populateCollections((Company) resourceDependency);
+				break;
+			case COMPANY_DEPARTMENT:
+				this.companyDepartmentService.populateCollections((CompanyDepartment) resourceDependency);
+				break;
+			case ESTABLISHMENT:
+				this.establishmentService.populateCollections((Establishment) resourceDependency);
 		}
 	}
 
@@ -1290,118 +1279,118 @@ public abstract class ResourcesSynchronizationJob<T extends Resource> extends Qu
 	 * This method allows to hide some values that musn't be present into the XML to
 	 * send. This method is called only in case of RELATION_MISSING by method
 	 * reSynchronizeResourceDependency.
-	 * 
+	 *
 	 * @param resourceDependency : the ressource missing to synchronize before
 	 *                           synchronize the main resource
 	 * @param classType          : the ressource missing class
 	 */
 	public void hideValuesOfResource(Resource resourceDependency,
-			SynchronizationSubscription synchronizationSubscription, ClassType classType) {
+									 SynchronizationSubscription synchronizationSubscription, ClassType classType) {
 		Assert.notNull(resourceDependency, "resourceDependency cannot be null");
 		Assert.notNull(classType, "classType cannot be null");
 
 		switch (classType) {
-		case ADMIN_PROFILE:
-			if (resourceDependency instanceof AdminProfile) {
-				this.synchronizationFilterService.filter((AdminProfile) resourceDependency,
-						synchronizationSubscription);
-			}
-			break;
-		case AGENT_PROFILE:
-			if (resourceDependency instanceof AgentProfile) {
-				this.synchronizationFilterService.filter((AgentProfile) resourceDependency,
-						synchronizationSubscription);
-			}
-			break;
-		case EMPLOYEE_PROFILE:
-			if (resourceDependency instanceof EmployeeProfile) {
-				this.synchronizationFilterService.filter((EmployeeProfile) resourceDependency,
-						synchronizationSubscription);
-			}
-			break;
-		case CUSTOMER:
-			if (resourceDependency instanceof Customer) {
-				this.synchronizationFilterService.filter((Customer) resourceDependency, synchronizationSubscription);
-			}
-			break;
-		case ORGANISM:
-			if (resourceDependency instanceof Organism) {
-				this.synchronizationFilterService.filter((Organism) resourceDependency, synchronizationSubscription);
-			}
-			break;
-		case COMPANY:
-			if (resourceDependency instanceof Company) {
-				this.synchronizationFilterService.filter((Company) resourceDependency, synchronizationSubscription);
-			}
-			break;
-		case ORGANISM_DEPARTMENT:
-			if (resourceDependency instanceof OrganismDepartment) {
-				this.synchronizationFilterService.filter((OrganismDepartment) resourceDependency,
-						synchronizationSubscription);
-			}
-			break;
-		case COMPANY_DEPARTMENT:
-			if (resourceDependency instanceof CompanyDepartment) {
-				this.synchronizationFilterService.filter((CompanyDepartment) resourceDependency,
-						synchronizationSubscription);
-			}
-			break;
-		case ESTABLISHMENT:
-			if (resourceDependency instanceof Establishment) {
-				this.synchronizationFilterService.filter((Establishment) resourceDependency,
-						synchronizationSubscription);
-			}
+			case ADMIN_PROFILE:
+				if (resourceDependency instanceof AdminProfile) {
+					this.synchronizationFilterService.filter((AdminProfile) resourceDependency,
+							synchronizationSubscription);
+				}
+				break;
+			case AGENT_PROFILE:
+				if (resourceDependency instanceof AgentProfile) {
+					this.synchronizationFilterService.filter((AgentProfile) resourceDependency,
+							synchronizationSubscription);
+				}
+				break;
+			case EMPLOYEE_PROFILE:
+				if (resourceDependency instanceof EmployeeProfile) {
+					this.synchronizationFilterService.filter((EmployeeProfile) resourceDependency,
+							synchronizationSubscription);
+				}
+				break;
+			case CUSTOMER:
+				if (resourceDependency instanceof Customer) {
+					this.synchronizationFilterService.filter((Customer) resourceDependency, synchronizationSubscription);
+				}
+				break;
+			case ORGANISM:
+				if (resourceDependency instanceof Organism) {
+					this.synchronizationFilterService.filter((Organism) resourceDependency, synchronizationSubscription);
+				}
+				break;
+			case COMPANY:
+				if (resourceDependency instanceof Company) {
+					this.synchronizationFilterService.filter((Company) resourceDependency, synchronizationSubscription);
+				}
+				break;
+			case ORGANISM_DEPARTMENT:
+				if (resourceDependency instanceof OrganismDepartment) {
+					this.synchronizationFilterService.filter((OrganismDepartment) resourceDependency,
+							synchronizationSubscription);
+				}
+				break;
+			case COMPANY_DEPARTMENT:
+				if (resourceDependency instanceof CompanyDepartment) {
+					this.synchronizationFilterService.filter((CompanyDepartment) resourceDependency,
+							synchronizationSubscription);
+				}
+				break;
+			case ESTABLISHMENT:
+				if (resourceDependency instanceof Establishment) {
+					this.synchronizationFilterService.filter((Establishment) resourceDependency,
+							synchronizationSubscription);
+				}
 		}
 	}
 
 	/**
 	 * Convert a MethodType to an SynchronizationJobType
-	 * 
+	 *
 	 * @param methodType : the method type to convert
 	 * @return SynchronizationJobType : the {@link SynchronizationJobType}
-	 *         corresponding at the given {@link MethodType}
+	 * corresponding at the given {@link MethodType}
 	 */
 	public SynchronizationJobType convertMethodTypeToSynchronizationJobType(MethodType methodType) {
 		logger.debug("Starting convertMethodTypeToSynchronizationJobType");
 		Assert.notNull(methodType, "methodType cannot be null");
 		switch (methodType) {
-		case POST:
-			return SynchronizationJobType.CREATE;
-		case PUT:
-			return SynchronizationJobType.UPDATE;
-		case DELETE:
-			return SynchronizationJobType.DELETE;
+			case POST:
+				return SynchronizationJobType.CREATE;
+			case PUT:
+				return SynchronizationJobType.UPDATE;
+			case DELETE:
+				return SynchronizationJobType.DELETE;
 		}
 		return null;
 	}
 
 	/**
 	 * Convert a SynchronizationJobType to an MethodType
-	 * 
+	 *
 	 * @param synchronizationJobType : the {@link SynchronizationJobType} to convert
 	 * @return MethodType : the {@link MethodType} corresponding at the given
-	 *         {@link SynchronizationJobType}
+	 * {@link SynchronizationJobType}
 	 */
 	public MethodType convertSynchronizationJobTypeToMethodType(SynchronizationJobType synchronizationJobType) {
 		Assert.notNull(synchronizationJobType, "synchronizationJobType cannot be null");
 		logger.debug("Starting convertSynchronizationJobTypeToMethodType");
 		switch (synchronizationJobType) {
-		case CREATE:
-			return MethodType.POST;
-		case UPDATE:
-			return MethodType.PUT;
-		case DELETE:
-			return MethodType.DELETE;
+			case CREATE:
+				return MethodType.POST;
+			case UPDATE:
+				return MethodType.PUT;
+			case DELETE:
+				return MethodType.DELETE;
 		}
 		return null;
 	}
 
 	/**
 	 * Return the {@link ResourceType} of a given {@link Resource}
-	 * 
+	 *
 	 * @param resource : the given {@link Resource}
 	 * @return ResourceType : the {@link ResourceType} corresponding at the given
-	 *         {@link Resource}
+	 * {@link Resource}
 	 */
 	public ResourceType getResourceType(Resource resource) {
 		logger.debug("Starting getResourceType");
@@ -1450,13 +1439,13 @@ public abstract class ResourcesSynchronizationJob<T extends Resource> extends Qu
 
 	/**
 	 * Display all informations about the error to the console
-	 * 
+	 *
 	 * @param responseMessage             : the response returned by the WS client
 	 * @param synchronizationSubscription : the {@link SynchronizationSubscription}
 	 *                                    concerned by the synchronization
 	 */
 	public void logErrorContainedInResponseMessage(ResponseMessage responseMessage,
-			SynchronizationSubscription synchronizationSubscription) {
+												   SynchronizationSubscription synchronizationSubscription) {
 		logger.error("[logErrorInResponseMessage]");
 
 		logger.error("[HTTP STATUS] : " + responseMessage.getHttpStatus());
@@ -1473,14 +1462,14 @@ public abstract class ResourcesSynchronizationJob<T extends Resource> extends Qu
 
 	/**
 	 * Persist all the informations about the synchronization into the database
-	 * 
+	 *
 	 * @param resource                    : the {@link Resource} synchronized
 	 * @param responseMessage             : the response returned by the WS client
 	 * @param synchronizationSubscription : the {@link SynchronizationSubscription}
 	 *                                    concerned by the synchronization
 	 */
 	public void manageSynchronizationLog(Resource resource, ResponseMessage responseMessage,
-			SynchronizationSubscription synchronizationSubscription) {
+										 SynchronizationSubscription synchronizationSubscription) {
 		logger.debug("Starting manageSynchronizationLog");
 		SynchronizationError newSynchronizationError = new SynchronizationError();
 
@@ -1562,7 +1551,7 @@ public abstract class ResourcesSynchronizationJob<T extends Resource> extends Qu
 	/**
 	 * This method allows to save the initial synchronization in order to know all
 	 * synchronizations attached at the first synchronization
-	 * 
+	 *
 	 * @param synchronizationLog : all informations about the current
 	 *                           synchronization task
 	 */
@@ -1597,15 +1586,14 @@ public abstract class ResourcesSynchronizationJob<T extends Resource> extends Qu
 
 	/**
 	 * This method check if it's the last time that the synchronization is triggered
-	 * 
+	 *
 	 * @param synchronizationLog : all informations about the current
 	 *                           synchronization task
 	 * @param responseMessage    : the response returned by the WS client
-	 * 
 	 * @return true if it's the last time that the synchronization is triggered
 	 */
 	public Boolean checkIfSynchronizationIsFinal(SynchronizationLog synchronizationLog,
-			ResponseMessage responseMessage) {
+												 ResponseMessage responseMessage) {
 		logger.debug("Starting checkIfSynchronizationIsFinal");
 		// If it's an HTTP code = 200 or 201
 		if (responseMessage.getHttpStatus().getValue() <= HttpStatus.NO_CONTENT.getValue()) {
@@ -1654,7 +1642,7 @@ public abstract class ResourcesSynchronizationJob<T extends Resource> extends Qu
 	/**
 	 * Private method used to build the error message depending of the resource
 	 * concrete class
-	 * 
+	 *
 	 * @param className : name of the resource concrete class
 	 * @return the complete error message
 	 */
@@ -1668,7 +1656,7 @@ public abstract class ResourcesSynchronizationJob<T extends Resource> extends Qu
 	/**
 	 * This method allows to return the correct business service depending on the
 	 * concrete resource's class
-	 * 
+	 *
 	 * @param classType : the resource's class
 	 * @return the correct business service depending on {@link ClassType}
 	 */
@@ -1677,24 +1665,49 @@ public abstract class ResourcesSynchronizationJob<T extends Resource> extends Qu
 		logger.debug("Enterring in method getResourceService with classType : " + classType);
 
 		switch (classType) {
-		case ADMIN_PROFILE:
-			return adminProfileService;
-		case AGENT_PROFILE:
-			return agentProfileService;
-		case EMPLOYEE_PROFILE:
-			return employeeProfileService;
-		case CUSTOMER:
-			return customerService;
-		case ORGANISM:
-			return organismService;
-		case ORGANISM_DEPARTMENT:
-			return organismDepartmentService;
-		case COMPANY:
-			return companyService;
-		case COMPANY_DEPARTMENT:
-			return companyDepartmentService;
+			case ADMIN_PROFILE:
+				return adminProfileService;
+			case AGENT_PROFILE:
+				return agentProfileService;
+			case EMPLOYEE_PROFILE:
+				return employeeProfileService;
+			case CUSTOMER:
+				return customerService;
+			case ORGANISM:
+				return organismService;
+			case ORGANISM_DEPARTMENT:
+				return organismDepartmentService;
+			case COMPANY:
+				return companyService;
+			case COMPANY_DEPARTMENT:
+				return companyDepartmentService;
 		}
 		logger.error("no resource service was found for this type of resource : " + classType);
 		return null;
 	}
+
+
+	/**
+	 * Conversion d'une adresse socle dans une adresse pour la SDM
+	 * @param resourceAddress
+	 * @return
+	 */
+	protected SdmAdresse convertToSdmAdresse(Address resourceAddress) {
+		if (resourceAddress != null) {
+			SdmAdresse adresseSDM = new SdmAdresse();
+			adresseSDM.setCodePostal(resourceAddress.getPostalCode());
+			if (resourceAddress.getCountry() != null) {
+				adresseSDM.setPays(resourceAddress.getCountry().getLabel());
+			}
+			adresseSDM.setRue(resourceAddress.getPostalAddress());
+			adresseSDM.setVille(resourceAddress.getCity());
+			if (resourceAddress.getCountry() != null) {
+				adresseSDM.setAcronymePays(resourceAddress.getCountry().name());
+			}
+			return adresseSDM;
+		} else {
+			return null;
+		}
+	}
+
 }

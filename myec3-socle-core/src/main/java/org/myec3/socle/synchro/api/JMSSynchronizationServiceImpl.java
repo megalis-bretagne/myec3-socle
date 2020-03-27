@@ -62,6 +62,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
 /**
@@ -150,6 +151,7 @@ public class JMSSynchronizationServiceImpl implements SynchronizationService {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Transactional
 	public void propagateCUD(Resource resource, List<Long> listApplicationIdToResynchronize,
 			SynchronizationType synchronizationType, SynchronizationJobType synchronizationJobType, int nbAttempts) {
 
@@ -198,6 +200,7 @@ public class JMSSynchronizationServiceImpl implements SynchronizationService {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Transactional
 	public void propagateCC(Resource resource, String relationName, List<Resource> createdResources,
 			String sendingApplication, int nbAttempts) {
 		List<String> resourcesStream = null;
@@ -253,6 +256,7 @@ public class JMSSynchronizationServiceImpl implements SynchronizationService {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Transactional
 	public void propagateCU(Resource resource, String relationName, List<Resource> updatedResources,
 			List<Resource> addedResources, List<Resource> removedResources, String sendingApplication, int nbAttempts) {
 		List<String> resourcesStream = null;
