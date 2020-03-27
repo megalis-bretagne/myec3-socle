@@ -31,6 +31,8 @@ import javax.jms.Message;
 import javax.jms.MessageProducer;
 import javax.jms.Queue;
 import javax.jms.Session;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 
 import org.apache.activemq.ActiveMQConnectionFactory;
 import org.myec3.socle.core.constants.MyEc3EsbConstants;
@@ -86,6 +88,9 @@ public class JMSSynchronizationServiceImpl implements SynchronizationService {
 	@Autowired
 	@Qualifier("serviceManager")
 	private ServiceManager serviceManager;
+
+	@PersistenceContext
+	EntityManager entityManager;
 
 	private Session sendSession = null;
 	private MessageProducer sender = null;
@@ -155,6 +160,11 @@ public class JMSSynchronizationServiceImpl implements SynchronizationService {
 			SynchronizationType synchronizationType, SynchronizationJobType synchronizationJobType, int nbAttempts) {
 
 		try {
+
+			//hack on détache l'entity resource de la session hibernate
+			//il faudrait faire transiter des DTO plutot que des entity dans QRTZ
+			entityManager.detach(resource);
+
 			OutputStream baOutputStream = this.cleanAndMarshalResource(resource);
 
 			MapMessage msg = this.sendSession.createMapMessage();
@@ -205,6 +215,10 @@ public class JMSSynchronizationServiceImpl implements SynchronizationService {
 		OutputStream outputStream = null;
 
 		try {
+			//hack on détache l'entity resource de la session hibernate
+			//il faudrait faire transiter des DTO plutot que des entity dans QRTZ
+			entityManager.detach(resource);
+
 			MapMessage msg = this.sendSession.createMapMessage();
 			outputStream = this.cleanAndMarshalResource(resource);
 
@@ -218,6 +232,11 @@ public class JMSSynchronizationServiceImpl implements SynchronizationService {
 			if (createdResources != null) {
 				resourcesStream = new ArrayList<String>();
 				for (Resource createdResource : createdResources) {
+
+					//hack on détache l'entity resource de la session hibernate
+					//il faudrait faire transiter des DTO plutot que des entity dans QRTZ
+					entityManager.detach(createdResource);
+
 					outputStream = this.cleanAndMarshalResource(createdResource);
 					resourcesStream.add(outputStream.toString());
 				}
@@ -262,6 +281,10 @@ public class JMSSynchronizationServiceImpl implements SynchronizationService {
 		try {
 			MapMessage msg = this.sendSession.createMapMessage();
 
+			//hack on détache l'entity resource de la session hibernate
+			//il faudrait faire transiter des DTO plutot que des entity dans QRTZ
+			entityManager.detach(resource);
+
 			outputStream = this.cleanAndMarshalResource(resource);
 
 			msg.setObject(SynchronizationParametersType.RESOURCE.toString(), outputStream.toString());
@@ -275,6 +298,10 @@ public class JMSSynchronizationServiceImpl implements SynchronizationService {
 			if (updatedResources != null) {
 				resourcesStream = new ArrayList<String>();
 				for (Resource updatedResource : updatedResources) {
+					//hack on détache l'entity resource de la session hibernate
+					//il faudrait faire transiter des DTO plutot que des entity dans QRTZ
+					entityManager.detach(updatedResource);
+
 					outputStream = this.cleanAndMarshalResource(updatedResource);
 					resourcesStream.add(outputStream.toString());
 				}
@@ -285,6 +312,10 @@ public class JMSSynchronizationServiceImpl implements SynchronizationService {
 			if (addedResources != null) {
 				resourcesStream = new ArrayList<String>();
 				for (Resource addedResource : addedResources) {
+					//hack on détache l'entity resource de la session hibernate
+					//il faudrait faire transiter des DTO plutot que des entity dans QRTZ
+					entityManager.detach(addedResource);
+
 					outputStream = this.cleanAndMarshalResource(addedResource);
 					resourcesStream.add(outputStream.toString());
 				}
@@ -295,6 +326,10 @@ public class JMSSynchronizationServiceImpl implements SynchronizationService {
 			if (removedResources != null) {
 				resourcesStream = new ArrayList<String>();
 				for (Resource removedResource : removedResources) {
+					//hack on détache l'entity resource de la session hibernate
+					//il faudrait faire transiter des DTO plutot que des entity dans QRTZ
+					entityManager.detach(removedResource);
+
 					outputStream = this.cleanAndMarshalResource(removedResource);
 					resourcesStream.add(outputStream.toString());
 				}
