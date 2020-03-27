@@ -151,7 +151,6 @@ public class JMSSynchronizationServiceImpl implements SynchronizationService {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Transactional
 	public void propagateCUD(Resource resource, List<Long> listApplicationIdToResynchronize,
 			SynchronizationType synchronizationType, SynchronizationJobType synchronizationJobType, int nbAttempts) {
 
@@ -200,7 +199,6 @@ public class JMSSynchronizationServiceImpl implements SynchronizationService {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Transactional
 	public void propagateCC(Resource resource, String relationName, List<Resource> createdResources,
 			String sendingApplication, int nbAttempts) {
 		List<String> resourcesStream = null;
@@ -256,7 +254,6 @@ public class JMSSynchronizationServiceImpl implements SynchronizationService {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Transactional
 	public void propagateCU(Resource resource, String relationName, List<Resource> updatedResources,
 			List<Resource> addedResources, List<Resource> removedResources, String sendingApplication, int nbAttempts) {
 		List<String> resourcesStream = null;
