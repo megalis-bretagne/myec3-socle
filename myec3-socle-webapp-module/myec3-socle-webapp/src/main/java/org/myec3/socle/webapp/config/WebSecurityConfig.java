@@ -46,7 +46,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     public void configure(final WebSecurity web) {
-        web.ignoring().antMatchers("/health", "/resources/errorAccess.html", "/static/**", "/assets/**", "/modules.gz/**");
+        web.ignoring().antMatchers("/health", "/resources/errorAccess.html", "/static/**", "/assets/**", "/modules.gz/**", "/*.ico");
     }
 
     @Override
