@@ -1,5 +1,7 @@
 package org.myec3.socle.core.domain.sdm.model;
 
+import java.util.Objects;
+
 public class SdmAdresse {
 
     private String rue;
@@ -13,7 +15,7 @@ public class SdmAdresse {
     }
 
     public void setRue(String rue) {
-        this.rue = rue;
+        this.rue = Objects.toString(rue,"");
     }
 
     public String getCodePostal() {
@@ -21,7 +23,7 @@ public class SdmAdresse {
     }
 
     public void setCodePostal(String codePostal) {
-        this.codePostal = codePostal;
+        this.codePostal = Objects.toString(codePostal,"");
     }
 
     public String getVille() {
@@ -29,7 +31,7 @@ public class SdmAdresse {
     }
 
     public void setVille(String ville) {
-        this.ville = ville;
+        this.ville = Objects.toString(ville,"");
     }
 
     public String getPays() {
@@ -37,7 +39,7 @@ public class SdmAdresse {
     }
 
     public void setPays(String pays) {
-        this.pays = pays;
+        this.pays = Objects.toString(pays,"");
     }
 
     public String getAcronymePays() {
@@ -45,6 +47,6 @@ public class SdmAdresse {
     }
 
     public void setAcronymePays(String acronymePays) {
-        this.acronymePays = acronymePays;
+        this.acronymePays = Objects.toString(acronymePays,"");
     }
 }

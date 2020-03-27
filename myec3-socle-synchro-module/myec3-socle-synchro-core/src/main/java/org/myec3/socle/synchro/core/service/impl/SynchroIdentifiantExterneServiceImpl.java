@@ -20,4 +20,9 @@ public class SynchroIdentifiantExterneServiceImpl extends AbstractGenericService
         return dao.findByIdSocle(idSocle, resourceType);
     }
 
+    @Override
+    public SynchroIdentifiantExterne findByAcronyme(String acronyme,ResourceType resourceType) {
+        return dao.findByAcronyme(acronyme, resourceType);
+    }
+
 }

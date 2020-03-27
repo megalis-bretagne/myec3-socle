@@ -4,6 +4,7 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 @XmlRootElement
 public class SdmEntreprise extends SdmResource  {
@@ -25,9 +26,6 @@ public class SdmEntreprise extends SdmResource  {
 
     @XmlElement(required = false)
     private String codeAPE;
-
-    @XmlElement(required = false)
-    private Date dateModification;
 
     @XmlElement(required = false)
     private String capitalSocial;
@@ -54,23 +52,15 @@ public class SdmEntreprise extends SdmResource  {
     }
 
     public void setSiren(String siren) {
-        this.siren = siren;
+        this.siren =  Objects.toString(siren,"");
     }
 
     public String getEffectif() {
         return effectif;
     }
 
-    public Date getDateModification() {
-        return dateModification;
-    }
-
-    public void setDateModification(Date dateModification) {
-        this.dateModification = dateModification;
-    }
-
     public void setEffectif(String effectif) {
-        this.effectif = effectif;
+        this.effectif =  Objects.toString(effectif,"");;
     }
 
     public SdmAdresse getAdresse() {
@@ -86,7 +76,7 @@ public class SdmEntreprise extends SdmResource  {
     }
 
     public void setFormeJuridique(String formeJuridique) {
-        this.formeJuridique = formeJuridique;
+        this.formeJuridique = Objects.toString(formeJuridique,"");
     }
 
     public String getCodeAPE() {
@@ -94,7 +84,7 @@ public class SdmEntreprise extends SdmResource  {
     }
 
     public void setCodeAPE(String codeAPE) {
-        this.codeAPE = codeAPE;
+        this.codeAPE = Objects.toString(codeAPE,"");
     }
 
     public String getCapitalSocial() {
@@ -102,7 +92,7 @@ public class SdmEntreprise extends SdmResource  {
     }
 
     public void setCapitalSocial(String capitalSocial) {
-        this.capitalSocial = capitalSocial;
+        this.capitalSocial = Objects.toString(capitalSocial,"");
     }
 
     public String getRaisonSociale() {
@@ -110,7 +100,7 @@ public class SdmEntreprise extends SdmResource  {
     }
 
     public void setRaisonSociale(String raisonSociale) {
-        this.raisonSociale = raisonSociale;
+        this.raisonSociale = Objects.toString(raisonSociale,"");
     }
 
     public String getEmail() {
@@ -118,7 +108,7 @@ public class SdmEntreprise extends SdmResource  {
     }
 
     public void setEmail(String email) {
-        this.email = email;
+        this.email = Objects.toString(email,"");
     }
 
     public List<SdmEtablissement> getEtablisssements() {

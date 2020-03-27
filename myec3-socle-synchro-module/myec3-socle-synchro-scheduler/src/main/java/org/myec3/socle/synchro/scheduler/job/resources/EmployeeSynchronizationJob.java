@@ -29,6 +29,8 @@ import org.myec3.socle.synchro.core.domain.model.SynchronizationSubscription;
 import org.myec3.socle.synchro.core.service.SynchroIdentifiantExterneService;
 import org.myec3.socle.ws.client.ResourceWsClient;
 import org.myec3.socle.ws.client.impl.SdmWsClientImpl;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
@@ -52,6 +54,8 @@ import java.util.Date;
 @Component
 public class EmployeeSynchronizationJob extends
         ResourcesSynchronizationJob<EmployeeProfile> {
+
+    private static final Logger logger = LoggerFactory.getLogger(EmployeeSynchronizationJob.class);
 
     @Autowired
     @Qualifier("synchroIdentifiantExterneService")
@@ -83,10 +87,18 @@ public class EmployeeSynchronizationJob extends
         if ("SDM".equals(synchronizationSubscription.getApplication().getName())) {
             SdmInscrit inscritSDM = convertToSdmInscrit(resource);
             SynchroIdentifiantExterne synchroIdentifiantExterne = synchroIdentifiantExterneService.findByIdSocle(resource.getUser().getId(), ResourceType.EMPLOYEE_PROFILE);
-            inscritSDM.setId(synchroIdentifiantExterne.getIdAppliExterne());
-            inscritSDM.setActif(false);
             SdmWsClientImpl sdmWsClient = (SdmWsClientImpl) resourceWsClient;
-            return sdmWsClient.put(resource, inscritSDM, synchronizationSubscription);
+            if (synchroIdentifiantExterne !=null){
+                inscritSDM.setId(synchroIdentifiantExterne.getIdAppliExterne());
+                inscritSDM.setActif(false);
+                return sdmWsClient.put(resource, inscritSDM, synchronizationSubscription);
+            }else{
+                logger.warn("EmployeeProfile id: {} n'a pas d'idApplicationExterne (SDM) dans la table synchroIdentifiantExterneService",resource.getId());
+                //todo return null à voir si ça fonctionne dans ce cas
+                return null;
+            }
+
+
         } else {
             return resourceWsClient.delete(resource, synchronizationSubscription);
         }
@@ -103,7 +115,6 @@ public class EmployeeSynchronizationJob extends
         if ("SDM".equals(synchronizationSubscription.getApplication().getName())) {
             SdmInscrit inscritSDM = convertToSdmInscrit(resource);
             SynchroIdentifiantExterne synchroIdentifiantExterne = synchroIdentifiantExterneService.findByIdSocle(resource.getUser().getId(), ResourceType.EMPLOYEE_PROFILE);
-
              SdmWsClientImpl sdmWsClient = (SdmWsClientImpl) resourceWsClient;
             if (synchroIdentifiantExterne !=null){
                 inscritSDM.setId(synchroIdentifiantExterne.getIdAppliExterne());
@@ -116,8 +127,13 @@ public class EmployeeSynchronizationJob extends
         }
     }
 
-
+    /**
+     * Conversion d'un EmployeeProfile socle dans un Inscrit  pour la SDM
+     * @param resource
+     * @return
+     */
     private SdmInscrit convertToSdmInscrit(EmployeeProfile resource) {
+
         SdmInscrit inscritSDM = new SdmInscrit();
         inscritSDM.setLogin(resource.getUsername());
         inscritSDM.setEmail(resource.getEmail());
@@ -127,18 +143,19 @@ public class EmployeeSynchronizationJob extends
         inscritSDM.setTelephone(resource.getPhone());
         inscritSDM.setMotDePasse(resource.getUser().getPassword());
         inscritSDM.setTypeHash("sha256");
+        //inscritSDM.setInscritAnnuaireDefense();
+
         if(resource.getEstablishment()!=null){
             inscritSDM.setSiret(resource.getEstablishment().getSiret());
             SynchroIdentifiantExterne synchro = synchroIdentifiantExterneService.findByIdSocle(resource.getEstablishment().getId(), ResourceType.ESTABLISHMENT);
             if (synchro!= null ){
                 inscritSDM.setIdEtablissement(synchro.getIdAppliExterne());
             }else{
-                getLogger().warn("Pas d'établissement dans la synchroIdentifiantExterneService pour l'id etablissement :{}",resource.getEstablishment().getId());
+                logger.warn("EmployeeProfile id: {} n'a pas de ESTABLISHMENT SDM dans la table synchroIdentifiantExterneService pour l'idSocle ",resource.getId(),resource.getEstablishment().getId());
             }
         }else{
-            getLogger().warn("Pas d'établissement resource.getEstablishment().getId() pour l'emplyoye:{}",resource.getId());
+            logger.warn("EmployeeProfile id: {} n'a pas de resource.getEstablishment().getId() il est donc impossible de rechercher dans la table synchroIdentifiantExterneService",resource.getId());
         }
-        //inscritSDM.setInscritAnnuaireDefense();
         return inscritSDM;
     }
 

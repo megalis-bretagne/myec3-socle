@@ -2,7 +2,7 @@ package org.myec3.socle.core.domain.sdm.model;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
-import java.util.Date;
+import java.util.Objects;
 
 @XmlRootElement
 public class SdmInscrit extends SdmResource {
@@ -29,7 +29,7 @@ public class SdmInscrit extends SdmResource {
     private String prenom;
 
     @XmlElement(required = true)
-    boolean actif;
+    boolean actif=true;
 
     @XmlElement(required = false)
     private String telephone;
@@ -38,7 +38,7 @@ public class SdmInscrit extends SdmResource {
     private String siret;
 
     @XmlElement(required = false)
-    private int inscritAnnuaireDefense;
+    private int inscritAnnuaireDefense=0;
 
     @XmlElement(required = false)
     private String typeHash;
@@ -48,7 +48,7 @@ public class SdmInscrit extends SdmResource {
     }
 
     public void setMotDePasse(String motDePasse) {
-        this.motDePasse = motDePasse;
+        this.motDePasse = Objects.toString(motDePasse,"");
     }
 
     public long getId() {
@@ -72,7 +72,7 @@ public class SdmInscrit extends SdmResource {
     }
 
     public void setLogin(String login) {
-        this.login = login;
+        this.login = Objects.toString(login,"");
     }
 
     public String getEmail() {
@@ -80,7 +80,7 @@ public class SdmInscrit extends SdmResource {
     }
 
     public void setEmail(String email) {
-        this.email = email;
+        this.email = Objects.toString(email,"");
     }
 
     public String getNom() {
@@ -88,7 +88,7 @@ public class SdmInscrit extends SdmResource {
     }
 
     public void setNom(String nom) {
-        this.nom = nom;
+        this.nom = Objects.toString(nom,"");
     }
 
     public String getPrenom() {
@@ -96,7 +96,7 @@ public class SdmInscrit extends SdmResource {
     }
 
     public void setPrenom(String prenom) {
-        this.prenom = prenom;
+        this.prenom = Objects.toString(prenom,"");
     }
 
     public boolean isActif() {
@@ -112,7 +112,7 @@ public class SdmInscrit extends SdmResource {
     }
 
     public void setTelephone(String telephone) {
-        this.telephone = telephone;
+        this.telephone = Objects.toString(telephone,"");
     }
 
     public String getSiret() {
@@ -120,7 +120,7 @@ public class SdmInscrit extends SdmResource {
     }
 
     public void setSiret(String siret) {
-        this.siret = siret;
+        this.siret = Objects.toString(siret,"");
     }
 
     public int getInscritAnnuaireDefense() {
@@ -136,6 +136,6 @@ public class SdmInscrit extends SdmResource {
     }
 
     public void setTypeHash(String typeHash) {
-        this.typeHash = typeHash;
+        this.typeHash = Objects.toString(typeHash,"");
     }
 }

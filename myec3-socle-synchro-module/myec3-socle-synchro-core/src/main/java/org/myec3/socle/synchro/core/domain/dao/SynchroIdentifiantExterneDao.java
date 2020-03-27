@@ -10,4 +10,6 @@ public interface SynchroIdentifiantExterneDao extends
     boolean truncate();
 
     SynchroIdentifiantExterne findByIdSocle(long idSocle, ResourceType resourceType);
+
+    SynchroIdentifiantExterne findByAcronyme(String acronyme, ResourceType resourceType);
 }

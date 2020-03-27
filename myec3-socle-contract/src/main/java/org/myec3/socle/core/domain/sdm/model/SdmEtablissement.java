@@ -3,6 +3,7 @@ package org.myec3.socle.core.domain.sdm.model;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.util.Date;
+import java.util.Objects;
 
 @XmlRootElement
 public class SdmEtablissement extends SdmResource  {
@@ -14,10 +15,6 @@ public class SdmEtablissement extends SdmResource  {
 
     @XmlElement(required = true)
     private String siret;
-    private Date dateCreation;
-
-    @XmlElement(required = false)
-    private Date dateModification;
 
     @XmlElement(required = false)
     private SdmAdresse adresse;
@@ -46,7 +43,7 @@ public class SdmEtablissement extends SdmResource  {
     }
 
     public void setSiege(String siege) {
-        this.siege = siege;
+        this.siege = Objects.toString(siege,"");
     }
 
     public String getSiret() {
@@ -54,23 +51,7 @@ public class SdmEtablissement extends SdmResource  {
     }
 
     public void setSiret(String siret) {
-        this.siret = siret;
-    }
-
-    public Date getDateCreation() {
-        return dateCreation;
-    }
-
-    public void setDateCreation(Date dateCreation) {
-        this.dateCreation = dateCreation;
-    }
-
-    public Date getDateModification() {
-        return dateModification;
-    }
-
-    public void setDateModification(Date dateModification) {
-        this.dateModification = dateModification;
+        this.siret = Objects.toString(siret,"");
     }
 
     public SdmAdresse getAdresse() {

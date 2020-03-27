@@ -28,6 +28,8 @@ import org.myec3.socle.synchro.core.domain.model.SynchronizationSubscription;
 import org.myec3.socle.synchro.core.service.SynchroIdentifiantExterneService;
 import org.myec3.socle.ws.client.ResourceWsClient;
 import org.myec3.socle.ws.client.impl.SdmWsClientImpl;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
@@ -52,6 +54,8 @@ import java.util.Date;
 @Component
 public class OrganismDepartmentSynchronizationJob extends
         ResourcesSynchronizationJob<OrganismDepartment> {
+
+    private static final Logger logger = LoggerFactory.getLogger(OrganismDepartmentSynchronizationJob.class);
 
     @Autowired
     @Qualifier("synchroIdentifiantExterneService")
@@ -85,9 +89,16 @@ public class OrganismDepartmentSynchronizationJob extends
         if ("SDM".equals(synchronizationSubscription.getApplication().getName())) {
             SdmService sdmService = convertToSdmService(resource);
             SynchroIdentifiantExterne synchroIdentifiantExterne = synchroIdentifiantExterneService.findByIdSocle(resource.getId(), ResourceType.ORGANISM_DEPARTMENT);
-            sdmService.setId(synchroIdentifiantExterne.getIdAppliExterne());
             SdmWsClientImpl sdmWsClient = (SdmWsClientImpl) resourceWsClient;
-            return sdmWsClient.put(resource, sdmService, synchronizationSubscription);
+            if (synchroIdentifiantExterne != null) {
+                //sdmService.setActif(false);
+                sdmService.setId(synchroIdentifiantExterne.getIdAppliExterne());
+                return sdmWsClient.put(resource, sdmService, synchronizationSubscription);
+            } else {
+                logger.warn("OrganismDepartment id: {} n'a pas d'idApplicationExterne (SDM) dans la table synchroIdentifiantExterneService", resource.getId());
+                //todo return null à voir si ça fonctionne dans ce cas
+                return null;
+            }
         }
         return resourceWsClient.delete(resource, synchronizationSubscription);
     }
@@ -132,10 +143,13 @@ public class OrganismDepartmentSynchronizationJob extends
         }
         serviceSDM.setEmail(resource.getEmail());
 
-        if (resource.getParentDepartment() !=null){
-            serviceSDM.setIdExterneParent(resource.getParentDepartment().getId());
+        if (!resource.isRootDepartment() && resource.getParentDepartment() !=null){
+            SynchroIdentifiantExterne synchroIdentifiantExterne = synchroIdentifiantExterneService.findByIdSocle(resource.getParentDepartment().getId(), ResourceType.ORGANISM_DEPARTMENT);
+            if(synchroIdentifiantExterne !=null){
+                serviceSDM.setIdExterneParent(resource.getParentDepartment().getId());
+                serviceSDM.setIdParent(synchroIdentifiantExterne.getIdAppliExterne());
+            }
         }
-
         return serviceSDM;
     }
 
