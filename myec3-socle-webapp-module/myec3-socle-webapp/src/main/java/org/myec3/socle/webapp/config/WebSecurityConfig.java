@@ -21,6 +21,7 @@ import org.springframework.security.web.authentication.logout.SimpleUrlLogoutSuc
 import org.springframework.security.web.authentication.preauth.AbstractPreAuthenticatedProcessingFilter;
 import org.springframework.security.web.authentication.preauth.PreAuthenticatedAuthenticationProvider;
 import org.springframework.security.web.authentication.preauth.PreAuthenticatedAuthenticationToken;
+import org.springframework.security.web.authentication.preauth.RequestHeaderAuthenticationFilter;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.security.web.util.matcher.OrRequestMatcher;
@@ -45,7 +46,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     public void configure(final WebSecurity web) {
-        web.ignoring().antMatchers("/health", "/resources/errorAccess.html", "/static/**", "/assets/**", "/modules.gz/t5/core/**");
+        web.ignoring().antMatchers("/health", "/resources/errorAccess.html", "/static/**", "/assets/**", "/modules.gz/**");
     }
 
     @Override
@@ -69,7 +70,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/user/admin/**").hasAuthority("ROLE_SUPER_ADMIN")
                 .antMatchers("/user/superadmin/**").hasAuthority("ROLE_SUPER_ADMIN")
                 .antMatchers("/user/search/**").hasAnyAuthority("ROLE_SUPER_ADMIN", "ROLE_ADMIN", "ROLE_MANAGER_AGENT", "ROLE_MANAGER_EMPLOYEE")
-                .antMatchers("/user/regeneratepassword").hasAnyAuthority("ROLE_SUPER_ADMIN", "ROLE_ADMIN", "ROLE_MANAGER_EMPLOYEE", "ROLE_DEFAULT", "ROLE_ANONYMOUS")
+                .antMatchers("/user/regeneratepassword").hasAnyAuthority("ROLE_AUTH", "ROLE_ANONYMOUS")
 
                 .antMatchers("/synchroman/**").hasAuthority("ROLE_SUPER_ADMIN")
 
@@ -98,23 +99,22 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/company/establishment/modify/*").hasAnyAuthority("ROLE_SUPER_ADMIN", "ROLE_ADMIN", "ROLE_MANAGER_EMPLOYEE", "ROLE_DEFAULT")
                 .antMatchers("/company/establishment/listemployees/*").hasAnyAuthority("ROLE_SUPER_ADMIN", "ROLE_ADMIN", "ROLE_MANAGER_EMPLOYEE", "ROLE_DEFAULT")
                 // Creating establishment can be accessed for everyone ! Code will handle rigths
-                .antMatchers("/company/establishment/create*").hasAnyAuthority("ROLE_SUPER_ADMIN", "ROLE_ADMIN", "ROLE_MANAGER_EMPLOYEE", "ROLE_DEFAULT", "ROLE_ANONYMOUS")
+                .antMatchers("/company/establishment/create*").hasAnyAuthority("ROLE_AUTH", "ROLE_ANONYMOUS")
                 // The next one is needed for tapestry pager (*/*)
-                .antMatchers("/company/establishment/create*/*").hasAnyAuthority("ROLE_SUPER_ADMIN", "ROLE_ADMIN", "ROLE_MANAGER_EMPLOYEE", "ROLE_DEFAULT", "ROLE_ANONYMOUS")
-                .antMatchers("/company/establishment/create/*").hasAnyAuthority("ROLE_SUPER_ADMIN", "ROLE_ADMIN", "ROLE_MANAGER_EMPLOYEE", "ROLE_DEFAULT", "ROLE_ANONYMOUS")
+                .antMatchers("/company/establishment/create*/*").hasAnyAuthority("ROLE_AUTH", "ROLE_ANONYMOUS")
+                .antMatchers("/company/establishment/create/*").hasAnyAuthority("ROLE_AUTH", "ROLE_ANONYMOUS")
                 .antMatchers("/company/employee/modify/**").hasAnyAuthority("ROLE_SUPER_ADMIN", "ROLE_ADMIN", "ROLE_MANAGER_EMPLOYEE", "ROLE_DEFAULT")
                 .antMatchers("/company/employee/modify.employee_form.modification_form").hasAnyAuthority("ROLE_SUPER_ADMIN", "ROLE_ADMIN", "ROLE_MANAGER_EMPLOYEE", "ROLE_DEFAULT")
                 .antMatchers("/company/employee/view/**").hasAnyAuthority("ROLE_SUPER_ADMIN", "ROLE_ADMIN", "ROLE_MANAGER_EMPLOYEE", "ROLE_DEFAULT")
                 .antMatchers("/company/employee/**").hasAnyAuthority("ROLE_SUPER_ADMIN", "ROLE_ADMIN", "ROLE_MANAGER_EMPLOYEE")
 
-                .antMatchers("/company/siren/").hasAnyAuthority("ROLE_SUPER_ADMIN", "ROLE_ADMIN", "ROLE_MANAGER_EMPLOYEE", "ROLE_DEFAULT", "ROLE_ANONYMOUS")
+                .antMatchers("/company/siren").hasAnyAuthority("ROLE_AUTH", "ROLE_ANONYMOUS")
 
                 .and().logout()
                 //deux possiblités pour le logout, soit l'utilisateur a été déconnecté depuis une autre application de keyclaok, soit l'utilisateur se déconnecte explicitement depuis le socle
                 .logoutRequestMatcher( new AntPathRequestMatcher(MyEc3Constants.J_SPRING_SECURITY_LOGOUT, "GET"))
                 .invalidateHttpSession(true)
-                .logoutSuccessHandler(customKeyclaokLogoutSucessHandler("/"))
-                .logoutSuccessUrl("/");
+                .logoutSuccessHandler(customKeyclaokLogoutSucessHandler("/"));
     }
 
     private LogoutSuccessHandler customKeyclaokLogoutSucessHandler(String defaultTargetUrl) {
@@ -147,6 +147,17 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         authenticationProcessingFilterEntryPoint.setForceHttps(false);
         return authenticationProcessingFilterEntryPoint;
     }
+
+//    @Bean
+//    public RequestHeaderAuthenticationFilter customFilter() throws Exception {
+//        RequestHeaderAuthenticationFilter requestHeaderAuthenticationFilter = new RequestHeaderAuthenticationFilter();
+//        requestHeaderAuthenticationFilter.setPrincipalRequestHeader("uid");
+//        requestHeaderAuthenticationFilter.setAuthenticationManager(authenticationManager());
+//        requestHeaderAuthenticationFilter.setExceptionIfHeaderMissing(false);
+//        requestHeaderAuthenticationFilter.setCheckForPrincipalChanges(true);
+//        requestHeaderAuthenticationFilter.setInvalidateSessionOnPrincipalChange(false);
+//        return requestHeaderAuthenticationFilter;
+//    }
 
     @Bean
     public AbstractPreAuthenticatedProcessingFilter customFilter() throws Exception {

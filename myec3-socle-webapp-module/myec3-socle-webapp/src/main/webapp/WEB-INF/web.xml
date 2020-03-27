@@ -22,20 +22,28 @@
             <web-resource-name>public</web-resource-name>
             <url-pattern>/static/*</url-pattern>
             <url-pattern>/assets/*</url-pattern>
-            <url-pattern>/modules.gz/t5/core/*</url-pattern>
+            <url-pattern>/modules.gz/*</url-pattern>
             <url-pattern>/company/siren</url-pattern>
+            <url-pattern>/company/siren/</url-pattern>
             <url-pattern>/company/siren.modification_form</url-pattern>
             <url-pattern>/company/siren.modification_foreign_form</url-pattern>
             <url-pattern>/company/init</url-pattern>
             <url-pattern>/company/init.modification_form</url-pattern>
-            <url-pattern>/company/establishment</url-pattern>
+            <url-pattern>/company/init.creationdate:format</url-pattern>
+            <url-pattern>/company/init.person_list:injectrow</url-pattern>
+            <url-pattern>/company/init.person_list:triggerremoverow</url-pattern>
+            <url-pattern>/company/establishment/create</url-pattern>
+            <url-pattern>/company/establishment/create/</url-pattern>
+            <url-pattern>/company/establishment/create/*</url-pattern>
             <url-pattern>/company/establishment/create.modification_form</url-pattern>
             <url-pattern>/company/create</url-pattern>
             <url-pattern>/company/create.modification_form</url-pattern>
             <url-pattern>/company/view</url-pattern>
             <url-pattern>/user/regeneratepassword</url-pattern>
+            <url-pattern>/user/regeneratepassword/</url-pattern>
             <url-pattern>/user/regeneratepassword.regenerate_password_form</url-pattern>
             <url-pattern>/user/newpassword</url-pattern>
+            <url-pattern>/user/newpassword/</url-pattern>
         </web-resource-collection>
     </security-constraint>
 
@@ -55,13 +63,6 @@ TODO : les règles suivantes n'ont pas été reprise du https.conf pour le momen
 
 # Autorisations création d'entreprise en mode non connecté
 <Location /*.ico>
-  Require all granted
-</Location>
-<Location /modules.gz/t5/core/>
-  Require all granted
-</Location>
-
-<Location /assets/>
   Require all granted
 </Location>
 -->
