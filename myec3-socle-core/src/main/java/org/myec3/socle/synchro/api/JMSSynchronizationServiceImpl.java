@@ -1,17 +1,17 @@
 /**
  * Copyright (c) 2011 Atos Bourgogne
- * 
+ *
  * This file is part of MyEc3.
- * 
+ *
  * MyEc3 is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License version 3 as published by
  * the Free Software Foundation.
- * 
+ *
  * MyEc3 is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public License
  * along with MyEc3. If not, see <http://www.gnu.org/licenses/>.
  */
@@ -31,8 +31,6 @@ import javax.jms.Message;
 import javax.jms.MessageProducer;
 import javax.jms.Queue;
 import javax.jms.Session;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 
 import org.apache.activemq.ActiveMQConnectionFactory;
 import org.myec3.socle.core.constants.MyEc3EsbConstants;
@@ -70,9 +68,9 @@ import org.springframework.util.Assert;
 /**
  * Implementation of synchronization service used to send JMS messages to the
  * remote ESB queue IN.
- * 
+ *
  * @see SynchronizationService
- * 
+ *
  * @author Matthieu Proboeuf <matthieu.proboeuf@atosorigin.com>
  * @author Denis Cucchietti <denis.cucchietti@atosorigin.com>
  */
@@ -88,9 +86,6 @@ public class JMSSynchronizationServiceImpl implements SynchronizationService {
 	@Autowired
 	@Qualifier("serviceManager")
 	private ServiceManager serviceManager;
-
-	@PersistenceContext
-	EntityManager entityManager;
 
 	private Session sendSession = null;
 	private MessageProducer sender = null;
@@ -108,7 +103,7 @@ public class JMSSynchronizationServiceImpl implements SynchronizationService {
 	/**
 	 * Method started by Spring (see jmsInMyec3Context.xml) to activate the
 	 * connection to the remote ESB
-	 * 
+	 *
 	 */
 	@PostConstruct
 	public void startConnection() {
@@ -157,14 +152,9 @@ public class JMSSynchronizationServiceImpl implements SynchronizationService {
 	 * {@inheritDoc}
 	 */
 	public void propagateCUD(Resource resource, List<Long> listApplicationIdToResynchronize,
-			SynchronizationType synchronizationType, SynchronizationJobType synchronizationJobType, int nbAttempts) {
+							 SynchronizationType synchronizationType, SynchronizationJobType synchronizationJobType, int nbAttempts) {
 
 		try {
-
-			//hack on détache l'entity resource de la session hibernate
-			//il faudrait faire transiter des DTO plutot que des entity dans QRTZ
-			entityManager.detach(resource);
-
 			OutputStream baOutputStream = this.cleanAndMarshalResource(resource);
 
 			MapMessage msg = this.sendSession.createMapMessage();
@@ -210,15 +200,11 @@ public class JMSSynchronizationServiceImpl implements SynchronizationService {
 	 * {@inheritDoc}
 	 */
 	public void propagateCC(Resource resource, String relationName, List<Resource> createdResources,
-			String sendingApplication, int nbAttempts) {
+							String sendingApplication, int nbAttempts) {
 		List<String> resourcesStream = null;
 		OutputStream outputStream = null;
 
 		try {
-			//hack on détache l'entity resource de la session hibernate
-			//il faudrait faire transiter des DTO plutot que des entity dans QRTZ
-			entityManager.detach(resource);
-
 			MapMessage msg = this.sendSession.createMapMessage();
 			outputStream = this.cleanAndMarshalResource(resource);
 
@@ -232,11 +218,6 @@ public class JMSSynchronizationServiceImpl implements SynchronizationService {
 			if (createdResources != null) {
 				resourcesStream = new ArrayList<String>();
 				for (Resource createdResource : createdResources) {
-
-					//hack on détache l'entity resource de la session hibernate
-					//il faudrait faire transiter des DTO plutot que des entity dans QRTZ
-					entityManager.detach(createdResource);
-
 					outputStream = this.cleanAndMarshalResource(createdResource);
 					resourcesStream.add(outputStream.toString());
 				}
@@ -274,16 +255,12 @@ public class JMSSynchronizationServiceImpl implements SynchronizationService {
 	 * {@inheritDoc}
 	 */
 	public void propagateCU(Resource resource, String relationName, List<Resource> updatedResources,
-			List<Resource> addedResources, List<Resource> removedResources, String sendingApplication, int nbAttempts) {
+							List<Resource> addedResources, List<Resource> removedResources, String sendingApplication, int nbAttempts) {
 		List<String> resourcesStream = null;
 		OutputStream outputStream = null;
 
 		try {
 			MapMessage msg = this.sendSession.createMapMessage();
-
-			//hack on détache l'entity resource de la session hibernate
-			//il faudrait faire transiter des DTO plutot que des entity dans QRTZ
-			entityManager.detach(resource);
 
 			outputStream = this.cleanAndMarshalResource(resource);
 
@@ -298,10 +275,6 @@ public class JMSSynchronizationServiceImpl implements SynchronizationService {
 			if (updatedResources != null) {
 				resourcesStream = new ArrayList<String>();
 				for (Resource updatedResource : updatedResources) {
-					//hack on détache l'entity resource de la session hibernate
-					//il faudrait faire transiter des DTO plutot que des entity dans QRTZ
-					entityManager.detach(updatedResource);
-
 					outputStream = this.cleanAndMarshalResource(updatedResource);
 					resourcesStream.add(outputStream.toString());
 				}
@@ -312,10 +285,6 @@ public class JMSSynchronizationServiceImpl implements SynchronizationService {
 			if (addedResources != null) {
 				resourcesStream = new ArrayList<String>();
 				for (Resource addedResource : addedResources) {
-					//hack on détache l'entity resource de la session hibernate
-					//il faudrait faire transiter des DTO plutot que des entity dans QRTZ
-					entityManager.detach(addedResource);
-
 					outputStream = this.cleanAndMarshalResource(addedResource);
 					resourcesStream.add(outputStream.toString());
 				}
@@ -326,10 +295,6 @@ public class JMSSynchronizationServiceImpl implements SynchronizationService {
 			if (removedResources != null) {
 				resourcesStream = new ArrayList<String>();
 				for (Resource removedResource : removedResources) {
-					//hack on détache l'entity resource de la session hibernate
-					//il faudrait faire transiter des DTO plutot que des entity dans QRTZ
-					entityManager.detach(removedResource);
-
 					outputStream = this.cleanAndMarshalResource(removedResource);
 					resourcesStream.add(outputStream.toString());
 				}
@@ -372,7 +337,7 @@ public class JMSSynchronizationServiceImpl implements SynchronizationService {
 	 */
 	@Override
 	public void propagateCollectionCreate(Resource resource, String relationName, List<Resource> createdResources,
-			String sendingApplication) {
+										  String sendingApplication) {
 		if (this.isSynchronizable(resource)) {
 			this.schedulerService.addImmediatePropagateCCTrigger(resource, relationName, createdResources,
 					sendingApplication, 0);
@@ -384,7 +349,7 @@ public class JMSSynchronizationServiceImpl implements SynchronizationService {
 	 */
 	@Override
 	public void propagateCollectionUpdate(Resource resource, String relationName, List<Resource> updatedResources,
-			List<Resource> addedResources, List<Resource> removedResources, String sendingApplication) {
+										  List<Resource> addedResources, List<Resource> removedResources, String sendingApplication) {
 		if (this.isSynchronizable(resource)) {
 			this.schedulerService.addImmediatePropagateCUTrigger(resource, relationName, updatedResources,
 					addedResources, removedResources, sendingApplication, 0);
@@ -396,7 +361,7 @@ public class JMSSynchronizationServiceImpl implements SynchronizationService {
 	 */
 	@Override
 	public void propagateCreation(Resource resource, List<Long> listApplicationIdToResynchronize,
-			SynchronizationType synchronizationType, String sendingApplication) {
+								  SynchronizationType synchronizationType, String sendingApplication) {
 		this.schedulerService.addImmediatePropagateCUDTrigger(resource, listApplicationIdToResynchronize,
 				synchronizationType, SynchronizationJobType.CREATE, 0);
 
@@ -407,7 +372,7 @@ public class JMSSynchronizationServiceImpl implements SynchronizationService {
 	 */
 	@Override
 	public void propagateDeletion(Resource resource, List<Long> listApplicationIdToResynchronize,
-			SynchronizationType synchronizationType, String sendingApplication) {
+								  SynchronizationType synchronizationType, String sendingApplication) {
 		if (this.isSynchronizable(resource)) {
 			this.schedulerService.addImmediatePropagateCUDTrigger(resource, listApplicationIdToResynchronize,
 					synchronizationType, SynchronizationJobType.DELETE, 0);
@@ -419,7 +384,7 @@ public class JMSSynchronizationServiceImpl implements SynchronizationService {
 	 */
 	@Override
 	public void propagateUpdate(Resource resource, List<Long> listApplicationIdToResynchronize,
-			SynchronizationType synchronizationType, String sendingApplication) {
+								SynchronizationType synchronizationType, String sendingApplication) {
 		if (this.isSynchronizable(resource)) {
 			if (resource.getClass().getSuperclass().equals(Profile.class)) {
 				// synchronize if the profile is enabled, do nothing
@@ -436,7 +401,7 @@ public class JMSSynchronizationServiceImpl implements SynchronizationService {
 
 	/**
 	 * Method used to clean resource collections before marshalling
-	 * 
+	 *
 	 * @param resource : the {@link Resource} to clean
 	 * @return ByteArrayOutputStream
 	 */
@@ -454,11 +419,11 @@ public class JMSSynchronizationServiceImpl implements SynchronizationService {
 	/**
 	 * This method allows to clean collections of resource unused for marshalling
 	 * the resource.
-	 * 
+	 *
 	 * If you not use this step an error "Laisy initilize collection of roles"
 	 * occure during the marshall of the object (because we are not into the
 	 * hibernate transaction)
-	 * 
+	 *
 	 * @param resource : the {@link Resource} to clean
 	 */
 	public void cleanResourceCollections(Resource resource) {
