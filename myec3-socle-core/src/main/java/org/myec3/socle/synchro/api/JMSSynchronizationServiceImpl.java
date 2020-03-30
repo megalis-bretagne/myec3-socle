@@ -1,17 +1,17 @@
 /**
  * Copyright (c) 2011 Atos Bourgogne
- * 
+ *
  * This file is part of MyEc3.
- * 
+ *
  * MyEc3 is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License version 3 as published by
  * the Free Software Foundation.
- * 
+ *
  * MyEc3 is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public License
  * along with MyEc3. If not, see <http://www.gnu.org/licenses/>.
  */
@@ -68,9 +68,9 @@ import org.springframework.util.Assert;
 /**
  * Implementation of synchronization service used to send JMS messages to the
  * remote ESB queue IN.
- * 
+ *
  * @see SynchronizationService
- * 
+ *
  * @author Matthieu Proboeuf <matthieu.proboeuf@atosorigin.com>
  * @author Denis Cucchietti <denis.cucchietti@atosorigin.com>
  */
@@ -103,7 +103,7 @@ public class JMSSynchronizationServiceImpl implements SynchronizationService {
 	/**
 	 * Method started by Spring (see jmsInMyec3Context.xml) to activate the
 	 * connection to the remote ESB
-	 * 
+	 *
 	 */
 	@PostConstruct
 	public void startConnection() {
@@ -151,9 +151,8 @@ public class JMSSynchronizationServiceImpl implements SynchronizationService {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Transactional
 	public void propagateCUD(Resource resource, List<Long> listApplicationIdToResynchronize,
-			SynchronizationType synchronizationType, SynchronizationJobType synchronizationJobType, int nbAttempts) {
+							 SynchronizationType synchronizationType, SynchronizationJobType synchronizationJobType, int nbAttempts) {
 
 		try {
 			OutputStream baOutputStream = this.cleanAndMarshalResource(resource);
@@ -200,9 +199,8 @@ public class JMSSynchronizationServiceImpl implements SynchronizationService {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Transactional
 	public void propagateCC(Resource resource, String relationName, List<Resource> createdResources,
-			String sendingApplication, int nbAttempts) {
+							String sendingApplication, int nbAttempts) {
 		List<String> resourcesStream = null;
 		OutputStream outputStream = null;
 
@@ -256,9 +254,8 @@ public class JMSSynchronizationServiceImpl implements SynchronizationService {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Transactional
 	public void propagateCU(Resource resource, String relationName, List<Resource> updatedResources,
-			List<Resource> addedResources, List<Resource> removedResources, String sendingApplication, int nbAttempts) {
+							List<Resource> addedResources, List<Resource> removedResources, String sendingApplication, int nbAttempts) {
 		List<String> resourcesStream = null;
 		OutputStream outputStream = null;
 
@@ -340,7 +337,7 @@ public class JMSSynchronizationServiceImpl implements SynchronizationService {
 	 */
 	@Override
 	public void propagateCollectionCreate(Resource resource, String relationName, List<Resource> createdResources,
-			String sendingApplication) {
+										  String sendingApplication) {
 		if (this.isSynchronizable(resource)) {
 			this.schedulerService.addImmediatePropagateCCTrigger(resource, relationName, createdResources,
 					sendingApplication, 0);
@@ -352,7 +349,7 @@ public class JMSSynchronizationServiceImpl implements SynchronizationService {
 	 */
 	@Override
 	public void propagateCollectionUpdate(Resource resource, String relationName, List<Resource> updatedResources,
-			List<Resource> addedResources, List<Resource> removedResources, String sendingApplication) {
+										  List<Resource> addedResources, List<Resource> removedResources, String sendingApplication) {
 		if (this.isSynchronizable(resource)) {
 			this.schedulerService.addImmediatePropagateCUTrigger(resource, relationName, updatedResources,
 					addedResources, removedResources, sendingApplication, 0);
@@ -364,7 +361,7 @@ public class JMSSynchronizationServiceImpl implements SynchronizationService {
 	 */
 	@Override
 	public void propagateCreation(Resource resource, List<Long> listApplicationIdToResynchronize,
-			SynchronizationType synchronizationType, String sendingApplication) {
+								  SynchronizationType synchronizationType, String sendingApplication) {
 		this.schedulerService.addImmediatePropagateCUDTrigger(resource, listApplicationIdToResynchronize,
 				synchronizationType, SynchronizationJobType.CREATE, 0);
 
@@ -375,7 +372,7 @@ public class JMSSynchronizationServiceImpl implements SynchronizationService {
 	 */
 	@Override
 	public void propagateDeletion(Resource resource, List<Long> listApplicationIdToResynchronize,
-			SynchronizationType synchronizationType, String sendingApplication) {
+								  SynchronizationType synchronizationType, String sendingApplication) {
 		if (this.isSynchronizable(resource)) {
 			this.schedulerService.addImmediatePropagateCUDTrigger(resource, listApplicationIdToResynchronize,
 					synchronizationType, SynchronizationJobType.DELETE, 0);
@@ -387,7 +384,7 @@ public class JMSSynchronizationServiceImpl implements SynchronizationService {
 	 */
 	@Override
 	public void propagateUpdate(Resource resource, List<Long> listApplicationIdToResynchronize,
-			SynchronizationType synchronizationType, String sendingApplication) {
+								SynchronizationType synchronizationType, String sendingApplication) {
 		if (this.isSynchronizable(resource)) {
 			if (resource.getClass().getSuperclass().equals(Profile.class)) {
 				// synchronize if the profile is enabled, do nothing
@@ -404,7 +401,7 @@ public class JMSSynchronizationServiceImpl implements SynchronizationService {
 
 	/**
 	 * Method used to clean resource collections before marshalling
-	 * 
+	 *
 	 * @param resource : the {@link Resource} to clean
 	 * @return ByteArrayOutputStream
 	 */
@@ -422,11 +419,11 @@ public class JMSSynchronizationServiceImpl implements SynchronizationService {
 	/**
 	 * This method allows to clean collections of resource unused for marshalling
 	 * the resource.
-	 * 
+	 *
 	 * If you not use this step an error "Laisy initilize collection of roles"
 	 * occure during the marshall of the object (because we are not into the
 	 * hibernate transaction)
-	 * 
+	 *
 	 * @param resource : the {@link Resource} to clean
 	 */
 	public void cleanResourceCollections(Resource resource) {

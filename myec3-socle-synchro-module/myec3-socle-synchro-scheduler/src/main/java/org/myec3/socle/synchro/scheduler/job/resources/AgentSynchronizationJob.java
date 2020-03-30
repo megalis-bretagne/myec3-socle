@@ -96,7 +96,7 @@ public class AgentSynchronizationJob extends
                 agentSDM.setActif(false);
                 return sdmWsClient.put(resource, agentSDM, synchronizationSubscription);
             }else{
-                logger.warn("AgentProfile id: {} n'a pas d'idAppliExterne (SDM) dans la table synchroIdentifiantExterneService",resource.getId());
+                logger.warn("AgentProfile.User id: {} n'a pas d'idAppliExterne (SDM) dans la table synchroIdentifiantExterneService",resource.getUser().getId());
                 //todo return null à voir si ça fonctionne dans ce cas
                 return null;
             }

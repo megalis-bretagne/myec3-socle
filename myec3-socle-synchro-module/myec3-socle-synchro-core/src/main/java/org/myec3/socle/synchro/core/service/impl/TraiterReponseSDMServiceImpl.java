@@ -47,23 +47,24 @@ public class TraiterReponseSDMServiceImpl implements TraiterReponseSDMService {
             LinkedHashMap<String, Object> reponseHM = (LinkedHashMap<String, Object>) reponse;
 
             if (AgentProfile.class.equals(resource.getClass())) {
+                AgentProfile  agentResource = (AgentProfile)resource;
                 if (reponseHM.get("Agent") instanceof LinkedHashMap) {
                     Object agent = reponseHM.get("Agent");
                     LinkedHashMap<String,Object> agentHM = (LinkedHashMap<String,Object>) agent;
 
-                    SynchroIdentifiantExterne s =synchroIdentifiantExterneService.findByIdSocle(resource.getId(), ResourceType.AGENT_PROFILE);
+                    SynchroIdentifiantExterne s =synchroIdentifiantExterneService.findByIdSocle(agentResource.getUser().getId(), ResourceType.AGENT_PROFILE);
                     if (s==null){
                         Application sdmApplication = applicationService.findByName("SDM");
                         SynchroIdentifiantExterne synchro = new SynchroIdentifiantExterne();
                         synchro.setApplication(sdmApplication);
                         synchro.setTypeRessource(ResourceType.AGENT_PROFILE);
-                        synchro.setIdSocle(resource.getId());
+                        synchro.setIdSocle(agentResource.getUser().getId());
                         if (agentHM.get("id") !=null){
                             synchro.setIdAppliExterne(Long.valueOf((Integer)agentHM.get("id")));
                         }
                         synchroIdentifiantExterneService.create(synchro);
                     }else {
-                        s.setIdSocle(resource.getId());
+                        s.setIdSocle(agentResource.getUser().getId());
                         if (agentHM.get("id") !=null){
                             s.setIdAppliExterne(Long.valueOf((Integer)agentHM.get("id")));
                         }
@@ -75,23 +76,24 @@ public class TraiterReponseSDMServiceImpl implements TraiterReponseSDMService {
                 }
             }
             if (EmployeeProfile.class.equals(resource.getClass())) {
+                EmployeeProfile  employeeResource = (EmployeeProfile)resource;
                 if (reponseHM.get("Inscrit") instanceof LinkedHashMap) {
                     Object inscrit = reponseHM.get("Inscrit");
                     LinkedHashMap<String,Object> inscritHM = (LinkedHashMap<String,Object>) inscrit;
 
-                    SynchroIdentifiantExterne s =synchroIdentifiantExterneService.findByIdSocle(resource.getId(), ResourceType.EMPLOYEE_PROFILE);
+                    SynchroIdentifiantExterne s =synchroIdentifiantExterneService.findByIdSocle(employeeResource.getUser().getId(), ResourceType.EMPLOYEE_PROFILE);
                     if (s==null){
                         Application sdmApplication = applicationService.findByName("SDM");
                         SynchroIdentifiantExterne synchro = new SynchroIdentifiantExterne();
                         synchro.setApplication(sdmApplication);
                         synchro.setTypeRessource(ResourceType.EMPLOYEE_PROFILE);
-                        synchro.setIdSocle(resource.getId());
+                        synchro.setIdSocle(employeeResource.getUser().getId());
                         if (inscritHM.get("id") !=null){
                             synchro.setIdAppliExterne(Long.valueOf((Integer)inscritHM.get("id")));
                         }
                         synchroIdentifiantExterneService.create(synchro);
                     }else {
-                        s.setIdSocle(resource.getId());
+                        s.setIdSocle(employeeResource.getUser().getId());
                         if (inscritHM.get("id") !=null){
                             s.setIdAppliExterne(Long.valueOf((Integer)inscritHM.get("id")));
                         }

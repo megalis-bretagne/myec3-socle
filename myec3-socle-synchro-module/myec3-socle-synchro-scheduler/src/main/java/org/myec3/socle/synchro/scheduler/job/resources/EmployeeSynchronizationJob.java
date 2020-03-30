@@ -93,7 +93,7 @@ public class EmployeeSynchronizationJob extends
                 inscritSDM.setActif(false);
                 return sdmWsClient.put(resource, inscritSDM, synchronizationSubscription);
             }else{
-                logger.warn("EmployeeProfile id: {} n'a pas d'idApplicationExterne (SDM) dans la table synchroIdentifiantExterneService",resource.getId());
+                logger.warn("EmployeeProfile.user id: {} n'a pas d'idApplicationExterne (SDM) dans la table synchroIdentifiantExterneService",resource.getUser().getId());
                 //todo return null à voir si ça fonctionne dans ce cas
                 return null;
             }

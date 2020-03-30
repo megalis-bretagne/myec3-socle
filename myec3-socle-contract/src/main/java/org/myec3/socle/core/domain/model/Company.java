@@ -530,7 +530,7 @@ public class Company extends Structure {
 
 	@XmlElement(name = "responsible", required = false)
 	@XmlElementWrapper(name = "responsibles", required = false)
-	@OneToMany(mappedBy = "company", cascade = { CascadeType.ALL }, fetch = FetchType.LAZY)
+	@OneToMany(mappedBy = "company", cascade = { CascadeType.ALL }, fetch = FetchType.EAGER)
 	@JsonProperty("mandataires_sociaux")
 	public List<Person> getResponsibles() {
 		return responsibles;
