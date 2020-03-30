@@ -45,8 +45,7 @@
             <url-pattern>/user/regeneratepassword</url-pattern>
             <url-pattern>/user/regeneratepassword/</url-pattern>
             <url-pattern>/user/regeneratepassword.regenerate_password_form</url-pattern>
-            <url-pattern>/user/newpassword</url-pattern>
-            <url-pattern>/user/newpassword/</url-pattern>
+            <url-pattern>/user/newpassword/*</url-pattern>
         </web-resource-collection>
     </security-constraint>
 
