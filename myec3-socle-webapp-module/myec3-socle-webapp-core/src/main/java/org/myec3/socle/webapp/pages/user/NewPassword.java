@@ -105,7 +105,7 @@ public class NewPassword extends AbstractPage {
 
 	/**
 	 * Business Service providing methods and specifics operations to synchronize
-	 * {@link Resource} objects to external applications
+	 * {@link org.myec3.socle.core.domain.model.Resource} objects to external applications
 	 */
 	@Inject
 	@Named("synchronizationNotificationService")
@@ -270,7 +270,7 @@ public class NewPassword extends AbstractPage {
 		this.successMessage = "OK";
 		this.user = null;
 		this.formBlock = Boolean.FALSE;
-		this.urlAfterRegen = GuWebAppConstants.URL_AFTER_PASSWORD_REGENERATION;
+		this.urlAfterRegen = GuWebAppConstants.PORTAIL_BASE_URL;
 		return Boolean.TRUE;
 	}
 }

@@ -88,7 +88,6 @@ public final class GuWebAppConstants {
     public static final String URL_HEAD_OFFICE = STRUCT_REF_BUNDLE.getString("url-headoffice");
 
     // Portals URL
-    public static final String MY_PORTAL_URL = GU_BUNDLE.getString("config.portal.url");
     public static final String LEGAL_NOTICE_URL = GU_BUNDLE.getString("legal.notice.url");
 
     // file constants
@@ -97,9 +96,6 @@ public final class GuWebAppConstants {
     public static final String FILER_LOGO_URL = GU_BUNDLE.getString("filer.logo.url");
     public static final String FILER_LOGO_CUSTOMERS_FOLDER = "customers/";
     public static final String CUSTOMER_FOLDER_NAME = "customer";
-
-    // URL after password regeneration
-    public static final String URL_AFTER_PASSWORD_REGENERATION = GU_BUNDLE.getString("urlafterregen");
 
     // Expiration time password (days)
     public static int expirationTimePassword = Integer.valueOf(GU_BUNDLE.getString("expiration.time.password"));
@@ -114,6 +110,8 @@ public final class GuWebAppConstants {
     public static final String KEYCLOAK_BASE_URL = ENV_BUNDLE.getString("keycloak.baseUrl");
 
     public static final String MYEC3_BASE_URL = ENV_BUNDLE.getString("myec3.baseUrl");
+
+    public static final String PORTAIL_BASE_URL = ENV_BUNDLE.getString("portail.baseUrl");
 
     public static final String SDM_TOKEN_URL = ENV_BUNDLE.getString("sdm.tokenUrl");
 }

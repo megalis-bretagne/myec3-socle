@@ -124,7 +124,7 @@ public class NavigationMenu extends AbstractPage {
 					return customer.getPortalUrl();
 				}
 			}
-			return GuWebAppConstants.MY_PORTAL_URL;
+			return GuWebAppConstants.PORTAIL_BASE_URL;
 		}
 		if (currentItem.getPage().getName().equalsIgnoreCase("org.myec3.socle.webapp.pages.organism.DetailOrganism")
 				|| (currentItem.getPage().getName()
