@@ -89,6 +89,7 @@ public class AppModule {
 			final Configuration<String> configuration) {
 		configuration.add("/oauth/.*");
 		configuration.add("/sdmInit/.*");
+		configuration.add("/health");
 	}
 
 	public HttpServletRequestFilter buildUtf8Filter() {
