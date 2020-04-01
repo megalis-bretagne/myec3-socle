@@ -134,8 +134,8 @@ public class EstablishmentSynchronizationJob extends
     private SdmEtablissement convertSdmEtablissement(Establishment resource) {
 
         SdmEtablissement etablissementSDM = new SdmEtablissement();
-
-        etablissementSDM.setSiege("");
+        int siege = resource.getIsHeadOffice() ? 1 : 0;
+        etablissementSDM.setSiege(String.valueOf(siege));
         etablissementSDM.setSiret(resource.getSiret());
 
         if (resource.getCompany() !=null && resource.getCompany().getId() != null){

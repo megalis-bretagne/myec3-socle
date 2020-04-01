@@ -48,6 +48,7 @@ public class SdmAgent extends SdmResource {
       @XmlElement(required = true)
       private SdmService service;
 
+
       public long getIdExterne() {
             return idExterne;
       }
