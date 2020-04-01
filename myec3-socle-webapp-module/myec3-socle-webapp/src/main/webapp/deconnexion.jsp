@@ -10,7 +10,7 @@
 <!--<iframe style="display: none;" src='https://combrit-socle.sib.fr/j_spring_security_logout'></iframe>-->
 <!--<iframe style="display: none;" src='https://combrit.sib.fr/secure/deconnexion.jsp'></iframe>-->
 <script type="text/javascript">function deconnexion () {
-    $.ajax({
+    jQuery.ajax({
         url: "http://sangoku:60080/deconnexion.php",
         xhrFields: {
             withCredentials: true
