@@ -11,7 +11,7 @@
 <!--<iframe style="display: none;" src='https://combrit.sib.fr/secure/deconnexion.jsp'></iframe>-->
 <script type="text/javascript">function deconnexion () {
     jQuery.ajax({
-        url: "https://sangoku:60080/apache-test/secure/redirect_uri?logout=https%3A%2F%2Fsangoku%3A60080%2Fapache-test%2F",
+        url: "https://combrit-exploit.sib.fr/secure/redirect_uri?logout=https%3A%2F%2Fsangoku%3A60080%2Fapache-test%2F",
         xhrFields: {
             withCredentials: true
         },
