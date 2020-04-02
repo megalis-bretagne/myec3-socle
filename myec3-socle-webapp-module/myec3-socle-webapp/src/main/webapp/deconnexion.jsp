@@ -46,7 +46,7 @@
                 withCredentials: true
             },
             success: function( result ) {
-                console.log("OK");
+                window.location.href = "http://combrit.sib.fr"
             },
             error: function (result) {
                 console.log("KO")
