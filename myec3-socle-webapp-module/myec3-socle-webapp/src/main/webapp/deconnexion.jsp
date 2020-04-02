@@ -4,14 +4,14 @@
     <script type="text/javascript" src="./static/js/jquery-3.4.1.min.js"></script>
 </head>
 <body>
-<div onclick="deconnexion();">Single Sign-Out</div>
+<div onclick="deconnexion('https://sangoku.sib.fr/secure/redirect_uri?logout=https%3A%2F%2Fsangoku.sib.fr');">Single Sign-Out</div>
 <!--<iframe style="display: none;" src='https://sso-preprod.megalis.bretagne.bzh/auth/realms/megalis/protocol/openid-connect/logout'></iframe>-->
 <!--<iframe style="display: none;" src='http://sangoku:60080/secure/redirect_uri?logout=http%3A%2F%2Fsangoku%3A60080'></iframe>-->
 <!--<iframe style="display: none;" src='https://combrit-socle.sib.fr/j_spring_security_logout'></iframe>-->
 <!--<iframe style="display: none;" src='https://combrit.sib.fr/secure/deconnexion.jsp'></iframe>-->
-<script type="text/javascript">function deconnexion () {
+<script type="text/javascript">function deconnexion (lien) {
     $.ajax({
-        url: "https://sangoku.sib.fr/secure/redirect_uri?logout=https%3A%2F%2Fsangoku.sib.fr",
+        url: lien,
         xhrFields: {
             withCredentials: true
         },
@@ -42,6 +42,6 @@
     //     req.send();
     // window.location.assign("http://localhost:8087/index.jsp");
 }
-window.onload=deconnexion();</script>
+window.onload=deconnexion("https://sangoku.sib.fr/index.php");</script>
 </body>
 </html>
