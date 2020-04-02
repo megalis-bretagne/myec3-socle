@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <script type="text/javascript" src="./static/js/jquery-1.3.2.min.js"></script>
+    <script type="text/javascript" src="./static/js/jquery-3.4.1.min.js"></script>
 </head>
 <body>
 <div onclick="deconnexion();">Single Sign-Out</div>
@@ -10,13 +10,13 @@
 <!--<iframe style="display: none;" src='https://combrit-socle.sib.fr/j_spring_security_logout'></iframe>-->
 <!--<iframe style="display: none;" src='https://combrit.sib.fr/secure/deconnexion.jsp'></iframe>-->
 <script type="text/javascript">function deconnexion () {
-    jQuery.ajax({
+    $.ajax({
         url: "https://sangoku.sib.fr/secure/redirect_uri?logout=https%3A%2F%2Fsangoku.sib.fr",
         xhrFields: {
             withCredentials: true
         },
         success: function( result ) {
-            console.log("ID Session <%=request.getSession().getId()%>");
+            console.log("OK");
         },
         error: function (result) {
             console.log("KO")
