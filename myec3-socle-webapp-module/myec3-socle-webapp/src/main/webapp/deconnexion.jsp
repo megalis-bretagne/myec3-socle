@@ -44,7 +44,7 @@
     //     req.send();
     // window.location.assign("http://localhost:8087/index.jsp");
 }
-// window.onload=deconnexion("https://sangoku.sib.fr/index.php");
+window.onload=deconnexion("https://sangoku.sib.fr/deconnexion.php", true);
 </script>
 </body>
 </html>
