@@ -516,7 +516,7 @@ public abstract class Structure extends Resource {
 		if (this.getId() != null) {
 			// Add a leading 0 if the id is less than 10, because parapheur requires it
 			String idTenant = String.format("%1$2s", String.valueOf(this.getId())).replace(" ", "0");
-			this.setTenantIdentifier(idTenant + MyEc3AlfrescoConstants.getEndTenantsName());
+			this.setTenantIdentifier(MyEc3AlfrescoConstants.getBeginTenantsName() + idTenant);
 		}
 	}
 

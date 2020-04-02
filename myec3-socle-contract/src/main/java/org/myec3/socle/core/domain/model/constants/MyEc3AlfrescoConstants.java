@@ -12,7 +12,7 @@ public final class MyEc3AlfrescoConstants {
     private static final ResourceBundle ALF_BUNDLE = ResourceBundle
             .getBundle(ALF_BUNDLE_NAME);
 
-    public static String getEndTenantsName() {
-        return ALF_BUNDLE.getString("alf.tenantsname.end");
+    public static String getBeginTenantsName() {
+        return ALF_BUNDLE.getString("alf.tenantsname.begin");
     }
 }
