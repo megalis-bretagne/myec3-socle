@@ -129,13 +129,13 @@ public class CompanySynchronizationJob extends
 		SdmEntreprise entrepriseSDM = new SdmEntreprise();
 
 		entrepriseSDM.setSiren(resource.getSiren());
-		entrepriseSDM.setFormeJuridique(resource.getApeCode());
+		entrepriseSDM.setFormeJuridique(resource.getLegalCategory().getLabel());
 		entrepriseSDM.setCodeAPE(resource.getApeCode());
 		entrepriseSDM.setEmail(resource.getEmail());
+		entrepriseSDM.setRaisonSociale(resource.getName());
 		//pas de mapping trouvé pour les deux champs ci-dessous
 		entrepriseSDM.setCapitalSocial("");
 		entrepriseSDM.setEffectif("");
-		entrepriseSDM.setRaisonSociale(resource.getLegalCategory().toString());
 
 		entrepriseSDM.setAdresse(convertToSdmAdresse(resource.getAddress()));
 

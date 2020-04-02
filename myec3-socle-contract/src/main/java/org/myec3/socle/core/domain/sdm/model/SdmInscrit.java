@@ -43,6 +43,16 @@ public class SdmInscrit extends SdmResource {
     @XmlElement(required = false)
     private String typeHash;
 
+    private SdmAdresse adresse;
+
+    public SdmAdresse getAdresse() {
+        return adresse;
+    }
+
+    public void setAdresse(SdmAdresse adresse) {
+        this.adresse = adresse;
+    }
+
     public String getMotDePasse() {
         return motDePasse;
     }
