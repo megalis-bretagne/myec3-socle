@@ -135,7 +135,7 @@ public class OrganismSynchronizationJob extends
         organismeSDM.setId(0);
         organismeSDM.setAcronyme(resource.getAcronym());
         organismeSDM.setSigle(resource.getLabel());
-        organismeSDM.setCategorieInsee(resource.getTenantIdentifier());
+        organismeSDM.setCategorieInsee(resource.getLegalCategory().getId());
         organismeSDM.setDenomination(resource.getName());
         organismeSDM.setSiren(resource.getSiren());
         organismeSDM.setNic(resource.getNic());
