@@ -39,3 +39,8 @@ deployPreprod:
   extends: .deployPreprod
   variables:
     STACK_NAME: "socle"
+
+deployProd:
+  extends: .deployProd
+  variables:
+    STACK_NAME: "socle"
