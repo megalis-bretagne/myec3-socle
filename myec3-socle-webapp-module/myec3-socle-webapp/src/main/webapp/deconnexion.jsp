@@ -5,7 +5,7 @@ boolean logoutSSO = BooleanUtils.toBoolean(request.getParameter("logoutSSO"));
 <!DOCTYPE html>
 <html>
 <head>
-    <script type="text/javascript" src="./static/js/jquery-3.4.1.min.js"></script>
+    <script type="text/javascript" src="./static/js/jquery-1.3.2.min.js"></script>
 </head>
 <body>
 <script type="text/javascript">
@@ -18,7 +18,7 @@ boolean logoutSSO = BooleanUtils.toBoolean(request.getParameter("logoutSSO"));
     }
 
     function deconnexionSSO () {
-        $.ajax({
+        jQuery.ajax({
             url: "https://combrit-sso.sib.fr/auth/realms/megalis/protocol/openid-connect/logout",
             xhrFields: {
                 withCredentials: true
@@ -52,7 +52,7 @@ boolean logoutSSO = BooleanUtils.toBoolean(request.getParameter("logoutSSO"));
 }
 
     function deconnexionApplis(){
-        $.ajax({
+        jQuery.ajax({
             url: "https://sangoku.sib.fr/deconnexion.php",
             xhrFields: {
                 withCredentials: true
