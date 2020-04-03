@@ -13,7 +13,7 @@ boolean logoutSSO = BooleanUtils.toBoolean(request.getParameter("logoutSSO"));
         <%if (logoutSSO) {%>
           deconnexionSSO();
         <%} else {%>
-          deconnexion();
+        deconnexionApplis();
         <%}%>
     }
 
@@ -58,7 +58,7 @@ boolean logoutSSO = BooleanUtils.toBoolean(request.getParameter("logoutSSO"));
                 withCredentials: true
             },
             success: function( result ) {
-                window.location.href = "http://combrit.sib.fr"
+                window.location.href = "https://combrit.sib.fr"
             },
             error: function (result) {
                 console.log("KO")
