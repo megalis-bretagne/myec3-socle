@@ -1,3 +1,7 @@
+<%@ page import="org.apache.commons.lang3.BooleanUtils" %><%
+boolean logoutSSO = BooleanUtils.toBoolean(request.getParameter("logoutSSO"));
+%>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -5,7 +9,15 @@
 </head>
 <body>
 <script type="text/javascript">
-    function deconnexion () {
+    function deconnexion(){
+        <%if (logoutSSO) {%>
+          deconnexionSSO();
+        <%} else {%>
+          deconnexion();
+        <%}%>
+    }
+
+    function deconnexionSSO () {
         $.ajax({
             url: "https://combrit-sso.sib.fr/auth/realms/megalis/protocol/openid-connect/logout",
             xhrFields: {
