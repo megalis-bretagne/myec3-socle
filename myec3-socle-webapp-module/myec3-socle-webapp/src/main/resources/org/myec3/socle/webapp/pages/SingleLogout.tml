@@ -2,59 +2,13 @@
 <html xmlns:t="http://tapestry.apache.org/schema/tapestry_5_1_0.xsd">
 <head>
     <title>Deconnexion en cours ...</title>
-    <!--[if IE 6]><link href="styles/ie6hacks.css" rel="stylesheet" /><![endif]-->
-    <!--[if IE 7]><link href="styles/ie7hacks.css" rel="stylesheet" /><![endif]-->
-    <link href="${context:static/css/dev.css}" rel="stylesheet" type="text/css" />
-    <link href="${context:static/css/print.css}" rel="stylesheet" type="text/css" media="print" />
-    <link href="${context:static/css/tapestryhacks.css}" rel="stylesheet" type="text/css" />
-    <script type="text/javascript" src="${context:static/js/jquery-3.4.1.min.js}"></script>
-    <!--[if IE 6 | IE 7]><script type="text/javascript" src="js/generalIEfix.js"></script><![endif]-->
-    <script type="text/javascript" src="${context:static/js/load.js}"></script>
-    <script type="text/javascript" src="${context:static/js/postalCode.js}"></script>
-    <!-- Silk Icons by Mark James - http://famfamfam.com -->
+    <script type="text/javascript" src="${context:static/js/singleLogout.js}"></script>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <link href="/megalis.ico" rel="icon" type="image/x-icon"/>
 </head>
 <body>
 <script type="text/javascript">
-    function deconnexion(logoutSSO){
-        if (logoutSSO){
-            deconnexionSSO();
-        } else {
-            deconnexionApplis();
-        }
-    }
 
-    function deconnexionSSO () {
-        $.ajax({
-            url: "https://combrit-sso.sib.fr/auth/realms/megalis/protocol/openid-connect/logout",
-            xhrFields: {
-                withCredentials: true
-            },
-            success: function( result ) {
-                deconnexionApplis();
-            },
-            error: function (result) {
-                console.log("KO")
-            }
-        });
-
-    }
-
-    function deconnexionApplis(){
-        $.ajax({
-            url: "https://sangoku.sib.fr/deconnexion.php",
-            xhrFields: {
-                withCredentials: true
-            },
-            success: function( result ) {
-                window.location.href = "https://combrit.sib.fr"
-            },
-            error: function (result) {
-                console.log("KO")
-            }
-        });
-    }
     window.onload=deconnexion(${logoutSSO});
 </script>
 

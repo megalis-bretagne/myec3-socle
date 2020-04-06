@@ -46,7 +46,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     public void configure(final WebSecurity web) {
-        web.ignoring().antMatchers("/singlelogout", "/health", "/resources/errorAccess.html", "/static/**", "/assets/**", "/modules.gz/**", "/megalis.ico");
+        web.ignoring().antMatchers("/deconnexion.jsp","/singlelogout", "/health", "/resources/errorAccess.html", "/static/**", "/assets/**", "/modules.gz/**", "/megalis.ico");
     }
 
     @Override
@@ -114,7 +114,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 //deux possiblités pour le logout, soit l'utilisateur a été déconnecté depuis une autre application de keyclaok, soit l'utilisateur se déconnecte explicitement depuis le socle
                 .logoutRequestMatcher( new AntPathRequestMatcher(MyEc3Constants.J_SPRING_SECURITY_LOGOUT, "GET"))
                 .invalidateHttpSession(true)
-                .logoutSuccessHandler(customKeyclaokLogoutSucessHandler("/singlelogout?logoutSSO=false"));
+                .logoutSuccessHandler(customKeyclaokLogoutSucessHandler("/deconnexion.jsp"));
     }
 
     private LogoutSuccessHandler customKeyclaokLogoutSucessHandler(String defaultTargetUrl) {
