@@ -17,6 +17,11 @@
  */
 package org.myec3.socle.webapp.constants;
 
+import org.apache.commons.lang3.StringUtils;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.ResourceBundle;
 
 /**
@@ -107,11 +112,20 @@ public final class GuWebAppConstants {
     // Expiration time url modif password (days)
     public static int expirationTimeUrlModifPassword = Integer.valueOf(GU_BUNDLE.getString("expiration.time.url.modif.password"));
 
-    public static final String KEYCLOAK_BASE_URL = ENV_BUNDLE.getString("keycloak.baseUrl");
-
     public static final String MYEC3_BASE_URL = ENV_BUNDLE.getString("myec3.baseUrl");
 
     public static final String PORTAIL_BASE_URL = ENV_BUNDLE.getString("portail.baseUrl");
 
     public static final String SDM_TOKEN_URL = ENV_BUNDLE.getString("sdm.tokenUrl");
+
+    public static final List<String> LISTE_URL_LOGOUT = getListeUrlLogout();
+
+    private static List<String> getListeUrlLogout() {
+        List<String> listeUrlLogout = new ArrayList<>();
+        String valPpListeUrlLogout = ENV_BUNDLE.getString("listeUrlLogout");
+        if (StringUtils.isNotBlank(valPpListeUrlLogout)){
+            listeUrlLogout = Arrays.asList(valPpListeUrlLogout.split("|"));
+        }
+        return listeUrlLogout;
+    }
 }
