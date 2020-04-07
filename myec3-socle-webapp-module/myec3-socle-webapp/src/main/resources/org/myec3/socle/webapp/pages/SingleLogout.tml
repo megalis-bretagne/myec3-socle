@@ -9,9 +9,7 @@
 
 <iframe style="display: none;" src="${keycloakLogoutUrl}"></iframe>
 <t:loop source="listeUrlLogout" value="urlLogout" >
-    <div >
-        <iframe style="display: none;" src='${urlLogout}'></iframe>
-    </div>
+    <iframe style="display: none;" src='${urlLogout}'></iframe>
 </t:loop>
 <script type="text/javascript"> window.onload = function () {
     window.location.assign("${portailBaseUrl}");
