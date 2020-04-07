@@ -116,6 +116,8 @@ public final class GuWebAppConstants {
 
     public static final String PORTAIL_BASE_URL = ENV_BUNDLE.getString("portail.baseUrl");
 
+    public static final String KEYCLOAK_BASE_URL = ENV_BUNDLE.getString("keycloak.baseUrl");
+
     public static final String SDM_TOKEN_URL = ENV_BUNDLE.getString("sdm.tokenUrl");
 
     public static final List<String> LISTE_URL_LOGOUT = getListeUrlLogout();
@@ -124,8 +126,10 @@ public final class GuWebAppConstants {
         List<String> listeUrlLogout = new ArrayList<>();
         String valPpListeUrlLogout = ENV_BUNDLE.getString("listeUrlLogout");
         if (StringUtils.isNotBlank(valPpListeUrlLogout)){
-            listeUrlLogout = Arrays.asList(valPpListeUrlLogout.split("|"));
+            listeUrlLogout = Arrays.asList(valPpListeUrlLogout.split("\\|"));
         }
         return listeUrlLogout;
     }
+
+
 }

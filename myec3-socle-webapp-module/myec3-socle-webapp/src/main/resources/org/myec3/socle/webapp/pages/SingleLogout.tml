@@ -2,15 +2,20 @@
 <html xmlns:t="http://tapestry.apache.org/schema/tapestry_5_1_0.xsd">
 <head>
     <title>Deconnexion en cours ...</title>
-    <script type="text/javascript" src="${context:static/js/singleLogout.js}"></script>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <link href="/megalis.ico" rel="icon" type="image/x-icon"/>
 </head>
 <body>
-<script type="text/javascript">
 
-    window.onload=deconnexion(${logoutSSO});
-</script>
+<iframe style="display: none;" src="${keycloakLogoutUrl}"></iframe>
+<t:loop source="listeUrlLogout" value="urlLogout" >
+    <div >
+        <iframe style="display: none;" src='${urlLogout}'></iframe>
+    </div>
+</t:loop>
+<script type="text/javascript"> window.onload = function () {
+    window.location.assign("${portailBaseUrl}");
+}</script>
 
 </body>
 </html>

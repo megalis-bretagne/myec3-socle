@@ -114,7 +114,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 //deux possiblités pour le logout, soit l'utilisateur a été déconnecté depuis une autre application de keyclaok, soit l'utilisateur se déconnecte explicitement depuis le socle
                 .logoutRequestMatcher( new AntPathRequestMatcher(MyEc3Constants.J_SPRING_SECURITY_LOGOUT, "GET"))
                 .invalidateHttpSession(true)
-                .logoutSuccessHandler(customKeyclaokLogoutSucessHandler("/deconnexion.jsp"));
+                .logoutSuccessHandler(customKeyclaokLogoutSucessHandler("/singlelogout?logoutSSO=false"));
     }
 
     private LogoutSuccessHandler customKeyclaokLogoutSucessHandler(String defaultTargetUrl) {
