@@ -15,6 +15,9 @@ public class SdmOrganisme extends SdmResource  {
     private String nic;
     private SdmAdresse adresse;
     private String description;
+    private String url;
+    private String email;
+    private String tel;
 
     public long getId() {
         return id;
@@ -86,5 +89,29 @@ public class SdmOrganisme extends SdmResource  {
 
     public void setDescription(String description) {
         this.description = Objects.toString(description,"");
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = Objects.toString(url,"");
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = Objects.toString(email,"");
+    }
+
+    public String getTel() {
+        return tel;
+    }
+
+    public void setTel(String tel) {
+        this.tel = Objects.toString(tel,"");
     }
 }
