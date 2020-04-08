@@ -139,7 +139,12 @@ public class OrganismDepartmentSynchronizationJob extends
             serviceSDM.setComplement(resource.getOrganism().getNic());
             serviceSDM.setFormeJuridique(resource.getOrganism().getStrutureLegalCategory().toString());
             serviceSDM.setFormeJuridiqueCode(resource.getOrganism().getLegalCategory().toString());
-            serviceSDM.setAcronymeOrganisme(resource.getOrganism().getAcronym());
+            SynchroIdentifiantExterne synchroOrganism = synchroIdentifiantExterneService.findByIdSocle(resource.getOrganism().getId(),ResourceType.ORGANISM);
+            if (synchroOrganism!=null){
+                serviceSDM.setAcronymeOrganisme(synchroOrganism.getAcronyme());
+            }else{
+                serviceSDM.setAcronymeOrganisme(resource.getOrganism().getAcronym());
+            }
         }
         serviceSDM.setEmail(resource.getEmail());
 

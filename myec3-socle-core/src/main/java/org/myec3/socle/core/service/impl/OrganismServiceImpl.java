@@ -66,14 +66,6 @@ public class OrganismServiceImpl extends GenericStructureServiceImpl<Organism, O
 
 	/**
 	 * Business Service providing methods and specifics operations on
-	 * {@link AcronymList} objects
-	 */
-	@Autowired
-	@Qualifier("acronymsListService")
-	private AcronymsListService acronymsListService;
-
-	/**
-	 * Business Service providing methods and specifics operations on
 	 * {@link StructureType} objects
 	 */
 	@Autowired
@@ -122,7 +114,7 @@ public class OrganismServiceImpl extends GenericStructureServiceImpl<Organism, O
 		Assert.notNull(organism, "organism is mandatory. null value is forbidden");
 
 		// Adding acronym if new organism
-		AcronymsList freeAcronym;
+/*		AcronymsList freeAcronym;
 		if (null == organism.getAcronym()) {
 			freeAcronym = this.acronymsListService.findOneAvailableAcronym();
 		} else {
@@ -130,9 +122,11 @@ public class OrganismServiceImpl extends GenericStructureServiceImpl<Organism, O
 		}
 		if (null == freeAcronym) {
 			throw new AllAcronymsUsedException();
-		}
-		organism.setAcronym(freeAcronym.getValue());
-		freeAcronym.setAvailable(Boolean.FALSE);
+		}*/
+/*		organism.setAcronym(freeAcronym.getValue());
+		freeAcronym.setAvailable(Boolean.FALSE);*/
+
+		organism.setAcronym("AAA");
 
 		// Adding structuretype
 		StructureType structureType = this.structureTypeService.findByValue(StructureTypeValue.ORGANISM);
