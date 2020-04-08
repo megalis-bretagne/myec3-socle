@@ -115,7 +115,7 @@ public class OrganismSynchronizationJob extends
             SdmOrganisme organismeSDM = convertSdmOrganisme(resource);
 
             SynchroIdentifiantExterne synchroIdentifiantExterne=null;
-            if (StringUtils.isEmpty(resource.getAcronym())){
+            if (!StringUtils.isEmpty(resource.getAcronym())){
                 synchroIdentifiantExterne = synchroIdentifiantExterneService.findByAcronyme(resource.getAcronym(), ResourceType.ORGANISM);
             }
             SdmWsClientImpl sdmWsClient = (SdmWsClientImpl) resourceWsClient;
@@ -134,6 +134,9 @@ public class OrganismSynchronizationJob extends
         SdmOrganisme organismeSDM = new SdmOrganisme();
         organismeSDM.setId(0);
         organismeSDM.setAcronyme(resource.getAcronym());
+        organismeSDM.setEmail(resource.getEmail());
+        organismeSDM.setUrl(resource.getWebsite());
+        organismeSDM.setTel(resource.getPhone());
         organismeSDM.setSigle(resource.getLabel());
         organismeSDM.setCategorieInsee(resource.getLegalCategory().getId());
         organismeSDM.setDenomination(resource.getName());
