@@ -145,6 +145,7 @@ public class SdmSynchroService {
                     synchro.setTypeRessource(ResourceType.ORGANISM);
                     synchro.setIdSocle(organismSocle.getId());
                     synchro.setIdAppliExterne(Long.valueOf(idSdm));
+                    synchro.setAcronyme(organismSocle.getAcronym());
 
                     synchroIdentifiantExterneService.create(synchro);
 
