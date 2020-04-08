@@ -120,7 +120,7 @@ public class OrganismSynchronizationJob extends
             }
             SdmWsClientImpl sdmWsClient = (SdmWsClientImpl) resourceWsClient;
             if (synchroIdentifiantExterne !=null){
-                organismeSDM.setId(synchroIdentifiantExterne.getIdAppliExterne());
+                //organismeSDM.setId(synchroIdentifiantExterne.getIdAppliExterne());
                 return sdmWsClient.put(resource, organismeSDM, synchronizationSubscription);
             }else{
                 return sdmWsClient.post(resource, organismeSDM, synchronizationSubscription);
