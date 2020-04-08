@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.myec3.socle.core.domain.model.*;
 import org.myec3.socle.core.domain.model.enums.ResourceType;
 import org.myec3.socle.core.service.ApplicationService;
+import org.myec3.socle.core.service.OrganismService;
 import org.myec3.socle.core.sync.api.Error;
 import org.myec3.socle.core.sync.api.ErrorCodeType;
 import org.myec3.socle.core.sync.api.ResponseMessage;
@@ -31,6 +32,12 @@ public class TraiterReponseSDMServiceImpl implements TraiterReponseSDMService {
     @Autowired
     @Qualifier("synchroIdentifiantExterneService")
     private SynchroIdentifiantExterneService synchroIdentifiantExterneService;
+
+
+    @Autowired
+    @Qualifier("organismService")
+    private OrganismService organismService;
+
 
     @Autowired
     @Qualifier("applicationService")
@@ -123,7 +130,9 @@ public class TraiterReponseSDMServiceImpl implements TraiterReponseSDMService {
                             if (orga.get("acronyme") !=null){
                                 synchro.setAcronyme(String.valueOf(orga.get("acronyme")));
                                 //Mise à jour de l'acronym avec le retour de la SDM
-                                ((Organism) resource).setAcronym(String.valueOf(orga.get("acronyme")));
+                                Organism organism = organismService.findOne(resource.getId());
+                                organism.setAcronym(String.valueOf(orga.get("acronyme")));
+                                organismService.update(organism);
                             }
                             synchroIdentifiantExterneService.create(synchro);
                         }else {
