@@ -17,40 +17,16 @@
  */
 package org.myec3.socle.synchro.scheduler.job.resources;
 
-import java.util.Date;
-import java.util.List;
-
 import org.myec3.socle.core.domain.model.*;
 import org.myec3.socle.core.domain.model.enums.ResourceType;
 import org.myec3.socle.core.domain.sdm.model.SdmAdresse;
-import org.myec3.socle.core.service.AdminProfileService;
-import org.myec3.socle.core.service.AgentProfileService;
-import org.myec3.socle.core.service.CompanyDepartmentService;
-import org.myec3.socle.core.service.CompanyService;
-import org.myec3.socle.core.service.CustomerService;
-import org.myec3.socle.core.service.EmployeeProfileService;
-import org.myec3.socle.core.service.EstablishmentService;
-import org.myec3.socle.core.service.OrganismDepartmentService;
-import org.myec3.socle.core.service.OrganismService;
-import org.myec3.socle.core.service.ResourceService;
-import org.myec3.socle.core.sync.api.ClassType;
-import org.myec3.socle.core.sync.api.ErrorCodeType;
-import org.myec3.socle.core.sync.api.HttpStatus;
-import org.myec3.socle.core.sync.api.MethodType;
-import org.myec3.socle.core.sync.api.ResponseMessage;
+import org.myec3.socle.core.service.*;
+import org.myec3.socle.core.sync.api.*;
 import org.myec3.socle.synchro.api.constants.SynchronizationJobType;
 import org.myec3.socle.synchro.api.constants.SynchronizationRelationsName;
 import org.myec3.socle.synchro.api.constants.SynchronizationType;
-import org.myec3.socle.synchro.core.domain.model.SynchronizationError;
-import org.myec3.socle.synchro.core.domain.model.SynchronizationFilter;
-import org.myec3.socle.synchro.core.domain.model.SynchronizationInitial;
-import org.myec3.socle.synchro.core.domain.model.SynchronizationLog;
-import org.myec3.socle.synchro.core.domain.model.SynchronizationSubscription;
-import org.myec3.socle.synchro.core.service.SynchronizationErrorService;
-import org.myec3.socle.synchro.core.service.SynchronizationFilterService;
-import org.myec3.socle.synchro.core.service.SynchronizationInitialService;
-import org.myec3.socle.synchro.core.service.SynchronizationLogService;
-import org.myec3.socle.synchro.core.service.SynchronizationSubscriptionService;
+import org.myec3.socle.synchro.core.domain.model.*;
+import org.myec3.socle.synchro.core.service.*;
 import org.myec3.socle.synchro.scheduler.constants.MyEc3SynchroConstants;
 import org.myec3.socle.synchro.scheduler.service.SchedulerService;
 import org.myec3.socle.synchro.scheduler.service.impl.SchedulerServiceImpl;
@@ -66,6 +42,9 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.scheduling.quartz.QuartzJobBean;
 import org.springframework.util.Assert;
 import org.springframework.web.context.support.SpringBeanAutowiringSupport;
+
+import java.util.Date;
+import java.util.List;
 
 /**
  * @author Matthieu Proboeuf <matthieu.proboeuf@atosorigin.com>
