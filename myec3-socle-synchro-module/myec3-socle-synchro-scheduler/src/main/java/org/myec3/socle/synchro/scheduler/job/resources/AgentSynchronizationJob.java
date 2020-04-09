@@ -94,7 +94,7 @@ public class AgentSynchronizationJob extends
             SdmWsClientImpl sdmWsClient = (SdmWsClientImpl) resourceWsClient;
             if (synchroIdentifiantExterne !=null){
                 agentSDM.setId(synchroIdentifiantExterne.getIdAppliExterne());
-                agentSDM.setActif(false);
+                agentSDM.setActif("0");
                 return sdmWsClient.put(resource, agentSDM, synchronizationSubscription);
             }else{
                 logger.warn("AgentProfile.User id: {} n'a pas d'idAppliExterne (SDM) dans la table synchroIdentifiantExterneService",resource.getUser().getId());
@@ -149,7 +149,9 @@ public class AgentSynchronizationJob extends
         agentSDM.setEmail(resource.getEmail());
         agentSDM.setNom(resource.getUser().getLastname());
         agentSDM.setPrenom(resource.getUser().getFirstname());
-        agentSDM.setActif(resource.isEnabled());
+
+        int myInt = resource.isEnabled() ? 1 : 0;
+        agentSDM.setActif(String.valueOf(myInt));
 
         if(!StringUtils.isEmpty(resource.getPhone())){
             agentSDM.setTelephone(resource.getPhone());

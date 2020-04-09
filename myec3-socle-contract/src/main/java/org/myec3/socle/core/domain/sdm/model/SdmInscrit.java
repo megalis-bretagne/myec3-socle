@@ -29,7 +29,7 @@ public class SdmInscrit extends SdmResource {
     private String prenom;
 
     @XmlElement(required = true)
-    boolean actif=true;
+    String actif="1";
 
     @XmlElement(required = false)
     private String telephone;
@@ -109,11 +109,11 @@ public class SdmInscrit extends SdmResource {
         this.prenom = Objects.toString(prenom,"");
     }
 
-    public boolean isActif() {
+    public String getActif() {
         return actif;
     }
 
-    public void setActif(boolean actif) {
+    public void setActif(String actif) {
         this.actif = actif;
     }
 

@@ -37,7 +37,7 @@ public class SdmAgent extends SdmResource {
       private String acronymeOrganisme;
 
       @XmlElement(required = true)
-      boolean actif=true;
+      String actif="1";
 
       @XmlElement(required = false)
       private String telephone;
@@ -123,11 +123,11 @@ public class SdmAgent extends SdmResource {
             this.acronymeOrganisme = Objects.toString(acronymeOrganisme,"");
       }
 
-      public boolean isActif() {
+      public String getActif() {
             return actif;
       }
 
-      public void setActif(boolean actif) {
+      public void setActif(String actif) {
             this.actif = actif;
       }
 
