@@ -37,6 +37,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 
 import javax.ws.rs.client.Entity;
 import java.util.Date;
@@ -149,9 +150,18 @@ public class AgentSynchronizationJob extends
         agentSDM.setNom(resource.getUser().getLastname());
         agentSDM.setPrenom(resource.getUser().getFirstname());
         agentSDM.setActif(resource.isEnabled());
-        agentSDM.setTelephone(resource.getPhone());
+
+        if(!StringUtils.isEmpty(resource.getPhone())){
+            agentSDM.setTelephone(resource.getPhone());
+        }
+        if(!StringUtils.isEmpty(resource.getCellPhone())){
+            agentSDM.setTelephone(resource.getCellPhone());
+        }
         agentSDM.setFax(resource.getFax());
         agentSDM.setAcronymeOrganisme(resource.getOrganismDepartment().getOrganism().getAcronym());
+
+        agentSDM.setAdresse(convertToSdmAdresse(resource.getAddress()));
+
 
         SdmService serviceSDM = new SdmService();
         SynchroIdentifiantExterne synchroIdentifiantExterne = synchroIdentifiantExterneService.findByIdSocle(resource.getOrganismDepartment().getId(), ResourceType.ORGANISM_DEPARTMENT);

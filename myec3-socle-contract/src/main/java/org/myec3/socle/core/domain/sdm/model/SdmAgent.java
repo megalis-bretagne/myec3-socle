@@ -48,6 +48,16 @@ public class SdmAgent extends SdmResource {
       @XmlElement(required = true)
       private SdmService service;
 
+      @XmlElement(required = false)
+      private SdmAdresse adresse;
+
+      public SdmAdresse getAdresse() {
+            return adresse;
+      }
+
+      public void setAdresse(SdmAdresse adresse) {
+            this.adresse = adresse;
+      }
 
       public long getIdExterne() {
             return idExterne;
