@@ -90,7 +90,7 @@ public class EmployeeSynchronizationJob extends
             SdmWsClientImpl sdmWsClient = (SdmWsClientImpl) resourceWsClient;
             if (synchroIdentifiantExterne !=null){
                 inscritSDM.setId(synchroIdentifiantExterne.getIdAppliExterne());
-                inscritSDM.setActif(false);
+                inscritSDM.setActif("0");
                 return sdmWsClient.put(resource, inscritSDM, synchronizationSubscription);
             }else{
                 logger.warn("EmployeeProfile.user id: {} n'a pas d'idApplicationExterne (SDM) dans la table synchroIdentifiantExterneService",resource.getUser().getId());
@@ -139,7 +139,8 @@ public class EmployeeSynchronizationJob extends
         inscritSDM.setEmail(resource.getEmail());
         inscritSDM.setNom(resource.getUser().getLastname());
         inscritSDM.setPrenom(resource.getUser().getFirstname());
-        inscritSDM.setActif(resource.isEnabled());
+        int myInt = resource.isEnabled() ? 1 : 0;
+        inscritSDM.setActif(String.valueOf(myInt));
         inscritSDM.setTelephone(resource.getPhone());
         inscritSDM.setMotDePasse(resource.getUser().getPassword());
         inscritSDM.setTypeHash("sha256");
