@@ -18,17 +18,13 @@
 package org.myec3.socle.synchro.scheduler.job.resources;
 
 import org.myec3.socle.core.domain.model.AgentProfile;
-import org.myec3.socle.core.domain.model.Profile;
 import org.myec3.socle.core.domain.model.Role;
 import org.myec3.socle.core.domain.model.enums.ResourceType;
 import org.myec3.socle.core.domain.sdm.model.SdmAgent;
 import org.myec3.socle.core.domain.sdm.model.SdmService;
-import org.myec3.socle.core.service.AgentProfileService;
-import org.myec3.socle.core.service.CompanyService;
 import org.myec3.socle.core.sync.api.ResponseMessage;
 import org.myec3.socle.synchro.core.domain.model.SynchroIdentifiantExterne;
 import org.myec3.socle.synchro.core.domain.model.SynchronizationSubscription;
-import org.myec3.socle.synchro.core.service.SynchroIdentifiantExterneDeltaService;
 import org.myec3.socle.synchro.core.service.SynchroIdentifiantExterneService;
 import org.myec3.socle.ws.client.ResourceWsClient;
 import org.myec3.socle.ws.client.impl.SdmWsClientImpl;
@@ -38,9 +34,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
-
-import javax.ws.rs.client.Entity;
-import java.util.Date;
 
 /**
  * Concrete job implementation used when the resource to synchronize is an

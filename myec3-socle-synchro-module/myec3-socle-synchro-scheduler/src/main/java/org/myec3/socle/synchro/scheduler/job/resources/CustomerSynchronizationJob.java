@@ -1,11 +1,9 @@
 package org.myec3.socle.synchro.scheduler.job.resources;
 
 import org.myec3.socle.core.domain.model.Customer;
-import org.myec3.socle.core.domain.sdm.model.SdmService;
 import org.myec3.socle.core.sync.api.ResponseMessage;
 import org.myec3.socle.synchro.core.domain.model.SynchronizationSubscription;
 import org.myec3.socle.ws.client.ResourceWsClient;
-import org.myec3.socle.ws.client.impl.SdmWsClientImpl;
 import org.springframework.stereotype.Component;
 
 /**

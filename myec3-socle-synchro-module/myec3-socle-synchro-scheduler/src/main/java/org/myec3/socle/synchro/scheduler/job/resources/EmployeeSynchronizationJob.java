@@ -18,11 +18,8 @@
 package org.myec3.socle.synchro.scheduler.job.resources;
 
 import org.myec3.socle.core.domain.model.EmployeeProfile;
-import org.myec3.socle.core.domain.model.Role;
 import org.myec3.socle.core.domain.model.enums.ResourceType;
-import org.myec3.socle.core.domain.sdm.model.SdmAgent;
 import org.myec3.socle.core.domain.sdm.model.SdmInscrit;
-import org.myec3.socle.core.domain.sdm.model.SdmService;
 import org.myec3.socle.core.sync.api.ResponseMessage;
 import org.myec3.socle.synchro.core.domain.model.SynchroIdentifiantExterne;
 import org.myec3.socle.synchro.core.domain.model.SynchronizationSubscription;
@@ -34,8 +31,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
-
-import java.util.Date;
 
 /**
  * Concrete job implementation used when the resource to synchronize is an

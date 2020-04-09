@@ -17,11 +17,9 @@
  */
 package org.myec3.socle.synchro.scheduler.job.resources;
 
-import org.myec3.socle.core.domain.model.AgentProfile;
 import org.myec3.socle.core.domain.model.OrganismDepartment;
-import org.myec3.socle.core.domain.model.Role;
 import org.myec3.socle.core.domain.model.enums.ResourceType;
-import org.myec3.socle.core.domain.sdm.model.*;
+import org.myec3.socle.core.domain.sdm.model.SdmService;
 import org.myec3.socle.core.sync.api.ResponseMessage;
 import org.myec3.socle.synchro.core.domain.model.SynchroIdentifiantExterne;
 import org.myec3.socle.synchro.core.domain.model.SynchronizationSubscription;
@@ -34,8 +32,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
-
-import java.util.Date;
 
 /**
  * Concrete job implementation used when the resource to synchronize is an
@@ -129,7 +125,7 @@ public class OrganismDepartmentSynchronizationJob extends
 
         serviceSDM.setLibelle(resource.getLabel());
         if (StringUtils.isEmpty(resource.getAbbreviation())){
-            serviceSDM.setSigle("ZZZ");
+            serviceSDM.setSigle("TOP");
         }else{
             serviceSDM.setSigle(resource.getAbbreviation());
         }
