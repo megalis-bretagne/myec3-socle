@@ -65,7 +65,7 @@
 
     <profiles>
         <profile>
-            <id>local</id>
+            <id>dbserver</id>
             <build>
                 <resources>
                     <resource>
