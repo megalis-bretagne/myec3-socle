@@ -8,6 +8,10 @@ import org.apache.tapestry5.ioc.annotations.Inject;
 import org.apache.tapestry5.services.Request;
 import org.myec3.socle.webapp.constants.GuWebAppConstants;
 
+import java.io.UnsupportedEncodingException;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLEncoder;
 import java.util.List;
 
 public class SingleLogout {
@@ -16,8 +20,6 @@ public class SingleLogout {
     private Request request;
 
     private List<String> listeUrlLogout;
-
-    private boolean logoutSSO;
 
     private String portailBaseUrl;
 
@@ -28,10 +30,23 @@ public class SingleLogout {
 
     @OnEvent(EventConstants.ACTIVATE)
     public Object onActivate() {
+        if (BooleanUtils.toBoolean(request.getParameter("logoutSSO"))){
+            //cas ou le parametre logoutSSO est a true, dans ce cas, on appelle l'url de logout du SSO qui ensuite va faire un redirect
+            //sur ce meme controleur mais avec cette fois-ci logoutSSO a false
+            String redirectUri;
+            try {
+                redirectUri = URLEncoder.encode(GuWebAppConstants.MYEC3_BASE_URL + "/singlelogout?logoutSSO=false", "UTF-8");
+            } catch (UnsupportedEncodingException e) {
+                throw new RuntimeException("Erreur d'encodage de l'url en UTF-8", e);
+            }
+            try {
+                return new URL(GuWebAppConstants.KEYCLOAK_BASE_URL + "/auth/realms/megalis/protocol/openid-connect/logout?redirect_uri="+redirectUri);
+            } catch (MalformedURLException e) {
+                throw new RuntimeException("Erreur lors de la construction de l'URL de redirection", e);
+            }
+        }
         this.listeUrlLogout = GuWebAppConstants.LISTE_URL_LOGOUT;
-        this.logoutSSO = BooleanUtils.toBoolean(request.getParameter("logoutSSO"));
         this.portailBaseUrl = GuWebAppConstants.PORTAIL_BASE_URL;
-        this.keycloakLogoutUrl = GuWebAppConstants.KEYCLOAK_BASE_URL + "/auth/realms/megalis/protocol/openid-connect/logout";
         return Boolean.TRUE;
     }
 
@@ -39,16 +54,7 @@ public class SingleLogout {
         return listeUrlLogout;
     }
 
-    public boolean isLogoutSSO() {
-        return logoutSSO;
-    }
-
     public String getPortailBaseUrl() {
         return portailBaseUrl;
     }
-
-    public String getKeycloakLogoutUrl() {
-        return keycloakLogoutUrl;
-    }
-
 }

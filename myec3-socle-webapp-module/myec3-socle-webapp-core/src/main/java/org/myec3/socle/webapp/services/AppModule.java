@@ -90,7 +90,6 @@ public class AppModule {
 		configuration.add("/oauth/.*");
 		configuration.add("/sdmInit/.*");
 		configuration.add("/health");
-		configuration.add("/deconnexion.jsp");
 	}
 
 	public HttpServletRequestFilter buildUtf8Filter() {

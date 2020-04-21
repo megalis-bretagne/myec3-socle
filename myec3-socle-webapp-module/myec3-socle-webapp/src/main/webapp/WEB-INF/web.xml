@@ -20,8 +20,6 @@
     <security-constraint>
         <web-resource-collection>
             <web-resource-name>public</web-resource-name>
-            <url-pattern>/deconnexion.jsp</url-pattern>
-            <url-pattern>/deconnexion.jsp/</url-pattern>
             <url-pattern>/singlelogout</url-pattern>
             <url-pattern>/singlelogout/</url-pattern>
             <url-pattern>/health</url-pattern>
