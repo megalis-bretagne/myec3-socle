@@ -129,7 +129,7 @@ public class AgentSynchronizationJob extends
      */
     private SdmAgent convertToSdmAgent(AgentProfile resource) {
         SdmAgent agentSDM = new SdmAgent();
-        agentSDM.setIdExterne(String.valueOf(resource.getId()));
+        agentSDM.setIdExterne(String.valueOf(resource.getExternalId()));
 
         agentSDM.setIdentifiant(resource.getUsername());
 
