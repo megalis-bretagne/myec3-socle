@@ -129,7 +129,8 @@ public class AgentSynchronizationJob extends
      */
     private SdmAgent convertToSdmAgent(AgentProfile resource) {
         SdmAgent agentSDM = new SdmAgent();
-        agentSDM.setIdExterne(resource.getId());
+        agentSDM.setIdExterne(String.valueOf(resource.getId()));
+
         agentSDM.setIdentifiant(resource.getUsername());
 
         //mapping du role

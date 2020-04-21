@@ -122,7 +122,7 @@ public class OrganismDepartmentSynchronizationJob extends
 
     private SdmService convertToSdmService(OrganismDepartment resource) {
         SdmService serviceSDM = new SdmService();
-
+        serviceSDM.setIdExterne(String.valueOf(resource.getId()));
         serviceSDM.setLibelle(resource.getLabel());
         if (StringUtils.isEmpty(resource.getAbbreviation())){
             serviceSDM.setSigle("TOP");

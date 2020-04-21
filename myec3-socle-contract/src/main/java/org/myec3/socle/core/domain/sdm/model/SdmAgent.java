@@ -19,9 +19,6 @@ public class SdmAgent extends SdmResource {
       private long idProfil;
 
       @XmlElement(required = true)
-      private long idExterne;
-
-      @XmlElement(required = true)
       private String identifiant;
 
       @XmlElement(required = true)
@@ -57,14 +54,6 @@ public class SdmAgent extends SdmResource {
 
       public void setAdresse(SdmAdresse adresse) {
             this.adresse = adresse;
-      }
-
-      public long getIdExterne() {
-            return idExterne;
-      }
-
-      public void setIdExterne(long idExterne) {
-            this.idExterne = idExterne;
       }
 
       public long getId() {

@@ -127,6 +127,8 @@ public class OrganismSynchronizationJob extends
 
     private SdmOrganisme convertSdmOrganisme(Organism resource) {
         SdmOrganisme organismeSDM = new SdmOrganisme();
+        organismeSDM.setIdExterne(String.valueOf(resource.getId()));
+
         organismeSDM.setId(0);
         organismeSDM.setAcronyme(resource.getAcronym());
         organismeSDM.setEmail(resource.getEmail());

@@ -124,7 +124,7 @@ public class CompanySynchronizationJob extends
 
 	private SdmEntreprise convertSdmEntreprise(Company resource) {
 		SdmEntreprise entrepriseSDM = new SdmEntreprise();
-
+		entrepriseSDM.setIdExterne(String.valueOf(resource.getId()));
 		entrepriseSDM.setSiren(resource.getSiren());
 		entrepriseSDM.setFormeJuridique(resource.getLegalCategory().getLabel());
 		entrepriseSDM.setCodeAPE(resource.getApeCode());
