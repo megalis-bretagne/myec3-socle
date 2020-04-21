@@ -13,7 +13,6 @@ public class SdmService extends SdmResource  {
     @XmlElement(required = true)
     private long id;
     private long idParent;
-    private long idExterne;
     private long idExterneParent;
     private String libelle;
     private String acronymeOrganisme;
@@ -38,14 +37,6 @@ public class SdmService extends SdmResource  {
 
     public void setIdParent(long idParent) {
         this.idParent = idParent;
-    }
-
-    public long getIdExterne() {
-        return idExterne;
-    }
-
-    public void setIdExterne(long idExterne) {
-        this.idExterne = idExterne;
     }
 
     public long getIdExterneParent() {

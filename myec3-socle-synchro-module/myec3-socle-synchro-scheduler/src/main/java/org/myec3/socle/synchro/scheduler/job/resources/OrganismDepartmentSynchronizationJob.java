@@ -129,7 +129,7 @@ public class OrganismDepartmentSynchronizationJob extends
         }else{
             serviceSDM.setSigle(resource.getAbbreviation());
         }
-        serviceSDM.setIdExterne(resource.getId());
+
         serviceSDM.setSiren(resource.getSiren());
         if (resource.getOrganism() !=null){
             serviceSDM.setComplement(resource.getOrganism().getNic());
