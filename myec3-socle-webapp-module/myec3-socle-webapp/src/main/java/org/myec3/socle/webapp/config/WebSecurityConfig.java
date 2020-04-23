@@ -46,7 +46,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     public void configure(final WebSecurity web) {
-        web.ignoring().antMatchers("/singlelogout", "/health", "/resources/errorAccess.html", "/logos/**", "/static/**", "/assets/**", "/modules.gz/**", "/megalis.ico");
+        web.ignoring().antMatchers("/singlelogout", "/health", "/resources/errorAccess.html", "/externe/**", "/static/**", "/assets/**", "/modules.gz/**", "/megalis.ico");
     }
 
     @Override
