@@ -21,6 +21,7 @@ import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.FileInputStream;
 import java.util.*;
 
 import javax.imageio.ImageIO;
@@ -285,32 +286,31 @@ public class Modify extends AbstractPage {
 		try {
 			if (null != this.logo) {
 				// FIXME duplicated from Organism.Create.java
-				AuthorizedMimeType mimeType = AuthorizedMimeType.getTypeByLabel(this.logo.getContentType());
+				AuthorizedMimeType mimeType = AuthorizedMimeType
+						.getTypeByLabel(this.logo.getContentType());
 				String file_extension = mimeType.toString().toLowerCase();
 
-				File targetDirectory = new File(
-						GuWebAppConstants.FILER_LOGO_PATH + this.organism.getAcronym() + GuWebAppConstants.IMAGE);
+				String finNomFic = "structure_id_" + this.organism.getId() + "." + file_extension;
+				String nomFicLogoFull = "logo_full_" + finNomFic;
+				String nomFicLogo = "logo_" + finNomFic;
+				String nomFicIcon = "icon_" + finNomFic;
 
-				if (!targetDirectory.exists())
-					targetDirectory.mkdirs();
-
-				File copiedLogo = new File(GuWebAppConstants.FILER_LOGO_PATH + this.organism.getAcronym()
-						+ GuWebAppConstants.IMAGE + "logo_full." + file_extension);
-
+				File copiedLogo = new File(GuWebAppConstants.FILER_LOGO_PATH + nomFicLogoFull);
 				logo.write(copiedLogo);
 
-				BufferedImage originalImg = ImageIO.read(copiedLogo);
+				/* Resize LOGO for 200x200 pixel */
+				FileInputStream fis = new FileInputStream(copiedLogo);
+				BufferedImage originalImg = ImageIO.read(fis);
 				BufferedImage resizeBufferLogo = resize(originalImg);
-				File resizedLogo = new File(GuWebAppConstants.FILER_LOGO_PATH + this.organism.getAcronym()
-						+ GuWebAppConstants.IMAGE + "logo." + file_extension);
-				ImageIO.write(resizeBufferLogo, file_extension, resizedLogo);
-				this.organism.setLogoUrl(GuWebAppConstants.FILER_LOGO_URL + this.organism.getAcronym()
-						+ GuWebAppConstants.IMAGE + "logo." + file_extension);
+				File resizedLogo = new File(GuWebAppConstants.FILER_LOGO_PATH + nomFicLogo);
 
-				File copiedIcon = new File(GuWebAppConstants.FILER_LOGO_PATH + this.organism.getAcronym()
-						+ GuWebAppConstants.IMAGE + "icon." + file_extension);
-				this.organism.setIconUrl(GuWebAppConstants.FILER_LOGO_URL + this.organism.getAcronym()
-						+ GuWebAppConstants.IMAGE + "icon." + file_extension);
+				// write logo.jpeg
+				ImageIO.write(resizeBufferLogo, file_extension, resizedLogo);
+
+				this.organism.setLogoUrl(GuWebAppConstants.FILER_LOGO_URL + nomFicLogo);
+
+				File copiedIcon = new File(GuWebAppConstants.FILER_LOGO_PATH + nomFicIcon);
+				this.organism.setIconUrl(GuWebAppConstants.FILER_LOGO_URL + nomFicIcon);
 
 				// write icon.jpeg
 				ImageIO.write(resizeBufferLogo, file_extension, copiedIcon);

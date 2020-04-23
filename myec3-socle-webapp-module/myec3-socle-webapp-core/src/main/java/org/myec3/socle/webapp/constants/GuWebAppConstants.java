@@ -96,9 +96,27 @@ public final class GuWebAppConstants {
     public static final String LEGAL_NOTICE_URL = GU_BUNDLE.getString("legal.notice.url");
 
     // file constants
-    public static final String FILER_LOGO_PATH = GU_BUNDLE.getString("filer.logo.path");
+    public static final String FILER_LOGO_PATH = getFilterLogoPath();
+
+    private static String getFilterLogoPath(){
+        String filterLogoPath = GU_BUNDLE.getString("filer.logo.path");
+        if (!filterLogoPath.endsWith("/") && !filterLogoPath.endsWith("\\")){
+            filterLogoPath += System.getProperty("file.separator");
+        }
+        return filterLogoPath;
+    }
+
     public static final String FILER_LOGO_TMP_FOLDER = "tmp";
-    public static final String FILER_LOGO_URL = GU_BUNDLE.getString("filer.logo.url");
+    public static final String FILER_LOGO_URL = getFilterLogoUrl();
+
+    private static String getFilterLogoUrl(){
+        String filterLogoUrl = GU_BUNDLE.getString("filer.logo.url");
+        if (!filterLogoUrl.endsWith("/")){
+            filterLogoUrl += "/";
+        }
+        return filterLogoUrl;
+    }
+
     public static final String FILER_LOGO_CUSTOMERS_FOLDER = "customers/";
     public static final String CUSTOMER_FOLDER_NAME = "customer";
 
@@ -130,6 +148,4 @@ public final class GuWebAppConstants {
         }
         return listeUrlLogout;
     }
-
-
 }

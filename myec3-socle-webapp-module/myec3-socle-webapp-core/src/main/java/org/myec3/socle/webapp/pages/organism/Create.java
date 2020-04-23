@@ -69,9 +69,6 @@ import org.myec3.socle.webapp.pages.Index;
  * Corresponding tapestry template file is :
  * src/main/resources/org/myec3/socle/webapp/pages/organism/Create.tml
  *
- * @see securityMyEc3Context.xml to know profiles authorized to display this
- *      page<br />
- *
  * @author Anthony Colas <anthony.j.colas@atosorigin.com>
  * @author Denis Cucchietti <anthony.j.colas@atosorigin.com>
  */
@@ -249,36 +246,27 @@ public class Create extends AbstractPage {
           .getTypeByLabel(this.logo.getContentType());
         String file_extension = mimeType.toString().toLowerCase();
 
-        File targetDirectory = new File(GuWebAppConstants.FILER_LOGO_PATH
-          + this.organism.getAcronym() + GuWebAppConstants.IMAGE);
-        targetDirectory.mkdirs();
+        String finNomFic = "structure_id_" + this.organism.getId() + "." + file_extension;
+        String nomFicLogoFull = "logo_full_" + finNomFic;
+        String nomFicLogo = "logo_" + finNomFic;
+        String nomFicIcon = "icon_" + finNomFic;
 
-        File copiedLogo = new File(GuWebAppConstants.FILER_LOGO_PATH
-          + this.organism.getAcronym() + GuWebAppConstants.IMAGE
-          + "logo_full." + file_extension);
-
+        File copiedLogo = new File(GuWebAppConstants.FILER_LOGO_PATH + nomFicLogoFull);
         logo.write(copiedLogo);
 
         /* Resize LOGO for 200x200 pixel */
         FileInputStream fis = new FileInputStream(copiedLogo);
         BufferedImage originalImg = ImageIO.read(fis);
         BufferedImage resizeBufferLogo = resize(originalImg);
-        File resizedLogo = new File(GuWebAppConstants.FILER_LOGO_PATH
-          + this.organism.getAcronym() + GuWebAppConstants.IMAGE
-          + "logo." + file_extension);
+        File resizedLogo = new File(GuWebAppConstants.FILER_LOGO_PATH + nomFicLogo);
 
         // write logo.jpeg
         ImageIO.write(resizeBufferLogo, file_extension, resizedLogo);
-        this.organism.setLogoUrl(GuWebAppConstants.FILER_LOGO_URL
-          + this.organism.getAcronym() + GuWebAppConstants.IMAGE
-          + "logo." + file_extension);
 
-        File copiedIcon = new File(GuWebAppConstants.FILER_LOGO_PATH
-          + this.organism.getAcronym() + GuWebAppConstants.IMAGE
-          + "icon." + file_extension);
-        this.organism.setIconUrl(GuWebAppConstants.FILER_LOGO_URL
-          + this.organism.getAcronym() + GuWebAppConstants.IMAGE
-          + "icon." + file_extension);
+        this.organism.setLogoUrl(GuWebAppConstants.FILER_LOGO_URL + nomFicLogo);
+
+        File copiedIcon = new File(GuWebAppConstants.FILER_LOGO_PATH + nomFicIcon);
+        this.organism.setIconUrl(GuWebAppConstants.FILER_LOGO_URL + nomFicIcon);
 
         // write icon.jpeg
         ImageIO.write(resizeBufferLogo, file_extension, copiedIcon);
