@@ -171,7 +171,7 @@ public class ResourceWsClientImpl implements ResourceWsClient {
 
 				String responseToString = response.readEntity(String.class);
 				// Display response content
-				logResponseContent(responseToString);
+				//logResponseContent(responseToString);
 
 				// Set entity error contained into client response to response
 				// message
@@ -383,23 +383,6 @@ public class ResourceWsClientImpl implements ResourceWsClient {
 			logger.error("[DELETE]", ex);
 			return this.buildServerErrorMessage(resource, HttpStatus.BAD_REQUEST, ErrorCodeType.INTERNAL_CLIENT_ERROR,
 					MethodType.DELETE, CLIENT_EXCEPTION_ERROR_LABEL, ex.getMessage());
-		}
-	}
-
-	/**
-	 * This method allows to log the content of the client response received
-	 * 
-	 * @param response : the Response body received as a string
-	 */
-	private void logResponseContent(String response) {
-		try {
-			// We display the content of inputStream
-			OutputStream outStream = System.out;
-			try (Writer w = new OutputStreamWriter(outStream, "UTF-8")) {
-				w.write(response);
-			}
-		} catch (Exception e) {
-			logger.error("Failed to write response content : ", e);
 		}
 	}
 
