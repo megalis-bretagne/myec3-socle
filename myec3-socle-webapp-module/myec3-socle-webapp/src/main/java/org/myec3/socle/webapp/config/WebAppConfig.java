@@ -37,6 +37,7 @@ public class WebAppConfig implements WebMvcConfigurer {
 		registry.addResourceHandler("/resources/**").addResourceLocations("/resources/").resourceChain(true)
 				.addResolver(new PathResourceResolver());
 		registry.addResourceHandler("/static/**/*").addResourceLocations("/static/");
+		registry.addResourceHandler("/externe/**/*").addResourceLocations("/externe/");
 		registry.addResourceHandler("/megalis.ico").addResourceLocations("/megalis.ico");
 	}
 

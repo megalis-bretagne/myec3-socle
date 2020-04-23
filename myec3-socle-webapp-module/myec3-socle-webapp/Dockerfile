@@ -20,7 +20,6 @@ echo "multi.dir=true" >> /glowroot/glowroot.properties
 ADD "http://nexus.sib.fr:8081/nexus/service/local/artifact/maven/redirect?r=sib-group&g=org.myec3.socle&a=myec3-socle-webapp&v=5.6.2-MEGALIS-SNAPSHOT&p=war" /usr/local/tomcat/webapps/ROOT.war
 RUN unzip /usr/local/tomcat/webapps/ROOT.war -d /usr/local/tomcat/webapps/ROOT
 RUN rm /usr/local/tomcat/webapps/ROOT.war
-RUN mkdir /usr/local/tomcat/webapps/ROOT/externe
 #livrairies de l'adapter keycloak a copier directement dans le repertoire lib du tomcat
 COPY tomcat/* /usr/local/tomcat/lib/
 
