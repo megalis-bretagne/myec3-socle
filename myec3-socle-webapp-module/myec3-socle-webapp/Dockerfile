@@ -20,6 +20,7 @@ echo "multi.dir=true" >> /glowroot/glowroot.properties
 ADD "http://nexus.sib.fr:8081/nexus/service/local/artifact/maven/redirect?r=sib-group&g=org.myec3.socle&a=myec3-socle-webapp&v=5.6.2-MEGALIS-SNAPSHOT&p=war" /usr/local/tomcat/webapps/ROOT.war
 RUN unzip /usr/local/tomcat/webapps/ROOT.war
 RUN rm /usr/local/tomcat/webapps/ROOT.war
+RUN cd /usr/local/tomcat/webapps/ROOT
 #livrairies de l'adapter keycloak a copier directement dans le repertoire lib du tomcat
 COPY tomcat/* /usr/local/tomcat/lib/
 
@@ -29,6 +30,7 @@ COPY docker-entrypoint.sh /usr/local/bin/
 RUN chmod u+x /usr/local/bin/docker-entrypoint.sh
 RUN mkdir /configGen
 
-CMD ["docker-entrypoint.sh"]
+CMD ["tail -f /dev/null"]
+#CMD ["docker-entrypoint.sh"]
 
 #HEALTHCHECK --interval=1m --timeout=5m --start-period=2m --retries=3 CMD curl -f http://localhost:8080/health || exit
