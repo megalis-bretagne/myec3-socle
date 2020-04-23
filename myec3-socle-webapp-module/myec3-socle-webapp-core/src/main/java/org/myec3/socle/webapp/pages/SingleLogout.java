@@ -21,7 +21,7 @@ public class SingleLogout {
 
     private List<String> listeUrlLogout;
 
-    private String portailBaseUrl;
+    private String portailLogoutUrl;
 
     private String keycloakLogoutUrl;
 
@@ -46,7 +46,7 @@ public class SingleLogout {
             }
         }
         this.listeUrlLogout = GuWebAppConstants.LISTE_URL_LOGOUT;
-        this.portailBaseUrl = GuWebAppConstants.PORTAIL_BASE_URL;
+        this.portailLogoutUrl = GuWebAppConstants.PORTAIL_BASE_URL + "/front/logout.jsp";
         return Boolean.TRUE;
     }
 
@@ -54,7 +54,7 @@ public class SingleLogout {
         return listeUrlLogout;
     }
 
-    public String getPortailBaseUrl() {
-        return portailBaseUrl;
+    public String getPortailLogoutUrl() {
+        return portailLogoutUrl;
     }
 }

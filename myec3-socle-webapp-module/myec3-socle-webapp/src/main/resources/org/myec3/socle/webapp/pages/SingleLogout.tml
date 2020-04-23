@@ -11,7 +11,7 @@
     <iframe style="display: none;" src='${urlLogout}'></iframe>
 </t:loop>
 <script type="text/javascript"> window.onload = function () {
-    window.location.assign("${portailBaseUrl}");
+    window.location.assign("${portailLogoutUrl}");
 }</script>
 
 </body>
