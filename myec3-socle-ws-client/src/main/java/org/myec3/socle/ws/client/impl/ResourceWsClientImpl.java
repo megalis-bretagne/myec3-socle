@@ -170,7 +170,6 @@ public class ResourceWsClientImpl implements ResourceWsClient {
 						responseMsg.getHttpStatus().getValue());
 
 				String responseToString = response.readEntity(String.class);
-				logger.info("REPONSE: {}",responseToString);
 				// Display response content
 				//logResponseContent(responseToString);
 
@@ -178,6 +177,8 @@ public class ResourceWsClientImpl implements ResourceWsClient {
 				// message
 				// Jersey has difficulties to convert the response to Error natively. We are
 				// doing it now by ourselves
+
+				logger.debug("Content of response in string : " + responseToString);
 
 				ObjectMapper mapper = new XmlMapper();
 				mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
@@ -269,13 +270,6 @@ public class ResourceWsClientImpl implements ResourceWsClient {
 
 		try {
 			logger.debug("[POST] on URI: {}", synchronizationSubscription.getUri());
-			try{
-				ObjectMapper mapper = new ObjectMapper();
-				String json = mapper.writeValueAsString(resource);
-				logger.info("REQUETE: {}",json);
-			}catch (Exception e){
-				logger.warn("probleme pour afficher la requete", e);
-			}
 			Response response = builder.post(Entity.xml(resource));
 			return buildResponseMessage(response, MethodType.POST);
 		} catch (ClientErrorException ex) {
