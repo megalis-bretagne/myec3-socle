@@ -14,7 +14,7 @@ echo "JAVA_OPTS: ${JAVA_OPTS}"
 BDD_PASSWORD=$(cat /run/secrets/db_password)
 echo "bdd.pwd = $BDD_PASSWORD" > /configGen/pwd.properties
 
-set JPDA_ADDRESS=8000
-set JPDA_TRANSPORT=dt_socket
+export JPDA_ADDRESS=8000
+export JPDA_TRANSPORT=dt_socket
 
 catalina.sh jpda run
