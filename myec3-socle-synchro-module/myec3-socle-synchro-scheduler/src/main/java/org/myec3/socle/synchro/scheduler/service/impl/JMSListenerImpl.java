@@ -108,7 +108,7 @@ public class JMSListenerImpl implements MessageListener {
 			// Start connection
 			connect.start();
 
-			log.info("Successfully connected to remote ESB queue");
+			log.debug("Successfully connected to remote ESB queue");
 		} catch (Exception e) {
 			log.error("Failed to initialize connection to remote ESB queue", e);
 		}
