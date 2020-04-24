@@ -17,4 +17,4 @@ echo "bdd.pwd = $BDD_PASSWORD" > /configGen/pwd.properties
 export JPDA_ADDRESS=8000
 export JPDA_TRANSPORT=dt_socket
 
-catalina.sh jpda run
+catalina.sh run
