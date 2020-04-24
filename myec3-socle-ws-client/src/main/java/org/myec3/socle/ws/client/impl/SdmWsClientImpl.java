@@ -194,7 +194,7 @@ public class SdmWsClientImpl implements ResourceWsClient {
 				String json = mapper.writeValueAsString(resourceSDM);
 				logger.info("REQUETE: {}",json);
 			}catch (Exception e){
-				logger.warn("probleme pour afficher la requete");
+				logger.warn("probleme pour afficher la requete", e);
 			}
 			Response response = builder.post(Entity.json(resourceSDM));
 			return buildResponseMessage(response, MethodType.POST, resource);
@@ -229,7 +229,7 @@ public class SdmWsClientImpl implements ResourceWsClient {
 				String json = mapper.writeValueAsString(resourceSDM);
 				logger.info("REQUETE: {}",json);
 			}catch (Exception e){
-				logger.warn("probleme pour afficher la requete");
+				logger.warn("probleme pour afficher la requete", e);
 			}
 			Response response = builder.put(Entity.json(resourceSDM));
 			return buildResponseMessage(response, MethodType.PUT, resource);

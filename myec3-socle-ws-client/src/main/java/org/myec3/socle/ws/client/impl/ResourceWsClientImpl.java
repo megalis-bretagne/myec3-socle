@@ -274,7 +274,7 @@ public class ResourceWsClientImpl implements ResourceWsClient {
 				String json = mapper.writeValueAsString(resource);
 				logger.info("REQUETE: {}",json);
 			}catch (Exception e){
-				logger.warn("probleme pour afficher la requete");
+				logger.warn("probleme pour afficher la requete", e);
 			}
 			Response response = builder.post(Entity.xml(resource));
 			return buildResponseMessage(response, MethodType.POST);
