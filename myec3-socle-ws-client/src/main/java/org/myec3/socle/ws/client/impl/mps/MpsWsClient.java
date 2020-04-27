@@ -1,13 +1,8 @@
 package org.myec3.socle.ws.client.impl.mps;
 
-import java.io.*;
-import java.net.*;
-import java.nio.charset.StandardCharsets;
-import java.util.HashMap;
-import java.util.ResourceBundle;
-
-import javax.ws.rs.core.Response.Status;
-
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.myec3.socle.core.domain.model.Company;
 import org.myec3.socle.core.domain.model.Establishment;
 import org.myec3.socle.core.domain.model.Person;
@@ -20,9 +15,12 @@ import org.myec3.socle.ws.client.impl.mps.response.ResponseEtablissements;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import javax.ws.rs.core.Response.Status;
+import java.io.*;
+import java.net.*;
+import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
+import java.util.ResourceBundle;
 
 import static java.util.stream.Collectors.joining;
 

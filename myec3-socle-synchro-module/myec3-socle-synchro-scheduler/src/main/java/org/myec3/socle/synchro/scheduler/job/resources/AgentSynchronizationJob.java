@@ -154,7 +154,10 @@ public class AgentSynchronizationJob extends
             agentSDM.setTelephone(resource.getCellPhone());
         }
         agentSDM.setFax(resource.getFax());
-        agentSDM.setAcronymeOrganisme(resource.getOrganismDepartment().getOrganism().getAcronym());
+
+        //On réalise une requete sur SynchroIdentifiantExterne pour récupérer l'acronyme retourné par la SDM
+        SynchroIdentifiantExterne synchroIdentifiantExterneOrganisme = synchroIdentifiantExterneService.findByIdSocle(resource.getOrganismDepartment().getOrganism().getId(), ResourceType.ORGANISM);
+        agentSDM.setAcronymeOrganisme(synchroIdentifiantExterneOrganisme.getAcronyme());
 
         agentSDM.setAdresse(convertToSdmAdresse(resource.getAddress()));
 

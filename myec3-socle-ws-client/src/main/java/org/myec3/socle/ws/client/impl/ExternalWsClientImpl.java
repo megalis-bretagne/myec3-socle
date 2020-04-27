@@ -1,20 +1,10 @@
 package org.myec3.socle.ws.client.impl;
 
-import java.security.InvalidParameterException;
-import java.security.cert.CertificateException;
-import java.text.MessageFormat;
-import java.util.Map;
-
-import javax.ws.rs.core.Response;
-
 import org.myec3.socle.core.domain.model.AgentProfile;
 import org.myec3.socle.core.domain.model.Organism;
 import org.myec3.socle.core.domain.model.Resource;
 import org.myec3.socle.core.sync.api.Error;
-import org.myec3.socle.core.sync.api.ErrorCodeType;
-import org.myec3.socle.core.sync.api.HttpStatus;
-import org.myec3.socle.core.sync.api.MethodType;
-import org.myec3.socle.core.sync.api.ResponseMessage;
+import org.myec3.socle.core.sync.api.*;
 import org.myec3.socle.synchro.core.domain.model.SynchronizationSubscription;
 import org.myec3.socle.ws.client.ResourceWsClient;
 import org.myec3.socle.ws.https.ConnectionContext;
@@ -32,6 +22,12 @@ import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Component;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
+
+import javax.ws.rs.core.Response;
+import java.security.InvalidParameterException;
+import java.security.cert.CertificateException;
+import java.text.MessageFormat;
+import java.util.Map;
 
 
 /**

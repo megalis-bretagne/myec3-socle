@@ -7,9 +7,10 @@
 
 package org.myec3.socle.ws.client.impl.mps;
 
-import javax.xml.bind.annotation.XmlRegistry;
 import org.myec3.socle.ws.client.impl.mps.response.ResponseEntreprises;
 import org.myec3.socle.ws.client.impl.mps.response.ResponseEtablissements;
+
+import javax.xml.bind.annotation.XmlRegistry;
 
 /**
  * This object contains factory methods for each Java content interface and Java

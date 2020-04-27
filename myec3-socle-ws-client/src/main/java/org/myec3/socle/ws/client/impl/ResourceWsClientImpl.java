@@ -17,9 +17,21 @@
  */
 package org.myec3.socle.ws.client.impl;
 
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.io.Writer;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.dataformat.xml.XmlMapper;
+import com.fasterxml.jackson.module.jaxb.JaxbAnnotationModule;
+import org.glassfish.jersey.client.JerseyClientBuilder;
+import org.myec3.socle.core.domain.model.AgentProfile;
+import org.myec3.socle.core.domain.model.OrganismDepartment;
+import org.myec3.socle.core.domain.model.Resource;
+import org.myec3.socle.core.sync.api.Error;
+import org.myec3.socle.core.sync.api.*;
+import org.myec3.socle.synchro.core.domain.model.SynchronizationSubscription;
+import org.myec3.socle.ws.client.ResourceWsClient;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
 
 import javax.ws.rs.ClientErrorException;
 import javax.ws.rs.client.Client;
@@ -30,26 +42,6 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.ResponseBuilder;
 import javax.ws.rs.core.Response.Status;
-
-import org.glassfish.jersey.client.JerseyClientBuilder;
-import org.myec3.socle.core.domain.model.AgentProfile;
-import org.myec3.socle.core.domain.model.OrganismDepartment;
-import org.myec3.socle.core.domain.model.Resource;
-import org.myec3.socle.core.sync.api.Error;
-import org.myec3.socle.core.sync.api.ErrorCodeType;
-import org.myec3.socle.core.sync.api.HttpStatus;
-import org.myec3.socle.core.sync.api.MethodType;
-import org.myec3.socle.core.sync.api.ResponseMessage;
-import org.myec3.socle.synchro.core.domain.model.SynchronizationSubscription;
-import org.myec3.socle.ws.client.ResourceWsClient;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Component;
-
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.dataformat.xml.XmlMapper;
-import com.fasterxml.jackson.module.jaxb.JaxbAnnotationModule;
 
 /**
  * Concrete implementation of REST methods used to contact third-party
@@ -170,6 +162,7 @@ public class ResourceWsClientImpl implements ResourceWsClient {
 						responseMsg.getHttpStatus().getValue());
 
 				String responseToString = response.readEntity(String.class);
+				logger.info("REPONSE: {}",responseToString);
 				// Display response content
 				//logResponseContent(responseToString);
 
@@ -190,6 +183,8 @@ public class ResourceWsClientImpl implements ResourceWsClient {
 				// Fill the method used during the request
 				responseMsg.getError().setMethodType(methodType);
 			} else {
+				String responseToString = response.readEntity(String.class);
+				logger.info("REPONSE: {}",responseToString);
 				// No error occurred during the request
 				responseMsg.setError(null);
 			}
@@ -270,6 +265,13 @@ public class ResourceWsClientImpl implements ResourceWsClient {
 
 		try {
 			logger.debug("[POST] on URI: {}", synchronizationSubscription.getUri());
+			try{
+				ObjectMapper mapper = new ObjectMapper();
+				String xml = mapper.writeValueAsString(resource);
+				logger.info("REQUETE: {}",xml);
+			}catch (Exception e){
+				logger.warn("probleme pour afficher la requete", e);
+			}
 			Response response = builder.post(Entity.xml(resource));
 			return buildResponseMessage(response, MethodType.POST);
 		} catch (ClientErrorException ex) {
@@ -301,6 +303,14 @@ public class ResourceWsClientImpl implements ResourceWsClient {
 
 		try {
 			logger.debug("[PUT] on URI : {}", synchronizationSubscription.getUri());
+			try{
+				ObjectMapper mapper = new ObjectMapper();
+				String xml = mapper.writeValueAsString(resource);
+				logger.info("REQUETE: {}",xml);
+			}catch (Exception e){
+				logger.warn("probleme pour afficher la requete", e);
+			}
+
 			Response response = builder.put(Entity.xml(resource));
 			return buildResponseMessage(response, MethodType.PUT);
 		} catch (ClientErrorException ex) {
