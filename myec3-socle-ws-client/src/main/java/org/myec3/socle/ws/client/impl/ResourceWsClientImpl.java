@@ -266,8 +266,8 @@ public class ResourceWsClientImpl implements ResourceWsClient {
 		try {
 			logger.debug("[POST] on URI: {}", synchronizationSubscription.getUri());
 			try{
-				ObjectMapper mapper = new ObjectMapper();
-				String xml = mapper.writeValueAsString(resource);
+				XmlMapper xmlMapper = new XmlMapper();
+				String xml = xmlMapper.writeValueAsString(resource);
 				logger.info("REQUETE: {}",xml);
 			}catch (Exception e){
 				logger.warn("probleme pour afficher la requete", e);
@@ -304,8 +304,8 @@ public class ResourceWsClientImpl implements ResourceWsClient {
 		try {
 			logger.debug("[PUT] on URI : {}", synchronizationSubscription.getUri());
 			try{
-				ObjectMapper mapper = new ObjectMapper();
-				String xml = mapper.writeValueAsString(resource);
+				XmlMapper xmlMapper = new XmlMapper();
+				String xml = xmlMapper.writeValueAsString(resource);
 				logger.info("REQUETE: {}",xml);
 			}catch (Exception e){
 				logger.warn("probleme pour afficher la requete", e);
