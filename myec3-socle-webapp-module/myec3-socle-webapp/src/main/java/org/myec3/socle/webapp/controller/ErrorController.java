@@ -17,7 +17,7 @@ public class ErrorController {
 	// for 403 access denied page
 	@RequestMapping(value = "/errorAccess", method = { RequestMethod.POST, RequestMethod.GET })
 	public String accesssDenied(Principal user) {
-		return "redirect:resources/errorAccess.html";
+		return "redirect:/resources/errorAccess.html";
 
 	}
 
@@ -25,6 +25,6 @@ public class ErrorController {
 	@ResponseStatus(HttpStatus.BAD_REQUEST) // 400
 	@ResponseBody
 	public String resolveBadRequestExceptions() {
-		return "redirect:resources/errorOpenSso.html";
+		return "redirect:/resources/errorOpenSso.html";
 	}
 }
