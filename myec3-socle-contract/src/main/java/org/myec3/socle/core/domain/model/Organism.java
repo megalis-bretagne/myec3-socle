@@ -308,6 +308,7 @@ public class Organism extends Structure {
 	@XmlElementWrapper(name = "organismStatuses", required = false)
 	@XmlElement(required = false)
 	@LazyCollection(LazyCollectionOption.FALSE)
+	@JsonIgnore
 	public Set<OrganismStatus> getOrganismStatus() {
 		return organismStatuses;
 	}
