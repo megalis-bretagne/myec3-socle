@@ -124,7 +124,7 @@ public class SdmInitController {
 
             List<LinkedHashMap<String, Object>> agentsListe = null;
             try {
-                Object response = clientMps.get("https://marches-preprod.megalis.bretagne.bzh/app.php/api/v1/agents.json", page);
+                Object response = clientMps.get("https://marches.megalis.bretagne.bzh/app.php/api/v1/agents.json", page);
                 LinkedHashMap<String, Object> services = (LinkedHashMap<String, Object>) response;
                 agentsListe = (List<LinkedHashMap<String, Object>>) services.get("agents");
 
@@ -184,7 +184,7 @@ public class SdmInitController {
             List<LinkedHashMap<String, Object>> organismesListe = null;
 
             try {
-                Object response = clientMps.get("https://marches-preprod.megalis.bretagne.bzh/app.php/api/v1/organismes.json", page);
+                Object response = clientMps.get("https://marches.megalis.bretagne.bzh/app.php/api/v1/organismes.json", page);
                 LinkedHashMap<String, Object> organismes = (LinkedHashMap<String, Object>) response;
                 organismesListe = (List<LinkedHashMap<String, Object>>) organismes.get("organismes");
 
@@ -242,7 +242,7 @@ public class SdmInitController {
 
             List<LinkedHashMap<String, Object>> servicesListe = null;
             try {
-                Object response = clientMps.get("https://marches-preprod.megalis.bretagne.bzh/app.php/api/v1/services.json", page);
+                Object response = clientMps.get("https://marches.megalis.bretagne.bzh/app.php/api/v1/services.json", page);
                 LinkedHashMap<String, Object> services = (LinkedHashMap<String, Object>) response;
                 servicesListe = (List<LinkedHashMap<String, Object>>) services.get("services");
 
@@ -301,7 +301,7 @@ public class SdmInitController {
             List<LinkedHashMap<String, Object>> etablissementsListe = null;
 
             try {
-                Object response = clientMps.get("https://marches-preprod.megalis.bretagne.bzh/app.php/api/v1/etablissements.json", page);
+                Object response = clientMps.get("https://marches.megalis.bretagne.bzh/app.php/api/v1/etablissements.json", page);
                 LinkedHashMap<String, Object> services = (LinkedHashMap<String, Object>) response;
                 etablissementsListe = (List<LinkedHashMap<String, Object>>) services.get("etablissements");
             } catch (Exception e) {
@@ -360,7 +360,7 @@ public class SdmInitController {
 
             List<LinkedHashMap<String, Object>> entreprisesListe = null;
             try {
-                Object response = clientMps.get("https://marches-preprod.megalis.bretagne.bzh/app.php/api/v1/entreprises.json", page);
+                Object response = clientMps.get("https://marches.megalis.bretagne.bzh/app.php/api/v1/entreprises.json", page);
                 LinkedHashMap<String, Object> services = (LinkedHashMap<String, Object>) response;
                 entreprisesListe = (List<LinkedHashMap<String, Object>>) services.get("entreprises");
 
@@ -423,7 +423,7 @@ public class SdmInitController {
 
             List<LinkedHashMap<String, Object>> inscritsListe = null;
             try {
-                Object response = clientMps.get("https://marches-preprod.megalis.bretagne.bzh/app.php/api/v1/inscrits.json", page);
+                Object response = clientMps.get("https://marches.megalis.bretagne.bzh/app.php/api/v1/inscrits.json", page);
                 LinkedHashMap<String, Object> services = (LinkedHashMap<String, Object>) response;
                 inscritsListe = (List<LinkedHashMap<String, Object>>) services.get("inscrits");
 
