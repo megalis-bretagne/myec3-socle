@@ -70,6 +70,9 @@ public class AgentSynchronizationJob extends
             SdmWsClientImpl sdmWsClient = (SdmWsClientImpl) resourceWsClient;
             return sdmWsClient.post(resource, agentSDM, synchronizationSubscription);
         } else {
+            if (synchronizationSubscription.getApplication().getId() == 7){
+                resource.setAlfUserName(resource.getId() + "@monotenant.megalis");
+            }
             return resourceWsClient.post(resource, synchronizationSubscription);
         }
     }
@@ -95,6 +98,9 @@ public class AgentSynchronizationJob extends
                 return null;
             }
         } else {
+            if (synchronizationSubscription.getApplication().getId() == 7){
+                resource.setAlfUserName(resource.getId() + "@monotenant.megalis");
+            }
             return resourceWsClient.delete(resource, synchronizationSubscription);
         }
     }
