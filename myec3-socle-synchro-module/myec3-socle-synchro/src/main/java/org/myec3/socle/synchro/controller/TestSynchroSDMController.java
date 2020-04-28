@@ -18,9 +18,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 @RestController
-public class TestSycnhroSDMController {
+public class TestSynchroSDMController {
 
-    private static final Logger logger = LoggerFactory.getLogger(TestSycnhroSDMController.class);
+    private static final Logger logger = LoggerFactory.getLogger(TestSynchroSDMController.class);
 
     @Autowired
     @Qualifier("agentProfileService")
@@ -78,6 +78,25 @@ public class TestSycnhroSDMController {
     @Autowired
     @Qualifier("applicationService")
     private ApplicationService applicationService;
+
+    @RequestMapping(value = "/jcms/agent/", method = {RequestMethod.GET})
+    @Transactional
+    public String agentJcms(@RequestParam long id) {
+
+        AgentProfile agent =agentProfileService.findOne(id);
+
+        Application applicationASynchroniser = applicationService.findByName("portail megalisbretagne");
+        List<Long> listApplicationIdToResynchronize = new ArrayList<>();
+        listApplicationIdToResynchronize.add(applicationASynchroniser.getId());
+
+        SynchronizationType synchronizationType = SynchronizationType.SYNCHRONIZATION;
+        String sendingApplication = "GU";
+
+        agentSynchronizer.synchronizeUpdate(agent, listApplicationIdToResynchronize, synchronizationType, sendingApplication);
+        logger.info("synchro agent {}", agent.getUsername());
+
+        return "synchro agent "+ agent.getName();
+    }
 
 
     @RequestMapping(value = "/sdm/agent/", method = {RequestMethod.GET})
