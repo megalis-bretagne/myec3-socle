@@ -232,7 +232,7 @@ public class ResourceWsClientImpl implements ResourceWsClient {
 		try {
 			return builder.get();
 		} catch (Exception ex) {
-			logger.error(ex.getMessage());
+			logger.error(synchronizationSubscription.getApplication().getName() + " - " + ex.getMessage(), ex);
 			ResponseBuilder errorResponse = Response.status(Status.SERVICE_UNAVAILABLE);
 			return errorResponse.build();
 		}
@@ -248,7 +248,7 @@ public class ResourceWsClientImpl implements ResourceWsClient {
 		try {
 			return builder.get();
 		} catch (Exception ex) {
-			logger.error(ex.getMessage());
+			logger.error(synchronizationSubscription.getApplication().getName() + " - " + ex.getMessage(), ex);
 			ResponseBuilder errorResponse = Response.status(Status.SERVICE_UNAVAILABLE);
 			return errorResponse.build();
 		}
@@ -264,29 +264,29 @@ public class ResourceWsClientImpl implements ResourceWsClient {
 		Builder builder = webResource.request().accept(MediaType.APPLICATION_XML);
 
 		try {
-			logger.debug("[POST] on URI: {}", synchronizationSubscription.getUri());
+			logger.debug(synchronizationSubscription.getApplication().getName() + " - [POST] on URI: {}", synchronizationSubscription.getUri());
 			try{
 				XmlMapper xmlMapper = new XmlMapper();
 				String xml = xmlMapper.writeValueAsString(resource);
-				logger.info("REQUETE: {}",xml);
+				logger.info(synchronizationSubscription.getApplication().getName() + " - REQUETE: {}",xml);
 			}catch (Exception e){
-				logger.warn("probleme pour afficher la requete", e);
+				logger.warn(synchronizationSubscription.getApplication().getName() + " - probleme pour afficher la requete", e);
 			}
 			Response response = builder.post(Entity.xml(resource));
 			return buildResponseMessage(response, MethodType.POST);
 		} catch (ClientErrorException ex) {
 			if (ex.getMessage().contains(CONNECTION_EXCEPTION)) {
-				logger.error("[POST][ConnectException] Server Unavailable HTTP status 503", ex);
+				logger.error(synchronizationSubscription.getApplication().getName() + " - [POST][ConnectException] Server Unavailable HTTP status 503", ex);
 				return this.buildServerErrorMessage(resource, HttpStatus.SERVER_UNAVAILABLE, null, MethodType.POST,
 						SERVER_UNVAILABLE_ERROR_LABEL, SERVER_UNVAILABLE_ERROR_MESSAGE);
 			} else {
-				logger.error("[POST] Exception in sync", ex);
+				logger.error(synchronizationSubscription.getApplication().getName() + " - [POST] Exception in sync", ex);
 				return this.buildServerErrorMessage(resource, HttpStatus.BAD_REQUEST,
 						ErrorCodeType.INTERNAL_CLIENT_ERROR, MethodType.POST, CLIENT_EXCEPTION_ERROR_LABEL,
 						ex.getMessage());
 			}
 		} catch (Exception ex) {
-			logger.error("[POST] Exception in sync", ex);
+			logger.error(synchronizationSubscription.getApplication().getName() + " - [POST] Exception in sync", ex);
 			return this.buildServerErrorMessage(resource, HttpStatus.BAD_REQUEST,
 					ErrorCodeType.INTERNAL_CLIENT_ERROR,
 					MethodType.POST, CLIENT_EXCEPTION_ERROR_LABEL, ex.getMessage());
@@ -302,30 +302,30 @@ public class ResourceWsClientImpl implements ResourceWsClient {
 		Builder builder = webResource.request().accept(MediaType.APPLICATION_XML);
 
 		try {
-			logger.debug("[PUT] on URI : {}", synchronizationSubscription.getUri());
+			logger.debug(synchronizationSubscription.getApplication().getName() + " - [PUT] on URI : {}", synchronizationSubscription.getUri());
 			try{
 				XmlMapper xmlMapper = new XmlMapper();
 				String xml = xmlMapper.writeValueAsString(resource);
-				logger.info("REQUETE: {}",xml);
+				logger.info(synchronizationSubscription.getApplication().getName() + " - REQUETE: {}",xml);
 			}catch (Exception e){
-				logger.warn("probleme pour afficher la requete", e);
+				logger.warn(synchronizationSubscription.getApplication().getName() + " - probleme pour afficher la requete", e);
 			}
 
 			Response response = builder.put(Entity.xml(resource));
 			return buildResponseMessage(response, MethodType.PUT);
 		} catch (ClientErrorException ex) {
 			if (ex.getMessage().contains(CONNECTION_EXCEPTION)) {
-				logger.error("[PUT][ConnectException] Server Unavailable HTTP status 503", ex);
+				logger.error(synchronizationSubscription.getApplication().getName() + " - [PUT][ConnectException] Server Unavailable HTTP status 503", ex);
 				return this.buildServerErrorMessage(resource, HttpStatus.SERVER_UNAVAILABLE, null, MethodType.PUT,
 						SERVER_UNVAILABLE_ERROR_LABEL, SERVER_UNVAILABLE_ERROR_MESSAGE);
 			} else {
-				logger.error("[PUT] Sync error:", ex);
+				logger.error(synchronizationSubscription.getApplication().getName() + " - [PUT] Sync error:", ex);
 				return this.buildServerErrorMessage(resource, HttpStatus.BAD_REQUEST,
 						ErrorCodeType.INTERNAL_CLIENT_ERROR, MethodType.PUT, CLIENT_EXCEPTION_ERROR_LABEL,
 						ex.getMessage());
 			}
 		} catch (Exception ex) {
-			logger.error("[PUT] Sync error:", ex);
+			logger.error(synchronizationSubscription.getApplication().getName() + " - [PUT] Sync error:", ex);
 			return this.buildServerErrorMessage(resource, HttpStatus.BAD_REQUEST, ErrorCodeType.INTERNAL_CLIENT_ERROR,
 					MethodType.PUT, CLIENT_EXCEPTION_ERROR_LABEL, ex.getMessage());
 		}
@@ -341,23 +341,23 @@ public class ResourceWsClientImpl implements ResourceWsClient {
 
 		prepareHeader(builder, resource);
 		try {
-			logger.debug("[PUT COMPLETE] on URI: {}", synchronizationSubscription.getUri());
+			logger.debug(synchronizationSubscription.getApplication().getName() + " - [PUT COMPLETE] on URI: {}", synchronizationSubscription.getUri());
 			Response response = builder.put(Entity.xml(resource));
 			return buildResponseMessage(response, MethodType.PUT);
 		} catch (ClientErrorException ex) {
 			if (ex.getMessage().contains(CONNECTION_EXCEPTION)) {
-				logger.error(
-						"[PUT COMPLETE][ConnectException] Server Unavailable HTTP status 503", ex);
+				logger.error(synchronizationSubscription.getApplication().getName() +
+						" - [PUT COMPLETE][ConnectException] Server Unavailable HTTP status 503", ex);
 				return this.buildServerErrorMessage(resource, HttpStatus.SERVER_UNAVAILABLE, null, MethodType.PUT,
 						SERVER_UNVAILABLE_ERROR_LABEL, SERVER_UNVAILABLE_ERROR_MESSAGE);
 			} else {
-				logger.error("[PUT COMPLETE] sync error:", ex);
+				logger.error(synchronizationSubscription.getApplication().getName() + " - [PUT COMPLETE] sync error:", ex);
 				return this.buildServerErrorMessage(resource, HttpStatus.BAD_REQUEST,
 						ErrorCodeType.INTERNAL_CLIENT_ERROR, MethodType.PUT, CLIENT_EXCEPTION_ERROR_LABEL,
 						ex.getMessage());
 			}
 		} catch (Exception ex) {
-			logger.error("[PUT COMPLETE] sync error:", ex);
+			logger.error(synchronizationSubscription.getApplication().getName() + " - [PUT COMPLETE] sync error:", ex);
 			return this.buildServerErrorMessage(resource, HttpStatus.BAD_REQUEST, ErrorCodeType.INTERNAL_CLIENT_ERROR,
 					MethodType.PUT, CLIENT_EXCEPTION_ERROR_LABEL, ex.getMessage());
 		}
@@ -373,24 +373,24 @@ public class ResourceWsClientImpl implements ResourceWsClient {
 
 		prepareHeader(builder, resource);
 		try {
-			logger.debug("[DELETE] on URI: {}", synchronizationSubscription.getUri());
+			logger.debug(synchronizationSubscription.getApplication().getName() + " - [DELETE] on URI: {}", synchronizationSubscription.getUri());
 			Response response = builder.delete();
 
 			return buildResponseMessage(response, MethodType.DELETE);
 
 		} catch (ClientErrorException ex) {
 			if (ex.getMessage().contains(CONNECTION_EXCEPTION)) {
-				logger.error("[DELETE][ConnectException] Server Unavailable HTTP status 503", ex);
+				logger.error(synchronizationSubscription.getApplication().getName() + " - [DELETE][ConnectException] Server Unavailable HTTP status 503", ex);
 				return this.buildServerErrorMessage(resource, HttpStatus.SERVER_UNAVAILABLE, null, MethodType.DELETE,
 						SERVER_UNVAILABLE_ERROR_LABEL, SERVER_UNVAILABLE_ERROR_MESSAGE);
 			} else {
-				logger.error("[DELETE]", ex);
+				logger.error(synchronizationSubscription.getApplication().getName() + " - [DELETE]", ex);
 				return this.buildServerErrorMessage(resource, HttpStatus.BAD_REQUEST,
 						ErrorCodeType.INTERNAL_CLIENT_ERROR, MethodType.DELETE, CLIENT_EXCEPTION_ERROR_LABEL,
 						ex.getMessage());
 			}
 		} catch (Exception ex) {
-			logger.error("[DELETE]", ex);
+			logger.error(synchronizationSubscription.getApplication().getName() + " - [DELETE]", ex);
 			return this.buildServerErrorMessage(resource, HttpStatus.BAD_REQUEST, ErrorCodeType.INTERNAL_CLIENT_ERROR,
 					MethodType.DELETE, CLIENT_EXCEPTION_ERROR_LABEL, ex.getMessage());
 		}
