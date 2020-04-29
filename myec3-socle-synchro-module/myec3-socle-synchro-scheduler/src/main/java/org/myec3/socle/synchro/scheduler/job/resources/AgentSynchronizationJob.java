@@ -124,6 +124,9 @@ public class AgentSynchronizationJob extends
             }
 
         } else {
+            if (synchronizationSubscription.getApplication().getId() == 7){
+                resource.setAlfUserName(resource.getId() + "@monotenant.megalis");
+            }
             return resourceWsClient.put(resource, synchronizationSubscription);
         }
     }
