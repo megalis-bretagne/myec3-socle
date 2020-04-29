@@ -44,7 +44,7 @@
             <url-pattern>/company/establishment/create.modification_form</url-pattern>
             <url-pattern>/company/create</url-pattern>
             <url-pattern>/company/create.modification_form</url-pattern>
-            <url-pattern>/company/view</url-pattern>
+            <url-pattern>/company/view/*</url-pattern>
             <url-pattern>/user/regeneratepassword</url-pattern>
             <url-pattern>/user/regeneratepassword/</url-pattern>
             <url-pattern>/user/regeneratepassword.regenerate_password_form</url-pattern>
