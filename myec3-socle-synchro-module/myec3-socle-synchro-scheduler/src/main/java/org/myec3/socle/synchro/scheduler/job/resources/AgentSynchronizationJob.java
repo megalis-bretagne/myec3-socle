@@ -167,15 +167,17 @@ public class AgentSynchronizationJob extends
 
         agentSDM.setAdresse(convertToSdmAdresse(resource.getAddress()));
 
-
-        SdmService serviceSDM = new SdmService();
-        SynchroIdentifiantExterne synchroIdentifiantExterne = synchroIdentifiantExterneService.findByIdSocle(resource.getOrganismDepartment().getId(), ResourceType.ORGANISM_DEPARTMENT);
-        if (synchroIdentifiantExterne !=null){
-            serviceSDM.setId(synchroIdentifiantExterne.getIdAppliExterne());
-        }else{
-            logger.warn("Agent {} n'a pas de ORGANISM_DEPARTMENT SDM dans la table synchroIdentifiantExterneService pour l'idSocle ",resource.getId(),resource.getOrganismDepartment().getId());
+        // on ne renseigne pas le service dans le cas d'un service root
+        if( !resource.getOrganismDepartment().isRootDepartment()){
+            SdmService serviceSDM = new SdmService();
+            SynchroIdentifiantExterne synchroIdentifiantExterne = synchroIdentifiantExterneService.findByIdSocle(resource.getOrganismDepartment().getId(), ResourceType.ORGANISM_DEPARTMENT);
+            if (synchroIdentifiantExterne !=null){
+                serviceSDM.setId(synchroIdentifiantExterne.getIdAppliExterne());
+            }else{
+                logger.warn("Agent {} n'a pas de ORGANISM_DEPARTMENT SDM dans la table synchroIdentifiantExterneService pour l'idSocle ",resource.getId(),resource.getOrganismDepartment().getId());
+            }
+            agentSDM.setService(serviceSDM);
         }
-        agentSDM.setService(serviceSDM);
 
         return agentSDM;
     }
