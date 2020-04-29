@@ -42,7 +42,7 @@ public class SdmAgent extends SdmResource {
       @XmlElement(required = false)
       private String fax;
 
-      @XmlElement(required = true)
+      @JsonInclude(JsonInclude.Include.NON_NULL)
       private SdmService service;
 
       @XmlElement(required = false)
