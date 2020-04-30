@@ -340,7 +340,7 @@ public abstract class SchedulerServiceImpl implements SchedulerService {
 			String sendingApplication) {
 		logger.debug("Enterring method addImmediateSynchronizationSubscriptionAgentProfileTrigger");
 		//Pour slow pas de synchro d'agent si il n'y pas pas de certificat
-		if (subscription.getApplication().getId() == 22 && resource.getUser() != null && StringUtils.isEmpty(resource.getUser().getCertificate())) {
+		if (subscription.getId() == 22 && resource.getUser() != null && StringUtils.isEmpty(resource.getUser().getCertificate())) {
 			logger.info(
 					"Pas de synchro à faire pour slow dans le cas d'un agent sans certificat "
 							+ subscription.getApplication().getUrl());
