@@ -139,17 +139,8 @@ public class AgentSynchronizationManagerImpl extends ResourceSynchronizationMana
 				if (subscription.getSynchronizationFilter().isAllRolesDisplayed()) {
 					clone.setRoles(currentAgentRoles);
 				}
-				boolean synchroAFaire =true;
-				//Pour slow pas de synchro d'agent si il n'y pas pas de certificat
-				if (subscription.getApplication().getId() == 22 && resource.getUser() != null && StringUtils.isEmpty(resource.getUser().getCertificate())) {
-					synchroAFaire=false;
-					this.getLogger().info(
-							"Pas de synchro à faire pour slow dans le cas d'un agent sans certificat "
-									+ subscription.getApplication().getUrl());
-				}
 
-
-				if ((clone.getRoles() != null) && (!clone.getRoles().isEmpty()) && synchroAFaire) {
+				if ((clone.getRoles() != null) && (!clone.getRoles().isEmpty()) ) {
 
 					this.getLogger()
 							.debug("1-[addImmediateSynchronizationSubscriptionAgentProfileTrigger] agent with role : "
@@ -360,13 +351,6 @@ public class AgentSynchronizationManagerImpl extends ResourceSynchronizationMana
 							clone.setRoles(currentApplicationRoles);
 						}
 					}
-				}
-				//Pour slow pas de synchro d'agent si il n'y pas pas de certificat
-				if (subscription.getApplication().getId() == 22 && resource.getUser() != null && StringUtils.isEmpty(resource.getUser().getCertificate())) {
-					currentApplicationRoles.clear();
-					this.getLogger().info(
-							"Pas de synchro à faire pour slow dans le cas d'un agent sans certificat "
-									+ subscription.getApplication().getUrl());
 				}
 
 				if (!currentApplicationRoles.isEmpty()) {

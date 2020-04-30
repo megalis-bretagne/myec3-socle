@@ -64,6 +64,7 @@ import org.quartz.SchedulerException;
 import org.quartz.SimpleTrigger;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.util.StringUtils;
 
 /**
  * Concrete implementation of the Scheduler Service with quartz framework. It's
@@ -338,9 +339,16 @@ public abstract class SchedulerServiceImpl implements SchedulerService {
 			SynchronizationJobType synchronizationJobType, SynchronizationType synchronizationType,
 			String sendingApplication) {
 		logger.debug("Enterring method addImmediateSynchronizationSubscriptionAgentProfileTrigger");
-		this.addImmediateSynchronizationSubscriptionProfileTrigger(getResourceJobBuilder(resource), jobName, resource,
-				listRoles, subscription,
-				synchronizationJobType, synchronizationType, sendingApplication);
+		//Pour slow pas de synchro d'agent si il n'y pas pas de certificat
+		if (subscription.getApplication().getId() == 22 && resource.getUser() != null && StringUtils.isEmpty(resource.getUser().getCertificate())) {
+			logger.info(
+					"Pas de synchro à faire pour slow dans le cas d'un agent sans certificat "
+							+ subscription.getApplication().getUrl());
+		} else {
+			this.addImmediateSynchronizationSubscriptionProfileTrigger(getResourceJobBuilder(resource), jobName, resource,
+					listRoles, subscription,
+					synchronizationJobType, synchronizationType, sendingApplication);
+		}
 	}
 
 	/**
