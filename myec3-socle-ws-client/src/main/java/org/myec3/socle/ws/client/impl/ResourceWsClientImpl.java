@@ -27,6 +27,7 @@ import com.fasterxml.jackson.dataformat.xml.jaxb.XmlJaxbAnnotationIntrospector;
 import com.fasterxml.jackson.module.jaxb.JaxbAnnotationIntrospector;
 import com.fasterxml.jackson.module.jaxb.JaxbAnnotationModule;
 import org.glassfish.jersey.client.JerseyClientBuilder;
+import org.glassfish.jersey.logging.LoggingFeature;
 import org.myec3.socle.core.domain.model.AgentProfile;
 import org.myec3.socle.core.domain.model.OrganismDepartment;
 import org.myec3.socle.core.domain.model.Resource;
@@ -43,10 +44,12 @@ import javax.ws.rs.client.Client;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.Invocation.Builder;
 import javax.ws.rs.client.WebTarget;
+import javax.ws.rs.core.Feature;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.ResponseBuilder;
 import javax.ws.rs.core.Response.Status;
+import java.util.logging.Level;
 
 /**
  * Concrete implementation of REST methods used to contact third-party
@@ -76,6 +79,8 @@ public class ResourceWsClientImpl implements ResourceWsClient {
 	private Client getClientWs() {
 		if (this.clientWs == null) {
 			this.clientWs = JerseyClientBuilder.newClient();
+			Feature feature = new LoggingFeature(java.util.logging.Logger.getLogger(getClass().getName()), Level.INFO, LoggingFeature.Verbosity.PAYLOAD_TEXT, null);
+			this.clientWs.register(feature);
 		}
 		return this.clientWs;
 	}
