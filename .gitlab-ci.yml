@@ -30,15 +30,36 @@ buildSocleWebapp:
     BUILD_CONTEXT: "myec3-socle-webapp-module/myec3-socle-webapp"
     IMAGE_NAME: "megalis/socle-webapp"
 
-deploy:
+deployWebapp:
   extends: .deployDev
   variables:
-    STACK_NAME: "socle"
+    STACK_NAME: "socle-webapp"
 
-deployPreprod:
+deploySynchro:
+  extends: .deployDev
+  variables:
+    STACK_NAME: "socle-synchro"
+
+deployEsb:
+  extends: .deployDev
+  variables:
+    STACK_NAME: "socle-esb"
+
+
+deployPreprodWebapp:
   extends: .deployPreprod
   variables:
-    STACK_NAME: "socle"
+    STACK_NAME: "socle-webapp"
+
+deployPreprodSynchro:
+  extends: .deployPreprod
+  variables:
+    STACK_NAME: "socle-synchro"
+
+deployPreprodEsb:
+  extends: .deployPreprod
+  variables:
+    STACK_NAME: "socle-esb"
 
 deployProd:
   extends: .deployProd
