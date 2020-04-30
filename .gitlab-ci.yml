@@ -61,7 +61,17 @@ deployPreprodEsb:
   variables:
     STACK_NAME: "socle-esb"
 
-deployProd:
+deployProdWebapp:
   extends: .deployProd
   variables:
-    STACK_NAME: "socle"
+    STACK_NAME: "socle-webapp"
+
+deployProdSynchro:
+  extends: .deployProd
+  variables:
+    STACK_NAME: "socle-synchro"
+
+deployProdEsb:
+  extends: .deployProd
+  variables:
+    STACK_NAME: "socle-esb"
