@@ -20,6 +20,7 @@ package org.myec3.socle.ws.client.impl;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
+import com.fasterxml.jackson.dataformat.xml.jaxb.XmlJaxbAnnotationIntrospector;
 import com.fasterxml.jackson.module.jaxb.JaxbAnnotationModule;
 import org.glassfish.jersey.client.JerseyClientBuilder;
 import org.myec3.socle.core.domain.model.AgentProfile;
@@ -267,6 +268,7 @@ public class ResourceWsClientImpl implements ResourceWsClient {
 			logger.debug(synchronizationSubscription.getApplication().getName() + " - [POST] on URI: {}", synchronizationSubscription.getUri());
 			try{
 				XmlMapper xmlMapper = new XmlMapper();
+				xmlMapper.setAnnotationIntrospector(XmlJaxbAnnotationIntrospector.nopInstance());
 				String xml = xmlMapper.writeValueAsString(resource);
 				logger.info(synchronizationSubscription.getApplication().getName() + " - REQUETE: {}",xml);
 			}catch (Exception e){
@@ -305,6 +307,7 @@ public class ResourceWsClientImpl implements ResourceWsClient {
 			logger.debug(synchronizationSubscription.getApplication().getName() + " - [PUT] on URI : {}", synchronizationSubscription.getUri());
 			try{
 				XmlMapper xmlMapper = new XmlMapper();
+				xmlMapper.setAnnotationIntrospector(XmlJaxbAnnotationIntrospector.nopInstance());
 				String xml = xmlMapper.writeValueAsString(resource);
 				logger.info(synchronizationSubscription.getApplication().getName() + " - REQUETE: {}",xml);
 			}catch (Exception e){
