@@ -63,6 +63,7 @@ import java.util.logging.Level;
 public class ResourceWsClientImpl implements ResourceWsClient {
 
 	private static Logger logger = LoggerFactory.getLogger(ResourceWsClientImpl.class);
+	private java.util.logging.Logger loggerJava = java.util.logging.Logger.getLogger(getClass().getName());
 
 	private static final String SERVER_UNVAILABLE_ERROR_LABEL = "Server unavailable";
 	private static final String SERVER_UNVAILABLE_ERROR_MESSAGE = "Impossible to contact distant server";
@@ -79,7 +80,7 @@ public class ResourceWsClientImpl implements ResourceWsClient {
 	private Client getClientWs() {
 		if (this.clientWs == null) {
 			this.clientWs = JerseyClientBuilder.newClient();
-			Feature feature = new LoggingFeature(java.util.logging.Logger.getLogger(getClass().getName()), Level.INFO, LoggingFeature.Verbosity.PAYLOAD_TEXT, null);
+			Feature feature = new LoggingFeature(loggerJava, Level.INFO, LoggingFeature.Verbosity.PAYLOAD_TEXT, null);
 			this.clientWs.register(feature);
 		}
 		return this.clientWs;
