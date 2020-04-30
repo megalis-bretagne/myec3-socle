@@ -17,10 +17,14 @@
  */
 package org.myec3.socle.ws.client.impl;
 
+import com.fasterxml.jackson.databind.AnnotationIntrospector;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.introspect.AnnotationIntrospectorPair;
+import com.fasterxml.jackson.databind.introspect.JacksonAnnotationIntrospector;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import com.fasterxml.jackson.dataformat.xml.jaxb.XmlJaxbAnnotationIntrospector;
+import com.fasterxml.jackson.module.jaxb.JaxbAnnotationIntrospector;
 import com.fasterxml.jackson.module.jaxb.JaxbAnnotationModule;
 import org.glassfish.jersey.client.JerseyClientBuilder;
 import org.myec3.socle.core.domain.model.AgentProfile;
@@ -72,6 +76,10 @@ public class ResourceWsClientImpl implements ResourceWsClient {
 	private Client getClientWs() {
 		if (this.clientWs == null) {
 			this.clientWs = JerseyClientBuilder.newClient();
+			System.setProperty("com.sun.xml.ws.transport.http.client.HttpTransportPipe.dump", "true");
+			System.setProperty("com.sun.xml.internal.ws.transport.http.client.HttpTransportPipe.dump", "true");
+			System.setProperty("com.sun.xml.ws.transport.http.HttpAdapter.dump", "true");
+			System.setProperty("com.sun.xml.internal.ws.transport.http.HttpAdapter.dump", "true");
 		}
 		return this.clientWs;
 	}
@@ -266,14 +274,6 @@ public class ResourceWsClientImpl implements ResourceWsClient {
 
 		try {
 			logger.debug(synchronizationSubscription.getApplication().getName() + " - [POST] on URI: {}", synchronizationSubscription.getUri());
-			try{
-				XmlMapper xmlMapper = new XmlMapper();
-				xmlMapper.setAnnotationIntrospector(XmlJaxbAnnotationIntrospector.nopInstance());
-				String xml = xmlMapper.writeValueAsString(resource);
-				logger.info(synchronizationSubscription.getApplication().getName() + " - REQUETE: {}",xml);
-			}catch (Exception e){
-				logger.warn(synchronizationSubscription.getApplication().getName() + " - probleme pour afficher la requete", e);
-			}
 			Response response = builder.post(Entity.xml(resource));
 			return buildResponseMessage(response, MethodType.POST);
 		} catch (ClientErrorException ex) {
@@ -305,15 +305,6 @@ public class ResourceWsClientImpl implements ResourceWsClient {
 
 		try {
 			logger.debug(synchronizationSubscription.getApplication().getName() + " - [PUT] on URI : {}", synchronizationSubscription.getUri());
-			try{
-				XmlMapper xmlMapper = new XmlMapper();
-				xmlMapper.setAnnotationIntrospector(XmlJaxbAnnotationIntrospector.nopInstance());
-				String xml = xmlMapper.writeValueAsString(resource);
-				logger.info(synchronizationSubscription.getApplication().getName() + " - REQUETE: {}",xml);
-			}catch (Exception e){
-				logger.warn(synchronizationSubscription.getApplication().getName() + " - probleme pour afficher la requete", e);
-			}
-
 			Response response = builder.put(Entity.xml(resource));
 			return buildResponseMessage(response, MethodType.PUT);
 		} catch (ClientErrorException ex) {
