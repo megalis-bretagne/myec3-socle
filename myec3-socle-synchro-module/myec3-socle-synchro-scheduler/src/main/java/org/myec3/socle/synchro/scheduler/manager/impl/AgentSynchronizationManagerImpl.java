@@ -37,6 +37,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
+import org.springframework.util.StringUtils;
 
 /**
  * Concrete implementation of synchronization manager to perform synchronization
@@ -350,6 +351,13 @@ public class AgentSynchronizationManagerImpl extends ResourceSynchronizationMana
 							clone.setRoles(currentApplicationRoles);
 						}
 					}
+				}
+				//Pour slow pas de synchro d'agent si il n'y pas pas de certificat
+				if (subscription.getApplication().getId() == 22 && resource.getUser() != null && StringUtils.isEmpty(resource.getUser().getCertificate())) {
+					currentApplicationRoles.clear();
+					this.getLogger().info(
+							"Pas de synchro à faire pour slow dans le cas d'un agent sans certificat "
+									+ subscription.getApplication().getUrl());
 				}
 
 				if (!currentApplicationRoles.isEmpty()) {
