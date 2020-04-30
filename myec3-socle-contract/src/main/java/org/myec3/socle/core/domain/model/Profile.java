@@ -18,6 +18,7 @@
 package org.myec3.socle.core.domain.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 import org.hibernate.envers.Audited;
@@ -309,7 +310,7 @@ public abstract class Profile extends Resource implements UserDetails {
 	@XmlElementWrapper(name = "roles")
 	@ManyToMany
 	@LazyCollection(LazyCollectionOption.FALSE)
-	@JsonIgnore
+	@JsonInclude(JsonInclude.Include.NON_NULL)
 	public List<Role> getRoles() {
 		return roles;
 	}
