@@ -22,6 +22,7 @@ import org.springframework.util.StringUtils;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 @Service("traiterReponseSDMService")
@@ -88,8 +89,8 @@ public class TraiterReponseSDMServiceImpl implements TraiterReponseSDMService {
                     Object inscrit = reponseHM.get("Inscrit");
                     LinkedHashMap<String,Object> inscritHM = (LinkedHashMap<String,Object>) inscrit;
 
-                    SynchroIdentifiantExterne s =synchroIdentifiantExterneService.findByIdSocle(employeeResource.getUser().getId(), ResourceType.EMPLOYEE_PROFILE);
-                    if (s==null){
+                    List<SynchroIdentifiantExterne> s =synchroIdentifiantExterneService.findListByIdSocle(employeeResource.getUser().getId(), ResourceType.EMPLOYEE_PROFILE);
+                    if (s==null || s.isEmpty()){
                         Application sdmApplication = applicationService.findByName("SDM");
                         SynchroIdentifiantExterne synchro = new SynchroIdentifiantExterne();
                         synchro.setApplication(sdmApplication);
@@ -100,11 +101,11 @@ public class TraiterReponseSDMServiceImpl implements TraiterReponseSDMService {
                         }
                         synchroIdentifiantExterneService.create(synchro);
                     }else {
-                        s.setIdSocle(employeeResource.getUser().getId());
+                        s.get(0).setIdSocle(employeeResource.getUser().getId());
                         if (inscritHM.get("id") !=null){
-                            s.setIdAppliExterne(Long.valueOf((Integer)inscritHM.get("id")));
+                            s.get(0).setIdAppliExterne(Long.valueOf((Integer)inscritHM.get("id")));
                         }
-                        synchroIdentifiantExterneService.update(s);
+                        synchroIdentifiantExterneService.update(s.get(0));
 
                     }
                 } else {
@@ -150,8 +151,8 @@ public class TraiterReponseSDMServiceImpl implements TraiterReponseSDMService {
                     Object entreprise = reponseHM.get("Entreprise");
                     LinkedHashMap<String,Object> ent = (LinkedHashMap<String,Object>) entreprise;
 
-                    SynchroIdentifiantExterne s =synchroIdentifiantExterneService.findByIdSocle(resource.getId(), ResourceType.COMPANY);
-                    if (s==null){
+                    List<SynchroIdentifiantExterne> s =synchroIdentifiantExterneService.findListByIdSocle(resource.getId(), ResourceType.COMPANY);
+                    if (s==null||s.isEmpty()){
                         Application sdmApplication = applicationService.findByName("SDM");
                         SynchroIdentifiantExterne synchro = new SynchroIdentifiantExterne();
                         synchro.setApplication(sdmApplication);
@@ -162,11 +163,11 @@ public class TraiterReponseSDMServiceImpl implements TraiterReponseSDMService {
                         }
                         synchroIdentifiantExterneService.create(synchro);
                     }else {
-                        s.setIdSocle(resource.getId());
+                        s.get(0).setIdSocle(resource.getId());
                         if (ent.get("id") !=null){
-                            s.setIdAppliExterne(Long.valueOf((Integer)ent.get("id")));
+                            s.get(0).setIdAppliExterne(Long.valueOf((Integer)ent.get("id")));
                         }
-                        synchroIdentifiantExterneService.update(s);
+                        synchroIdentifiantExterneService.update(s.get(0));
 
                     }
                 } else {
@@ -206,8 +207,8 @@ public class TraiterReponseSDMServiceImpl implements TraiterReponseSDMService {
                     Object etablissement = reponseHM.get("Etablissement");
                     LinkedHashMap<String,Object> etab = (LinkedHashMap<String,Object>) etablissement;
 
-                    SynchroIdentifiantExterne s =synchroIdentifiantExterneService.findByIdSocle(resource.getId(), ResourceType.ESTABLISHMENT);
-                    if (s==null){
+                    List<SynchroIdentifiantExterne> s =synchroIdentifiantExterneService.findListByIdSocle(resource.getId(), ResourceType.ESTABLISHMENT);
+                    if (s==null||s.isEmpty()){
                         Application sdmApplication = applicationService.findByName("SDM");
                         SynchroIdentifiantExterne synchro = new SynchroIdentifiantExterne();
                         synchro.setApplication(sdmApplication);
@@ -218,11 +219,11 @@ public class TraiterReponseSDMServiceImpl implements TraiterReponseSDMService {
                         }
                         synchroIdentifiantExterneService.create(synchro);
                     }else {
-                        s.setIdSocle(resource.getId());
+                        s.get(0).setIdSocle(resource.getId());
                         if (etab.get("id") !=null){
-                            s.setIdAppliExterne(Long.valueOf((Integer)etab.get("id")));
+                            s.get(0).setIdAppliExterne(Long.valueOf((Integer)etab.get("id")));
                         }
-                        synchroIdentifiantExterneService.update(s);
+                        synchroIdentifiantExterneService.update(s.get(0));
 
                     }
                 } else {
