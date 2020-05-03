@@ -32,6 +32,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+
 /**
  * Concrete job implementation used when the resource to synchronize is an
  * {@link Company}. This class implements abstract methods declared into
@@ -81,10 +83,17 @@ public class CompanySynchronizationJob extends
 		if ("SDM".equals(synchronizationSubscription.getApplication().getName())) {
 
 			SdmEntreprise entrepriseSDM = convertSdmEntreprise(resource);
-			SynchroIdentifiantExterne synchroIdentifiantExterne = synchroIdentifiantExterneService.findByIdSocle(resource.getId(), ResourceType.COMPANY);
+			List<SynchroIdentifiantExterne> synchroIdentifiantExterne = synchroIdentifiantExterneService.findListByIdSocle(resource.getId(), ResourceType.COMPANY);
+
 			SdmWsClientImpl sdmWsClient = (SdmWsClientImpl) resourceWsClient;
-			if (synchroIdentifiantExterne !=null){
-				entrepriseSDM.setId(synchroIdentifiantExterne.getIdAppliExterne());
+			if (synchroIdentifiantExterne !=null && !synchroIdentifiantExterne.isEmpty()){
+				entrepriseSDM.setId(synchroIdentifiantExterne.get(0).getIdAppliExterne());
+				if (synchroIdentifiantExterne.size()>1){
+					logger.warn("Company id: {} a plusieurs IdAppliExterne en bdd ",resource.getId());
+					for(SynchroIdentifiantExterne s:synchroIdentifiantExterne){
+						logger.warn(" idSocle {} IdAppliExterne {} ",s.getIdSocle(),s.getIdAppliExterne());
+					}
+				}
 				//todo pas de flag actif dans le model SDM comment faire pour désactiver une entreprise ??
 				//entrepriseSDM.setActif(false);
 				return sdmWsClient.put(resource, entrepriseSDM, synchronizationSubscription);
@@ -108,10 +117,17 @@ public class CompanySynchronizationJob extends
 
 		if ("SDM".equals(synchronizationSubscription.getApplication().getName())) {
 			SdmEntreprise entrepriseSDM = convertSdmEntreprise(resource);
-			SynchroIdentifiantExterne synchroIdentifiantExterne = synchroIdentifiantExterneService.findByIdSocle(resource.getId(), ResourceType.COMPANY);
+			List<SynchroIdentifiantExterne> synchroIdentifiantExterne = synchroIdentifiantExterneService.findListByIdSocle(resource.getId(), ResourceType.COMPANY);
+
 			SdmWsClientImpl sdmWsClient = (SdmWsClientImpl) resourceWsClient;
-			if (synchroIdentifiantExterne !=null){
-				entrepriseSDM.setId(synchroIdentifiantExterne.getIdAppliExterne());
+			if (synchroIdentifiantExterne !=null && !synchroIdentifiantExterne.isEmpty()){
+				entrepriseSDM.setId(synchroIdentifiantExterne.get(0).getIdAppliExterne());
+				if (synchroIdentifiantExterne.size()>1){
+					logger.warn("Company id: {} a plusieurs IdAppliExterne en bdd ",resource.getId());
+					for(SynchroIdentifiantExterne s:synchroIdentifiantExterne){
+						logger.warn(" idSocle {} IdAppliExterne {} ",s.getIdSocle(),s.getIdAppliExterne());
+					}
+				}
 				return sdmWsClient.put(resource, entrepriseSDM, synchronizationSubscription);
 			}else{
 				return sdmWsClient.post(resource, entrepriseSDM, synchronizationSubscription);
@@ -133,30 +149,8 @@ public class CompanySynchronizationJob extends
 		//pas de mapping trouvé pour les deux champs ci-dessous
 		entrepriseSDM.setCapitalSocial("");
 		entrepriseSDM.setEffectif("");
-
 		entrepriseSDM.setAdresse(convertToSdmAdresse(resource.getAddress()));
 
-		/*		for (Establishment establishment :resource.getEstablishments()){
-
-			SdmEtablissement etablissementSDM = new SdmEtablissement();
-			//etablissementSDM.setId("");
-			etablissementSDM.setSiege("");
-			if (resource.getAddress() != null){
-				SdmAdresse adresseSDM = new SdmAdresse ();
-				adresseSDM.setCodePostal(resource.getAddress().getPostalCode());
-				if (resource.getAddress().getCountry() !=null){
-					adresseSDM.setPays(resource.getAddress().getCountry().getLabel());
-				}
-				adresseSDM.setRue(resource.getAddress().getStreetName());
-				adresseSDM.setVille(resource.getAddress().getCity());
-				adresseSDM.setAcronymePays(resource.getAddress().getInsee());
-
-				etablissementSDM.setAdresse(adresseSDM);
-			}
-			etablissementSDM.setDateCreation(new Date());
-			etablissementSDM.setDateModification(etablissementSDM.getDateCreation());
-
-		}*/
 		return entrepriseSDM;
 	}
 }

@@ -10,6 +10,7 @@ import org.springframework.stereotype.Repository;
 
 import javax.persistence.NoResultException;
 import javax.persistence.Query;
+import java.util.List;
 
 @Repository("synchroIdentifiantExterneDao")
 public class JpaSynchroIdentifiantExterneDao extends JpaGenericSynchronizationDao<SynchroIdentifiantExterne>
@@ -50,6 +51,26 @@ public class JpaSynchroIdentifiantExterneDao extends JpaGenericSynchronizationDa
             return null;
         } catch (RuntimeException re) {
             this.getLog().error("findByIdSocle failed.", re);
+            throw re;
+        }
+    }
+
+    @Override
+    public List<SynchroIdentifiantExterne> findListByIdSocle(long idSocle, ResourceType resourceType) {
+        this.getLog().debug("Finding initial SynchroIdentifiantExterneService with idSocle : " + idSocle);
+        try {
+            Query query = this.getEm().createQuery("select s from " + this.getDomainClass().getSimpleName()
+                    + " s WHERE idSocle =:idSocle and typeRessource =:typeRessource order by idAppliExterne ASC" );
+            query.setParameter("idSocle", idSocle);
+            query.setParameter("typeRessource", resourceType);
+            List<SynchroIdentifiantExterne> result = (List<SynchroIdentifiantExterne>) query.getResultList();
+            this.getLog().debug("findListByIdSocle successfull.");
+            return result;
+        } catch (NoResultException e) {
+            this.getLog().info("findListByIdSocle returned no result");
+            return null;
+        } catch (RuntimeException re) {
+            this.getLog().error("findListByIdSocle failed.", re);
             throw re;
         }
     }

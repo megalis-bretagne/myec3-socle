@@ -32,6 +32,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+
 /**
  * Concrete job implementation used when the resource to synchronize is an
  * {@link EmployeeProfile}. This class implements abstract methods declared into
@@ -81,10 +83,16 @@ public class EmployeeSynchronizationJob extends
                                   ResourceWsClient resourceWsClient) {
         if ("SDM".equals(synchronizationSubscription.getApplication().getName())) {
             SdmInscrit inscritSDM = convertToSdmInscrit(resource);
-            SynchroIdentifiantExterne synchroIdentifiantExterne = synchroIdentifiantExterneService.findByIdSocle(resource.getUser().getId(), ResourceType.EMPLOYEE_PROFILE);
+            List<SynchroIdentifiantExterne> synchroIdentifiantExterne = synchroIdentifiantExterneService.findListByIdSocle(resource.getUser().getId(), ResourceType.EMPLOYEE_PROFILE);
             SdmWsClientImpl sdmWsClient = (SdmWsClientImpl) resourceWsClient;
-            if (synchroIdentifiantExterne !=null){
-                inscritSDM.setId(synchroIdentifiantExterne.getIdAppliExterne());
+            if (synchroIdentifiantExterne !=null && !synchroIdentifiantExterne.isEmpty()){
+                inscritSDM.setId(synchroIdentifiantExterne.get(0).getIdAppliExterne());
+                if (synchroIdentifiantExterne.size()>1){
+                    logger.warn("Employe id: {} a plusieurs IdAppliExterne en bdd ",resource.getId());
+                    for(SynchroIdentifiantExterne s:synchroIdentifiantExterne){
+                        logger.warn(" idSocle {} IdAppliExterne {} ",s.getIdSocle(),s.getIdAppliExterne());
+                    }
+                }
                 inscritSDM.setActif("0");
                 return sdmWsClient.put(resource, inscritSDM, synchronizationSubscription);
             }else{
@@ -109,10 +117,16 @@ public class EmployeeSynchronizationJob extends
 
         if ("SDM".equals(synchronizationSubscription.getApplication().getName())) {
             SdmInscrit inscritSDM = convertToSdmInscrit(resource);
-            SynchroIdentifiantExterne synchroIdentifiantExterne = synchroIdentifiantExterneService.findByIdSocle(resource.getUser().getId(), ResourceType.EMPLOYEE_PROFILE);
-             SdmWsClientImpl sdmWsClient = (SdmWsClientImpl) resourceWsClient;
-            if (synchroIdentifiantExterne !=null){
-                inscritSDM.setId(synchroIdentifiantExterne.getIdAppliExterne());
+            List<SynchroIdentifiantExterne> synchroIdentifiantExterne = synchroIdentifiantExterneService.findListByIdSocle(resource.getUser().getId(), ResourceType.EMPLOYEE_PROFILE);
+            SdmWsClientImpl sdmWsClient = (SdmWsClientImpl) resourceWsClient;
+            if (synchroIdentifiantExterne !=null && !synchroIdentifiantExterne.isEmpty()){
+                inscritSDM.setId(synchroIdentifiantExterne.get(0).getIdAppliExterne());
+                if (synchroIdentifiantExterne.size()>1){
+                    logger.warn("Employe id: {} a plusieurs IdAppliExterne en bdd ",resource.getId());
+                    for(SynchroIdentifiantExterne s:synchroIdentifiantExterne){
+                        logger.warn(" idSocle {} IdAppliExterne {} ",s.getIdSocle(),s.getIdAppliExterne());
+                    }
+                }
                 return sdmWsClient.put(resource, inscritSDM, synchronizationSubscription);
             }else{
                 return sdmWsClient.post(resource, inscritSDM, synchronizationSubscription);
@@ -146,9 +160,16 @@ public class EmployeeSynchronizationJob extends
 
         if(resource.getEstablishment()!=null){
             inscritSDM.setSiret(resource.getEstablishment().getSiret());
-            SynchroIdentifiantExterne synchro = synchroIdentifiantExterneService.findByIdSocle(resource.getEstablishment().getId(), ResourceType.ESTABLISHMENT);
-            if (synchro!= null ){
-                inscritSDM.setIdEtablissement(synchro.getIdAppliExterne());
+            List<SynchroIdentifiantExterne> synchro = synchroIdentifiantExterneService.findListByIdSocle(resource.getEstablishment().getId(), ResourceType.ESTABLISHMENT);
+            if (synchro!= null && !synchro.isEmpty() ){
+                inscritSDM.setIdEtablissement(synchro.get(0).getIdAppliExterne());
+                if (synchro.size()>1){
+                    logger.warn("Establishment id: {} a plusieurs IdAppliExterne en bdd ",resource.getId());
+                    for(SynchroIdentifiantExterne s:synchro){
+                        logger.warn(" idSocle {} IdAppliExterne {} ",s.getIdSocle(),s.getIdAppliExterne());
+                    }
+                }
+
             }else{
                 logger.warn("EmployeeProfile id: {} n'a pas de ESTABLISHMENT SDM dans la table synchroIdentifiantExterneService pour l'idSocle ",resource.getId(),resource.getEstablishment().getId());
             }

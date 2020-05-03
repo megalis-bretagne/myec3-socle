@@ -7,6 +7,8 @@ import org.myec3.socle.synchro.core.domain.model.SynchroIdentifiantExterne;
 import org.myec3.socle.synchro.core.service.SynchroIdentifiantExterneService;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service("synchroIdentifiantExterneService")
 public class SynchroIdentifiantExterneServiceImpl extends AbstractGenericServiceImpl<SynchroIdentifiantExterne, SynchroIdentifiantExterneDao>
         implements SynchroIdentifiantExterneService {
@@ -18,6 +20,11 @@ public class SynchroIdentifiantExterneServiceImpl extends AbstractGenericService
     @Override
     public SynchroIdentifiantExterne findByIdSocle(long idSocle,ResourceType resourceType) {
         return dao.findByIdSocle(idSocle, resourceType);
+    }
+
+    @Override
+    public List<SynchroIdentifiantExterne> findListByIdSocle(long idSocle, ResourceType resourceType) {
+        return dao.findListByIdSocle(idSocle, resourceType);
     }
 
     @Override
