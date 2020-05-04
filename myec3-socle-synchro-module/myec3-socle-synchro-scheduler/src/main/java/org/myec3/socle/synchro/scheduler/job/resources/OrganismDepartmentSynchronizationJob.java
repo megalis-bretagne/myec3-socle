@@ -130,8 +130,8 @@ public class OrganismDepartmentSynchronizationJob extends
             serviceSDM.setSigle(resource.getAbbreviation());
         }
 
-        serviceSDM.setSiren(resource.getSiren());
         if (resource.getOrganism() !=null){
+            serviceSDM.setSiren(resource.getOrganism().getSiren());
             serviceSDM.setComplement(resource.getOrganism().getNic());
             serviceSDM.setFormeJuridique(resource.getOrganism().getStrutureLegalCategory().toString());
             serviceSDM.setFormeJuridiqueCode(resource.getOrganism().getLegalCategory().toString());
