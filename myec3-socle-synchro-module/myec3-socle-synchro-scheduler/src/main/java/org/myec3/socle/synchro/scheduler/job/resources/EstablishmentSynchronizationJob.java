@@ -151,7 +151,7 @@ public class EstablishmentSynchronizationJob extends
                 etablissementSDM.setIdEntreprise(String.valueOf(synchroIdentifiantExterne.get(0).getIdAppliExterne()));
 
                 if (synchroIdentifiantExterne.size()>1){
-                    logger.warn("Company id: {} a plusieurs IdAppliExterne en bdd ",resource.getId());
+                    logger.warn("Company id: {} a plusieurs IdAppliExterne en bdd ",resource.getCompany().getId());
                     for(SynchroIdentifiantExterne s:synchroIdentifiantExterne){
                         logger.warn(" idSocle {} IdAppliExterne {} ",s.getIdSocle(),s.getIdAppliExterne());
                     }
