@@ -964,7 +964,7 @@ public abstract class ResourcesSynchronizationJob<T extends Resource> extends Qu
 		// defined in the properties file we delete it
 		if (synchronizationErrorService.findOne(newSynchronizationError.getId())
 				.getNbAttempts() >= MyEc3SynchroConstants.MAX_ATTEMPTS) {
-			synchronizationErrorService.delete(newSynchronizationError);
+			synchronizationErrorService.deleteById(newSynchronizationError.getId());
 			logger.error("The error handling of resource : " + resource.getName() + ", id : " + resource.getId()
 					+ " have failed " + MyEc3SynchroConstants.MAX_ATTEMPTS
 					+ " times. So the resource is not synchronized correctly with the application "
