@@ -81,7 +81,7 @@ public class Create extends AbstractPage {
 		List<SynchronizationSubscription> foundSynchronizationSubscription = this.synchronizationSubscriptionService
 				.findByResourceTypeAndApplicationId(resourceTypeSelected, applicationSelected.getId());
 
-		if (foundSynchronizationSubscription != null || foundSynchronizationSubscription.isEmpty()) {
+		if (foundSynchronizationSubscription != null) {
 			logger.info("An subscription with this application and this resource type already exists");
 			this.form.recordError(this.messages.get("subscription-already-exists-error"));
 		}
