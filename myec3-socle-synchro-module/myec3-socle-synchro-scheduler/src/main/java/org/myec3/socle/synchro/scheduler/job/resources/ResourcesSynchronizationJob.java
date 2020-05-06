@@ -1157,17 +1157,19 @@ public abstract class ResourcesSynchronizationJob<T extends Resource> extends Qu
 
 				// Get the synchronization subscription of the resource
 				// dependency
-				SynchronizationSubscription newSynchronizationSubscription = synchronizationSubscriptionService
+				List<SynchronizationSubscription> newSynchronizationSubscriptionList = synchronizationSubscriptionService
 						.findByResourceTypeAndApplicationId(this.getResourceType(resourceDependency),
 								synchronizationSubscription.getApplication().getId());
 
-				if (newSynchronizationSubscription == null) {
+				if (newSynchronizationSubscriptionList == null || newSynchronizationSubscriptionList.isEmpty()) {
 					logger.error("Impossible to resynchronize resourceDependency with ID : "
 							+ resourceDependency.getId() + " because no application is subscribed to this resource");
 				} else {
-					// We manage the resource dependency synchronization error
-					this.manageResourceDependencySynchronizationError(responseMessage, resourceDependency,
-							newSynchronizationSubscription, SynchronizationJobType.UPDATE);
+					for(SynchronizationSubscription newSynchronizationSubscription : newSynchronizationSubscriptionList){
+						// We manage the resource dependency synchronization error
+						this.manageResourceDependencySynchronizationError(responseMessage, resourceDependency,
+								newSynchronizationSubscription, SynchronizationJobType.UPDATE);
+					}
 				}
 			} else {
 				logger.error("[reSynchronizeResourceDependency] Application : "

@@ -48,7 +48,7 @@ public class AdminSynchronizationManagerImpl extends ResourceSynchronizationMana
 					.findAllByResourceLabel(ResourceType.ADMIN_PROFILE);
 		} else {
 			for (Long applicationIdToResynchronize : listApplicationIdToResynchronize) {
-				subscriptionList.add(this.getSynchronizationSubscriptionService()
+				subscriptionList.addAll(this.getSynchronizationSubscriptionService()
 						.findByResourceTypeAndApplicationId(ResourceType.ADMIN_PROFILE, applicationIdToResynchronize));
 			}
 		}

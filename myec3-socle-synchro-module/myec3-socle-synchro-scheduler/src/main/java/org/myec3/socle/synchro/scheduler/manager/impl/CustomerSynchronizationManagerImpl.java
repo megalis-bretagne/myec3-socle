@@ -53,7 +53,7 @@ public class CustomerSynchronizationManagerImpl extends ResourceSynchronizationM
 					.findAllByResourceLabel(ResourceType.CUSTOMER);
 		} else {
 			for (Long applicationIdToResynchronize : listApplicationIdToResynchronize) {
-				subscriptionList.add(this.getSynchronizationSubscriptionService()
+				subscriptionList.addAll(this.getSynchronizationSubscriptionService()
 						.findByResourceTypeAndApplicationId(ResourceType.CUSTOMER, applicationIdToResynchronize));
 			}
 		}

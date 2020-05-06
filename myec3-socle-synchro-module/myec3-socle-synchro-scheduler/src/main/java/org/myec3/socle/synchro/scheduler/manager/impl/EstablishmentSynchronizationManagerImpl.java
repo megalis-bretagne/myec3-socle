@@ -58,7 +58,7 @@ public class EstablishmentSynchronizationManagerImpl extends ResourceSynchroniza
 					.findAllByResourceLabel(ResourceType.ESTABLISHMENT);
 		} else {
 			for (Long applicationIdToResynchronize : listApplicationIdToResynchronize) {
-				subscriptionList.add(this.getSynchronizationSubscriptionService()
+				subscriptionList.addAll(this.getSynchronizationSubscriptionService()
 						.findByResourceTypeAndApplicationId(ResourceType.ESTABLISHMENT, applicationIdToResynchronize));
 			}
 		}

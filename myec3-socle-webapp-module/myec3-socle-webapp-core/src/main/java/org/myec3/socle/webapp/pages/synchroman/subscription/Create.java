@@ -78,10 +78,10 @@ public class Create extends AbstractPage {
 	@OnEvent(value = EventConstants.VALIDATE, component = "creation_subscription_form")
 	public void onValidate() {
 		// We check that the subscription not already exists
-		SynchronizationSubscription foundSynchronizationSubscription = this.synchronizationSubscriptionService
+		List<SynchronizationSubscription> foundSynchronizationSubscription = this.synchronizationSubscriptionService
 				.findByResourceTypeAndApplicationId(resourceTypeSelected, applicationSelected.getId());
 
-		if (foundSynchronizationSubscription != null) {
+		if (foundSynchronizationSubscription != null || foundSynchronizationSubscription.isEmpty()) {
 			logger.info("An subscription with this application and this resource type already exists");
 			this.form.recordError(this.messages.get("subscription-already-exists-error"));
 		}

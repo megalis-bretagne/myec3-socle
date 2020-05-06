@@ -83,7 +83,7 @@ public class CompanyDepartmentSynchronizationManagerImpl extends ResourceSynchro
 					.findAllByResourceLabel(ResourceType.COMPANY_DEPARTMENT);
 		} else {
 			for (Long applicationIdToResynchronize : listApplicationIdToResynchronize) {
-				subscriptionList.add(this.getSynchronizationSubscriptionService().findByResourceTypeAndApplicationId(
+				subscriptionList.addAll(this.getSynchronizationSubscriptionService().findByResourceTypeAndApplicationId(
 						ResourceType.COMPANY_DEPARTMENT, applicationIdToResynchronize));
 			}
 		}

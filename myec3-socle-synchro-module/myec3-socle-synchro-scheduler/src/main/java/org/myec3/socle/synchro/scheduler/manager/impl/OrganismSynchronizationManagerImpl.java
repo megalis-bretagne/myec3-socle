@@ -89,7 +89,7 @@ public class OrganismSynchronizationManagerImpl extends ResourceSynchronizationM
 					.findAllByResourceLabel(ResourceType.ORGANISM);
 		} else {
 			for (Long applicationIdToResynchronize : listApplicationIdToResynchronize) {
-				subscriptionList.add(this.getSynchronizationSubscriptionService()
+				subscriptionList.addAll(this.getSynchronizationSubscriptionService()
 						.findByResourceTypeAndApplicationId(ResourceType.ORGANISM, applicationIdToResynchronize));
 			}
 		}

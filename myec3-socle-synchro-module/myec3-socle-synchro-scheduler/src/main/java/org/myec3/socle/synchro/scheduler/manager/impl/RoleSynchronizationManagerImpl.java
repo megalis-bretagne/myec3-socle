@@ -99,7 +99,7 @@ public class RoleSynchronizationManagerImpl extends ResourceSynchronizationManag
 				} else {
 					for (Long applicationIdToResynchronize : listApplicationIdToResynchronize) {
 						subscriptionList
-								.add(this.getSynchronizationSubscriptionService().findByResourceTypeAndApplicationId(
+								.addAll(this.getSynchronizationSubscriptionService().findByResourceTypeAndApplicationId(
 										ResourceType.AGENT_PROFILE, applicationIdToResynchronize));
 					}
 				}
@@ -111,7 +111,7 @@ public class RoleSynchronizationManagerImpl extends ResourceSynchronizationManag
 				} else {
 					for (Long applicationIdToResynchronize : listApplicationIdToResynchronize) {
 						subscriptionList
-								.add(this.getSynchronizationSubscriptionService().findByResourceTypeAndApplicationId(
+								.addAll(this.getSynchronizationSubscriptionService().findByResourceTypeAndApplicationId(
 										ResourceType.EMPLOYEE_PROFILE, applicationIdToResynchronize));
 					}
 				}

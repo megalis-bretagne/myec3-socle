@@ -86,7 +86,7 @@ public class AgentSynchronizationManagerImpl extends ResourceSynchronizationMana
 					.findAllByResourceLabel(ResourceType.AGENT_PROFILE);
 		} else {
 			for (Long applicationIdToResynchronize : listApplicationIdToResynchronize) {
-				subscriptionList.add(this.getSynchronizationSubscriptionService()
+				subscriptionList.addAll(this.getSynchronizationSubscriptionService()
 						.findByResourceTypeAndApplicationId(ResourceType.AGENT_PROFILE, applicationIdToResynchronize));
 			}
 		}

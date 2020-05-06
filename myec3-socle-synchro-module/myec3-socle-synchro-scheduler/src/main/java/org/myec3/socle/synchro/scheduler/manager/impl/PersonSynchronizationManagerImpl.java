@@ -62,7 +62,7 @@ public class PersonSynchronizationManagerImpl extends ResourceSynchronizationMan
 					.findAllByResourceLabel(ResourceType.COMPANY);
 		} else {
 			for (Long applicationIdToResynchronize : listApplicationIdToResynchronize) {
-				subscriptionList.add(this.getSynchronizationSubscriptionService()
+				subscriptionList.addAll(this.getSynchronizationSubscriptionService()
 						.findByResourceTypeAndApplicationId(ResourceType.COMPANY, applicationIdToResynchronize));
 			}
 		}

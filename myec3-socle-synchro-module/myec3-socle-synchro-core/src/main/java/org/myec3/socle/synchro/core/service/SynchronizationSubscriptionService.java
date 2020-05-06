@@ -35,7 +35,7 @@ import org.myec3.socle.synchro.core.domain.model.SynchronizationSubscription;
  */
 public interface SynchronizationSubscriptionService extends IGenericService<SynchronizationSubscription> {
 
-	SynchronizationSubscription findByResourceTypeAndApplicationId(ResourceType resourceType, Long applicationId);
+	List<SynchronizationSubscription> findByResourceTypeAndApplicationId(ResourceType resourceType, Long applicationId);
 
 	/**
 	 * Find all {@link SynchronizationSubscription} associated to a given

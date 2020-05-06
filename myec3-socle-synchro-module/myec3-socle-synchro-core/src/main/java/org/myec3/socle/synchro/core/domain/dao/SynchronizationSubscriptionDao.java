@@ -34,7 +34,7 @@ import org.myec3.socle.synchro.core.domain.model.SynchronizationSubscription;
 public interface SynchronizationSubscriptionDao extends
 		GenericSynchronizationDao<SynchronizationSubscription> {
 
-	SynchronizationSubscription findByResourceTypeAndApplicationId(
+	List<SynchronizationSubscription> findByResourceTypeAndApplicationId(
 			ResourceType resourceType, Long applicationId);
 
 	/**

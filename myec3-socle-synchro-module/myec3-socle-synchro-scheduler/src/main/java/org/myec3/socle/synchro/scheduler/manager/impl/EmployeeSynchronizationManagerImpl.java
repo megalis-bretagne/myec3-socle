@@ -83,7 +83,7 @@ public class EmployeeSynchronizationManagerImpl extends ResourceSynchronizationM
 					.findAllByResourceLabel(ResourceType.EMPLOYEE_PROFILE);
 		} else {
 			for (Long applicationIdToResynchronize : listApplicationIdToResynchronize) {
-				subscriptionList.add(this.getSynchronizationSubscriptionService().findByResourceTypeAndApplicationId(
+				subscriptionList.addAll(this.getSynchronizationSubscriptionService().findByResourceTypeAndApplicationId(
 						ResourceType.EMPLOYEE_PROFILE, applicationIdToResynchronize));
 			}
 		}

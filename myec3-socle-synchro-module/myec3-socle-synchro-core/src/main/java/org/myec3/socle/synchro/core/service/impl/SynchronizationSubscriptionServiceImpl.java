@@ -61,7 +61,7 @@ public class SynchronizationSubscriptionServiceImpl
 	 * {@inheritDoc}
 	 */
 	@Override
-	public SynchronizationSubscription findByResourceTypeAndApplicationId(ResourceType resourceType,
+	public List<SynchronizationSubscription> findByResourceTypeAndApplicationId(ResourceType resourceType,
 			Long applicationId) {
 		return this.dao.findByResourceTypeAndApplicationId(resourceType, applicationId);
 	}

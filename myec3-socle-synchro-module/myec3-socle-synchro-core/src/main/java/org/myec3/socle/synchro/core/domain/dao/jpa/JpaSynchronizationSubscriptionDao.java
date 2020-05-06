@@ -91,7 +91,7 @@ public class JpaSynchronizationSubscriptionDao extends JpaGenericSynchronization
 	 * {@inheritDoc}
 	 */
 	@Override
-	public SynchronizationSubscription findByResourceTypeAndApplicationId(ResourceType resourceType,
+	public List<SynchronizationSubscription> findByResourceTypeAndApplicationId(ResourceType resourceType,
 			Long applicationId) {
 		this.getLog().debug("Finding instance of SynchronizationSubscription with ResourceType : " + resourceType
 				+ " and Application Id : " + applicationId);
@@ -100,7 +100,7 @@ public class JpaSynchronizationSubscriptionDao extends JpaGenericSynchronization
 					+ " s WHERE resourceLabel = :resourceType AND application_id = :applicationId");
 			query.setParameter("resourceType", resourceType);
 			query.setParameter("applicationId", applicationId);
-			SynchronizationSubscription instance = (SynchronizationSubscription) query.getSingleResult();
+			List<SynchronizationSubscription> instance = (List<SynchronizationSubscription>) query.getResultList();
 			this.getLog().debug("findByResourceTypeAndApplicationId successfull.");
 			return instance;
 		} catch (NoResultException e) {

@@ -87,7 +87,7 @@ public class OrganismDepartmentSynchronizationManagerImpl
 					.findAllByResourceLabel(ResourceType.ORGANISM_DEPARTMENT);
 		} else {
 			for (Long applicationIdToResynchronize : listApplicationIdToResynchronize) {
-				subscriptionList.add(this.getSynchronizationSubscriptionService().findByResourceTypeAndApplicationId(
+				subscriptionList.addAll(this.getSynchronizationSubscriptionService().findByResourceTypeAndApplicationId(
 						ResourceType.ORGANISM_DEPARTMENT, applicationIdToResynchronize));
 			}
 		}
