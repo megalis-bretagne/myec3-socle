@@ -48,20 +48,6 @@ public final class MyEc3MpsUpdateConstants {
     }
 
     /**
-     * @return the Hostname that will handle the update
-     */
-    public static String getHostname1() {
-	return MPSUPDATE_BUNDLE.getString("mpsUpdate.machineName1");
-    }
-
-    /**
-     * @return the Hostname that will handle the update
-     */
-    public static String getHostname2() {
-	return MPSUPDATE_BUNDLE.getString("mpsUpdate.machineName2");
-    }
-
-    /**
      * @return the interval from current day from which we should check the
      *         connection
      */
