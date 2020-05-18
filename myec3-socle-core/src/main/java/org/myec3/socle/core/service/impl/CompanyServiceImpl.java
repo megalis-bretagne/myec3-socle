@@ -236,7 +236,6 @@ public class CompanyServiceImpl extends GenericStructureServiceImpl<Company, Com
 
 	public List<MpsUpdateJob> getCompanyToUpdate() {
 
-		Boolean switchMachine = Boolean.FALSE;
 		// object to return
 		List<MpsUpdateJob> updateQueueToReturn = new ArrayList<MpsUpdateJob>();
 
@@ -258,13 +257,6 @@ public class CompanyServiceImpl extends GenericStructureServiceImpl<Company, Com
 				tmpUpdateQueue.setId(findCompanyEstablishment);
 				tmpUpdateQueue.setType(ResourceType.COMPANY.getLabel());
 				tmpUpdateQueue.setPriority(MpsUpdateTypeValue.AUTOMATIC.getLabel());
-				if (switchMachine.booleanValue()) {
-					tmpUpdateQueue.setMachineName(MyEc3MpsUpdateConstants.getHostname1());
-					switchMachine = Boolean.FALSE;
-				} else {
-					tmpUpdateQueue.setMachineName(MyEc3MpsUpdateConstants.getHostname2());
-					switchMachine = Boolean.TRUE;
-				}
 				logger.info("getCompanyToUpdate Create (but not persist) MpsUpdateJob : " + tmpUpdateQueue.toString());
 				updateQueueToReturn.add(tmpUpdateQueue);
 				Company searchCompany = this.findOne(findCompanyEstablishment);

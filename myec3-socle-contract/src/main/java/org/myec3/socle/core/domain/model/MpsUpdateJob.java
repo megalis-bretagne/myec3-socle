@@ -35,17 +35,15 @@ public class MpsUpdateJob implements PE {
 	private Long id;
 	private String type;
 	private String priority;
-	private String machineName;
 
 	public MpsUpdateJob() {
 
 	}
 
-	public MpsUpdateJob(Long id, String type, String priority, String machineName) {
+	public MpsUpdateJob(Long id, String type, String priority) {
 		this.id = id;
 		this.type = type;
 		this.priority = priority;
-		this.machineName = machineName;
 	}
 
 	@Id
@@ -76,19 +74,9 @@ public class MpsUpdateJob implements PE {
 		this.priority = priority;
 	}
 
-	@Column(nullable = false)
-	public String getMachineName() {
-		return machineName;
-	}
-
-	public void setMachineName(String machineName) {
-		this.machineName = machineName;
-	}
-
 	@Override
 	public String toString() {
-		return "MpsUpdateJob [id=" + id + ", type=" + type + ", priority=" + priority + ", machineName=" + machineName
-				+ "]";
+		return "MpsUpdateJob [id=" + id + ", type=" + type + ", priority=" + priority + "]";
 	}
 
 }

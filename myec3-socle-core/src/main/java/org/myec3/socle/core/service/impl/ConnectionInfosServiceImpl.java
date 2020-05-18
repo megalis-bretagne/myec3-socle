@@ -128,7 +128,6 @@ public class ConnectionInfosServiceImpl extends AbstractGenericServiceImpl<Conne
 	public List<MpsUpdateJob> getUserCompanyToUpdate() {
 
 		List<MpsUpdateJob> listToReturn = new ArrayList<MpsUpdateJob>();
-		Boolean switchMachine = Boolean.FALSE;
 
 		logger.debug("Starting ConnectionInfos getUserCompanyToUpdate");
 		Calendar cal = Calendar.getInstance();
@@ -164,13 +163,6 @@ public class ConnectionInfosServiceImpl extends AbstractGenericServiceImpl<Conne
 					CompanyMpsUpdateJobInsert.setId(companyEmployeeProfile.getId());
 					CompanyMpsUpdateJobInsert.setPriority(MpsUpdateTypeValue.CONNECTIONINFO.getLabel());
 					CompanyMpsUpdateJobInsert.setType(ResourceType.COMPANY.getLabel());
-					if (switchMachine.booleanValue()) {
-						CompanyMpsUpdateJobInsert.setMachineName(MyEc3MpsUpdateConstants.getHostname1());
-						switchMachine = Boolean.FALSE;
-					} else {
-						CompanyMpsUpdateJobInsert.setMachineName(MyEc3MpsUpdateConstants.getHostname2());
-						switchMachine = Boolean.TRUE;
-					}
 					logger.debug(
 							"getUserCompanyToUpdate Create MpsUpdateJob : " + CompanyMpsUpdateJobInsert.toString());
 					listToReturn.add(CompanyMpsUpdateJobInsert);

@@ -144,8 +144,6 @@ public class EstablishmentServiceImpl extends ResourceServiceImpl<Establishment,
 	public List<MpsUpdateJob> getEstablishmentToUpdate() {
 		// object to return
 		List<MpsUpdateJob> updateQueueToReturn = new ArrayList<MpsUpdateJob>();
-		Boolean switchMachine = Boolean.FALSE;
-
 		List<Establishment> EstablishmentListToUpdate = new ArrayList<Establishment>();
 
 		// get all the companies that need update
@@ -168,13 +166,6 @@ public class EstablishmentServiceImpl extends ResourceServiceImpl<Establishment,
 					tmpUpdateQueue.setId(findEstablishment.getId());
 					tmpUpdateQueue.setType(ResourceType.ESTABLISHMENT.getLabel());
 					tmpUpdateQueue.setPriority(MpsUpdateTypeValue.AUTOMATIC.getLabel());
-					if (switchMachine.booleanValue()) {
-						tmpUpdateQueue.setMachineName(MyEc3MpsUpdateConstants.getHostname1());
-						switchMachine = Boolean.FALSE;
-					} else {
-						tmpUpdateQueue.setMachineName(MyEc3MpsUpdateConstants.getHostname2());
-						switchMachine = Boolean.TRUE;
-					}
 					logger.info("getEstablishmentToUpdate Create (but not persist) MpsUpdateJob : "
 							+ tmpUpdateQueue.toString());
 					updateQueueToReturn.add(tmpUpdateQueue);
@@ -189,8 +180,6 @@ public class EstablishmentServiceImpl extends ResourceServiceImpl<Establishment,
 	public List<MpsUpdateJob> getEstablishmentToUpdateByCompany(Company company, MpsUpdateTypeValue updateType) {
 		// object to return
 		List<MpsUpdateJob> updateQueueToReturn = new ArrayList<MpsUpdateJob>();
-		Boolean switchMachine = Boolean.FALSE;
-
 		List<Establishment> EstablishmentListToUpdate = new ArrayList<Establishment>();
 
 		// get all the companies that need update
@@ -218,13 +207,6 @@ public class EstablishmentServiceImpl extends ResourceServiceImpl<Establishment,
 					tmpUpdateQueue.setPriority(MpsUpdateTypeValue.CONNECTIONINFO.getLabel());
 				} else if (updateType.equals(MpsUpdateTypeValue.MANUAL)) {
 					tmpUpdateQueue.setPriority(MpsUpdateTypeValue.MANUAL.getLabel());
-				}
-				if (switchMachine.booleanValue()) {
-					tmpUpdateQueue.setMachineName(MyEc3MpsUpdateConstants.getHostname1());
-					switchMachine = Boolean.FALSE;
-				} else {
-					tmpUpdateQueue.setMachineName(MyEc3MpsUpdateConstants.getHostname2());
-					switchMachine = Boolean.TRUE;
 				}
 				logger.debug("getEstablishmentToUpdateByCompany Create MpsUpdateJob : " + tmpUpdateQueue.toString());
 				updateQueueToReturn.add(tmpUpdateQueue);

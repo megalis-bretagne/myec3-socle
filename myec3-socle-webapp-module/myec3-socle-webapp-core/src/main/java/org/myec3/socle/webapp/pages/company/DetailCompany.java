@@ -59,7 +59,7 @@ import org.myec3.socle.webapp.pages.Index;
 /**
  * Page used to display company's informations {@link Company}<br />
  * 
- * @see securityMyEc3Context.xml to know profiles authorized to display this
+ * see securityMyEc3Context.xml to know profiles authorized to display this
  *      page<br />
  * 
  *      Corresponding tapestry template file is :
@@ -296,7 +296,6 @@ public class DetailCompany extends AbstractPage {
 			updateCompany.setId(id);
 			updateCompany.setPriority(MpsUpdateTypeValue.MANUAL.getLabel());
 			updateCompany.setType(ResourceType.COMPANY.getLabel());
-			updateCompany.setMachineName(MyEc3MpsUpdateConstants.getHostname1());
 
 			ressourcesToUpdate.add(updateCompany);
 

@@ -16,12 +16,9 @@ public class JpaMpsUpdateJobDao extends JpaNoResourceGenericDao<MpsUpdateJob> im
 
 	public List<MpsUpdateJob> findLimit(int limit) {
 		this.getLog().debug("Finding the resources to update with the following limit : " + limit);
-		String hostname = CronUtils.getHostName();
 		try {
 
-			Query q = this.getEm().createQuery("SELECT r FROM " + this.getDomainClass().getSimpleName()
-					+ " r WHERE r.machineName =:hostname " + "ORDER BY r.priority ASC");
-			q.setParameter("hostname", hostname);
+			Query q = this.getEm().createQuery("SELECT r FROM " + this.getDomainClass().getSimpleName() + " r ORDER BY r.priority ASC");
 			q.setMaxResults(limit);
 			List<MpsUpdateJob> results = q.getResultList();
 			getLog().debug("getCompanyToUpdate successfull.");
