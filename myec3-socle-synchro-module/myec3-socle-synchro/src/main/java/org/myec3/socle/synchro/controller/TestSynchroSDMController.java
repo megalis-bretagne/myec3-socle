@@ -119,7 +119,6 @@ public class TestSynchroSDMController {
     }
 
     @RequestMapping(value = "/sdm/organism/", method = {RequestMethod.GET})
-    @Transactional
     public String organisme(@RequestParam long id) {
         Organism organism =organismService.findOne(id);
 
