@@ -8,7 +8,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -80,7 +79,6 @@ public class TestSynchroSDMController {
     private ApplicationService applicationService;
 
     @RequestMapping(value = "/jcms/agent/", method = {RequestMethod.GET})
-    @Transactional
     public String agentJcms(@RequestParam long id) {
 
         AgentProfile agent =agentProfileService.findOne(id);
@@ -100,7 +98,6 @@ public class TestSynchroSDMController {
 
 
     @RequestMapping(value = "/sdm/agent/", method = {RequestMethod.GET})
-    @Transactional
     public String agent(@RequestParam long id) {
 
         AgentProfile agent =agentProfileService.findOne(id);
@@ -134,7 +131,6 @@ public class TestSynchroSDMController {
     }
 
     @RequestMapping(value = "/sdm/organismDepartment/", method = {RequestMethod.GET})
-    @Transactional
     public String organismDepartment(@RequestParam long id) {
         OrganismDepartment organismDepartment =organismDepartmentService.findOne(id);
 
@@ -151,7 +147,6 @@ public class TestSynchroSDMController {
 
 
     @RequestMapping(value = "/sdm/employee/", method = {RequestMethod.GET})
-    @Transactional
     public String employee(@RequestParam long id) {
         EmployeeProfile employeeProfile =employeeProfileService.findOne(id);
 
@@ -167,7 +162,6 @@ public class TestSynchroSDMController {
     }
 
     @RequestMapping(value = "/sdm/company/", method = {RequestMethod.GET})
-    @Transactional
     public String company(@RequestParam long id) {
         Company company =companyService.findOne(id);
 
@@ -184,7 +178,6 @@ public class TestSynchroSDMController {
 
 
     @RequestMapping(value = "/sdm/establishment/", method = {RequestMethod.GET})
-    @Transactional
     public String establishment(@RequestParam long id) {
         Establishment establishment =establishmentService.findOne(id);
 
@@ -198,6 +191,5 @@ public class TestSynchroSDMController {
 
         return "synchro emplyoee "+ establishment.getName();
     }
-
 
 }
