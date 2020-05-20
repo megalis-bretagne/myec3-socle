@@ -4,6 +4,7 @@ import static org.quartz.DateBuilder.futureDate;
 
 import org.myec3.socle.synchro.scheduler.service.impl.DBListenerImpl;
 import org.myec3.socle.synchro.scheduler.service.impl.JMSListenerImpl;
+import org.myec3.socle.ws.config.SocleClientConfig;
 import org.quartz.DateBuilder.IntervalUnit;
 import org.quartz.SimpleScheduleBuilder;
 import org.quartz.SimpleTrigger;
@@ -13,6 +14,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.core.io.ClassPathResource;
@@ -27,6 +29,7 @@ import javax.sql.DataSource;
 		"classpath:synchronization.properties", "classpath:quartzParallelScheduler.properties",
 		"classpath:quartzScheduler.properties" })
 @ComponentScan(basePackages = { "org.myec3.socle.synchro.scheduler" })
+@Import({ SocleClientConfig.class })
 public class SynchroSchedulerConfig {
 
 
