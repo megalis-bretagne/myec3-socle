@@ -31,9 +31,9 @@ import org.springframework.scheduling.quartz.QuartzJobBean;
  * This generic abstract job provide access to common services and methods that
  * will be used in each synchronization job.
  * 
- * @see PropagateCCSynchronizationJob.class
- * @see PropagateCUDSynchronizationJob.class
- * @see PropagateCUSynchronizationJob.class
+ * @see PropagateCCSynchronizationJob
+ * @see PropagateCUDSynchronizationJob
+ * @see PropagateCUSynchronizationJob
  * 
  * @author Matthieu Proboeuf <matthieu.proboeuf@atosorigin.com>
  * @author Denis Cucchietti <denis.cucchietti@atosorigin.com>
@@ -189,7 +189,8 @@ public abstract class GenericSynchronizationJob extends QuartzJobBean {
 	}
 
 	/**
-	 * @param updatedResources : the updatedResources to set
+	 *
+	 * @param createdResources
 	 */
 	public void setCreatedResources(List<Resource> createdResources) {
 		this.createdResources = createdResources;

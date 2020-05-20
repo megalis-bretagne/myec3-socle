@@ -25,8 +25,8 @@ import org.myec3.socle.core.service.InseeGeoCodeService;
 import org.myec3.socle.core.service.InseeLegalCategoryService;
 import org.myec3.socle.core.service.MpsUpdateJobService;
 import org.myec3.socle.core.service.PersonService;
-import org.myec3.socle.core.util.CronUtils;
-import org.myec3.socle.synchro.api.SynchronizationNotificationService;
+import org.myec3.socle.synchro.api.constants.SynchronizationType;
+import org.myec3.socle.synchro.scheduler.manager.ResourceSynchronizationManager;
 import org.myec3.socle.ws.client.CompanyWSinfo;
 import org.myec3.socle.ws.client.impl.mps.MpsWsClient;
 import org.slf4j.Logger;
@@ -70,14 +70,16 @@ public class UnstackUpdateList {
     private EmployeeProfileService employeeProfileService;
 
     @Autowired
-    @Qualifier("synchronizationNotificationService")
-    private SynchronizationNotificationService synchronizationService;
+    @Qualifier("companySynchronizer")
+    private ResourceSynchronizationManager<Company> companySynchronizer;
+
+    @Autowired
+    @Qualifier("establishmentSynchronizer")
+    private ResourceSynchronizationManager<Establishment> establishmentSynchronizer;
 
     private CompanyWSinfo mpsWS = new MpsWsClient();
 
     private int updateErrors;
-
-    private Company companyToUpdate;
 
     private static final String MPS_UPDATE_BUNDLE_NAME = "mpsUpdate";
     private static final ResourceBundle MPSUPDATE_BUNDLE = ResourceBundle.getBundle(MPS_UPDATE_BUNDLE_NAME);
@@ -237,7 +239,11 @@ public class UnstackUpdateList {
 
                                 // Send notification to external
                                 // applications
-                                this.synchronizationService.notifyUpdate(companyToUpdate);
+                                SynchronizationType synchronizationType = SynchronizationType.SYNCHRONIZATION;
+                                String sendingApplication = "BATCH";
+                                companySynchronizer.synchronizeUpdate(companyToUpdate, null, synchronizationType, sendingApplication);
+
+
                             } catch (Exception e) {
                                 logger.info("Error while updating Company : " + e);
                                 this.companyUpdateError(companyToUpdate, updateErrorId, resourceToUnstack);
@@ -371,7 +377,10 @@ public class UnstackUpdateList {
 
                                 // Send notification to external
                                 // applications
-                                this.synchronizationService.notifyUpdate(establishmentToUpdate);
+                                SynchronizationType synchronizationType = SynchronizationType.SYNCHRONIZATION;
+                                String sendingApplication = "BATCH";
+                                establishmentSynchronizer.synchronizeUpdate(establishmentToUpdate, null, synchronizationType, sendingApplication);
+
                             } catch (Exception e) {
                                 logger.warn("Error while updating Establishment : " + e);
                                 this.updateErrors += 1;
