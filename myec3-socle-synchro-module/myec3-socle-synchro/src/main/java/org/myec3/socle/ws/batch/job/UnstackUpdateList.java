@@ -14,10 +14,7 @@ import org.myec3.socle.core.domain.model.Establishment;
 import org.myec3.socle.core.domain.model.InseeGeoCode;
 import org.myec3.socle.core.domain.model.MpsUpdateJob;
 import org.myec3.socle.core.domain.model.Person;
-import org.myec3.socle.core.domain.model.enums.AdministrativeStateValue;
-import org.myec3.socle.core.domain.model.enums.Civility;
-import org.myec3.socle.core.domain.model.enums.MpsUpdateTypeValue;
-import org.myec3.socle.core.domain.model.enums.ResourceType;
+import org.myec3.socle.core.domain.model.enums.*;
 import org.myec3.socle.core.service.CompanyService;
 import org.myec3.socle.core.service.EmployeeProfileService;
 import org.myec3.socle.core.service.EstablishmentService;
@@ -198,7 +195,13 @@ public class UnstackUpdateList {
                             companyToUpdate.setNic(tmpCompany.getNic());
                             companyToUpdate.setLabel(tmpCompany.getLabel());
 
-                            companyToUpdate.setLegalCategory(tmpCompany.getLegalCategory());
+                            if(tmpCompany.getLegalCategory() != null){
+                                companyToUpdate.setLegalCategory(tmpCompany.getLegalCategory());
+                            }else{
+                                logger.info("Company InseeLegalCategory is null. Setting it to 'Autre'");
+                                CompanyINSEECat companyINSEECat = CompanyINSEECat.getByValue("AUTRE");
+                                companyToUpdate.setLegalCategory(companyINSEECat);
+                            }
 
                             AdministrativeState administrativeState = new AdministrativeState();
                             if (tmpCompany.getAdministrativeState() != null) {
