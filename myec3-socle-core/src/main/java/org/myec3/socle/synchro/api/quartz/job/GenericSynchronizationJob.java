@@ -189,8 +189,7 @@ public abstract class GenericSynchronizationJob extends QuartzJobBean {
 	}
 
 	/**
-	 *
-	 * @param createdResources
+	 * @param createdResources : the createdResources to set
 	 */
 	public void setCreatedResources(List<Resource> createdResources) {
 		this.createdResources = createdResources;
