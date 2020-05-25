@@ -268,15 +268,10 @@ public class Modify extends AbstractPage {
 			return this;
 		} else {
 			try {
-				this.checkIfUsernameUpdated();
 				this.agentProfileService.update(this.agentProfile);
 				this.synchronizationService.notifyUpdate(this.agentProfile);
 
-				if (this.getUsernameAlreadyExists()) {
-					this.viewPage.setSuccessMessage(this.getMessages().get("recording-success-not-modify-username"));
-				} else {
-					this.viewPage.setSuccessMessage(this.getMessages().get("recording-success-message"));
-				}
+				this.viewPage.setSuccessMessage(this.getMessages().get("recording-success-message"));
 
 				this.viewPage.setAgentProfile(this.agentProfile);
 				return this.viewPage;
@@ -347,19 +342,6 @@ public class Modify extends AbstractPage {
 				if ((organismAddress != null) && (currentAgentAddress == null)) {
 					this.agentProfile.setAddress(organismAddress);
 				}
-			}
-		}
-	}
-
-	/**
-	 * If email have been updated we check if we can set username = email
-	 */
-	public void checkIfUsernameUpdated() {
-		if (!this.getEmailOldValue().equals(this.agentProfile.getEmail())) {
-			if (!this.profileService.usernameAlreadyExists(this.agentProfile.getEmail(), this.agentProfile)) {
-				this.agentProfile.getUser().setUsername(this.agentProfile.getEmail());
-			} else {
-				this.setUsernameAlreadyExists(Boolean.TRUE);
 			}
 		}
 	}
