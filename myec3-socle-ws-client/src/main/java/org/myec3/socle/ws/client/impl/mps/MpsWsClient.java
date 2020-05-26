@@ -376,6 +376,11 @@ public class MpsWsClient implements CompanyWSinfo {
             company.getAddress()
                     .setPostalCode(responseEntreprises.getEtablissement_siege().getAddress().getPostalCode());
         }
+        //si pas de code postal dans la reponse on met 00000
+        if (company.getAddress().getPostalCode() == null) {
+            company.getAddress()
+                    .setPostalCode("00000");
+        }
 
         // city
         if (company.getAddress().getCity() == null) {
