@@ -40,7 +40,7 @@ import java.util.List;
  * Corresponding tapestry template file is :
  * src/main/resources/org/myec3/socle/webapp/pages/organism/agent/Modify.tml
  * 
- * @see securityMyEc3Context.xml to know profiles authorized to display this
+ * @see "WebSecurityConfig" to know profiles authorized to display this
  *      page<br />
  * 
  * @author Anthony Colas <anthony.j.colas@atosorigin.com>
@@ -172,15 +172,75 @@ public class Modify extends AbstractPage {
 		return super.hasRights(profile);
 	}
 
+	private void checkCertificate() {
+
+		// initialize the check to false
+		this.checkCertificate = Boolean.FALSE;
+
+		// get the user who have the same certificate
+		List<User> users = this.userService.findUsersByCertificate(this.agentProfile.getUser().getCertificate());
+		logger.debug("Users matching the same certificate : " + users.toString());
+		// If we have at least 1 user with same certificate
+		String userInfos = " ";
+		if (users.size() > 0) {
+
+			// check the current users
+			for (User user : users) {
+
+				// Is it current user ? If yes, that's not okay
+				if ((user.getId() != this.agentProfile.getUser().getId())) {
+
+					// Get the user associate Profile
+					List<Profile> profiles = this.profileService.findAllProfilesByUser(user);
+
+					// We have at least a profile !
+					if (profiles != null && profiles.size() == 1) {
+						for (Profile userProfile : profiles) {
+
+							// Profile is deleted or not (FALSE means deleted)
+							logger.debug("Is Profile enabled : " + userProfile.getEnabled());
+							if (!userProfile.getEnabled().equals(Boolean.FALSE)) {
+
+								logger.debug("Certificate Already in use !");
+
+								// Display error message
+								this.checkCertificate = Boolean.TRUE;
+								Structure userStructure = this.userService.findUserOrganismStructure(user);
+
+								// Construction or error message
+								if (user.getCivility() != null) {
+									userInfos += user.getCivility() + " " + user.getFirstname() + " "
+											+ user.getLastname() + " ";
+								} else {
+									userInfos += user.getFirstname() + " " + user.getLastname() + " ";
+								}
+
+								if (userStructure != null) {
+									userInfos += "(Organisme : " + userStructure.getLabel() + "), ";
+								}
+
+								logger.debug("UserInfos : " + userInfos);
+							}
+						}
+					}
+				}
+			}
+		}
+
+		if (this.checkCertificate.equals(Boolean.TRUE)) {
+			logger.debug("Certificate already used !");
+			userInfos = userInfos.substring(0, userInfos.length() - 2);
+			this.certificateErrorMessage = this.getMessages().get("already-used-certificate") + userInfos;
+		} else {
+			logger.debug("No user is using the same certificate.");
+			this.certificateSuccessMessage = this.getMessages().get("not-used-certificate");
+		}
+
+	}
+
 	// Form events
 	@OnEvent(EventConstants.SUCCESS)
 	public Object onSuccess() {
-
-		//cas enregistrer si il y a un certificat présent on force la vérification avant l'update
-		if(this.agentProfile.getUser().getCertificate() != null  ){
-			this.certificateValid= Boolean.TRUE;
-		}
-
 		logger.debug("CertificateValid Boolean ? " + this.certificateValid);
 		if (this.certificateValid != null && this.certificateValid.equals(Boolean.TRUE)) {
 			// User clicked on check certificate
@@ -196,67 +256,8 @@ public class Modify extends AbstractPage {
 				return null;
 			}
 
-			// initialize the check to false
-			this.checkCertificate = Boolean.FALSE;
+			this.checkCertificate();
 
-			// get the user who have the same certificate
-			List<User> users = this.userService.findUsersByCertificate(this.agentProfile.getUser().getCertificate());
-			logger.debug("Users matching the same certificate : " + users.toString());
-			// If we have at least 1 user with same certificate
-			String userInfos = " ";
-			if (users.size() > 0) {
-
-				// check the current users
-				for (User user : users) {
-
-					// Is it current user ? If yes, that's not okay
-					if ((user.getId() != this.agentProfile.getUser().getId())) {
-
-						// Get the user associate Profile
-						List<Profile> profiles = this.profileService.findAllProfilesByUser(user);
-
-						// We have at least a profile !
-						if (profiles != null && profiles.size() == 1) {
-							for (Profile userProfile : profiles) {
-
-								// Profile is deleted or not (FALSE means deleted)
-								logger.debug("Is Profile enabled : " + userProfile.getEnabled());
-								if (!userProfile.getEnabled().equals(Boolean.FALSE)) {
-
-									logger.debug("Certificate Already in use !");
-
-									// Display error message
-									this.checkCertificate = Boolean.TRUE;
-									Structure userStructure = this.userService.findUserOrganismStructure(user);
-
-									// Construction or error message
-									if (user.getCivility() != null) {
-										userInfos += user.getCivility() + " " + user.getFirstname() + " "
-												+ user.getLastname() + " ";
-									} else {
-										userInfos += user.getFirstname() + " " + user.getLastname() + " ";
-									}
-
-									if (userStructure != null) {
-										userInfos += "(Organisme : " + userStructure.getLabel() + "), ";
-									}
-
-									logger.debug("UserInfos : " + userInfos);
-								}
-							}
-						}
-					}
-				}
-			}
-
-			if (this.checkCertificate.equals(Boolean.TRUE)) {
-				logger.debug("Certificate already used !");
-				userInfos = userInfos.substring(0, userInfos.length() - 2);
-				this.certificateErrorMessage = this.getMessages().get("already-used-certificate") + userInfos;
-			} else {
-				logger.debug("No user is using the same certificate.");
-				this.certificateSuccessMessage = this.getMessages().get("not-used-certificate");
-			}
 			// set this boolean to true so we don't initiate AgentProfile again
 			// and loose informations
 			this.activateOnce = Boolean.TRUE;
@@ -266,6 +267,20 @@ public class Modify extends AbstractPage {
 			return this;
 		} else {
 			try {
+				//cas enregistrer si il y a un certificat présent on force la vérification avant l'update
+				if(this.agentProfile.getUser().getCertificate() != null ){
+					this.checkCertificate();
+					if (this.checkCertificate.equals(Boolean.TRUE)) {
+						logger.debug("Certificate already used !");
+						// set this boolean to true so we don't initiate AgentProfile again
+						// and loose informations
+						this.activateOnce = Boolean.TRUE;
+						this.oldAgentProfile = this.agentProfile;
+						// reset so we don't loop in this function
+						this.certificateValid = Boolean.FALSE;
+						return this;
+					}
+				}
 				this.agentProfileService.update(this.agentProfile);
 				this.synchronizationService.notifyUpdate(this.agentProfile);
 
