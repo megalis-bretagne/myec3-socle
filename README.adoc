@@ -51,5 +51,3 @@ Add the following modifiers :
 |===
 
 You can access the application on localhost:8080
-
-test
