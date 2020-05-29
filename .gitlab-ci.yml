@@ -51,7 +51,7 @@ deployPreprodWebapp:
   variables:
     STACK_NAME: "socle-webapp"
     
-deployPreprodWebapp:
+deployPreprodWebappScheduled:
   extends: .deployPreprodScheduled
   variables:
     STACK_NAME: "socle-webapp"
