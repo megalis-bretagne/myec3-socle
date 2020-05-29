@@ -17,6 +17,7 @@
  */
 package org.myec3.socle.core.domain.dao.jpa;
 
+import org.apache.commons.lang3.StringUtils;
 import org.myec3.socle.core.domain.dao.UserDao;
 import org.myec3.socle.core.domain.model.ConnectionInfos;
 import org.myec3.socle.core.domain.model.User;
@@ -107,8 +108,8 @@ public class JpaUserDao extends JpaResourceDao<User> implements UserDao {
 		this.getLog().debug("Finding User id by certificate");
 		try {
 			Query q = getEm().createQuery(
-					"SELECT u FROM " + this.getDomainClass().getSimpleName() + " u WHERE u.certificate = :certificate");
-			q.setParameter("certificate", certificate.replaceAll("\\r", ""));
+					"SELECT u FROM " + this.getDomainClass().getSimpleName() + " u WHERE REPLACE(REPLACE(u.certificate, '\\r', ''), '\\n', '') = :certificate");
+			q.setParameter("certificate", StringUtils.trim(certificate));
 			List<User> user = q.getResultList();
 			getLog().debug("findUsersIdByCertificate successfull.");
 			return user;
