@@ -109,7 +109,7 @@ public class JpaUserDao extends JpaResourceDao<User> implements UserDao {
 		try {
 			Query q = getEm().createQuery(
 					"SELECT u FROM " + this.getDomainClass().getSimpleName() + " u WHERE REPLACE(REPLACE(u.certificate, '\\r', ''), '\\n', '') = :certificate");
-			q.setParameter("certificate", StringUtils.trim(certificate));
+			q.setParameter("certificate", certificate.replaceAll("[\n\r]", ""));
 			List<User> user = q.getResultList();
 			getLog().debug("findUsersIdByCertificate successfull.");
 			return user;
