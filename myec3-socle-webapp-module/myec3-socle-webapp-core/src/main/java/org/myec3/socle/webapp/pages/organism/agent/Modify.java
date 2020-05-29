@@ -21,18 +21,10 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.tapestry5.EventConstants;
 import org.apache.tapestry5.PersistenceConstants;
-import org.apache.tapestry5.annotations.InjectPage;
-import org.apache.tapestry5.annotations.OnEvent;
-import org.apache.tapestry5.annotations.Persist;
-import org.apache.tapestry5.annotations.Property;
-import org.apache.tapestry5.annotations.Service;
+import org.apache.tapestry5.annotations.*;
 import org.apache.tapestry5.ioc.Messages;
 import org.apache.tapestry5.ioc.annotations.Inject;
-import org.myec3.socle.core.domain.model.Address;
-import org.myec3.socle.core.domain.model.AgentProfile;
-import org.myec3.socle.core.domain.model.Profile;
-import org.myec3.socle.core.domain.model.Structure;
-import org.myec3.socle.core.domain.model.User;
+import org.myec3.socle.core.domain.model.*;
 import org.myec3.socle.core.service.AgentProfileService;
 import org.myec3.socle.core.service.ProfileService;
 import org.myec3.socle.core.service.UserService;
@@ -183,6 +175,12 @@ public class Modify extends AbstractPage {
 	// Form events
 	@OnEvent(EventConstants.SUCCESS)
 	public Object onSuccess() {
+
+		//cas enregistrer si il y a un certificat présent on force la vérification avant l'update
+		if(this.agentProfile.getUser().getCertificate() != null  ){
+			this.certificateValid= Boolean.TRUE;
+		}
+
 		logger.debug("CertificateValid Boolean ? " + this.certificateValid);
 		if (this.certificateValid != null && this.certificateValid.equals(Boolean.TRUE)) {
 			// User clicked on check certificate

@@ -233,6 +233,11 @@ public class Create extends AbstractPage {
 	// Form events
 	@OnEvent(EventConstants.SUCCESS)
 	public Object onSuccess() {
+		//cas enregistrer si il y a un certificat présent on force la vérification avant l'update
+		if(this.agentProfile.getUser().getCertificate() != null  ){
+			this.certificateValid= Boolean.TRUE;
+		}
+
 		logger.debug("CertificateValid Boolean ? " + this.certificateValid);
 		if (this.certificateValid != null && this.certificateValid.equals(Boolean.TRUE)) {
 			// User clicked on check certificate
