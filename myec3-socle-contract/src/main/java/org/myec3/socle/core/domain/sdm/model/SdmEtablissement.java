@@ -22,6 +22,8 @@ public class SdmEtablissement extends SdmResource  {
     @XmlElement(required = true)
     private String idEntreprise;
 
+    private String codeEtablissement;
+
     public String getIdEntreprise() {
         return idEntreprise;
     }
@@ -52,6 +54,14 @@ public class SdmEtablissement extends SdmResource  {
 
     public void setSiret(String siret) {
         this.siret = Objects.toString(siret,"");
+    }
+
+    public String getCodeEtablissement() {
+        return codeEtablissement;
+    }
+
+    public void setCodeEtablissement(String codeEtablissement) {
+        this.codeEtablissement = Objects.toString(codeEtablissement,"");
     }
 
     public SdmAdresse getAdresse() {
