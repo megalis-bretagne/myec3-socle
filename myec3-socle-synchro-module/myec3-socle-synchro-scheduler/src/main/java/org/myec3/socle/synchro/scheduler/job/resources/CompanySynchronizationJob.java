@@ -142,6 +142,7 @@ public class CompanySynchronizationJob extends
 		SdmEntreprise entrepriseSDM = new SdmEntreprise();
 		entrepriseSDM.setIdExterne(String.valueOf(resource.getExternalId()));
 		entrepriseSDM.setSiren(resource.getSiren());
+		entrepriseSDM.setSirenEtranger(resource.getNationalID());
 		entrepriseSDM.setFormeJuridique(resource.getLegalCategory().getLabel());
 		entrepriseSDM.setCodeAPE(resource.getApeCode());
 		entrepriseSDM.setEmail(resource.getEmail());
