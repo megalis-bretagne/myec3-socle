@@ -73,7 +73,7 @@ public class SdmEntreprise extends SdmResource  {
         return paysenregistrement;
     }
     public void setPaysenregistrement(String paysenregistrement) {
-        this.sirenEtranger =  Objects.toString(paysenregistrement,"");
+        this.paysenregistrement =  Objects.toString(paysenregistrement,"");
     }
 
     public String getEffectif() {
