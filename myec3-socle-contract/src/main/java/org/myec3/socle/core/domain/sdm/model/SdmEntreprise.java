@@ -19,6 +19,9 @@ public class SdmEntreprise extends SdmResource  {
     private String sirenEtranger;
 
     @XmlElement(required = false)
+    private String paysenregistrement;
+
+    @XmlElement(required = false)
     private String effectif;
 
     @XmlElement(required = false)
@@ -64,6 +67,13 @@ public class SdmEntreprise extends SdmResource  {
 
     public void setSirenEtranger(String sirenEtranger) {
         this.sirenEtranger =  Objects.toString(sirenEtranger,"");
+    }
+
+    public String getPaysenregistrement() {
+        return paysenregistrement;
+    }
+    public void setPaysenregistrement(String paysenregistrement) {
+        this.sirenEtranger =  Objects.toString(paysenregistrement,"");
     }
 
     public String getEffectif() {
