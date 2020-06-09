@@ -12,8 +12,11 @@ public class SdmEntreprise extends SdmResource  {
     @XmlElement(required = true)
     private long id;
 
-    @XmlElement(required = true)
+    @XmlElement(required = false)
     private String siren;
+
+    @XmlElement(required = false)
+    private String sirenEtranger;
 
     @XmlElement(required = false)
     private String effectif;
@@ -53,6 +56,14 @@ public class SdmEntreprise extends SdmResource  {
 
     public void setSiren(String siren) {
         this.siren =  Objects.toString(siren,"");
+    }
+
+    public String getSirenEtranger() {
+        return sirenEtranger;
+    }
+
+    public void setSirenEtranger(String sirenEtranger) {
+        this.sirenEtranger =  Objects.toString(sirenEtranger,"");
     }
 
     public String getEffectif() {
