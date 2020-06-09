@@ -251,14 +251,14 @@ public class Create extends AbstractPage {
 
 		if (company != null) {
 			// We've got a company
-			if (this.getNic() != null) {
+			if (this.getNic() != null ) {
 				this.establishmentNic = this.nic;
 				this.initEstablishment();
 				this.onSelectedFromSearchEstablishment();
 				this.setNic(null);
 			}
 
-			if ((this.establishment == null) || (this.establishment != null && this.establishment.getSiret() != null
+			if ((this.establishment == null) || company.getForeignIdentifier() || (this.establishment != null && this.establishment.getSiret() != null
 					&& (!(this.establishment.getSiret().substring(0, 9).equals(this.company.getSiren()))))) {
 				logger.trace("No establishment provided.");
 				// Initiate everything needed for establishment creation !
