@@ -1,5 +1,7 @@
 package org.myec3.socle.core.domain.sdm.model;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.util.Date;
@@ -22,6 +24,7 @@ public class SdmEtablissement extends SdmResource  {
     @XmlElement(required = true)
     private String idEntreprise;
 
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private String codeEtablissement;
 
     public String getIdEntreprise() {

@@ -143,10 +143,15 @@ public class EstablishmentSynchronizationJob extends
         etablissementSDM.setIdExterne(String.valueOf(resource.getExternalId()));
         int siege = resource.getIsHeadOffice() ? 1 : 0;
         etablissementSDM.setSiege(String.valueOf(siege));
+
         etablissementSDM.setSiret(resource.getSiret());
 
         if (resource.getCompany() !=null && resource.getCompany().getId() != null){
             List<SynchroIdentifiantExterne> synchroIdentifiantExterne = synchroIdentifiantExterneService.findListByIdSocle(resource.getCompany().getId(), ResourceType.COMPANY);
+            if (resource.getCompany().getForeignIdentifier()){
+                etablissementSDM.setCodeEtablissement(resource.getCompany().getNationalID());
+            }
+
             if (synchroIdentifiantExterne !=null && !synchroIdentifiantExterne.isEmpty() ){
                 etablissementSDM.setIdEntreprise(String.valueOf(synchroIdentifiantExterne.get(0).getIdAppliExterne()));
 
