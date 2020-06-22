@@ -121,7 +121,7 @@ public class SdmWsClientImpl implements ResourceWsClient {
 				String responseToString = response.readEntity(String.class);
 				logger.info("REPONSE: {}",responseToString);
 				try {
-					Error error =traiterReponseSDMService.traiterReponseKo(responseToString,responseMsg);
+					Error error =traiterReponseSDMService.traiterReponseKo(responseToString,responseMsg,resource);
 				}catch (Exception e){
 					Error error = new Error();
 					responseMsg.setError(error);
