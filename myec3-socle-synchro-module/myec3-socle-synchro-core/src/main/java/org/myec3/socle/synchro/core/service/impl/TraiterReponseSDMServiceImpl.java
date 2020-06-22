@@ -1,10 +1,12 @@
 package org.myec3.socle.synchro.core.service.impl;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.apache.commons.lang3.StringUtils;
 import org.myec3.socle.core.domain.model.*;
 import org.myec3.socle.core.domain.model.enums.ResourceType;
 import org.myec3.socle.core.service.ApplicationService;
 import org.myec3.socle.core.service.OrganismService;
+import org.myec3.socle.core.sync.api.ClassType;
 import org.myec3.socle.core.sync.api.Error;
 import org.myec3.socle.core.sync.api.ErrorCodeType;
 import org.myec3.socle.core.sync.api.ResponseMessage;
@@ -17,8 +19,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.StringUtils;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -233,7 +233,7 @@ public class TraiterReponseSDMServiceImpl implements TraiterReponseSDMService {
         }
     }
 
-    public Error traiterReponseKo(String responseToString, ResponseMessage responseMsg) throws IOException {
+    public Error traiterReponseKo(String responseToString, ResponseMessage responseMsg,Resource resource) throws IOException {
 
         if (!StringUtils.isEmpty(responseToString)) {
             ObjectMapper mapper = new ObjectMapper();
@@ -258,19 +258,28 @@ public class TraiterReponseSDMServiceImpl implements TraiterReponseSDMService {
                 erreurs = (String) reponseHM.get("errors");
             }
 
-            //Integer status = (Integer) reponseHM.get("status");
-            //String type = (String) reponseHM.get("type");
-            //String statutReponse = (String) reponseHM.get("statutReponse");
-
             String title = (String) reponseHM.get("title");
             Error error = new Error();
             responseMsg.setError(error);
             error.setErrorMessage(erreurs);
             error.setErrorLabel(title);
-
-            //mapping à faire
             error.setErrorCode(ErrorCodeType.FORMAT_ERROR);
 
+            //mapping des codes erreurs
+            if (resource instanceof EmployeeProfile) {
+                if (StringUtils.equalsIgnoreCase("L'inscrit n'est attaché à aucun etablissement", erreurs)) {
+                    error.setClassType(ClassType.ESTABLISHMENT);
+                    error.setErrorCode(ErrorCodeType.RELATION_MISSING);
+                    error.setResourceId(((EmployeeProfile) resource).getEstablishment().getId());
+                }
+            }
+            if (resource instanceof Establishment) {
+                if (StringUtils.equalsIgnoreCase("Etablissement n'est attaché à aucune entreprise", erreurs)) {
+                    error.setClassType(ClassType.COMPANY);
+                    error.setErrorCode(ErrorCodeType.RELATION_MISSING);
+                    error.setResourceId(((Establishment) resource).getCompany().getId());
+                }
+            }
             return error;
         } else {
             Error error = new Error();

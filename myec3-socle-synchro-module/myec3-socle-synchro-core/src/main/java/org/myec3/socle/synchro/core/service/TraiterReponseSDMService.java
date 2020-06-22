@@ -10,5 +10,5 @@ public interface TraiterReponseSDMService {
 
    void traiterReponseOk(Resource resource, String responseToString) throws IOException;
 
-   Error traiterReponseKo(String responseToString, ResponseMessage responseMsg) throws IOException;
+   Error traiterReponseKo(String responseToString, ResponseMessage responseMsg,Resource resource) throws IOException;
 }
