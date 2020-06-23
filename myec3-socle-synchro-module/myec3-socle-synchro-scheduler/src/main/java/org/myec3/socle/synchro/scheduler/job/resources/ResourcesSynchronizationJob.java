@@ -1660,6 +1660,8 @@ public abstract class ResourcesSynchronizationJob<T extends Resource> extends Qu
 				return organismDepartmentService;
 			case COMPANY:
 				return companyService;
+			case ESTABLISHMENT:
+				return establishmentService;
 			case COMPANY_DEPARTMENT:
 				return companyDepartmentService;
 		}
