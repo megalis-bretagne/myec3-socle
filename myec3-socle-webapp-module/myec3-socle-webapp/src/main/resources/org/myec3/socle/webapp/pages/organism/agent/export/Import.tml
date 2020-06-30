@@ -119,8 +119,8 @@
 								<td><strong>${message:email-label}*</strong>
 								</td>
 								<td>Désigne l'adresse électronique de l'utilisateur ainsi
-									que son identifiant au sein du référentiel d'identité sur
-									e-bourgogne. Par conséquent, la valeur renseignée doit être
+									que son identifiant au sein du référentiel d'identité.
+									Par conséquent, la valeur renseignée doit être
 									unique. Ce champ constituera la clé de rapprochement entre les
 									utilisateurs e-bourgogne et ceux listés dans votre export.</td>
 								<td>${message:text-type-label}</td>
