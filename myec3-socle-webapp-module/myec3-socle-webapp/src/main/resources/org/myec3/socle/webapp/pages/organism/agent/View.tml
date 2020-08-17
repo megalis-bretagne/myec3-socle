@@ -205,7 +205,7 @@
 
                      &nbsp;
                     <ul class="links">
-                        <t:if test="isHimselfAndNotAdmin">
+                        <t:if test="!isHimselfAndNotAdmin">
                             <li class="back">
                                 <t:pagelink page="organism/department/detail" context="agentProfile.organismDepartment.id">
                                     ${message:back-detailorganismdepartment-label} : ${agentProfile?.organismDepartment?.label}
