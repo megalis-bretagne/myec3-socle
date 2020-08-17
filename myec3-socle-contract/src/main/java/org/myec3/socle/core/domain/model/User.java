@@ -91,6 +91,7 @@ public class User extends Resource {
 	 */
 	public User() {
 		super();
+		creationDate=new Date(System.currentTimeMillis());
 	}
 
 	/**
