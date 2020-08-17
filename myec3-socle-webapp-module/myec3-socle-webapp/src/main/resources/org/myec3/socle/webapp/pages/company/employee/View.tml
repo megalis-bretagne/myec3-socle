@@ -73,6 +73,12 @@
 						</label>
 						${employeeProfile?.user?.username}
 					</p>
+					<p>
+						<label>
+							${message:creationDateUser-label} :
+						</label>
+						<t:output format="timestampFormat" t:value="agentProfile.user.creationDate"/>
+					</p>
 					<t:if test="modifyDisplay">
 						<p>
 							<label>

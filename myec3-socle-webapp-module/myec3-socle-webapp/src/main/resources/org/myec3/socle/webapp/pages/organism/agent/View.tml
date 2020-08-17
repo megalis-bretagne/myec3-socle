@@ -80,7 +80,7 @@
                     </p>
                     <p>
                         <label>
-                            ${message:creationDate-label} :
+                            ${message:creationDateUser-label} :
                         </label>
                         <t:output format="timestampFormat" t:value="agentProfile.user.creationDate"/>
                     </p>
