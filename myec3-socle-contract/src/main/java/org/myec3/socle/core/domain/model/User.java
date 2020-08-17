@@ -68,6 +68,7 @@ public class User extends Resource {
 	private String username;
 	private String password;
 	private Date modifDatePassword;
+	private Date creationDate;
 	private Date expirationDatePassword;
 	private String controlKeyNewPassword;
 	private String newPassword;
@@ -199,6 +200,24 @@ public class User extends Resource {
 	public void setModifDatePassword(Date modifDatePassword) {
 		this.modifDatePassword = modifDatePassword;
 	}
+
+	/**
+	 * creation date of user.
+	 *
+	 * @return modification date of creation.
+	 */
+	@Column(nullable = true)
+	@Temporal(TemporalType.TIMESTAMP)
+	@XmlElement(required = false)
+	@XmlJavaTypeAdapter(TimestampAdapter.class)
+	public Date getCreationDate() {
+		return creationDate;
+	}
+
+	public void setCreationDate(Date creationDate) {
+		this.creationDate = creationDate;
+	}
+
 
 	/**
 	 * Expiration date of password.

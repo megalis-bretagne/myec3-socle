@@ -79,6 +79,12 @@
                         ${agentProfile?.user?.username}
                     </p>
                     <p>
+                        <label>
+                            ${message:creationDate-label} :
+                        </label>
+                        <t:output format="timestampFormat" t:value="agentProfile.user.creationDate"/>
+                    </p>
+                    <p>
                     	<label>
                         	 ${message:modificationDatePassword-label} :
                         </label>
