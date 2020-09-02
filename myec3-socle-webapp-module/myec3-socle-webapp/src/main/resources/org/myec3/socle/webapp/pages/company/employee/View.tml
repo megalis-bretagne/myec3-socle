@@ -187,6 +187,16 @@
 						</label>
 						${employeeProfile?.prefComMedia?.label}
 					</p>
+					<p>
+						<label>${message:lastConnectionDate-label} : </label>
+						<t:if test="employeeProfile.user.connectionInfos">
+							<t:output format="literal:'le' dd MMMM yyyy &agrave; HH:mm:ss" value="employeeProfile.user.connectionInfos.lastConnectionDate"/>
+							<p:else>
+								<message>${message:noConnectionRegistered-message}</message>
+							</p:else>
+						</t:if>
+
+					</p>
 					 &nbsp;
 					<ul class="links">
 						<t:if test="!isHimselfAndNotAdmin">
