@@ -136,7 +136,7 @@ public class OrganismSynchronizationJob extends
         organismeSDM.setTel(resource.getPhone());
         organismeSDM.setSigle(resource.getLabel());
         organismeSDM.setCategorieInsee(resource.getLegalCategory().getId());
-        organismeSDM.setDenomination(resource.getName());
+        organismeSDM.setDenomination(resource.getLabel());
         organismeSDM.setSiren(resource.getSiren());
         organismeSDM.setNic(resource.getNic());
         organismeSDM.setAdresse(convertToSdmAdresse(resource.getAddress()));
