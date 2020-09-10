@@ -208,9 +208,7 @@ public class User extends Resource {
 	 * @return modification date of creation.
 	 */
 	@Column(nullable = true)
-	@Temporal(TemporalType.TIMESTAMP)
-	@XmlElement(required = false)
-	@XmlJavaTypeAdapter(TimestampAdapter.class)
+	@XmlTransient
 	public Date getCreationDate() {
 		return creationDate;
 	}
