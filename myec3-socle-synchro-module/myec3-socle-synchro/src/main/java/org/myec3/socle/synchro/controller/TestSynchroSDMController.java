@@ -97,6 +97,56 @@ public class TestSynchroSDMController {
     }
 
 
+    @RequestMapping(value = "/pastell/agent/", method = {RequestMethod.GET})
+    public String agentPastell(@RequestParam long id) {
+
+        AgentProfile agent =agentProfileService.findOne(id);
+
+        Application applicationASynchroniser = applicationService.findByName("Pastell");
+        List<Long> listApplicationIdToResynchronize = new ArrayList<>();
+        listApplicationIdToResynchronize.add(applicationASynchroniser.getId());
+
+        SynchronizationType synchronizationType = SynchronizationType.SYNCHRONIZATION;
+        String sendingApplication = "GU";
+
+        agentSynchronizer.synchronizeUpdate(agent, listApplicationIdToResynchronize, synchronizationType, sendingApplication);
+        logger.info("synchro agent {}", agent.getUsername());
+
+        return "synchro agent "+ agent.getName();
+    }
+
+    @RequestMapping(value = "/pastell/organism/", method = {RequestMethod.GET})
+    public String organismePastell(@RequestParam long id) {
+        Organism organism =organismService.findOne(id);
+
+        Application applicationASynchroniser = applicationService.findByName("Pastell");
+        List<Long> listApplicationIdToResynchronize = new ArrayList<>();
+        listApplicationIdToResynchronize.add(applicationASynchroniser.getId());
+        SynchronizationType synchronizationType = SynchronizationType.SYNCHRONIZATION;
+        String sendingApplication = "GU";
+
+        organismSynchronizer.synchronizeUpdate(organism, listApplicationIdToResynchronize, synchronizationType, sendingApplication);
+
+        return "synchro organisme "+ organism.getName();
+    }
+
+    @RequestMapping(value = "/pastell/organismDepartment/", method = {RequestMethod.GET})
+    public String organismDepartmentPastell(@RequestParam long id) {
+        OrganismDepartment organismDepartment =organismDepartmentService.findOne(id);
+
+        Application applicationASynchroniser = applicationService.findByName("Pastell");
+        List<Long> listApplicationIdToResynchronize = new ArrayList<>();
+        listApplicationIdToResynchronize.add(applicationASynchroniser.getId());
+        SynchronizationType synchronizationType = SynchronizationType.SYNCHRONIZATION;
+        String sendingApplication = "GU";
+
+        organismDepartmentSynchronizer.synchronizeUpdate(organismDepartment, listApplicationIdToResynchronize, synchronizationType, sendingApplication);
+
+        return "synchro organismDepartment "+ organismDepartment.getName();
+    }
+
+
+
     @RequestMapping(value = "/sdm/agent/", method = {RequestMethod.GET})
     public String agent(@RequestParam long id) {
 
