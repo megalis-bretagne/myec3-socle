@@ -125,7 +125,7 @@ public class OrganismDepartmentSynchronizationJob extends
         serviceSDM.setIdExterne(String.valueOf(resource.getExternalId()));
         serviceSDM.setLibelle(resource.getLabel());
         if (StringUtils.isEmpty(resource.getAbbreviation())){
-            serviceSDM.setSigle("TOP");
+            serviceSDM.setSigle("/");
         }else{
             serviceSDM.setSigle(resource.getAbbreviation());
         }
