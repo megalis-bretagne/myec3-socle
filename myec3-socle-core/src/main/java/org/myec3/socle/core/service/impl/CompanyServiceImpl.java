@@ -198,7 +198,7 @@ public class CompanyServiceImpl extends GenericStructureServiceImpl<Company, Com
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void populateCollections(Company company) {
+	public void  populateCollections(Company company) {
 		Assert.notNull(company, "company is mandatory. null value is forbidden");
 
 		logger.debug("populate collections of company");
@@ -260,7 +260,7 @@ public class CompanyServiceImpl extends GenericStructureServiceImpl<Company, Com
 				logger.info("getCompanyToUpdate Create (but not persist) MpsUpdateJob : " + tmpUpdateQueue.toString());
 				updateQueueToReturn.add(tmpUpdateQueue);
 				Company searchCompany = this.findOne(findCompanyEstablishment);
-				this.populateCollections(searchCompany);
+				//this.populateCollections(searchCompany);
 				updateQueueToReturn.addAll(this.establishmentService.getEstablishmentToUpdateByCompany(searchCompany,
 						MpsUpdateTypeValue.AUTOMATIC));
 
