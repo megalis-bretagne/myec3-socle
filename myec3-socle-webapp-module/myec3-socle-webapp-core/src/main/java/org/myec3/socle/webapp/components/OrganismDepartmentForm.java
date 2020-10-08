@@ -1,17 +1,17 @@
 /**
  * Copyright (c) 2011 Atos Bourgogne
- * 
+ *
  * This file is part of MyEc3.
- * 
+ *
  * MyEc3 is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License version 3 as published by
  * the Free Software Foundation.
- * 
+ *
  * MyEc3 is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public License
  * along with MyEc3. If not, see <http://www.gnu.org/licenses/>.
  */
@@ -50,13 +50,13 @@ import org.myec3.socle.webapp.view.OrganismDepartmentView;
 /**
  * Component class used to manage organism departments (add or modify)
  * {@link OrganismDepartment}<br>
- * 
+ *
  * Corresponding tapestry template file is :
  * src/main/resources/org/myec3/socle/webapp
  * /components/OrganismDepartmentForm.tml
- * 
+ *
  * @author Anthony Colas <anthony.colas@atos.net>
- * 
+ *
  */
 public class OrganismDepartmentForm extends AbstractPage {
 
@@ -82,7 +82,7 @@ public class OrganismDepartmentForm extends AbstractPage {
 	private OrganismDepartment organismDepartment;
 
 	@Property
-	private OrganismDepartmentView selectedRootDepartment;
+	private OrganismDepartmentView selectedDepartment;
 
 	@Property
 	private OrganismDepartment rootDepartment;
@@ -143,11 +143,24 @@ public class OrganismDepartmentForm extends AbstractPage {
 		List<OrganismDepartmentView> departmentsList = getDepartementList();
 
 		departments = selectModelFactory.create(departmentsList, "nameDisplay");
+
+		//si on est en modification d'un deparment
+		if (!this.getNewOrganismDeparment() && this.organismDepartment.getParentDepartment() != null) {
+			//on récupère le department parent existant pour l'afficher dans le formularie de modification
+			for (OrganismDepartmentView departmentsView : departmentsList) {
+				if (this.organismDepartment.getParentDepartment().getId().equals(departmentsView.getOrganismDepartment().getId())) {
+					this.selectedDepartment = departmentsView;
+					break;
+				}
+			}
+		}
 	}
 
 	@OnEvent(EventConstants.SUCCESS)
 	public void onSuccess() {
-		this.organismDepartment.setParentDepartment(selectedRootDepartment.getOrganismDepartment());
+
+		this.organismDepartment.setParentDepartment(selectedDepartment.getOrganismDepartment());
+
 		final ComponentResultProcessorWrapper callback = new ComponentResultProcessorWrapper(
 				componentEventResultProcessor);
 		this.componentResources.triggerEvent("participativeprocessformok",
@@ -222,7 +235,7 @@ public class OrganismDepartmentForm extends AbstractPage {
 
 	/**
 	 * Check if it's a creation or a modification of an department
-	 * 
+	 *
 	 * @return true if it's a creation of new organism department
 	 */
 	public Boolean getNewOrganismDeparment() {
