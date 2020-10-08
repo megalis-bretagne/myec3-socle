@@ -48,22 +48,16 @@
 					t:validate="maxlength=250" />
 			</p>
 			<p>
-				<t:if test="newOrganismDeparment">
-					<t:label for="parentDepartment">
-						${message:parentDepartment-label} :
-					</t:label>
-					<t:select t:id="parentDepartment" t:validate="required"
-							  t:encoder="departmentEncoder" t:model="departments"
-							  t:value="selectedRootDepartment" />
-					<p:else>
-						<t:label for="parentDepartment">
-							${message:parentDepartment-label} :
-						</t:label>
-						<t:select t:id="parentDepartment" t:validate="required"
-								  t:encoder="departmentEncoder" t:model="departments"
-								  t:value="organismDepartment.parentDepartment" />
-					</p:else>
-				</t:if>
+
+				<t:label for="parentDepartment">
+					${message:parentDepartment-label} :
+				</t:label>
+				<t:label for="parentDepartment">
+					${message:parentDepartment-label} :
+				</t:label>
+				<t:select t:id="parentDepartment" t:validate="required"
+						  t:encoder="departmentEncoder" t:model="departments"
+						  t:value="organismDepartment.parentDepartment" />
 		    </p> 
 			<p>
 				<t:label for="postalAddress">
