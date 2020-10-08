@@ -47,13 +47,23 @@
 					t:value="organismDepartment.description" cols="17" rows="5"
 					t:validate="maxlength=250" />
 			</p>
-			<p> 
-				<t:label for="parentDepartment"> 
-                    ${message:parentDepartment-label} : 
-                </t:label>
-				<t:select t:id="parentDepartment" t:validate="required"
-					t:encoder="departmentEncoder" t:model="departments"
-					t:value="selectedRootDepartment" />
+			<p>
+				<t:if test="newOrganismDeparment">
+					<t:label for="parentDepartment">
+						${message:parentDepartment-label} :
+					</t:label>
+					<t:select t:id="parentDepartment" t:validate="required"
+							  t:encoder="departmentEncoder" t:model="departments"
+							  t:value="selectedRootDepartment" />
+					<p:else>
+						<t:label for="parentDepartment">
+							${message:parentDepartment-label} :
+						</t:label>
+						<t:select t:id="parentDepartment" t:validate="required"
+								  t:encoder="departmentEncoder" t:model="departments"
+								  t:value="organismDepartment.parentDepartment" />
+					</p:else>
+				</t:if>
 		    </p> 
 			<p>
 				<t:label for="postalAddress">
