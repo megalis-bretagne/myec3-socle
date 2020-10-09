@@ -18,6 +18,7 @@
 package org.myec3.socle.core.service.impl;
 
 import java.io.UnsupportedEncodingException;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.Properties;
@@ -107,6 +108,11 @@ public class EmailServiceImpl implements EmailService {
 
 		// Email header
 		msg.addHeader(EMAIL_HEADER_CHARSET, EMAIL_HEADER_CHARSET_VALUE);
+
+		String dateFormat = "yyyy-MM-dd HH:mm:ss"; // you specify the format for your date
+		String formattedDate = new SimpleDateFormat(dateFormat).format(new Date());
+		msg.addHeader("Date", formattedDate);
+
 
 		if (!StringUtils.isEmpty(MyEc3EmailConstants.getPapperBoyHeader())) {
 			msg.addHeader(PAPPERBOY_HEADER, MyEc3EmailConstants.getPapperBoyHeader());
