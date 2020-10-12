@@ -20,7 +20,11 @@ public class ExportCSV  implements Serializable, Cloneable, PE{
 
 
     @Column(nullable = false)
+    @Lob
     private File exportFile;
+
+    @Column(nullable = false)
+    private String etat;
 
     public ExportCSV() {
         super();
@@ -54,5 +58,13 @@ public class ExportCSV  implements Serializable, Cloneable, PE{
 
     public void setExportFile(File exportFile) {
         this.exportFile = exportFile;
+    }
+
+    public String getEtat() {
+        return etat;
+    }
+
+    public void setEtat(String etat) {
+        this.etat = etat;
     }
 }
