@@ -20,7 +20,6 @@ public class ExportCSV  implements Serializable, Cloneable, PE{
 
 
     @Column(nullable = false)
-    @Temporal(TemporalType.TIMESTAMP)
     private File exportFile;
 
     public ExportCSV() {
@@ -41,5 +40,19 @@ public class ExportCSV  implements Serializable, Cloneable, PE{
         return id;
     }
 
+    public Date getCreationDate() {
+        return creationDate;
+    }
 
+    public void setCreationDate(Date creationDate) {
+        this.creationDate = creationDate;
+    }
+
+    public File getExportFile() {
+        return exportFile;
+    }
+
+    public void setExportFile(File exportFile) {
+        this.exportFile = exportFile;
+    }
 }
