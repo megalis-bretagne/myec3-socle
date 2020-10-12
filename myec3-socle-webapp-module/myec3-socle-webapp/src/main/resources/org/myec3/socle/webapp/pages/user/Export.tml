@@ -35,6 +35,12 @@
 		<p t:banner="message:form-error" t:type="errors"
 			t:clientClass="errorDialogue"></p>
 
+		<!-- successMessage Message -->
+		<t:if test="successMessage">
+			<p class="success">${successMessage}</p>
+		</t:if>
+
+
 		<fieldset class="import">
 			<legend>Les exports disponibles</legend>
 			<div id="export_dispo">
@@ -46,14 +52,14 @@
 						<th>link</th>
 					</tr>
 					<tr>
-						<th>01/01/2020</th>
-						<th>OK</th>
-						<th>link</th>
+						<td>01/01/2020</td>
+						<td>OK</td>
+						<td>link</td>
 					</tr>
 					<tr>
-						<th>01/02/2020</th>
-						<th>OK</th>
-						<th>link</th>
+						<td>01/02/2020</td>
+						<td>OK</td>
+						<td>link</td>
 					</tr>
 					</tbody>
 				</table>

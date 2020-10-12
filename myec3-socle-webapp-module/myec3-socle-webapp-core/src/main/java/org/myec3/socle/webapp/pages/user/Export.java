@@ -10,10 +10,12 @@ import javax.inject.Named;
 
 import org.apache.tapestry5.ComponentResources;
 import org.apache.tapestry5.EventConstants;
+import org.apache.tapestry5.PersistenceConstants;
 import org.apache.tapestry5.StreamResponse;
 import org.apache.tapestry5.annotations.Component;
 import org.apache.tapestry5.annotations.InjectPage;
 import org.apache.tapestry5.annotations.OnEvent;
+import org.apache.tapestry5.annotations.Persist;
 import org.apache.tapestry5.corelib.components.Form;
 import org.apache.tapestry5.ioc.Messages;
 import org.apache.tapestry5.ioc.annotations.Inject;
@@ -48,6 +50,9 @@ public class Export extends AbstractPage {
 
 	@Inject
 	private Messages messages;
+
+	@Persist(PersistenceConstants.FLASH)
+	private String successMessage;
 
 	@Inject
 	private ComponentResources componentResources;
@@ -352,9 +357,9 @@ public class Export extends AbstractPage {
 	 * @throws IOException
 	 */
 	@OnEvent(value = EventConstants.SUCCESS, component = "agent_export_form")
-	public StreamResponse onSuccess() throws IOException {
+	public Object onSuccess() throws IOException {
 
-		StreamResponse sr = null;
+/*		StreamResponse sr = null;
 
 		if (super.getIsAdmin()) {
 			try {
@@ -391,8 +396,20 @@ public class Export extends AbstractPage {
 			this.form.recordError(this.messages.get("not-admin-exception"));
 		}
 
-		return sr;
+		return sr;*/
 
+		this.setSuccessMessage("export demandé");
+	return this;
+
+	}
+
+	// Getters n Setters
+	public String getSuccessMessage() {
+		return this.successMessage;
+	}
+
+	public void setSuccessMessage(String message) {
+		this.successMessage = message;
 	}
 
 	public void writeAllUserOfOrganismInfo(Organism organism, CSVWriter writer, String[] header) {
