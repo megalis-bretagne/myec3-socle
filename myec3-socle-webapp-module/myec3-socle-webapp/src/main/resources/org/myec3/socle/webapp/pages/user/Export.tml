@@ -35,6 +35,32 @@
 		<p t:banner="message:form-error" t:type="errors"
 			t:clientClass="errorDialogue"></p>
 
+		<fieldset class="import">
+			<legend>Les exports disponibles</legend>
+			<div id="export_dispo">
+				<table>
+					<tbody>
+					<tr>
+						<th>Date</th>
+						<th>etat</th>
+						<th>link</th>
+					</tr>
+					<tr>
+						<th>01/01/2020</th>
+						<th>OK</th>
+						<th>link</th>
+					</tr>
+					<tr>
+						<th>01/02/2020</th>
+						<th>OK</th>
+						<th>link</th>
+					</tr>
+					</tbody>
+				</table>
+			</div>
+		</fieldset>
+
+
 		<!-- IMPORT NEW FILE -->
 		<fieldset class="import">
 			<legend>${message:export-new-file-label}</legend>
@@ -44,7 +70,7 @@
 						suivants</span> :
 				</p>
 
-				<div id="export_fields">
+				<div id="export_fields" style="display: none">
 					<table>
 						<tbody>
 							<tr>
