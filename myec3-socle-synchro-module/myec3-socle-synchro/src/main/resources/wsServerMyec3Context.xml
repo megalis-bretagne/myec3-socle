@@ -74,11 +74,10 @@
 		  class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
 		<property name="targetObject" ref="ExportCron" />
 		<property name="targetMethod" value="exportAgent" />
-
 	</bean>
 
 	<bean id="exportAgentTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean ">
-		<property name="jobDetail" ref="unstackJob" />
+		<property name="jobDetail" ref="exportAgentJob" />
 		<property name="cronExpression" value="${exportCron.exportAgent}"  />
 	</bean>
 

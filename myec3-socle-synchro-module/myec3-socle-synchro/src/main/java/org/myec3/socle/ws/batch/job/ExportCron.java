@@ -23,8 +23,6 @@ public class ExportCron {
 
         logger.info("FIN AUTO exportAgent.");
 
-
-
     }
 
 
