@@ -40,8 +40,8 @@ public class Export extends AbstractPage {
 	@Inject
 	private Messages messages;
 
-	@Autowired
-	@Qualifier("exportCSVService")
+	@Inject
+	@Named("exportCSVService")
 	private ExportCSVService exportCSVService;
 
 
