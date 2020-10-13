@@ -24,11 +24,11 @@ public class ExportCSV  implements Serializable, Cloneable, PE{
     @Temporal(TemporalType.TIMESTAMP)
     private Date dateExport;
 
-    @Column(nullable = true)
+    @Column(nullable = true,length = 16000000)
     @Lob
     private String content;
 
-    @Column(nullable = false,length = 16000000)
+    @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private EtatExport etat;
 
