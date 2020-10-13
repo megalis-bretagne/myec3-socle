@@ -20,6 +20,7 @@ import org.apache.tapestry5.ioc.annotations.Inject;
 import org.apache.tapestry5.services.BeanModelSource;
 import org.myec3.socle.core.domain.model.*;
 import org.myec3.socle.core.service.*;
+import org.myec3.socle.core.tools.UnaccentLetter;
 import org.myec3.socle.webapp.pages.AbstractPage;
 import org.myec3.socle.webapp.pages.organism.agent.export.Report;
 import org.myec3.socle.webapp.utils.CsvStreamResponse;
@@ -122,6 +123,36 @@ public class Export extends AbstractPage {
 		model.include("id", "dateDemande", "dateExport", "etat","actions");
 		return model;
 	}
+
+	/**
+	 * @return the list of companies found
+	 */
+	public List<ExportCSV> getExportCSVResult() {
+		//String temp = null;
+
+/*		for (int i = 0; i < exportCSVResult.size(); i++) {
+			temp = exportCSVResult.get(i).getLabel();
+			temp = UnaccentLetter.unaccentString(temp);
+			temp = temp.toUpperCase();
+			exportCSVResult.get(i).setLabel(temp);
+		}*/
+
+		return exportCSVResult;
+	}
+
+	public void setCompaniesResult(List<ExportCSV> exportCSVResult) {
+		this.exportCSVResult = exportCSVResult;
+	}
+
+	/**
+	 * @return the number of companies found
+	 */
+	public Integer getResultsNumber() {
+		if (null == this.exportCSVResult)
+			return 0;
+		return this.exportCSVResult.size();
+	}
+
 
 	/**
 	 *
