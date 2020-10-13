@@ -18,7 +18,6 @@
 package org.myec3.socle.core.service;
 
 import org.myec3.socle.core.domain.model.ExportCSV;
-import org.myec3.socle.core.domain.model.SviProfile;
 
 public interface ExportCSVService extends IGenericService<ExportCSV> {
 	// Empty OK
