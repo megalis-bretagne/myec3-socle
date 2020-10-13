@@ -28,7 +28,7 @@ public class ExportCSV  implements Serializable, Cloneable, PE{
     @Lob
     private String content;
 
-    @Column(nullable = false)
+    @Column(nullable = false,length = 16000000)
     @Enumerated(EnumType.STRING)
     private EtatExport etat;
 
