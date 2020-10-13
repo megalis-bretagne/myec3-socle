@@ -93,12 +93,20 @@ public class ExportAgentServiceImpl implements ExportAgentService {
                 }
                 writer.close();
                 Date dateExport =new Date(System.currentTimeMillis());
+                boolean first= true;
+
 
                 for(ExportCSV exportCSV : exportCSVList) {
-                    exportCSV.setEtat(EtatExport.OK);
-                    exportCSV.setDateExport(dateExport);
-                    exportCSV.setContent(sw.toString());
-                    exportCSVService.update(exportCSV);
+                    if (first){
+                        exportCSV.setEtat(EtatExport.OK);
+                        exportCSV.setDateExport(dateExport);
+                        exportCSV.setContent(sw.toString());
+                        exportCSVService.update(exportCSV);
+                    }else{
+                        exportCSV.setEtat(EtatExport.AN);
+                        exportCSV.setDateExport(dateExport);
+                        exportCSVService.update(exportCSV);
+                    }
                 }
 
             } catch (IllegalArgumentException e) {

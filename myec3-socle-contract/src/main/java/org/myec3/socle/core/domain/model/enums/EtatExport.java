@@ -3,7 +3,7 @@ package org.myec3.socle.core.domain.model.enums;
 
 public enum EtatExport {
 
-	OK("Réalisé"),AF("Demandé"), KO("En erreur"), EC("En cours'");
+	OK("Réalisé"),AF("Demandé"), KO("En erreur"),AN("annulé"), EC("En cours'");
 
 	private final String label;
 

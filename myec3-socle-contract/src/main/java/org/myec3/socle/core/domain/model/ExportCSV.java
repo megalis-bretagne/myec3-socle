@@ -24,7 +24,7 @@ public class ExportCSV  implements Serializable, Cloneable, PE{
     @Temporal(TemporalType.TIMESTAMP)
     private Date dateExport;
 
-    @Column(nullable = true,length = 16000000)
+    @Column(nullable = true,columnDefinition = "LONGBLOB")
     @Lob
     private String content;
 

@@ -12,13 +12,12 @@ import org.apache.tapestry5.ComponentResources;
 import org.apache.tapestry5.EventConstants;
 import org.apache.tapestry5.PersistenceConstants;
 import org.apache.tapestry5.StreamResponse;
-import org.apache.tapestry5.annotations.Component;
-import org.apache.tapestry5.annotations.InjectPage;
-import org.apache.tapestry5.annotations.OnEvent;
-import org.apache.tapestry5.annotations.Persist;
+import org.apache.tapestry5.annotations.*;
+import org.apache.tapestry5.beaneditor.BeanModel;
 import org.apache.tapestry5.corelib.components.Form;
 import org.apache.tapestry5.ioc.Messages;
 import org.apache.tapestry5.ioc.annotations.Inject;
+import org.apache.tapestry5.services.BeanModelSource;
 import org.myec3.socle.core.domain.model.*;
 import org.myec3.socle.core.service.*;
 import org.myec3.socle.webapp.pages.AbstractPage;
@@ -36,14 +35,6 @@ public class Export extends AbstractPage {
 	private static final Logger logger = LoggerFactory.getLogger(Export.class);
 
 	private static final char SEPARATOR = ';';
-
-	@Inject
-	private Messages messages;
-
-	@Inject
-	@Named("exportCSVService")
-	private ExportCSVService exportCSVService;
-
 
 	@Persist(PersistenceConstants.FLASH)
 	private String successMessage;
@@ -90,14 +81,80 @@ public class Export extends AbstractPage {
 	@InjectPage
 	private Report reportPage;
 
+	@Inject
+	private Messages messages;
+
+	@Inject
+	@Named("exportCSVService")
+	private ExportCSVService exportCSVService;
+
+	@Inject
+	private BeanModelSource beanModelSource;
+
+	@Persist
+	private List<ExportCSV> exportCSVResult;
+
+	@SuppressWarnings("unused")
+	@Property
+	private Integer rowIndex;
+
+	@SuppressWarnings("unused")
+	@Property
+	private ExportCSV exportCSVRow;
+
 	@OnEvent(EventConstants.ACTIVATE)
 	public void Activation() {
 		super.initUser();
+		exportCSVResult = exportCSVService.findAll();
+	}
+
+
+	/**
+	 * @return : bean model
+	 */
+	public BeanModel<ExportCSV> getGridModel() {
+		BeanModel<ExportCSV> model = this.beanModelSource.createDisplayModel(
+				ExportCSV.class, this.getMessages());
+		model.add("id", null);
+		model.add("dateDemande", null);
+		model.add("dateExport", null);
+		model.get("etat").label("Sigle");
+		model.include("id", "dateDemande", "dateExport", "etat","actions");
+		return model;
 	}
 
 	/**
+	 *
+	 * Generate a csv file by filling an hashmap. Keys are attribute of the header,
+	 * values are the values for the attribute
+	 *
+	 * @throws IOException
+	 */
+	@OnEvent(value = EventConstants.SUCCESS, component = "agent_export_form")
+	public Object onSuccess() throws IOException {
+
+		this.setSuccessMessage("export demandé");
+
+		ExportCSV exportCSV = new ExportCSV();
+		exportCSVService.create(exportCSV);
+		return this;
+
+	}
+
+	// Getters n Setters
+	public String getSuccessMessage() {
+		return this.successMessage;
+	}
+
+	public void setSuccessMessage(String message) {
+		this.successMessage = message;
+	}
+
+
+
+	/**
 	 * add the String value of the element or "" if the element is null
-	 * 
+	 *
 	 * @param csvDataMap
 	 * @param key
 	 * @param element    the element
@@ -111,9 +168,9 @@ public class Export extends AbstractPage {
 	}
 
 	/**
-	 * 
+	 *
 	 * fill information retrieved from ConnectionInfos in the hashmap
-	 * 
+	 *
 	 * @param csvDataMap
 	 * @param connectionInfos
 	 */
@@ -132,9 +189,9 @@ public class Export extends AbstractPage {
 	}
 
 	/**
-	 * 
+	 *
 	 * fill information retrieved from AgentProfile in the hashmap
-	 * 
+	 *
 	 * @param csvDataMap
 	 * @param ap
 	 */
@@ -158,9 +215,9 @@ public class Export extends AbstractPage {
 	}
 
 	/**
-	 * 
+	 *
 	 * fill information retrieved from User in the hashmap
-	 * 
+	 *
 	 * @param csvDataMap
 	 * @param user
 	 */
@@ -204,9 +261,9 @@ public class Export extends AbstractPage {
 	}
 
 	/**
-	 * 
+	 *
 	 * fill information retrieved from Profile in the hashmap
-	 * 
+	 *
 	 * @param csvDataMap
 	 * @param profile
 	 */
@@ -249,10 +306,10 @@ public class Export extends AbstractPage {
 	}
 
 	/**
-	 * 
+	 *
 	 * Extract the value of the HashMap to generate the String array needed for the
 	 * CsvWritter If an element has no value we display empty value
-	 * 
+	 *
 	 * @param csvDataMap
 	 * @return
 	 */
@@ -321,10 +378,10 @@ public class Export extends AbstractPage {
 	}
 
 	/**
-	 * 
+	 *
 	 * fill information about roles of applications applications are keys of the
 	 * hashmap and for each the value is all the role for the application
-	 * 
+	 *
 	 * @param csvDataMap
 	 * @param roleList
 	 */
@@ -341,33 +398,6 @@ public class Export extends AbstractPage {
 			}
 		}
 
-	}
-
-	/**
-	 *
-	 * Generate a csv file by filling an hashmap. Keys are attribute of the header,
-	 * values are the values for the attribute
-	 *
-	 * @throws IOException
-	 */
-	@OnEvent(value = EventConstants.SUCCESS, component = "agent_export_form")
-	public Object onSuccess() throws IOException {
-
-		this.setSuccessMessage("export demandé");
-
-		ExportCSV exportCSV = new ExportCSV();
-		exportCSVService.create(exportCSV);
-		return this;
-
-	}
-
-	// Getters n Setters
-	public String getSuccessMessage() {
-		return this.successMessage;
-	}
-
-	public void setSuccessMessage(String message) {
-		this.successMessage = message;
 	}
 
 	public void writeAllUserOfOrganismInfo(Organism organism, CSVWriter writer, String[] header) {
