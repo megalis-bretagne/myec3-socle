@@ -1,6 +1,8 @@
 package org.myec3.socle.core.domain.model;
 
 
+import org.myec3.socle.core.domain.model.enums.EtatExport;
+
 import javax.persistence.*;
 import java.io.File;
 import java.io.Serializable;
@@ -16,19 +18,24 @@ public class ExportCSV  implements Serializable, Cloneable, PE{
 
     @Column(nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
-    private Date creationDate;
+    private Date dateDemande;
 
+    @Column(nullable = false)
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date dateExport;
 
     @Column(nullable = false)
     @Lob
     private File exportFile;
 
     @Column(nullable = false)
-    private String etat;
+    @Enumerated(EnumType.STRING)
+    private EtatExport etat;
 
     public ExportCSV() {
         super();
-        creationDate=new Date(System.currentTimeMillis());
+        dateDemande=new Date(System.currentTimeMillis());
+        etat =EtatExport.AF;
     }
 
     public void setId(Long id) {
@@ -44,12 +51,20 @@ public class ExportCSV  implements Serializable, Cloneable, PE{
         return id;
     }
 
-    public Date getCreationDate() {
-        return creationDate;
+    public Date getDateDemande() {
+        return dateDemande;
     }
 
-    public void setCreationDate(Date creationDate) {
-        this.creationDate = creationDate;
+    public void setDateDemande(Date dateDemande) {
+        this.dateDemande = dateDemande;
+    }
+
+    public Date getDateExport() {
+        return dateExport;
+    }
+
+    public void setDateExport(Date dateExport) {
+        this.dateExport = dateExport;
     }
 
     public File getExportFile() {
@@ -60,11 +75,11 @@ public class ExportCSV  implements Serializable, Cloneable, PE{
         this.exportFile = exportFile;
     }
 
-    public String getEtat() {
+    public EtatExport getEtat() {
         return etat;
     }
 
-    public void setEtat(String etat) {
+    public void setEtat(EtatExport etat) {
         this.etat = etat;
     }
 }

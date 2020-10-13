@@ -19,21 +19,8 @@ import org.apache.tapestry5.annotations.Persist;
 import org.apache.tapestry5.corelib.components.Form;
 import org.apache.tapestry5.ioc.Messages;
 import org.apache.tapestry5.ioc.annotations.Inject;
-import org.myec3.socle.core.domain.model.AgentProfile;
-import org.myec3.socle.core.domain.model.Application;
-import org.myec3.socle.core.domain.model.ConnectionInfos;
-import org.myec3.socle.core.domain.model.Organism;
-import org.myec3.socle.core.domain.model.Profile;
-import org.myec3.socle.core.domain.model.Role;
-import org.myec3.socle.core.domain.model.User;
-import org.myec3.socle.core.service.AgentProfileService;
-import org.myec3.socle.core.service.ApplicationService;
-import org.myec3.socle.core.service.ConnectionInfosService;
-import org.myec3.socle.core.service.OrganismDepartmentService;
-import org.myec3.socle.core.service.OrganismService;
-import org.myec3.socle.core.service.ProfileService;
-import org.myec3.socle.core.service.RoleService;
-import org.myec3.socle.core.service.UserService;
+import org.myec3.socle.core.domain.model.*;
+import org.myec3.socle.core.service.*;
 import org.myec3.socle.webapp.pages.AbstractPage;
 import org.myec3.socle.webapp.pages.organism.agent.export.Report;
 import org.myec3.socle.webapp.utils.CsvStreamResponse;
@@ -41,6 +28,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import au.com.bytecode.opencsv.CSVWriter;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 
 public class Export extends AbstractPage {
 
@@ -50,6 +39,11 @@ public class Export extends AbstractPage {
 
 	@Inject
 	private Messages messages;
+
+	@Autowired
+	@Qualifier("exportCSVService")
+	private ExportCSVService exportCSVService;
+
 
 	@Persist(PersistenceConstants.FLASH)
 	private String successMessage;
@@ -359,47 +353,11 @@ public class Export extends AbstractPage {
 	@OnEvent(value = EventConstants.SUCCESS, component = "agent_export_form")
 	public Object onSuccess() throws IOException {
 
-/*		StreamResponse sr = null;
-
-		if (super.getIsAdmin()) {
-			try {
-				StringWriter sw = new StringWriter();
-				CSVWriter writer = new CSVWriter(sw, SEPARATOR);
-
-				List<Application> applicationsList = applicationService.findAll();
-
-				// Write header
-				String[] header = generateHeader(applicationsList);
-				writer.writeNext(header);
-
-				List<Organism> organismsList = organismService.findAll();
-
-				for (Organism organism : organismsList) {
-					writeAllUserOfOrganismInfo(organism, writer, header);
-				}
-				writer.close();
-
-				CsvStreamResponse csr = new CsvStreamResponse(sw, "export_agent");
-
-				sr = csr;
-
-			} catch (IllegalArgumentException e) {
-				logger.debug(e.getMessage());
-				this.form.recordError(e.getMessage());
-			} catch (Exception e) {
-				logger.error("An unexpected error has occured during the validation of the file to upload {} ",
-						e.getMessage());
-				this.form.recordError(this.messages.get("generation-exception"));
-			}
-		} else {
-			logger.error("this user is not an admin");
-			this.form.recordError(this.messages.get("not-admin-exception"));
-		}
-
-		return sr;*/
-
 		this.setSuccessMessage("export demandé");
-	return this;
+
+		ExportCSV exportCSV = new ExportCSV();
+		exportCSVService.create(exportCSV);
+		return this;
 
 	}
 
