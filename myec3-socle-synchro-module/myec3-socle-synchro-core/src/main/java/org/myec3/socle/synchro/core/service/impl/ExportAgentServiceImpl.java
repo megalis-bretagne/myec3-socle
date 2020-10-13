@@ -2,6 +2,7 @@ package org.myec3.socle.synchro.core.service.impl;
 
 import au.com.bytecode.opencsv.CSVWriter;
 import org.myec3.socle.core.domain.model.*;
+import org.myec3.socle.core.domain.model.enums.EtatExport;
 import org.myec3.socle.core.service.*;
 import org.myec3.socle.synchro.core.service.ExportAgentService;
 import org.slf4j.Logger;
@@ -10,7 +11,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
+import java.io.FileWriter;
+import java.io.StringWriter;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -66,38 +70,59 @@ public class ExportAgentServiceImpl implements ExportAgentService {
     @Override
     public void exportAgent() {
 
-        List<ExportCSV> exportCSVList =  exportCSVService.findAll();
+        //On sélectionne toutes les demande d'export
+        List<ExportCSV> exportCSVList =  exportCSVService.findExportCSVByEtat(EtatExport.AF);
 
+        if ( exportCSVList !=null && exportCSVList.size()> 0){
+            logger.info("Il y a un export d'agent à faire");
 
-/*        try {
-            StringWriter sw = new StringWriter();
-            CSVWriter writer = new CSVWriter(sw, SEPARATOR);
+            try {
+                StringWriter sw = new StringWriter();
+                CSVWriter writer = new CSVWriter(sw, SEPARATOR);
 
-            List<Application> applicationsList = applicationService.findAll();
+                List<Application> applicationsList = applicationService.findAll();
 
-            // Write header
-            String[] header = generateHeader(applicationsList);
-            writer.writeNext(header);
+                // Write header
+                String[] header = generateHeader(applicationsList);
+                writer.writeNext(header);
 
-            List<Organism> organismsList = organismService.findAll();
+                List<Organism> organismsList = organismService.findAll();
 
-            for (Organism organism : organismsList) {
-                writeAllUserOfOrganismInfo(organism, writer, header);
+                for (Organism organism : organismsList) {
+                    writeAllUserOfOrganismInfo(organism, writer, header);
+                }
+                writer.close();
+                Date dateExport =new Date(System.currentTimeMillis());
+
+                for(ExportCSV exportCSV : exportCSVList) {
+                    exportCSV.setEtat(EtatExport.OK);
+                    exportCSV.setDateExport(dateExport);
+                    exportCSV.setContent(sw.toString());
+                    exportCSVService.update(exportCSV);
+                }
+
+            } catch (IllegalArgumentException e) {
+                logger.debug(e.getMessage());
+                Date dateExport =new Date(System.currentTimeMillis());
+                for(ExportCSV exportCSV : exportCSVList) {
+                    exportCSV.setEtat(EtatExport.KO);
+                    exportCSV.setDateExport(dateExport);
+                    //exportCSV.setContent(sw.toString());
+                    exportCSVService.update(exportCSV);
+                }
+            } catch (Exception e) {
+                logger.error("An unexpected error has occured during the validation of the file to upload {} ",
+                        e.getMessage());
+                Date dateExport =new Date(System.currentTimeMillis());
+                for(ExportCSV exportCSV : exportCSVList) {
+                    exportCSV.setEtat(EtatExport.KO);
+                    exportCSV.setDateExport(dateExport);
+                    //exportCSV.setContent(sw.toString());
+                    exportCSVService.update(exportCSV);
+                }
             }
-            writer.close();
+        }
 
-            //Ecrire en bdd le résultat
-
-
-
-        } catch (IllegalArgumentException e) {
-            logger.debug(e.getMessage());
-            //this.form.recordError(e.getMessage());
-        } catch (Exception e) {
-            logger.error("An unexpected error has occured during the validation of the file to upload {} ",
-                    e.getMessage());
-            //this.form.recordError(this.messages.get("generation-exception"));
-        }*/
 
     }
 

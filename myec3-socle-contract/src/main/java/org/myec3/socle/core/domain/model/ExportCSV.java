@@ -26,7 +26,7 @@ public class ExportCSV  implements Serializable, Cloneable, PE{
 
     @Column(nullable = true)
     @Lob
-    private File exportFile;
+    private String content;
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
@@ -67,12 +67,12 @@ public class ExportCSV  implements Serializable, Cloneable, PE{
         this.dateExport = dateExport;
     }
 
-    public File getExportFile() {
-        return exportFile;
+    public String getContent() {
+        return content;
     }
 
-    public void setExportFile(File exportFile) {
-        this.exportFile = exportFile;
+    public void setContent(String content) {
+        this.content = content;
     }
 
     public EtatExport getEtat() {

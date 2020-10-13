@@ -17,11 +17,11 @@ public class ExportCron {
     private ExportAgentService exportAgentService;
 
     public void exportAgent() {
-        logger.info("Starting AUTO Update.");
+        logger.info("Starting AUTO exportAgent.");
 
         exportAgentService.exportAgent();
 
-        logger.info("Add Companies done.");
+        logger.info("FIN AUTO exportAgent.");
 
 
 

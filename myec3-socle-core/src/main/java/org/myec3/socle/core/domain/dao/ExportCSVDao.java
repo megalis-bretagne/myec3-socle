@@ -18,8 +18,11 @@
 package org.myec3.socle.core.domain.dao;
 
 import org.myec3.socle.core.domain.model.ExportCSV;
+import org.myec3.socle.core.domain.model.enums.EtatExport;
+
+import java.util.List;
 
 
 public interface ExportCSVDao extends NoResourceGenericDao<ExportCSV> {
-
+    List<ExportCSV>  findExportCSVByEtat (EtatExport etat);
 }

@@ -21,9 +21,12 @@ import org.myec3.socle.core.domain.dao.ExportCSVDao;
 import org.myec3.socle.core.domain.dao.SviProfileDao;
 import org.myec3.socle.core.domain.model.ExportCSV;
 import org.myec3.socle.core.domain.model.SviProfile;
+import org.myec3.socle.core.domain.model.enums.EtatExport;
 import org.myec3.socle.core.service.ExportCSVService;
 import org.myec3.socle.core.service.SviProfileService;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  * Concrete Service implementation providing specific methods to
@@ -35,5 +38,9 @@ import org.springframework.stereotype.Service;
 public class ExportCSVServiceImpl extends AbstractGenericServiceImpl<ExportCSV, ExportCSVDao> implements
 		ExportCSVService
 {
+	@Override
+	public List<ExportCSV> findExportCSVByEtat(EtatExport etat) {
+		return dao.findExportCSVByEtat(etat);
+	}
 	// Empty Ok
 }

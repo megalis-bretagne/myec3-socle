@@ -21,8 +21,13 @@ import org.myec3.socle.core.domain.dao.ExportCSVDao;
 import org.myec3.socle.core.domain.dao.SviProfileDao;
 import org.myec3.socle.core.domain.model.ExportCSV;
 import org.myec3.socle.core.domain.model.SviProfile;
+import org.myec3.socle.core.domain.model.User;
+import org.myec3.socle.core.domain.model.enums.EtatExport;
 import org.springframework.stereotype.Repository;
 
+import javax.persistence.NoResultException;
+import javax.persistence.Query;
+import java.util.List;
 
 @Repository("exportCSVDao")
 public class JpaExportCSVDao extends JpaNoResourceGenericDao<ExportCSV> implements ExportCSVDao {
@@ -30,5 +35,24 @@ public class JpaExportCSVDao extends JpaNoResourceGenericDao<ExportCSV> implemen
 	@Override
 	public Class<ExportCSV> getType() {
 		return ExportCSV.class;
+	}
+
+	@Override
+	public List<ExportCSV> findExportCSVByEtat(EtatExport etat) {
+		this.getLog().debug("Finding ExportCSV id by etat");
+		try {
+			Query q = getEm().createQuery(
+					"SELECT e FROM " + this.getDomainClass().getSimpleName() + " e WHERE e.etat = :etat");
+			q.setParameter("etat", etat);
+			List<ExportCSV> result = q.getResultList();
+			getLog().debug("findExportCSVByEtat successfull.");
+			return result;
+		} catch (NoResultException e) {
+			this.getLog().warn("findExportCSVByEtat returned no result.");
+			return null;
+		} catch (RuntimeException re) {
+			getLog().error("findExportCSVByEtat failed.", re);
+			return null;
+		}
 	}
 }
