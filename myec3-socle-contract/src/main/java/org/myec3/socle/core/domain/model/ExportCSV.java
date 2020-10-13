@@ -20,11 +20,11 @@ public class ExportCSV  implements Serializable, Cloneable, PE{
     @Temporal(TemporalType.TIMESTAMP)
     private Date dateDemande;
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     @Temporal(TemporalType.TIMESTAMP)
     private Date dateExport;
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     @Lob
     private File exportFile;
 
