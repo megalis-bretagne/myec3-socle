@@ -3,6 +3,7 @@ package org.myec3.socle.webapp.pages.user;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -10,28 +11,18 @@ import javax.inject.Named;
 
 import org.apache.tapestry5.ComponentResources;
 import org.apache.tapestry5.EventConstants;
+import org.apache.tapestry5.PersistenceConstants;
 import org.apache.tapestry5.StreamResponse;
-import org.apache.tapestry5.annotations.Component;
-import org.apache.tapestry5.annotations.InjectPage;
-import org.apache.tapestry5.annotations.OnEvent;
+import org.apache.tapestry5.annotations.*;
+import org.apache.tapestry5.beaneditor.BeanModel;
 import org.apache.tapestry5.corelib.components.Form;
 import org.apache.tapestry5.ioc.Messages;
 import org.apache.tapestry5.ioc.annotations.Inject;
-import org.myec3.socle.core.domain.model.AgentProfile;
-import org.myec3.socle.core.domain.model.Application;
-import org.myec3.socle.core.domain.model.ConnectionInfos;
-import org.myec3.socle.core.domain.model.Organism;
-import org.myec3.socle.core.domain.model.Profile;
-import org.myec3.socle.core.domain.model.Role;
-import org.myec3.socle.core.domain.model.User;
-import org.myec3.socle.core.service.AgentProfileService;
-import org.myec3.socle.core.service.ApplicationService;
-import org.myec3.socle.core.service.ConnectionInfosService;
-import org.myec3.socle.core.service.OrganismDepartmentService;
-import org.myec3.socle.core.service.OrganismService;
-import org.myec3.socle.core.service.ProfileService;
-import org.myec3.socle.core.service.RoleService;
-import org.myec3.socle.core.service.UserService;
+import org.apache.tapestry5.services.BeanModelSource;
+import org.myec3.socle.core.domain.model.*;
+import org.myec3.socle.core.domain.model.enums.EtatExport;
+import org.myec3.socle.core.service.*;
+import org.myec3.socle.core.tools.UnaccentLetter;
 import org.myec3.socle.webapp.pages.AbstractPage;
 import org.myec3.socle.webapp.pages.organism.agent.export.Report;
 import org.myec3.socle.webapp.utils.CsvStreamResponse;
@@ -39,6 +30,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import au.com.bytecode.opencsv.CSVWriter;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 
 public class Export extends AbstractPage {
 
@@ -46,8 +39,8 @@ public class Export extends AbstractPage {
 
 	private static final char SEPARATOR = ';';
 
-	@Inject
-	private Messages messages;
+	@Persist(PersistenceConstants.FLASH)
+	private String successMessage;
 
 	@Inject
 	private ComponentResources componentResources;
@@ -91,14 +84,116 @@ public class Export extends AbstractPage {
 	@InjectPage
 	private Report reportPage;
 
+	@Inject
+	private Messages messages;
+
+	@Inject
+	@Named("exportCSVService")
+	private ExportCSVService exportCSVService;
+
+	@Inject
+	private BeanModelSource beanModelSource;
+
+	@Persist
+	private List<ExportCSV> exportCSVResult;
+
+	@SuppressWarnings("unused")
+	@Property
+	private Integer rowIndex;
+
+	@SuppressWarnings("unused")
+	@Property
+	private ExportCSV exportCSVRow;
+
 	@OnEvent(EventConstants.ACTIVATE)
 	public void Activation() {
 		super.initUser();
+		exportCSVResult = exportCSVService.findAllWithoutContent();
 	}
 
 	/**
+	 * @return : bean model
+	 */
+	public BeanModel<ExportCSV> getGridModel() {
+		BeanModel<ExportCSV> model = this.beanModelSource.createDisplayModel(
+				ExportCSV.class, this.getMessages());
+		//model.get("etat")
+		model.add("actions", null);
+		model.include("id","dateDemande","dateExport","etat","actions");
+		return model;
+	}
+
+	/**
+	 * @return the list of companies found
+	 */
+	public List<ExportCSV> getExportCSVResult() {
+		return exportCSVResult;
+	}
+
+	public void setCompaniesResult(List<ExportCSV> exportCSVResult) {
+		this.exportCSVResult = exportCSVResult;
+	}
+
+	/**
+	 * @return the number of companies found
+	 */
+	public Integer getResultsNumber() {
+		if (null == this.exportCSVResult)
+			return 0;
+		return this.exportCSVResult.size();
+	}
+
+
+	/**
+	 *
+	 * Generate a csv file by filling an hashmap. Keys are attribute of the header,
+	 * values are the values for the attribute
+	 *
+	 * @throws IOException
+	 */
+	@OnEvent(value = EventConstants.SUCCESS, component = "agent_export_form")
+	public Object onSuccess() throws IOException {
+
+		this.setSuccessMessage("export demandé");
+
+		ExportCSV exportCSV = new ExportCSV();
+		exportCSV.setEtat(EtatExport.AF);
+		exportCSV.setDateDemande(new Date(System.currentTimeMillis()));
+
+		exportCSVService.create(exportCSV);
+		return this;
+
+	}
+
+	public Object onDownload(Long id){
+		CsvStreamResponse csr = null;
+		try {
+			ExportCSV exportCSV = exportCSVService.findOne(id);
+			StringWriter sw = new StringWriter();
+			sw.write(exportCSV.getContent());
+			sw.close();
+			csr = new CsvStreamResponse(sw, "export_agent");
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return csr;
+	}
+
+
+	// Getters n Setters
+	public String getSuccessMessage() {
+		return this.successMessage;
+	}
+
+	public void setSuccessMessage(String message) {
+		this.successMessage = message;
+	}
+
+
+
+	/**
 	 * add the String value of the element or "" if the element is null
-	 * 
+	 *
 	 * @param csvDataMap
 	 * @param key
 	 * @param element    the element
@@ -112,9 +207,9 @@ public class Export extends AbstractPage {
 	}
 
 	/**
-	 * 
+	 *
 	 * fill information retrieved from ConnectionInfos in the hashmap
-	 * 
+	 *
 	 * @param csvDataMap
 	 * @param connectionInfos
 	 */
@@ -133,9 +228,9 @@ public class Export extends AbstractPage {
 	}
 
 	/**
-	 * 
+	 *
 	 * fill information retrieved from AgentProfile in the hashmap
-	 * 
+	 *
 	 * @param csvDataMap
 	 * @param ap
 	 */
@@ -159,9 +254,9 @@ public class Export extends AbstractPage {
 	}
 
 	/**
-	 * 
+	 *
 	 * fill information retrieved from User in the hashmap
-	 * 
+	 *
 	 * @param csvDataMap
 	 * @param user
 	 */
@@ -205,9 +300,9 @@ public class Export extends AbstractPage {
 	}
 
 	/**
-	 * 
+	 *
 	 * fill information retrieved from Profile in the hashmap
-	 * 
+	 *
 	 * @param csvDataMap
 	 * @param profile
 	 */
@@ -250,10 +345,10 @@ public class Export extends AbstractPage {
 	}
 
 	/**
-	 * 
+	 *
 	 * Extract the value of the HashMap to generate the String array needed for the
 	 * CsvWritter If an element has no value we display empty value
-	 * 
+	 *
 	 * @param csvDataMap
 	 * @return
 	 */
@@ -322,10 +417,10 @@ public class Export extends AbstractPage {
 	}
 
 	/**
-	 * 
+	 *
 	 * fill information about roles of applications applications are keys of the
 	 * hashmap and for each the value is all the role for the application
-	 * 
+	 *
 	 * @param csvDataMap
 	 * @param roleList
 	 */
@@ -341,57 +436,6 @@ public class Export extends AbstractPage {
 				csvDataMap.put("agent_profil_role_" + tmpRole.getApplication().getLabel(), tmpRole.getLabel());
 			}
 		}
-
-	}
-
-	/**
-	 *
-	 * Generate a csv file by filling an hashmap. Keys are attribute of the header,
-	 * values are the values for the attribute
-	 *
-	 * @throws IOException
-	 */
-	@OnEvent(value = EventConstants.SUCCESS, component = "agent_export_form")
-	public StreamResponse onSuccess() throws IOException {
-
-		StreamResponse sr = null;
-
-		if (super.getIsAdmin()) {
-			try {
-				StringWriter sw = new StringWriter();
-				CSVWriter writer = new CSVWriter(sw, SEPARATOR);
-
-				List<Application> applicationsList = applicationService.findAll();
-
-				// Write header
-				String[] header = generateHeader(applicationsList);
-				writer.writeNext(header);
-
-				List<Organism> organismsList = organismService.findAll();
-
-				for (Organism organism : organismsList) {
-					writeAllUserOfOrganismInfo(organism, writer, header);
-				}
-				writer.close();
-
-				CsvStreamResponse csr = new CsvStreamResponse(sw, "export_agent");
-
-				sr = csr;
-
-			} catch (IllegalArgumentException e) {
-				logger.debug(e.getMessage());
-				this.form.recordError(e.getMessage());
-			} catch (Exception e) {
-				logger.error("An unexpected error has occured during the validation of the file to upload {} ",
-						e.getMessage());
-				this.form.recordError(this.messages.get("generation-exception"));
-			}
-		} else {
-			logger.error("this user is not an admin");
-			this.form.recordError(this.messages.get("not-admin-exception"));
-		}
-
-		return sr;
 
 	}
 

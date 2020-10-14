@@ -65,4 +65,31 @@
 
 	<!-- End CRON Configuration for the unstack task -->
 
+
+	<!-- Begin CRON Configuration for the exportCron task -->
+
+	<bean id="ExportCron" class="org.myec3.socle.ws.batch.job.ExportCron" />
+
+	<bean id="exportAgentJob"
+		  class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject" ref="ExportCron" />
+		<property name="targetMethod" value="exportAgent" />
+	</bean>
+
+	<bean id="exportAgentTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean ">
+		<property name="jobDetail" ref="exportAgentJob" />
+		<property name="cronExpression" value="${exportCron.exportAgent}"  />
+	</bean>
+
+	<bean class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+		<property name="triggers">
+			<list>
+				<ref bean="exportAgentTrigger" />
+			</list>
+		</property>
+	</bean>
+
+	<!-- End CRON Configuration for the exportCron task  -->
+
+
 </beans>

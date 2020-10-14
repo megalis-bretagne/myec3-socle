@@ -84,7 +84,7 @@ public class Person extends Resource {
 
 	/**
 	 * @return the civility of the person.
-	 * @see Civility.class TODO : not used anymore as MPS doesn't return civility
+	 * @see Civility TODO : not used anymore as MPS doesn't return civility
 	 */
 	@Enumerated(EnumType.STRING)
 	@XmlElement(required = false)
