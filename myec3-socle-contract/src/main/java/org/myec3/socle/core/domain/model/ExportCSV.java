@@ -27,7 +27,6 @@ public class ExportCSV  implements Serializable, Cloneable, PE{
 
     @Column(nullable = true,columnDefinition = "LONGBLOB")
     @Lob
-    @Lazy
     private String content;
 
     @Column(nullable = false)

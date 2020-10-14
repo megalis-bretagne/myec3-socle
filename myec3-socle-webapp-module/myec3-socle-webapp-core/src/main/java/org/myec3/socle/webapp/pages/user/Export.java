@@ -106,7 +106,8 @@ public class Export extends AbstractPage {
 	@OnEvent(EventConstants.ACTIVATE)
 	public void Activation() {
 		super.initUser();
-		exportCSVResult = exportCSVService.findAllWithoutContent();
+		exportCSVResult = exportCSVService.findAll();
+		//exportCSVResult = exportCSVService.findAllWithoutContent();
 	}
 
 	/**
