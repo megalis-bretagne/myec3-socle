@@ -169,6 +169,24 @@ public class Export extends AbstractPage {
 
 	}
 
+	public Object onDownload(Long id){
+
+		CsvStreamResponse csr = null;
+		try {
+			System.out.println("onDownload");
+			System.out.println("id: " + id);
+			ExportCSV exportCSV = exportCSVService.findOne(id);
+			StringWriter sw = new StringWriter();
+			sw.write(exportCSV.getContent());
+			sw.close();
+			csr = new CsvStreamResponse(sw, "export_agent");
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return csr;
+	}
+
+
 	// Getters n Setters
 	public String getSuccessMessage() {
 		return this.successMessage;
