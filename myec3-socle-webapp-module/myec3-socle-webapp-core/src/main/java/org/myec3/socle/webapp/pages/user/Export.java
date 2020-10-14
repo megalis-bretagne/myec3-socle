@@ -116,11 +116,11 @@ public class Export extends AbstractPage {
 	public BeanModel<ExportCSV> getGridModel() {
 		BeanModel<ExportCSV> model = this.beanModelSource.createDisplayModel(
 				ExportCSV.class, this.getMessages());
-		model.add("id", null);
+/*		model.add("id", null);
 		model.add("dateDemande", null);
 		model.add("dateExport", null);
-		model.get("etat").label("Sigle");
-		model.include("id", "dateDemande", "dateExport", "etat","actions");
+		model.get("etat").label("Sigle");*/
+		model.include("actions");
 		return model;
 	}
 
