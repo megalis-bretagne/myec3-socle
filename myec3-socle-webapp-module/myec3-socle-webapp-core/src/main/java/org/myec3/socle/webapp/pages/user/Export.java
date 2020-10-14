@@ -106,7 +106,7 @@ public class Export extends AbstractPage {
 	@OnEvent(EventConstants.ACTIVATE)
 	public void Activation() {
 		super.initUser();
-		exportCSVResult = exportCSVService.findAll();
+		exportCSVResult = exportCSVService.findAllWithoutContent();
 	}
 
 	/**
@@ -125,15 +125,6 @@ public class Export extends AbstractPage {
 	 * @return the list of companies found
 	 */
 	public List<ExportCSV> getExportCSVResult() {
-		//String temp = null;
-
-/*		for (int i = 0; i < exportCSVResult.size(); i++) {
-			temp = exportCSVResult.get(i).getLabel();
-			temp = UnaccentLetter.unaccentString(temp);
-			temp = temp.toUpperCase();
-			exportCSVResult.get(i).setLabel(temp);
-		}*/
-
 		return exportCSVResult;
 	}
 
@@ -170,7 +161,6 @@ public class Export extends AbstractPage {
 	}
 
 	public Object onDownload(Long id){
-
 		CsvStreamResponse csr = null;
 		try {
 			ExportCSV exportCSV = exportCSVService.findOne(id);

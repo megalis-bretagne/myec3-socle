@@ -57,6 +57,25 @@ public class JpaExportCSVDao extends JpaNoResourceGenericDao<ExportCSV> implemen
 	}
 
 	@Override
+	public List<ExportCSV> findAllWithoutContent() {
+		this.getLog().debug("Finding findAllWithoutContent");
+		try {
+			Query q = getEm().createQuery(
+					"SELECT e.id,e.dateDemande,e.dateExport,e.etat FROM " + this.getDomainClass().getSimpleName() + " e order by e.dateDemande");
+			List<ExportCSV> result = q.getResultList();
+			getLog().debug("findAllWithoutContent successfull.");
+			return result;
+		} catch (NoResultException e) {
+			this.getLog().warn("findAllWithoutContent returned no result.");
+			return null;
+		} catch (RuntimeException re) {
+			getLog().error("findAllWithoutContent failed.", re);
+			return null;
+		}
+	}
+
+
+	@Override
 	public List<Long> findAllIdOrderbyDateDemande() {
 		this.getLog().debug("Finding findAllIdOrderbyDateDemande");
 		try {

@@ -47,5 +47,10 @@ public class ExportCSVServiceImpl extends AbstractGenericServiceImpl<ExportCSV, 
 	public List<Long> findAllIdOrderbyDateDemande() {
 		return dao.findAllIdOrderbyDateDemande();
 	}
+
+	@Override
+	public List<ExportCSV> findAllWithoutContent() {
+		return dao.findAllWithoutContent();
+	}
 	// Empty Ok
 }

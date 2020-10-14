@@ -26,4 +26,6 @@ public interface ExportCSVService extends IGenericService<ExportCSV> {
     List<ExportCSV> findExportCSVByEtat (EtatExport etat);
     List<Long> findAllIdOrderbyDateDemande ();
 
+    List<ExportCSV> findAllWithoutContent();
+
 }
