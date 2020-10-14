@@ -2,10 +2,8 @@ package org.myec3.socle.core.domain.model;
 
 
 import org.myec3.socle.core.domain.model.enums.EtatExport;
-import org.springframework.context.annotation.Lazy;
 
 import javax.persistence.*;
-import java.io.File;
 import java.io.Serializable;
 import java.util.Date;
 
@@ -35,8 +33,6 @@ public class ExportCSV  implements Serializable, Cloneable, PE{
 
     public ExportCSV() {
         super();
-        dateDemande=new Date(System.currentTimeMillis());
-        etat =EtatExport.AF;
     }
 
     public void setId(Long id) {

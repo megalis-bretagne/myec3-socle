@@ -18,15 +18,14 @@
 package org.myec3.socle.core.domain.dao.jpa;
 
 import org.myec3.socle.core.domain.dao.ExportCSVDao;
-import org.myec3.socle.core.domain.dao.SviProfileDao;
 import org.myec3.socle.core.domain.model.ExportCSV;
-import org.myec3.socle.core.domain.model.SviProfile;
-import org.myec3.socle.core.domain.model.User;
 import org.myec3.socle.core.domain.model.enums.EtatExport;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.NoResultException;
 import javax.persistence.Query;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Repository("exportCSVDao")
@@ -62,7 +61,17 @@ public class JpaExportCSVDao extends JpaNoResourceGenericDao<ExportCSV> implemen
 		try {
 			Query q = getEm().createQuery(
 					"SELECT e.id,e.dateDemande,e.dateExport,e.etat FROM " + this.getDomainClass().getSimpleName() + " e order by e.dateDemande");
-			List<ExportCSV> result = q.getResultList();
+
+			List<Object[]> rows = q.getResultList();
+			List<ExportCSV> result = new ArrayList<>();
+			for (Object[] row : rows) {
+				ExportCSV e =new ExportCSV();
+				e.setId((Long) row[0]);
+				e.setDateDemande((Date) row[1]);
+				e.setDateExport((Date) row[2]);
+				e.setEtat((EtatExport) row[3]);
+				result.add(e);
+			}
 			getLog().debug("findAllWithoutContent successfull.");
 			return result;
 		} catch (NoResultException e) {

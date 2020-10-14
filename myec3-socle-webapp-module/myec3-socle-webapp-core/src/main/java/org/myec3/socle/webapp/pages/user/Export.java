@@ -3,6 +3,7 @@ package org.myec3.socle.webapp.pages.user;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -19,6 +20,7 @@ import org.apache.tapestry5.ioc.Messages;
 import org.apache.tapestry5.ioc.annotations.Inject;
 import org.apache.tapestry5.services.BeanModelSource;
 import org.myec3.socle.core.domain.model.*;
+import org.myec3.socle.core.domain.model.enums.EtatExport;
 import org.myec3.socle.core.service.*;
 import org.myec3.socle.core.tools.UnaccentLetter;
 import org.myec3.socle.webapp.pages.AbstractPage;
@@ -126,6 +128,7 @@ public class Export extends AbstractPage {
 		//model.get("etat")
 		model.add("actions", null);
 		model.include("id","dateDemande","dateExport","etat","actions");
+
 		return model;
 	}
 
@@ -163,6 +166,9 @@ public class Export extends AbstractPage {
 		this.setSuccessMessage("export demandé");
 
 		ExportCSV exportCSV = new ExportCSV();
+		exportCSV.setEtat(EtatExport.AF);
+		exportCSV.setDateDemande(new Date(System.currentTimeMillis()));
+
 		exportCSVService.create(exportCSV);
 		return this;
 
