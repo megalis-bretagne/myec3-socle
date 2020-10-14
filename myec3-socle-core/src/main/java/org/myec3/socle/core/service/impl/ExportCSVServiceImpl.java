@@ -42,5 +42,10 @@ public class ExportCSVServiceImpl extends AbstractGenericServiceImpl<ExportCSV, 
 	public List<ExportCSV> findExportCSVByEtat(EtatExport etat) {
 		return dao.findExportCSVByEtat(etat);
 	}
+
+	@Override
+	public List<Long> findAllIdOrderbyDateDemande() {
+		return dao.findAllIdOrderbyDateDemande();
+	}
 	// Empty Ok
 }

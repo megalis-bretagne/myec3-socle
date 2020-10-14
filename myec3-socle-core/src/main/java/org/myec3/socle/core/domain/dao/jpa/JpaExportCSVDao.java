@@ -55,4 +55,23 @@ public class JpaExportCSVDao extends JpaNoResourceGenericDao<ExportCSV> implemen
 			return null;
 		}
 	}
+
+	@Override
+	public List<Long> findAllIdOrderbyDateDemande() {
+		this.getLog().debug("Finding findAllIdOrderbyDateDemande");
+		try {
+			Query q = getEm().createQuery(
+					"SELECT e.id FROM " + this.getDomainClass().getSimpleName() + " e order by e.dateDemande DESC");
+
+			List<Long> result = q.getResultList();
+			getLog().debug("findAllIdOrderbyDateDemande successfull.");
+			return result;
+		} catch (NoResultException e) {
+			this.getLog().warn("findAllIdOrderbyDateDemande returned no result.");
+			return null;
+		} catch (RuntimeException re) {
+			getLog().error("findAllIdOrderbyDateDemande failed.", re);
+			return null;
+		}
+	}
 }

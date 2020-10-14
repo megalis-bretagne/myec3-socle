@@ -25,4 +25,6 @@ import java.util.List;
 
 public interface ExportCSVDao extends NoResourceGenericDao<ExportCSV> {
     List<ExportCSV>  findExportCSVByEtat (EtatExport etat);
+
+    List<Long>  findAllIdOrderbyDateDemande ();
 }

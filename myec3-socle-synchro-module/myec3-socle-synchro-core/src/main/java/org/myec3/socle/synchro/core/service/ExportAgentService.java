@@ -5,4 +5,5 @@ public interface ExportAgentService {
 
     void exportAgent();
 
+    void purge();
 }

@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.FileWriter;
 import java.io.StringWriter;
@@ -66,6 +67,22 @@ public class ExportAgentServiceImpl implements ExportAgentService {
     @Qualifier("exportCSVService")
     private ExportCSVService exportCSVService;
 
+
+    @Override
+    @Transactional
+    public void purge() {
+
+        List<Long> listId = exportCSVService.findAllIdOrderbyDateDemande();
+
+        if  (listId.size()>5){
+            int nbEltASupprimer=listId.size()-5;
+
+            for (int i = 0; i < nbEltASupprimer; i++){
+                exportCSVService.deleteById(listId.get(i));
+            }
+        }
+
+    }
 
     @Override
     public void exportAgent() {
@@ -133,6 +150,8 @@ public class ExportAgentServiceImpl implements ExportAgentService {
 
 
     }
+
+
 
     public void writeAllUserOfOrganismInfo(Organism organism, CSVWriter writer, String[] header) {
 
