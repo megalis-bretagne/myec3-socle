@@ -41,7 +41,7 @@
 		</t:if>
 		<fieldset class="import">
 			<legend>Les exports disponibles</legend>
-			<table t:id="exportCSVGrid" t:empty="block:empty" pagerPosition="bottom" model="gridModel" t:type="grid" t:row="exportCSVRow" t:rowIndex="rowIndex" t:source="exportCSVResult" t:rowsPerPage="${message:rowsPerPage}" t:inplace="true">
+			<table t:id="exportCSVGrid" t:empty="block:empty" pagerPosition="bottom" model="gridModel" t:type="grid" t:row="exportCSVRow" t:rowIndex="rowIndex" t:source="exportCSVResult" t:rowsPerPage="5" t:inplace="true">
 				<t:parameter name="idCell">
 					<t:if test="exportCSVRow.id">
 						${exportCSVRow?.id}
