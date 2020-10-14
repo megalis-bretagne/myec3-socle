@@ -69,8 +69,25 @@ public class ExportAgentServiceImpl implements ExportAgentService {
 
 
     @Override
-    @Transactional
-    public void purge() {
+    @Transactional(readOnly = false)
+    public void purgeAndAdd(String content) {
+        List<ExportCSV> exportCSVList =  exportCSVService.findExportCSVByEtat(EtatExport.AF);
+
+                Date dateExport =new Date(System.currentTimeMillis());
+                boolean first= true;
+
+                for(ExportCSV exportCSV : exportCSVList) {
+                    if (first){
+                        exportCSV.setEtat(EtatExport.OK);
+                        exportCSV.setDateExport(dateExport);
+                        exportCSV.setContent(content);
+                        exportCSVService.update(exportCSV);
+                    }else{
+                        exportCSV.setEtat(EtatExport.AN);
+                        exportCSV.setDateExport(dateExport);
+                        exportCSVService.update(exportCSV);
+                    }
+                }
 
         List<Long> listId = exportCSVService.findAllIdOrderbyDateDemande();
 
@@ -85,9 +102,10 @@ public class ExportAgentServiceImpl implements ExportAgentService {
     }
 
     @Override
-    public void exportAgent() {
+    @Transactional(readOnly = true)
+    public String exportAgent() {
 
-        //On sélectionne toutes les demande d'export
+              //On sélectionne toutes les demande d'export
         List<ExportCSV> exportCSVList =  exportCSVService.findExportCSVByEtat(EtatExport.AF);
 
         if ( exportCSVList !=null && exportCSVList.size()> 0){
@@ -109,44 +127,21 @@ public class ExportAgentServiceImpl implements ExportAgentService {
                     writeAllUserOfOrganismInfo(organism, writer, header);
                 }
                 writer.close();
-                Date dateExport =new Date(System.currentTimeMillis());
-                boolean first= true;
 
+                return sw.toString();
 
-                for(ExportCSV exportCSV : exportCSVList) {
-                    if (first){
-                        exportCSV.setEtat(EtatExport.OK);
-                        exportCSV.setDateExport(dateExport);
-                        exportCSV.setContent(sw.toString());
-                        exportCSVService.update(exportCSV);
-                    }else{
-                        exportCSV.setEtat(EtatExport.AN);
-                        exportCSV.setDateExport(dateExport);
-                        exportCSVService.update(exportCSV);
-                    }
-                }
 
             } catch (IllegalArgumentException e) {
                 logger.debug(e.getMessage());
-                Date dateExport =new Date(System.currentTimeMillis());
-                for(ExportCSV exportCSV : exportCSVList) {
-                    exportCSV.setEtat(EtatExport.KO);
-                    exportCSV.setDateExport(dateExport);
-                    //exportCSV.setContent(sw.toString());
-                    exportCSVService.update(exportCSV);
-                }
+                return null;
+
             } catch (Exception e) {
                 logger.error("An unexpected error has occured during the validation of the file to upload {} ",
                         e.getMessage());
-                Date dateExport =new Date(System.currentTimeMillis());
-                for(ExportCSV exportCSV : exportCSVList) {
-                    exportCSV.setEtat(EtatExport.KO);
-                    exportCSV.setDateExport(dateExport);
-                    //exportCSV.setContent(sw.toString());
-                    exportCSVService.update(exportCSV);
-                }
+                return null;
             }
         }
+        return null;
 
 
     }

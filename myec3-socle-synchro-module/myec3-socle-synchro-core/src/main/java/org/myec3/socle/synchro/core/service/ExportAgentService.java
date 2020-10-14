@@ -3,7 +3,7 @@ package org.myec3.socle.synchro.core.service;
 
 public interface ExportAgentService {
 
-    void exportAgent();
+    String exportAgent();
 
-    void purge();
+    void purgeAndAdd(String content);
 }

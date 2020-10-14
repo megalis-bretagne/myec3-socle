@@ -18,9 +18,13 @@ public class ExportCron {
 
     public void exportAgent() {
         logger.info("Starting AUTO exportAgent.");
-        exportAgentService.exportAgent();
-        logger.info("Starting AUTO purge exportCSV.");
-        exportAgentService.purge();
+        String content = exportAgentService.exportAgent();
+
+        if (content!=null) {
+            logger.info("Starting AUTO purge exportCSV.");
+            exportAgentService.purgeAndAdd(content);
+        }
+
         logger.info("FIN AUTO exportAgent.");
     }
 
