@@ -73,21 +73,21 @@ public class ExportAgentServiceImpl implements ExportAgentService {
     public void purgeAndAdd(String content) {
         List<ExportCSV> exportCSVList =  exportCSVService.findExportCSVByEtat(EtatExport.AF);
 
-                Date dateExport =new Date(System.currentTimeMillis());
-                boolean first= true;
+        Date dateExport =new Date(System.currentTimeMillis());
+        boolean first= true;
 
-                for(ExportCSV exportCSV : exportCSVList) {
-                    if (first){
-                        exportCSV.setEtat(EtatExport.OK);
-                        exportCSV.setDateExport(dateExport);
-                        exportCSV.setContent(content);
-                        exportCSVService.update(exportCSV);
-                    }else{
-                        exportCSV.setEtat(EtatExport.AN);
-                        exportCSV.setDateExport(dateExport);
-                        exportCSVService.update(exportCSV);
-                    }
-                }
+        for(ExportCSV exportCSV : exportCSVList) {
+            if (first){
+                exportCSV.setEtat(EtatExport.OK);
+                exportCSV.setDateExport(dateExport);
+                exportCSV.setContent(content);
+                exportCSVService.update(exportCSV);
+            }else{
+                exportCSV.setEtat(EtatExport.AN);
+                exportCSV.setDateExport(dateExport);
+                exportCSVService.update(exportCSV);
+            }
+        }
 
         List<Long> listId = exportCSVService.findAllIdOrderbyDateDemande();
 
@@ -105,7 +105,7 @@ public class ExportAgentServiceImpl implements ExportAgentService {
     @Transactional(readOnly = true)
     public String exportAgent() {
 
-              //On sélectionne toutes les demande d'export
+        //On sélectionne toutes les demande d'export
         List<ExportCSV> exportCSVList =  exportCSVService.findExportCSVByEtat(EtatExport.AF);
 
         if ( exportCSVList !=null && exportCSVList.size()> 0){

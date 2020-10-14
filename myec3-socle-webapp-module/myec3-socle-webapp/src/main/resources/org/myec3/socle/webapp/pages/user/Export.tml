@@ -66,35 +66,10 @@
 					<t:eventlink event="download" context="exportCSVRow.id"> <img src="${context:static/images/organisme_voir.png}" alt="${message:telecharger-label}" title="${message:telecharger-label}" /> </t:eventlink>
 				</t:parameter>
 			</table>
-
 			<t:block t:id="empty">
 				${message:empty-message}
 			</t:block>
-
 		</fieldset>
-
-		<!--			<div id="export_dispo">-->
-		<!--				<table>-->
-		<!--					<tbody>-->
-		<!--					<tr>-->
-		<!--						<th>Date</th>-->
-		<!--						<th>etat</th>-->
-		<!--						<th>link</th>-->
-		<!--					</tr>-->
-		<!--					<tr>-->
-		<!--						<td>01/01/2020</td>-->
-		<!--						<td>OK</td>-->
-		<!--						<td>link</td>-->
-		<!--					</tr>-->
-		<!--					<tr>-->
-		<!--						<td>01/02/2020</td>-->
-		<!--						<td>OK</td>-->
-		<!--						<td>link</td>-->
-		<!--					</tr>-->
-		<!--					</tbody>-->
-		<!--				</table>-->
-		<!--			</div>-->
-		<!--		</fieldset>-->
 
 
 		<!-- IMPORT NEW FILE -->
