@@ -2,6 +2,7 @@ package org.myec3.socle.core.domain.model;
 
 
 import org.myec3.socle.core.domain.model.enums.EtatExport;
+import org.springframework.context.annotation.Lazy;
 
 import javax.persistence.*;
 import java.io.File;
@@ -26,6 +27,7 @@ public class ExportCSV  implements Serializable, Cloneable, PE{
 
     @Column(nullable = true,columnDefinition = "LONGBLOB")
     @Lob
+    @Lazy
     private String content;
 
     @Column(nullable = false)

@@ -109,13 +109,13 @@ public class Export extends AbstractPage {
 		exportCSVResult = exportCSVService.findAll();
 	}
 
-
 	/**
 	 * @return : bean model
 	 */
 	public BeanModel<ExportCSV> getGridModel() {
 		BeanModel<ExportCSV> model = this.beanModelSource.createDisplayModel(
 				ExportCSV.class, this.getMessages());
+		model.get("etat").label("Sigle");
 		model.add("actions", null);
 		model.include("id","dateDemande","dateExport","etat","actions");
 		return model;
@@ -173,8 +173,6 @@ public class Export extends AbstractPage {
 
 		CsvStreamResponse csr = null;
 		try {
-			System.out.println("onDownload");
-			System.out.println("id: " + id);
 			ExportCSV exportCSV = exportCSVService.findOne(id);
 			StringWriter sw = new StringWriter();
 			sw.write(exportCSV.getContent());

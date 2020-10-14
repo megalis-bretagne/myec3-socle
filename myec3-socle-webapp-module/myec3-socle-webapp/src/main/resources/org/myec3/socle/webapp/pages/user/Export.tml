@@ -63,8 +63,7 @@
 					</t:if>
 				</t:parameter>
 				<t:parameter name="actionsCell">
-					<t:pagelink page="company/detailcompany" context="exportCSVRow.id"><img src="${context:static/images/organisme_voir.png}" alt="${message:view-label}" title="${message:view-label}" /></t:pagelink>
-					<t:eventlink event="download" context="exportCSVRow.id"> <img src="${context:static/images/organisme_voir.png}" alt="${message:view-label}" title="${message:view-label}" /> </t:eventlink>
+					<t:eventlink event="download" context="exportCSVRow.id"> <img src="${context:static/images/organisme_voir.png}" alt="${message:telecharger-label}" title="${message:telecharger-label}" /> </t:eventlink>
 				</t:parameter>
 			</table>
 
