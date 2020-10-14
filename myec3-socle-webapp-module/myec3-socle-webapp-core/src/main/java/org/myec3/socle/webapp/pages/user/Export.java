@@ -120,6 +120,7 @@ public class Export extends AbstractPage {
 		model.add("dateDemande", null);
 		model.add("dateExport", null);
 		model.get("etat").label("Sigle");*/
+		model.add("actions", null);
 		model.include("actions");
 		return model;
 	}
