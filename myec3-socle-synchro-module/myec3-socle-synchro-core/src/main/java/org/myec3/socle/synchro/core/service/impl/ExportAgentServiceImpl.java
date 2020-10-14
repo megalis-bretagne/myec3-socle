@@ -83,9 +83,7 @@ public class ExportAgentServiceImpl implements ExportAgentService {
                 exportCSV.setContent(content);
                 exportCSVService.update(exportCSV);
             }else{
-                exportCSV.setEtat(EtatExport.AN);
-                exportCSV.setDateExport(dateExport);
-                exportCSVService.update(exportCSV);
+                exportCSVService.deleteById(exportCSV.getId());
             }
         }
 

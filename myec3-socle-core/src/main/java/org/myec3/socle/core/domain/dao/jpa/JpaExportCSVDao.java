@@ -89,7 +89,7 @@ public class JpaExportCSVDao extends JpaNoResourceGenericDao<ExportCSV> implemen
 		this.getLog().debug("Finding findAllIdOrderbyDateDemande");
 		try {
 			Query q = getEm().createQuery(
-					"SELECT e.id FROM " + this.getDomainClass().getSimpleName() + " e order by e.dateDemande DESC");
+					"SELECT e.id FROM " + this.getDomainClass().getSimpleName() + " e order by e.dateDemande ASC");
 
 			List<Long> result = q.getResultList();
 			getLog().debug("findAllIdOrderbyDateDemande successfull.");
