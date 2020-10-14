@@ -143,12 +143,15 @@ public class AgentSynchronizationJob extends
         agentSDM.setIdentifiant(resource.getUsername());
 
         //mapping du role
-        for (Role role :resource.getRoles() ){
-			if ("SDM".equals(role.getApplication().getName())){
-				agentSDM.setIdProfil(role.getExternalId());
-				break;
-			}
-		}
+        if (resource.getRoles() != null && !resource.getRoles().isEmpty() ){
+            for (Role role :resource.getRoles() ){
+                if ("SDM".equals(role.getApplication().getName())){
+                    agentSDM.setIdProfil(role.getExternalId());
+                    break;
+                }
+            }
+        }
+
         agentSDM.setEmail(resource.getEmail());
         agentSDM.setNom(resource.getUser().getLastname());
         agentSDM.setPrenom(resource.getUser().getFirstname());
