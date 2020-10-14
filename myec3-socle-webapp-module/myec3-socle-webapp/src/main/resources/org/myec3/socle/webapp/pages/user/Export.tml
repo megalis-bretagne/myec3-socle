@@ -67,6 +67,10 @@
 				</t:parameter>
 			</table>
 
+			<t:block t:id="empty">
+				${message:empty-message}
+			</t:block>
+
 		</fieldset>
 
 		<!--			<div id="export_dispo">-->
