@@ -79,7 +79,7 @@ import org.myec3.socle.webapp.entities.MessageEmail;
  * fill<br />
  * employee administrator attributes.<br />
  * 
- * @see securityMyEc3Context.xml to know profiles authorized to display this
+ *  WebSecurityConfig to know profiles authorized to display this
  *      page<br />
  * 
  *      Corresponding tapestry template file is :
@@ -291,6 +291,19 @@ public class Create {
 				applications = createNewCompany();
 			} else {
 				applications = updateExistingCompany();
+				// We must create the root company department of the company
+				// We must test if there is no department root already in object
+				if (companyDepartmentService.findRootCompanyDepartmentByCompany(company) == null) {
+					CompanyDepartment companyDepartment = new CompanyDepartment(MyEc3Constants.ROOT_DEPARTMENT_NAME,
+							MyEc3Constants.ROOT_DEPARTMENT_LABEL);
+					companyDepartment.setExternalId(Long.valueOf(0));
+					companyDepartment.setAddress(company.getAddress());
+					companyDepartment.setEmail(company.getEmail());
+					companyDepartment.setNic(company.getNic());
+					companyDepartment.setAcronym(company.getAcronym());
+					companyDepartment.setCompany(company);
+					this.companyDepartmentService.create(companyDepartment);
+				}
 			}
 
 			// CREATE USER
@@ -442,7 +455,7 @@ public class Create {
 					}
 				}
 			}
-
+			this.establishment.setCompany(this.company);
 			this.company.getEstablishments().add(this.establishment);
 			this.company = this.companyService.update(this.company);
 			// Send notification to external applications
@@ -525,10 +538,7 @@ public class Create {
 			this.establishment.getAddress().setCanton("Aucun");
 		}
 
-		if (this.establishment.getCompany() == null) {
-			this.establishment.setCompany(company);
-		}
-
+		this.establishment.setCompany(company);
 		this.company.addEstablishment(establishment);
 
 		if (this.company.getApeNafLabel() == null) {
