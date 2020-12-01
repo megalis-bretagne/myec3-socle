@@ -1,11 +1,9 @@
 package org.myec3.socle.core.util;
 
-import java.net.InetAddress;
-import java.net.UnknownHostException;
-import java.util.ResourceBundle;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
+import java.util.ResourceBundle;
 
 public class CronUtils {
 
@@ -13,12 +11,12 @@ public class CronUtils {
 
 	private static ResourceBundle bundle = ResourceBundle
 			.getBundle("socleCore");
-	
+
 	private static ResourceBundle bundleWs = ResourceBundle
-		.getBundle("mpsUpdate");
+			.getBundle("mpsUpdate");
 
 	public static boolean isCronServer() {
-		String currentHostname = null;
+/*		String currentHostname = null;
 		try {
 			currentHostname = InetAddress.getLocalHost().getHostName();
 			logger.info("CurrentHostname : " + currentHostname);
@@ -30,6 +28,9 @@ public class CronUtils {
 				.getString("server.instance.hostname"))) {
 			return false;
 		}
+		*/
+
+		//todo gérer le cas multi instance en cas de scalabilité de socle-webapp
 		return true;
 	}
 }
