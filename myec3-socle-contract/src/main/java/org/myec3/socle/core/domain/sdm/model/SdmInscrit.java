@@ -45,6 +45,9 @@ public class SdmInscrit extends SdmResource {
 
     private SdmAdresse adresse;
 
+    @XmlElement(required = true)
+    private long profil=1;
+
     public SdmAdresse getAdresse() {
         return adresse;
     }
@@ -71,6 +74,14 @@ public class SdmInscrit extends SdmResource {
 
     public long getIdEtablissement() {
         return idEtablissement;
+    }
+
+    public long getProfil() {
+        return profil;
+    }
+
+    public void setProfil(long profil) {
+        this.profil = profil;
     }
 
     public void setIdEtablissement(long idEtablissement) {

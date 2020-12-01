@@ -18,6 +18,7 @@
 package org.myec3.socle.synchro.scheduler.job.resources;
 
 import org.myec3.socle.core.domain.model.EmployeeProfile;
+import org.myec3.socle.core.domain.model.Role;
 import org.myec3.socle.core.domain.model.enums.ResourceType;
 import org.myec3.socle.core.domain.sdm.model.SdmInscrit;
 import org.myec3.socle.core.sync.api.ResponseMessage;
@@ -145,6 +146,16 @@ public class EmployeeSynchronizationJob extends
 
         SdmInscrit inscritSDM = new SdmInscrit();
         inscritSDM.setIdExterne(String.valueOf(resource.getExternalId()));
+
+        //mapping du role
+        if (resource.getRoles() != null && !resource.getRoles().isEmpty() ){
+            for (Role role :resource.getRoles() ){
+                if ("SDM".equals(role.getApplication().getName())){
+                    inscritSDM.setProfil(role.getExternalId());
+                    break;
+                }
+            }
+        }
 
         inscritSDM.setLogin(resource.getUsername());
         inscritSDM.setEmail(resource.getEmail());
