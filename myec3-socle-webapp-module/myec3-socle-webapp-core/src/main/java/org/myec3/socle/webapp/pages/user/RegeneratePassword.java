@@ -176,6 +176,8 @@ public class RegeneratePassword extends AbstractPage {
 
 	private List<Profile> availableProfiles;
 
+	private Profile profile;
+
 	private List<Profile> allExistingProfiles;
 
 	private boolean findNotEnabled;
@@ -227,63 +229,6 @@ public class RegeneratePassword extends AbstractPage {
 			// Now we search if there is some account which are not activated
 			this.allExistingProfiles = this.profileService.findAllByEmail(this.username);
 
-			if (this.allExistingProfiles.size() == 0) {
-				Profile profileTemp = this.profileService.findByUsername(this.username);
-				if (profileTemp != null) {
-					this.allExistingProfiles.add(profileTemp);
-				}
-			}
-
-			if (this.allExistingProfiles.size() > this.availableProfiles.size()) {
-				this.allExistingProfiles.removeAll(this.availableProfiles);
-
-				if (this.allExistingProfiles.size() != 0) {
-					this.availableProfiles.addAll(this.allExistingProfiles);
-					this.findNotEnabled = true;
-				}
-			}
-
-			// End of the research
-
-			List<Profile> listRemovedProfile = new ArrayList<Profile>();
-			for (Profile profile : availableProfiles) {
-				if (profile instanceof AgentProfile) {
-					if (!emailService
-							.authorizedToSendMail(((AgentProfile) profile)
-									.getOrganismDepartment().getOrganism())) {
-						listRemovedProfile.add(profile);
-					}
-				}
-			}
-
-			if (listRemovedProfile.size() > 0) {
-				this.availableProfiles.removeAll(listRemovedProfile);
-			}
-
-			this.availableProjectAccounts = this.projectAccountService
-					.findAllEnabledByEmailOrUsername(this.username);
-
-			// Now we search if there is some account which are not activated
-			this.allExistingProjectAccounts = this.projectAccountService.findAllByEmail(this.username);
-
-			if (this.allExistingProjectAccounts.size() == 0) {
-				ProjectAccount projectAccountTemp = this.projectAccountService.findByLogin(this.username);
-				if (projectAccountTemp != null) {
-					this.allExistingProjectAccounts.add(projectAccountTemp);
-				}
-			}
-
-			if (this.allExistingProjectAccounts.size() > this.availableProjectAccounts.size()) {
-				this.allExistingProjectAccounts.removeAll(this.availableProjectAccounts);
-
-				if (this.allExistingProjectAccounts.size() != 0) {
-					this.availableProjectAccounts.addAll(this.allExistingProjectAccounts);
-					this.findNotEnabled = true;
-				}
-			}
-
-			// End of the research
-
 			if ((this.availableProfiles.size() == 1
 					&& this.availableProjectAccounts.size() == 0)
 					|| (this.availableProfiles.size() == 0
@@ -314,176 +259,15 @@ public class RegeneratePassword extends AbstractPage {
 			return Boolean.FALSE;
 		}
 
-		this.availableProfiles = this.profileService
-				.findAllProfileEnabledByEmailOrUsername(this.username);
+		this.profile = this.profileService
+				.findByUsername(this.username);
 
-		// projectaccount is not a profile
-		this.availableProjectAccounts = this.projectAccountService
-				.findAllEnabledByEmailOrUsername(this.username);
-
-		// Now we search if there is some account which are not activated
-		this.allExistingProfiles = this.profileService.findAllByEmail(this.username);
-		this.allExistingProjectAccounts = this.projectAccountService.findAllByEmail(this.username);
-
-		if (this.allExistingProfiles.size() == 0) {
-			Profile profileTemp = this.profileService.findByUsername(this.username);
-			if (profileTemp != null) {
-				this.allExistingProfiles.add(profileTemp);
-			}
-		}
-
-		if (this.allExistingProjectAccounts.size() == 0) {
-			ProjectAccount projectAccountTemp = this.projectAccountService.findByLogin(this.username);
-			if (projectAccountTemp != null) {
-				this.allExistingProjectAccounts.add(projectAccountTemp);
-			}
-		}
-
-		if (this.allExistingProfiles.size() > this.availableProfiles.size()) {
-			logger.info("Remove all availableProfiles from allExistingProfiles, availableProfiles.size="+this.availableProfiles.size()+" - allExistingProfiles.size="+this.allExistingProfiles.size());
-			this.allExistingProfiles.removeAll(this.availableProfiles);
-
-			if (this.allExistingProfiles.size() != 0) {
-				logger.info("allExistingProfiles != 0 ");
-				this.availableProfiles.addAll(this.allExistingProfiles);
-
-				for (Profile profile : allExistingProfiles) {
-					if (isDisableByAdmin(profile)) {
-						logger.info("findNotEnabled=true" +profile.getId());
-						this.findNotEnabled = true;
-					}
-				}
-			}
-		}
-
-		if (this.allExistingProjectAccounts.size() > this.availableProjectAccounts.size()) {
-			logger.info("Remove all availableProjectAccounts from allExistingProjectAccounts, availableProjectAccounts.size="+this.availableProjectAccounts.size()+" - allExistingProjectAccounts.size="+this.allExistingProjectAccounts.size());
-			this.allExistingProjectAccounts.removeAll(this.availableProjectAccounts);
-
-			if (this.allExistingProjectAccounts.size() != 0) {
-				this.availableProjectAccounts.addAll(this.allExistingProjectAccounts);
-				this.findNotEnabled = true;
-			}
-		}
-
-		// End of the research
-
-		if (this.availableProfiles.size() > 1) {
-			List<Profile> listRemovedProfile = new ArrayList<Profile>();
-			for (Profile profile : availableProfiles) {
-				if (profile instanceof AgentProfile) {
-					if (!emailService
-							.authorizedToSendMail(((AgentProfile) profile)
-									.getOrganismDepartment().getOrganism())) {
-						logger.info("remove profile.id"+profile.getId());
-						listRemovedProfile.add(profile);
-					}
-				}
-			}
-			if (listRemovedProfile.size() > 0) {
-				this.availableProfiles.removeAll(listRemovedProfile);
-				if (this.availableProfiles.size() == 0
-						&& availableProjectAccounts.size() == 0) {
-					this.errorMessage = this.getMessages().get(
-							"no-activation-profile-error");
-					logger.info("availableProfiles ==0");
-					return Boolean.FALSE;
-				}
-			}
-		}
-
-		// not displaying profile table
-		if (this.availableProfiles.size() == 1
-				&& this.availableProjectAccounts.size() == 0) {
-			if (this.availableProfiles.get(0).getProfileType().getValue()
-					.equals(ProfileTypeValue.AGENT)
-					|| this.availableProfiles.get(0).getProfileType()
-							.getValue().equals(ProfileTypeValue.EMPLOYEE)) {
-				//if (this.availableProfiles.get(0).isAgent()) {
-				logger.info("cas agent ou employe");
-				if (ProfileTypeValue.AGENT.equals(this.availableProfiles.get(0).getProfileType().getValue())) {
-					AgentProfile agent = (AgentProfile) this.availableProfiles
-							.get(0);
-					logger.info("cas agent");
-					if (!this.emailService.authorizedToSendMail(agent
-							.getOrganismDepartment().getOrganism())) {
-						this.errorMessage = this.getMessages().get(
-								"no-activation-profile-error");
-						logger.info("availableProfiles ==1 but not authorized to SendMail organisme.id"+agent
-								.getOrganismDepartment().getOrganism().getId());
-						return Boolean.FALSE;
-					}
-				}
-				logger.info("cas employe");
-				if (this.findNotEnabled) {
-					logger.info("findNotEnabled + availableProfiles ==1 but not authorized to SendMail");
-					this.errorMessage = this.getMessages().get(
-							"mono-no-activation-profile-error");
-					this.oneAccount = true;
-				} else {
-					if (null == this.user) {
-						this.user = this.availableProfiles.get(0).getUser();
-						if (null == this.user) {
-							this.errorMessage = this.getMessages().get(
-									"no-corresponding-email-error");
-						}
-					}
-				}
-			} else {
-				if (null == this.user) {
-					this.user = this.availableProfiles.get(0).getUser();
-					if (null == this.user) {
-						this.errorMessage = this.getMessages().get(
-								"no-corresponding-email-error");
-					} else if (this.findNotEnabled) {
-						logger.info("null == this.user and findNotEnabled=true");
-						this.errorMessage = this.getMessages().get(
-								"mono-no-activation-profile-error");
-						this.oneAccount = true;
-					}
-				} else if (this.findNotEnabled) {
-					logger.info("findNotEnabled=true and (availableProfiles.size() ==1 and availableProjectAccounts==0)");
-					this.errorMessage = this.getMessages().get(
-							"mono-no-activation-profile-error");
-					this.oneAccount = true;
-				}
-			}
-			return Boolean.FALSE;
-		}
-
-		// not displaying projectAccount table
-		if (this.availableProjectAccounts.size() == 1
-				&& this.availableProfiles.size() == 0) {
-			if (null == this.user) {
-				this.user = this.availableProjectAccounts.get(0).getUser();
-				if (null == this.user) {
-					this.errorMessage = this.getMessages().get(
-							"no-corresponding-email-error");
-				} else if (this.findNotEnabled) {
-					logger.info("findNotEnabled=true (availableProjectAccounts.size() ==1 and availableProfiles==0)");
-					this.errorMessage = this.getMessages().get(
-							"mono-no-activation-profile-error");
-				}
-			} else if (this.findNotEnabled) {
-				logger.info("findNotEnabled=true and user not null and (availableProjectAccounts.size() ==1 and availableProfiles==0)");
-				this.errorMessage = this.getMessages().get(
-						"mono-no-activation-profile-error");
-
-			}
-			return Boolean.FALSE;
-		}
-
-		if ((this.availableProfiles.size() == 0)
-				&& (this.availableProjectAccounts.size() == 0)) {
+		if ( !profile.getUser().isEnabled()){
 			this.errorMessage = this.getMessages().get(
-					"no-corresponding-email-error");
+					"mono-no-activation-profile-error");
+			this.oneAccount = true;
 			return Boolean.FALSE;
 		}
-
-		if (this.findNotEnabled) {
-			this.multipleAccount = Boolean.TRUE;
-		}
-
 		this.successMessage = null;
 		return Boolean.TRUE;
 	}
