@@ -400,10 +400,11 @@ public class RegeneratePassword extends AbstractPage {
 					|| this.availableProfiles.get(0).getProfileType()
 							.getValue().equals(ProfileTypeValue.EMPLOYEE)) {
 				//if (this.availableProfiles.get(0).isAgent()) {
-				if (ProfileTypeValue.AGENT.equals(this.availableProfiles.get(0).getProfileType())) {
+				logger.info("cas agent ou employe");
+				if (ProfileTypeValue.AGENT.equals(this.availableProfiles.get(0).getProfileType().getValue())) {
 					AgentProfile agent = (AgentProfile) this.availableProfiles
 							.get(0);
-
+					logger.info("cas agent");
 					if (!this.emailService.authorizedToSendMail(agent
 							.getOrganismDepartment().getOrganism())) {
 						this.errorMessage = this.getMessages().get(
@@ -413,6 +414,7 @@ public class RegeneratePassword extends AbstractPage {
 						return Boolean.FALSE;
 					}
 				}
+				logger.info("cas employe");
 				if (this.findNotEnabled) {
 					logger.info("findNotEnabled + availableProfiles ==1 but not authorized to SendMail");
 					this.errorMessage = this.getMessages().get(
