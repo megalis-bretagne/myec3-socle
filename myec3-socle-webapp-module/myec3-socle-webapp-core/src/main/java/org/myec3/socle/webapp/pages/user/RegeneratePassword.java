@@ -270,8 +270,8 @@ public class RegeneratePassword extends AbstractPage {
 					"no-corresponding-email-error");
 			return Boolean.FALSE;
 		}
-
-		if ( !profile.getUser().isEnabled()){
+		this.user =profile.getUser();
+		if ( !this.user.isEnabled()){
 			this.errorMessage = this.getMessages().get(
 					"mono-no-activation-profile-error");
 			this.oneAccount = true;
@@ -285,56 +285,9 @@ public class RegeneratePassword extends AbstractPage {
 	@OnEvent(value = EventConstants.SUCCESS)
 	public Object successForm() {
 		// dont display table
-		if ((null == this.user) && (this.selectedProfiles.size() == 0)
-				&& (this.selectedProjectAccounts.size() == 0)) {
+		if (null == this.user) {
 			return null;
-		} else if (this.selectedProfiles.size() != 0
-				|| this.selectedProjectAccounts.size() != 0) {
-			// send mail to selected profiles
-			if (this.selectedProfiles.size() != 0) {
-				for (Profile profile : this.selectedProfiles) {
-					String controlKeyNewPassword = this.userService
-							.generateControlKeyNewPassword();
-					profile.getUser().setControlKeyNewPassword(
-							controlKeyNewPassword);
-
-					this.userService.update(profile.getUser());
-					this.synchronizationService.notifyUpdate(profile);
-
-					if (profile instanceof AgentProfile) {
-						AgentProfile agentProfile = (AgentProfile) profile;
-
-						sendMail(controlKeyNewPassword,
-								String.valueOf(agentProfile.getUser().getExternalId()),
-								agentProfile.getUser().getUsername(),
-								profile.getEmail(), agentProfile
-										.getOrganismDepartment().getOrganism()
-										.getCustomer());
-					} else {
-						sendMail(controlKeyNewPassword,
-								String.valueOf(profile.getUser().getExternalId()), profile.getUser().getUsername(),
-								profile.getEmail(), null);
-					}
-				}
-			}
-
-			// send mail to selected project accounts
-			if (this.selectedProjectAccounts.size() != 0) {
-				for (ProjectAccount projectAccount : this.selectedProjectAccounts) {
-					String controlKeyNewPassword = this.userService
-							.generateControlKeyNewPassword();
-
-					projectAccount.getUser().setControlKeyNewPassword(
-							controlKeyNewPassword);
-
-					this.userService.update(projectAccount.getUser());
-					sendMail(controlKeyNewPassword,
-							String.valueOf(projectAccount.getUser().getExternalId()), this.user.getUsername(),
-							projectAccount.getEmail(), null);
-				}
-			}
-
-		} else {
+		}else {
 			// normal case (only one profile or project account)
 			String controlKeyNewPassword = this.userService
 					.generateControlKeyNewPassword();
@@ -361,15 +314,6 @@ public class RegeneratePassword extends AbstractPage {
 								profile.getEmail(), null);
 					}
 					this.synchronizationService.notifyUpdate(profile);
-				}
-			} else {
-				// In case of project account table
-				ProjectAccount projectAccount = this.projectAccountService
-						.findByLogin(this.user.getUsername());
-				if (null != projectAccount) {
-					sendMail(controlKeyNewPassword,
-							String.valueOf(this.user.getExternalId()), this.user.getUsername(),
-							projectAccount.getEmail(), null);
 				}
 			}
 
