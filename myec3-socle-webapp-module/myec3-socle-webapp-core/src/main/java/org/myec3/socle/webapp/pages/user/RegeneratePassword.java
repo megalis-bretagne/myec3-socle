@@ -344,10 +344,12 @@ public class RegeneratePassword extends AbstractPage {
 			this.allExistingProfiles.removeAll(this.availableProfiles);
 
 			if (this.allExistingProfiles.size() != 0) {
+				logger.info("allExistingProfiles != 0 ");
 				this.availableProfiles.addAll(this.allExistingProfiles);
 
 				for (Profile profile : allExistingProfiles) {
 					if (isDisableByAdmin(profile)) {
+						logger.info("findNotEnabled=true" +profile.getId());
 						this.findNotEnabled = true;
 					}
 				}
@@ -405,12 +407,13 @@ public class RegeneratePassword extends AbstractPage {
 							.getOrganismDepartment().getOrganism())) {
 						this.errorMessage = this.getMessages().get(
 								"no-activation-profile-error");
-						logger.info("availableProfiles ==1 but not authorized to SendMail");
+						logger.info("availableProfiles ==1 but not authorized to SendMail organisme.id"+agent
+								.getOrganismDepartment().getOrganism().getId());
 						return Boolean.FALSE;
 					}
 				}
 				if (this.findNotEnabled) {
-					logger.info("availableProfiles ==1 but not authorized to SendMail");
+					logger.info("findNotEnabled + availableProfiles ==1 but not authorized to SendMail");
 					this.errorMessage = this.getMessages().get(
 							"mono-no-activation-profile-error");
 					this.oneAccount = true;
