@@ -226,6 +226,9 @@ public class RegeneratePassword extends AbstractPage {
 			this.availableProfiles = this.profileService
 					.findAllProfileEnabledByEmailOrUsername(this.username);
 
+			this.availableProjectAccounts = this.projectAccountService
+					.findAllEnabledByEmailOrUsername(this.username);
+
 			// Now we search if there is some account which are not activated
 			this.allExistingProfiles = this.profileService.findAllByEmail(this.username);
 
@@ -262,12 +265,19 @@ public class RegeneratePassword extends AbstractPage {
 		this.profile = this.profileService
 				.findByUsername(this.username);
 
+		if ( this.profile == null ){
+			this.errorMessage = this.getMessages().get(
+					"no-corresponding-email-error");
+			return Boolean.FALSE;
+		}
+
 		if ( !profile.getUser().isEnabled()){
 			this.errorMessage = this.getMessages().get(
 					"mono-no-activation-profile-error");
 			this.oneAccount = true;
 			return Boolean.FALSE;
 		}
+
 		this.successMessage = null;
 		return Boolean.TRUE;
 	}
