@@ -399,7 +399,8 @@ public class RegeneratePassword extends AbstractPage {
 					.equals(ProfileTypeValue.AGENT)
 					|| this.availableProfiles.get(0).getProfileType()
 							.getValue().equals(ProfileTypeValue.EMPLOYEE)) {
-				if (this.availableProfiles.get(0).isAgent()) {
+				//if (this.availableProfiles.get(0).isAgent()) {
+				if (ProfileTypeValue.AGENT.equals(this.availableProfiles.get(0).getProfileType())) {
 					AgentProfile agent = (AgentProfile) this.availableProfiles
 							.get(0);
 
