@@ -340,6 +340,7 @@ public class RegeneratePassword extends AbstractPage {
 		}
 
 		if (this.allExistingProfiles.size() > this.availableProfiles.size()) {
+			logger.info("Remove all availableProfiles from allExistingProfiles, availableProfiles.size="+this.availableProfiles.size()+" - allExistingProfiles.size="+this.allExistingProfiles.size());
 			this.allExistingProfiles.removeAll(this.availableProfiles);
 
 			if (this.allExistingProfiles.size() != 0) {
@@ -354,6 +355,7 @@ public class RegeneratePassword extends AbstractPage {
 		}
 
 		if (this.allExistingProjectAccounts.size() > this.availableProjectAccounts.size()) {
+			logger.info("Remove all availableProjectAccounts from allExistingProjectAccounts, availableProjectAccounts.size="+this.availableProjectAccounts.size()+" - allExistingProjectAccounts.size="+this.allExistingProjectAccounts.size());
 			this.allExistingProjectAccounts.removeAll(this.availableProjectAccounts);
 
 			if (this.allExistingProjectAccounts.size() != 0) {
@@ -371,6 +373,7 @@ public class RegeneratePassword extends AbstractPage {
 					if (!emailService
 							.authorizedToSendMail(((AgentProfile) profile)
 									.getOrganismDepartment().getOrganism())) {
+						logger.info("remove profile.id"+profile.getId());
 						listRemovedProfile.add(profile);
 					}
 				}
@@ -381,6 +384,7 @@ public class RegeneratePassword extends AbstractPage {
 						&& availableProjectAccounts.size() == 0) {
 					this.errorMessage = this.getMessages().get(
 							"no-activation-profile-error");
+					logger.info("availableProfiles ==0");
 					return Boolean.FALSE;
 				}
 			}
@@ -401,10 +405,12 @@ public class RegeneratePassword extends AbstractPage {
 							.getOrganismDepartment().getOrganism())) {
 						this.errorMessage = this.getMessages().get(
 								"no-activation-profile-error");
+						logger.info("availableProfiles ==1 but not authorized to SendMail");
 						return Boolean.FALSE;
 					}
 				}
 				if (this.findNotEnabled) {
+					logger.info("availableProfiles ==1 but not authorized to SendMail");
 					this.errorMessage = this.getMessages().get(
 							"mono-no-activation-profile-error");
 					this.oneAccount = true;
@@ -424,11 +430,13 @@ public class RegeneratePassword extends AbstractPage {
 						this.errorMessage = this.getMessages().get(
 								"no-corresponding-email-error");
 					} else if (this.findNotEnabled) {
+						logger.info("null == this.user and findNotEnabled=true");
 						this.errorMessage = this.getMessages().get(
 								"mono-no-activation-profile-error");
 						this.oneAccount = true;
 					}
 				} else if (this.findNotEnabled) {
+					logger.info("findNotEnabled=true and (availableProfiles.size() ==1 and availableProjectAccounts==0)");
 					this.errorMessage = this.getMessages().get(
 							"mono-no-activation-profile-error");
 					this.oneAccount = true;
@@ -446,10 +454,12 @@ public class RegeneratePassword extends AbstractPage {
 					this.errorMessage = this.getMessages().get(
 							"no-corresponding-email-error");
 				} else if (this.findNotEnabled) {
+					logger.info("findNotEnabled=true (availableProjectAccounts.size() ==1 and availableProfiles==0)");
 					this.errorMessage = this.getMessages().get(
 							"mono-no-activation-profile-error");
 				}
 			} else if (this.findNotEnabled) {
+				logger.info("findNotEnabled=true and user not null and (availableProjectAccounts.size() ==1 and availableProfiles==0)");
 				this.errorMessage = this.getMessages().get(
 						"mono-no-activation-profile-error");
 
