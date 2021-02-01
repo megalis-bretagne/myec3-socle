@@ -498,7 +498,7 @@ public class AbstractPage {
 					if (role.getName().equals("ROLE_MANAGER_EMPLOYEE")) {
 						employeeProfile.removeRole(role);
 						employeeProfile.addRoles(
-								roleService.findAllByCriteria("Rôle par défaut", "ROLE_DEFAULT", application));
+								roleService.findAllByCriteria(null, "ROLE_DEFAULT", application));
 					}
 				}
 

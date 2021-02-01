@@ -118,6 +118,7 @@ public class OrganismSynchronizationJob extends
                 //organismeSDM.setId(synchroIdentifiantExterne.getIdAppliExterne());
                 return sdmWsClient.put(resource, organismeSDM, synchronizationSubscription);
             }else{
+                organismeSDM.setAcronyme("");
                 return sdmWsClient.post(resource, organismeSDM, synchronizationSubscription);
             }
         }

@@ -176,6 +176,8 @@ public class RegeneratePassword extends AbstractPage {
 
 	private List<Profile> availableProfiles;
 
+	private Profile profile;
+
 	private List<Profile> allExistingProfiles;
 
 	private boolean findNotEnabled;
@@ -224,65 +226,11 @@ public class RegeneratePassword extends AbstractPage {
 			this.availableProfiles = this.profileService
 					.findAllProfileEnabledByEmailOrUsername(this.username);
 
-			// Now we search if there is some account which are not activated
-			this.allExistingProfiles = this.profileService.findAllByEmail(this.username);
-
-			if (this.allExistingProfiles.size() == 0) {
-				Profile profileTemp = this.profileService.findByUsername(this.username);
-				if (profileTemp != null) {
-					this.allExistingProfiles.add(profileTemp);
-				}
-			}
-
-			if (this.allExistingProfiles.size() > this.availableProfiles.size()) {
-				this.allExistingProfiles.removeAll(this.availableProfiles);
-
-				if (this.allExistingProfiles.size() != 0) {
-					this.availableProfiles.addAll(this.allExistingProfiles);
-					this.findNotEnabled = true;
-				}
-			}
-
-			// End of the research
-
-			List<Profile> listRemovedProfile = new ArrayList<Profile>();
-			for (Profile profile : availableProfiles) {
-				if (profile instanceof AgentProfile) {
-					if (!emailService
-							.authorizedToSendMail(((AgentProfile) profile)
-									.getOrganismDepartment().getOrganism())) {
-						listRemovedProfile.add(profile);
-					}
-				}
-			}
-
-			if (listRemovedProfile.size() > 0) {
-				this.availableProfiles.removeAll(listRemovedProfile);
-			}
-
 			this.availableProjectAccounts = this.projectAccountService
 					.findAllEnabledByEmailOrUsername(this.username);
 
 			// Now we search if there is some account which are not activated
-			this.allExistingProjectAccounts = this.projectAccountService.findAllByEmail(this.username);
-
-			if (this.allExistingProjectAccounts.size() == 0) {
-				ProjectAccount projectAccountTemp = this.projectAccountService.findByLogin(this.username);
-				if (projectAccountTemp != null) {
-					this.allExistingProjectAccounts.add(projectAccountTemp);
-				}
-			}
-
-			if (this.allExistingProjectAccounts.size() > this.availableProjectAccounts.size()) {
-				this.allExistingProjectAccounts.removeAll(this.availableProjectAccounts);
-
-				if (this.allExistingProjectAccounts.size() != 0) {
-					this.availableProjectAccounts.addAll(this.allExistingProjectAccounts);
-					this.findNotEnabled = true;
-				}
-			}
-
-			// End of the research
+			this.allExistingProfiles = this.profileService.findAllByEmail(this.username);
 
 			if ((this.availableProfiles.size() == 1
 					&& this.availableProjectAccounts.size() == 0)
@@ -314,158 +262,20 @@ public class RegeneratePassword extends AbstractPage {
 			return Boolean.FALSE;
 		}
 
-		this.availableProfiles = this.profileService
-				.findAllProfileEnabledByEmailOrUsername(this.username);
+		this.profile = this.profileService
+				.findByUsername(this.username);
 
-		// projectaccount is not a profile
-		this.availableProjectAccounts = this.projectAccountService
-				.findAllEnabledByEmailOrUsername(this.username);
-
-		// Now we search if there is some account which are not activated
-		this.allExistingProfiles = this.profileService.findAllByEmail(this.username);
-		this.allExistingProjectAccounts = this.projectAccountService.findAllByEmail(this.username);
-
-		if (this.allExistingProfiles.size() == 0) {
-			Profile profileTemp = this.profileService.findByUsername(this.username);
-			if (profileTemp != null) {
-				this.allExistingProfiles.add(profileTemp);
-			}
-		}
-
-		if (this.allExistingProjectAccounts.size() == 0) {
-			ProjectAccount projectAccountTemp = this.projectAccountService.findByLogin(this.username);
-			if (projectAccountTemp != null) {
-				this.allExistingProjectAccounts.add(projectAccountTemp);
-			}
-		}
-
-		if (this.allExistingProfiles.size() > this.availableProfiles.size()) {
-			this.allExistingProfiles.removeAll(this.availableProfiles);
-
-			if (this.allExistingProfiles.size() != 0) {
-				this.availableProfiles.addAll(this.allExistingProfiles);
-
-				for (Profile profile : allExistingProfiles) {
-					if (isDisableByAdmin(profile)) {
-						this.findNotEnabled = true;
-					}
-				}
-			}
-		}
-
-		if (this.allExistingProjectAccounts.size() > this.availableProjectAccounts.size()) {
-			this.allExistingProjectAccounts.removeAll(this.availableProjectAccounts);
-
-			if (this.allExistingProjectAccounts.size() != 0) {
-				this.availableProjectAccounts.addAll(this.allExistingProjectAccounts);
-				this.findNotEnabled = true;
-			}
-		}
-
-		// End of the research
-
-		if (this.availableProfiles.size() > 1) {
-			List<Profile> listRemovedProfile = new ArrayList<Profile>();
-			for (Profile profile : availableProfiles) {
-				if (profile instanceof AgentProfile) {
-					if (!emailService
-							.authorizedToSendMail(((AgentProfile) profile)
-									.getOrganismDepartment().getOrganism())) {
-						listRemovedProfile.add(profile);
-					}
-				}
-			}
-			if (listRemovedProfile.size() > 0) {
-				this.availableProfiles.removeAll(listRemovedProfile);
-				if (this.availableProfiles.size() == 0
-						&& availableProjectAccounts.size() == 0) {
-					this.errorMessage = this.getMessages().get(
-							"no-activation-profile-error");
-					return Boolean.FALSE;
-				}
-			}
-		}
-
-		// not displaying profile table
-		if (this.availableProfiles.size() == 1
-				&& this.availableProjectAccounts.size() == 0) {
-			if (this.availableProfiles.get(0).getProfileType().getValue()
-					.equals(ProfileTypeValue.AGENT)
-					|| this.availableProfiles.get(0).getProfileType()
-							.getValue().equals(ProfileTypeValue.EMPLOYEE)) {
-				if (this.availableProfiles.get(0).isAgent()) {
-					AgentProfile agent = (AgentProfile) this.availableProfiles
-							.get(0);
-
-					if (!this.emailService.authorizedToSendMail(agent
-							.getOrganismDepartment().getOrganism())) {
-						this.errorMessage = this.getMessages().get(
-								"no-activation-profile-error");
-						return Boolean.FALSE;
-					}
-				}
-				if (this.findNotEnabled) {
-					this.errorMessage = this.getMessages().get(
-							"mono-no-activation-profile-error");
-					this.oneAccount = true;
-				} else {
-					if (null == this.user) {
-						this.user = this.availableProfiles.get(0).getUser();
-						if (null == this.user) {
-							this.errorMessage = this.getMessages().get(
-									"no-corresponding-email-error");
-						}
-					}
-				}
-			} else {
-				if (null == this.user) {
-					this.user = this.availableProfiles.get(0).getUser();
-					if (null == this.user) {
-						this.errorMessage = this.getMessages().get(
-								"no-corresponding-email-error");
-					} else if (this.findNotEnabled) {
-						this.errorMessage = this.getMessages().get(
-								"mono-no-activation-profile-error");
-						this.oneAccount = true;
-					}
-				} else if (this.findNotEnabled) {
-					this.errorMessage = this.getMessages().get(
-							"mono-no-activation-profile-error");
-					this.oneAccount = true;
-				}
-			}
-			return Boolean.FALSE;
-		}
-
-		// not displaying projectAccount table
-		if (this.availableProjectAccounts.size() == 1
-				&& this.availableProfiles.size() == 0) {
-			if (null == this.user) {
-				this.user = this.availableProjectAccounts.get(0).getUser();
-				if (null == this.user) {
-					this.errorMessage = this.getMessages().get(
-							"no-corresponding-email-error");
-				} else if (this.findNotEnabled) {
-					this.errorMessage = this.getMessages().get(
-							"mono-no-activation-profile-error");
-				}
-			} else if (this.findNotEnabled) {
-				this.errorMessage = this.getMessages().get(
-						"mono-no-activation-profile-error");
-
-			}
-			return Boolean.FALSE;
-		}
-
-		if ((this.availableProfiles.size() == 0)
-				&& (this.availableProjectAccounts.size() == 0)) {
+		if ( this.profile == null ){
 			this.errorMessage = this.getMessages().get(
 					"no-corresponding-email-error");
 			return Boolean.FALSE;
 		}
-
-		if (this.findNotEnabled) {
-			this.multipleAccount = Boolean.TRUE;
+		this.user =profile.getUser();
+		if ( !this.user.isEnabled()){
+			this.errorMessage = this.getMessages().get(
+					"mono-no-activation-profile-error");
+			this.oneAccount = true;
+			return Boolean.FALSE;
 		}
 
 		this.successMessage = null;
@@ -475,56 +285,9 @@ public class RegeneratePassword extends AbstractPage {
 	@OnEvent(value = EventConstants.SUCCESS)
 	public Object successForm() {
 		// dont display table
-		if ((null == this.user) && (this.selectedProfiles.size() == 0)
-				&& (this.selectedProjectAccounts.size() == 0)) {
+		if (null == this.user) {
 			return null;
-		} else if (this.selectedProfiles.size() != 0
-				|| this.selectedProjectAccounts.size() != 0) {
-			// send mail to selected profiles
-			if (this.selectedProfiles.size() != 0) {
-				for (Profile profile : this.selectedProfiles) {
-					String controlKeyNewPassword = this.userService
-							.generateControlKeyNewPassword();
-					profile.getUser().setControlKeyNewPassword(
-							controlKeyNewPassword);
-
-					this.userService.update(profile.getUser());
-					this.synchronizationService.notifyUpdate(profile);
-
-					if (profile instanceof AgentProfile) {
-						AgentProfile agentProfile = (AgentProfile) profile;
-
-						sendMail(controlKeyNewPassword,
-								String.valueOf(agentProfile.getUser().getExternalId()),
-								agentProfile.getUser().getUsername(),
-								profile.getEmail(), agentProfile
-										.getOrganismDepartment().getOrganism()
-										.getCustomer());
-					} else {
-						sendMail(controlKeyNewPassword,
-								String.valueOf(profile.getUser().getExternalId()), profile.getUser().getUsername(),
-								profile.getEmail(), null);
-					}
-				}
-			}
-
-			// send mail to selected project accounts
-			if (this.selectedProjectAccounts.size() != 0) {
-				for (ProjectAccount projectAccount : this.selectedProjectAccounts) {
-					String controlKeyNewPassword = this.userService
-							.generateControlKeyNewPassword();
-
-					projectAccount.getUser().setControlKeyNewPassword(
-							controlKeyNewPassword);
-
-					this.userService.update(projectAccount.getUser());
-					sendMail(controlKeyNewPassword,
-							String.valueOf(projectAccount.getUser().getExternalId()), this.user.getUsername(),
-							projectAccount.getEmail(), null);
-				}
-			}
-
-		} else {
+		}else {
 			// normal case (only one profile or project account)
 			String controlKeyNewPassword = this.userService
 					.generateControlKeyNewPassword();
@@ -551,15 +314,6 @@ public class RegeneratePassword extends AbstractPage {
 								profile.getEmail(), null);
 					}
 					this.synchronizationService.notifyUpdate(profile);
-				}
-			} else {
-				// In case of project account table
-				ProjectAccount projectAccount = this.projectAccountService
-						.findByLogin(this.user.getUsername());
-				if (null != projectAccount) {
-					sendMail(controlKeyNewPassword,
-							String.valueOf(this.user.getExternalId()), this.user.getUsername(),
-							projectAccount.getEmail(), null);
 				}
 			}
 
