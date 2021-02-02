@@ -485,14 +485,10 @@ public class MessageEmail {
 					.format(getMessage(
 							messages,
 							"content-email-password-about-to-expired-"
-									+ mapAttributes
-											.get(ATTR_NB_DAYS_EXPIRATION_DATE_PASSWORD)),
-							mapAttributes.get(ATTR_USER_ID), mapAttributes
-									.get(ATTR_PROFIL_MAIL),
-							mapAttributes
-									.get(ATTR_STRUCTURE_NAME),
-							mapAttributes
-									.get(ATTR_EXPIRATION_DATE_PASSWORD)));
+									+ mapAttributes.get(ATTR_NB_DAYS_EXPIRATION_DATE_PASSWORD)),
+							mapAttributes.get(ATTR_PROFIL_MAIL),
+							mapAttributes.get(ATTR_STRUCTURE_NAME),
+							mapAttributes.get(ATTR_EXPIRATION_DATE_PASSWORD)));
 
 			content.append("<br/><br/>");
 			content.append(getMessage(messages,
