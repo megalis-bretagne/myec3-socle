@@ -510,7 +510,6 @@ public class MessageEmail {
 		case EXPIRED_PASSWORD:
 			content.append(MessageFormat.format(
 					getMessage(messages, "content-email-password-expired"),
-					mapAttributes.get(ATTR_USER_ID),
 					mapAttributes.get(ATTR_PROFIL_MAIL),
 					mapAttributes.get(ATTR_STRUCTURE_NAME)));
 
