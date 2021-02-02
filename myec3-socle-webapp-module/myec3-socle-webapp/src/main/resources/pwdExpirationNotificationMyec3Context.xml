@@ -29,7 +29,8 @@
         <property name="jobDetail" ref="pwdExpirationNotificationJob" />
         <!-- format <Seconds Minutes Hours Day-of-Month Month Day-of-Week Year
             (optional field)> Everyday @ 01:00 -->
-        <property name="cronExpression" value="0 0 1 * * ?"  />
+        <!-- Test déclanchement toutes les 5 minutes -->
+        <property name="cronExpression" value="*/5 * * * *"  />
     </bean>
 
     <bean class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
