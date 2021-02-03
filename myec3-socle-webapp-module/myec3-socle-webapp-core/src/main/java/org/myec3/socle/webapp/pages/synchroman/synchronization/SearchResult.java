@@ -54,7 +54,7 @@ public class SearchResult extends AbstractPage {
 	private Resource resource;
 
 	@Inject
-	@Service("synchronizationService")
+	@Service("synchronizationCoreService")
 	private SynchronizationService synchronizationService;
 
 	@Inject

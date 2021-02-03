@@ -37,7 +37,7 @@ public class ManageSubscriptions extends AbstractPage {
 	private SynchronizationSubscriptionService synchronizationSubscriptionService;
 
 	@Inject
-	@Service("synchronizationService")
+	@Service("synchronizationCoreService")
 	private SynchronizationService synchronizationService;
 
 	@Persist
