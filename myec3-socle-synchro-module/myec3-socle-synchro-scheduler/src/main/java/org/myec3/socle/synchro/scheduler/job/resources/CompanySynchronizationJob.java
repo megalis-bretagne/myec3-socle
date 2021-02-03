@@ -41,15 +41,13 @@ import java.util.List;
  * Concrete job implementation used when the resource to synchronize is an
  * {@link Company}. This class implements abstract methods declared into
  * ResourcesSynchronizationJob.
- *
+ * <p>
  * This class use a REST client to send the resource.
- *
- * @see ResourcesSynchronizationJob<Company>
- * @see org.myec3.socle.ws.client.ResourceWsClient<Company>
  *
  * @author Matthieu Proboeuf <matthieu.proboeuf@atosorigin.com>
  * @author Denis Cucchietti <denis.cucchietti@atosorigin.com>
- *
+ * @see ResourcesSynchronizationJob<Company>
+ * @see org.myec3.socle.ws.client.ResourceWsClient<Company>
  */
 @Component
 public class CompanySynchronizationJob extends
@@ -152,7 +150,7 @@ public class CompanySynchronizationJob extends
         entrepriseSDM.setFormeJuridique(resource.getLegalCategory().getLabel());
         entrepriseSDM.setCodeAPE(resource.getApeCode());
         entrepriseSDM.setEmail(resource.getEmail());
-        entrepriseSDM.setRaisonSociale(resource.getName());
+        entrepriseSDM.setRaisonSociale(resource.getLabel());
         //pas de mapping trouvé pour les deux champs ci-dessous
         entrepriseSDM.setCapitalSocial("");
         entrepriseSDM.setEffectif("");
