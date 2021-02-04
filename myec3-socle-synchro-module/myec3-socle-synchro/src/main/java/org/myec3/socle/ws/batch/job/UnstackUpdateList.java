@@ -2,11 +2,7 @@ package org.myec3.socle.ws.batch.job;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.ResourceBundle;
+import java.util.*;
 
 import org.myec3.socle.core.domain.model.AdministrativeState;
 import org.myec3.socle.core.domain.model.Company;
@@ -235,6 +231,7 @@ public class UnstackUpdateList {
                                             companyResponsible.setType("PP");
                                         }
                                     }
+                                    companyToUpdate.clearResponsibles();
                                     companyToUpdate.setResponsibles(tmpPersonList);
                                 }
 
