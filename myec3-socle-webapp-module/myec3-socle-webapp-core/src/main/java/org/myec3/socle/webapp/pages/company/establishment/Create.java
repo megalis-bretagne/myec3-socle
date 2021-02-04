@@ -737,10 +737,6 @@ public class Create extends AbstractPage {
 				this.form.recordError(this.messages.get("email-required-message"));
 			}
 
-			if (null == this.establishment.getPhone()) {
-				this.form.recordError(this.messages.get("phone-required-message"));
-			}
-
 			if (null == this.establishment.getAddress().getPostalAddress()) {
 				this.form.recordError(this.messages.get("postalAddress-required-message"));
 			}

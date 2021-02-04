@@ -82,7 +82,7 @@
 	           		</p>	
 	           		
 	           		<p>
-	                	<t:label for="phone">${message:phone-label} *:</t:label>
+	                	<t:label for="phone">${message:phone-label} :</t:label>
 	               		<t:textfield t:id="phone" t:value="establishment.phone" t:validate="regexp"/>          
 	           		</p>	
 	           		
@@ -149,7 +149,7 @@
 	            	</p>
 	            	
 	            	<p>
-		                <t:label for="foreignPhone">${message:phone-label} *:</t:label>
+		                <t:label for="foreignPhone">${message:phone-label} :</t:label>
 		               	<t:textfield t:id="foreignPhone" t:value="establishment.phone"/>          
 	            	</p>
 	            	
