@@ -247,9 +247,6 @@ public class Modify extends AbstractPage {
 			this.form.recordError(this.getMessages().get("email-required-message"));
 		}
 
-		if (null == this.establishment.getPhone() || this.establishment.getPhone().isEmpty()) {
-			this.form.recordError(this.getMessages().get("phone-required-message"));
-		}
 
 		if (null == this.establishment.getAddress().getPostalAddress()
 				|| this.establishment.getAddress().getPostalAddress().isEmpty()) {
