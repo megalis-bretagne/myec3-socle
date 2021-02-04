@@ -34,10 +34,10 @@
 			</p>
 			<p>
 				<t:label for="siren">
-                    ${message:siren-label} :
+                    ${message:siren-label} *:
                 </t:label>
 				<t:textfield t:id="siren" t:value="organismDepartment.siren"
-					t:validate="maxlength=255" />
+							 t:maxlength="9" t:validate="required, regexp" />
 			</p>
 			<p>
 				<t:label for="description">
