@@ -3,6 +3,7 @@ package org.myec3.socle.ws.client.impl;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.glassfish.jersey.client.ClientProperties;
 import org.myec3.socle.core.domain.model.Resource;
 import org.myec3.socle.core.domain.sdm.model.SdmResource;
 import org.myec3.socle.core.sync.api.Error;
@@ -52,6 +53,7 @@ public class SdmWsClientImpl implements ResourceWsClient {
     private Client getClientWs() {
         if (this.clientWs == null) {
             this.clientWs = ClientBuilder.newClient();
+            this.clientWs.property(ClientProperties.SUPPRESS_HTTP_COMPLIANCE_VALIDATION, true);
         }
         return this.clientWs;
     }
