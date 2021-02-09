@@ -1,8 +1,9 @@
 package org.myec3.socle.ws.client.impl;
 
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.glassfish.jersey.client.JerseyClientBuilder;
+import org.glassfish.jersey.client.ClientProperties;
 import org.myec3.socle.core.domain.model.Resource;
 import org.myec3.socle.core.domain.sdm.model.SdmResource;
 import org.myec3.socle.core.sync.api.Error;
@@ -19,10 +20,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
 import javax.ws.rs.ClientErrorException;
-import javax.ws.rs.client.Client;
-import javax.ws.rs.client.Entity;
-import javax.ws.rs.client.Invocation;
-import javax.ws.rs.client.WebTarget;
+import javax.ws.rs.client.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
@@ -34,264 +32,306 @@ import javax.ws.rs.core.Response;
 @Component("sdmWsClientImpl")
 public class SdmWsClientImpl implements ResourceWsClient {
 
-	private static final Logger logger = LoggerFactory.getLogger(SdmWsClientImpl.class);
+    private static final Logger logger = LoggerFactory.getLogger(SdmWsClientImpl.class);
 
-	private static final String SERVER_UNVAILABLE_ERROR_LABEL = "Server unavailable";
-	private static final String SERVER_UNVAILABLE_ERROR_MESSAGE = "Impossible to contact distant server";
-	private static final String CONNECTION_EXCEPTION = "java.net.ConnectException: Connection refused";
-	private static final String CLIENT_EXCEPTION_ERROR_LABEL = "Client WS Exception";
+    private static final String SERVER_UNVAILABLE_ERROR_LABEL = "Server unavailable";
+    private static final String SERVER_UNVAILABLE_ERROR_MESSAGE = "Impossible to contact distant server";
+    private static final String CONNECTION_EXCEPTION = "java.net.ConnectException: Connection refused";
+    private static final String CLIENT_EXCEPTION_ERROR_LABEL = "Client WS Exception";
 
-	private Client clientWs = null;
+    private Client clientWs = null;
 
-	@Autowired
-	@Qualifier("traiterReponseSDMService")
-	private TraiterReponseSDMService traiterReponseSDMService;
+    @Autowired
+    @Qualifier("traiterReponseSDMService")
+    private TraiterReponseSDMService traiterReponseSDMService;
 
-	/**
-	 * Creates and returns JerseyClient
-	 *
-	 * @return WS client
-	 */
-	private Client getClientWs() {
-		if (this.clientWs == null) {
-			this.clientWs = JerseyClientBuilder.newClient();
-		}
-		return this.clientWs;
-	}
+    /**
+     * Creates and returns JerseyClient
+     *
+     * @return WS client
+     */
+    private Client getClientWs() {
+        if (this.clientWs == null) {
+            this.clientWs = ClientBuilder.newClient();
+            this.clientWs.property(ClientProperties.SUPPRESS_HTTP_COMPLIANCE_VALIDATION, true);
+        }
+        return this.clientWs;
+    }
 
-	/**
-	 * Prepare Header before sending the request
-	 *
-	 * @param builder  : the builder used to create the request
-	 */
-	private void prepareHeaderAtexo(Invocation.Builder builder) {
-		WebTarget webResource = getClientWs().target(WsConstants.SDM_TOKEN_URL);
-		Invocation.Builder builderToken = webResource.request().accept(MediaType.APPLICATION_JSON);
-		try{
-			Response response = builderToken.get();
-			String responseToString = response.readEntity(String.class);
-			String[] tab= StringUtils.split(responseToString,"<ticket>");
-			String[] tab2 =StringUtils.split(tab[1],"</ticket>");
-			builder.header("Authorization", "Bearer " + tab2[0]);
-		}catch (Exception e){
-			logger.error("Erreur lors de la récupération du token SDM",e);
-		}
-	}
-
-
-	/**
-	 * This method allows to retrieve the {@link HttpStatus} through the Client
-	 * Response
-	 *
-	 * @param response : the client response received
-	 * @return the correct {@link HttpStatus} corresponding at the client response
-	 *         status received
-	 */
-	private HttpStatus retrieveHttpStatus(Response response) {
-		logger.debug("Processing method retrieveHttpStatus...");
-		HttpStatus[] HttpStatusList = HttpStatus.values();
-		for (HttpStatus httpStatus : HttpStatusList) {
-			if (response.getStatus() == httpStatus.getValue()) {
-				logger.debug("HttpStatus contained into client response : {}", httpStatus);
-				return httpStatus;
-			}
-		}
-		return null;
-	}
-
-	/**
-	 * Build the response message before sending it for error checking
-	 *
-	 * @param response   : the response returned by the ws client
-	 * @param methodType : the {@link MethodType} used to perform the request
-	 * @param resource
-	 * @return a {@link ResponseMessage} used by the synchronization module in order
-	 *         to log the request and perform error handling if necessary
-	 * @throws Exception
-	 */
-	private ResponseMessage buildResponseMessage(Response response, MethodType methodType, Resource resource) throws Exception {
-		ResponseMessage responseMsg = new ResponseMessage();
-		// Set HttpStatus depending on client response value
-		responseMsg.setHttpStatus(this.retrieveHttpStatus(response));
-
-		if (!(responseMsg.getHttpStatus() == null)) {
-			if (responseMsg.getHttpStatus().getValue() > HttpStatus.NO_CONTENT.getValue()) {
-				logger.debug("[buildResponseMessage] HttpStatus returned by webService Client: {}",
-						responseMsg.getHttpStatus().getValue());
-				String responseToString = response.readEntity(String.class);
-				logger.info("REPONSE: {}",responseToString);
-				try {
-					Error error =traiterReponseSDMService.traiterReponseKo(responseToString,responseMsg,resource);
-				}catch (Exception e){
-					Error error = new Error();
-					responseMsg.setError(error);
-					error.setErrorMessage("Erreur lors du parsing de la réponse de la SDM");
-					error.setErrorLabel("Erreur lors du parsing de la réponse de la SDM");
-					//mapping à faire
-					error.setErrorCode(ErrorCodeType.INTERNAL_CLIENT_ERROR);
-				}
-				// Fill the method used during the request
-				responseMsg.getError().setMethodType(methodType);
-			} else {
-				// No error occurred during the request
-				String responseToString = response.readEntity(String.class);
-				// Display response content
-				logger.info("REPONSE: {}",responseToString);
-				//traiter la reponse de la SDM
-				try {
-					traiterReponseSDMService.traiterReponseOk(resource, responseToString);
-				}catch(Exception e){
-					logger.error("Erreur lors du parsing de la reponse OK de la SDM",e);
-					throw e;
-				}
-
-				responseMsg.setError(null);
-			}
-		} else {
-			throw new Exception("The HTTP status returned is not managed : " + response.getStatus());
-		}
-		return responseMsg;
-	}
-
-	/**
-	 * Set {@link Error} into {@link ResponseMessage} if the http status returned
-	 * equals 500 or 503
-	 *
-	 * @param resource   : the {@link Resource} concerned by the request
-	 * @param httpStatus : the httpStatus returned by the client
-	 * @param methodType : the type of REST request used
-	 * @return a ResponseMessage
-	 */
-	private ResponseMessage buildServerErrorMessage(Resource resource, HttpStatus httpStatus, ErrorCodeType errorCode,
-													MethodType methodType, String errorLabel, String errorMessage) {
-		ResponseMessage responseMsg = new ResponseMessage();
-		// Create error
-		Error error = new Error();
-		error.setErrorLabel(errorLabel);
-		error.setErrorMessage(errorMessage);
-		error.setResourceId(resource.getId());
-		error.setMethodType(methodType);
-		error.setErrorCode(errorCode);
-
-		// Create responseMessage
-		responseMsg.setHttpStatus(httpStatus);
-		responseMsg.setError(error);
-
-		return responseMsg;
-	}
-	public ResponseMessage post(Resource resource, SdmResource resourceSDM,SynchronizationSubscription synchronizationSubscription) {
-		WebTarget webResource = getClientWs().target(synchronizationSubscription.getUri());
-
-		Invocation.Builder builder = webResource.request().accept(MediaType.APPLICATION_JSON);
-		prepareHeaderAtexo(builder);
-		try {
-			logger.info("[POST] on URI: {}", synchronizationSubscription.getUri());
-			try{
-				ObjectMapper mapper = new ObjectMapper();
-				String json = mapper.writeValueAsString(resourceSDM);
-				logger.info("REQUETE: {}",json);
-			}catch (Exception e){
-				logger.warn("probleme pour afficher la requete", e);
-			}
-			Response response = builder.post(Entity.json(resourceSDM));
-			return buildResponseMessage(response, MethodType.POST, resource);
-		} catch (ClientErrorException ex) {
-			if (ex.getMessage().contains(CONNECTION_EXCEPTION)) {
-				logger.error("[POST][ConnectException] Server Unavailable HTTP status 503", ex);
-				return this.buildServerErrorMessage(resource, HttpStatus.SERVER_UNAVAILABLE, null, MethodType.POST,
-						SERVER_UNVAILABLE_ERROR_LABEL, SERVER_UNVAILABLE_ERROR_MESSAGE);
-			} else {
-				logger.error("[POST] Exception in sync", ex);
-				return this.buildServerErrorMessage(resource, HttpStatus.BAD_REQUEST,
-						ErrorCodeType.INTERNAL_CLIENT_ERROR, MethodType.POST, CLIENT_EXCEPTION_ERROR_LABEL,
-						ex.getMessage());
-			}
-		} catch (Exception ex) {
-			logger.error("[POST] Exception in sync", ex);
-			return this.buildServerErrorMessage(resource, HttpStatus.BAD_REQUEST,
-					ErrorCodeType.INTERNAL_CLIENT_ERROR,
-					MethodType.POST, CLIENT_EXCEPTION_ERROR_LABEL, ex.getMessage());
-		}
-	}
-
-	public ResponseMessage put(Resource resource, SdmResource resourceSDM,SynchronizationSubscription synchronizationSubscription) {
-		WebTarget webResource = getClientWs().target(synchronizationSubscription.getUri());
-
-		Invocation.Builder builder = webResource.request().accept(MediaType.APPLICATION_JSON);
-		prepareHeaderAtexo(builder);
-		try {
-			logger.info("[PUT] on URI: {}", synchronizationSubscription.getUri());
-			try{
-				ObjectMapper mapper = new ObjectMapper();
-				String json = mapper.writeValueAsString(resourceSDM);
-				logger.info("REQUETE: {}",json);
-			}catch (Exception e){
-				logger.warn("probleme pour afficher la requete", e);
-			}
-			Response response = builder.put(Entity.json(resourceSDM));
-			return buildResponseMessage(response, MethodType.PUT, resource);
-		} catch (ClientErrorException ex) {
-			if (ex.getMessage().contains(CONNECTION_EXCEPTION)) {
-				logger.error("[PUT][ConnectException] Server Unavailable HTTP status 503", ex);
-				return this.buildServerErrorMessage(resource, HttpStatus.SERVER_UNAVAILABLE, null, MethodType.PUT,
-						SERVER_UNVAILABLE_ERROR_LABEL, SERVER_UNVAILABLE_ERROR_MESSAGE);
-			} else {
-				logger.error("[PUT] Exception in sync", ex);
-				return this.buildServerErrorMessage(resource, HttpStatus.BAD_REQUEST,
-						ErrorCodeType.INTERNAL_CLIENT_ERROR, MethodType.PUT, CLIENT_EXCEPTION_ERROR_LABEL,
-						ex.getMessage());
-			}
-		} catch (Exception ex) {
-			logger.error("[PUT] Exception in sync", ex);
-			return this.buildServerErrorMessage(resource, HttpStatus.BAD_REQUEST,
-					ErrorCodeType.INTERNAL_CLIENT_ERROR,
-					MethodType.PUT, CLIENT_EXCEPTION_ERROR_LABEL, ex.getMessage());
-		}
-	}
+    /**
+     * Prepare Header before sending the request
+     *
+     * @param builder : the builder used to create the request
+     */
+    private void prepareHeaderAtexo(Invocation.Builder builder) {
+        WebTarget webResource = getClientWs().target(WsConstants.SDM_TOKEN_URL);
+        Invocation.Builder builderToken = webResource.request().accept(MediaType.APPLICATION_JSON);
+        try {
+            Response response = builderToken.get();
+            String responseToString = response.readEntity(String.class);
+            String[] tab = StringUtils.split(responseToString, "<ticket>");
+            String[] tab2 = StringUtils.split(tab[1], "</ticket>");
+            builder.header("Authorization", "Bearer " + tab2[0]);
+        } catch (Exception e) {
+            logger.error("[TOKEN] Failed retrieving SDM token", e);
+        }
+    }
 
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public Response get(Resource resource, SynchronizationSubscription synchronizationSubscription) {
-		throw new UnsupportedOperationException("Not implemented.");
-	}
+    /**
+     * This method allows to retrieve the {@link HttpStatus} through the Client
+     * Response
+     *
+     * @param response : the client response received
+     * @return the correct {@link HttpStatus} corresponding at the client response
+     * status received
+     */
+    private HttpStatus retrieveHttpStatus(Response response) {
+        logger.debug("Processing method retrieveHttpStatus...");
+        HttpStatus[] httpStatusList = HttpStatus.values();
+        for (HttpStatus httpStatus : httpStatusList) {
+            if (response.getStatus() == httpStatus.getValue()) {
+                logger.debug("HttpStatus contained into client response : {}", httpStatus);
+                return httpStatus;
+            }
+        }
+        return null;
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public Response get(Long id, SynchronizationSubscription synchronizationSubscription) {
-		throw new UnsupportedOperationException("Not implemented.");
-	}
+    /**
+     * Build the response message before sending it for error checking
+     *
+     * @param response   : the response returned by the ws client
+     * @param methodType : the {@link MethodType} used to perform the request
+     * @param resource
+     * @return a {@link ResponseMessage} used by the synchronization module in order
+     * to log the request and perform error handling if necessary
+     * @throws Exception
+     */
+    private ResponseMessage buildResponseMessage(Response response, MethodType methodType, Resource resource) throws Exception {
+        ResponseMessage responseMsg = new ResponseMessage();
+        // Set HttpStatus depending on client response value
+        responseMsg.setHttpStatus(this.retrieveHttpStatus(response));
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public ResponseMessage post(Resource resource, SynchronizationSubscription synchronizationSubscription) {
-		WebTarget webResource = getClientWs().target(synchronizationSubscription.getUri());
+        if (responseMsg.getHttpStatus() != null) {
+            if (responseMsg.getHttpStatus().getValue() > HttpStatus.NO_CONTENT.getValue()) {
+                logger.debug("[buildResponseMessage] HttpStatus returned by webService Client: {}",
+                        responseMsg.getHttpStatus().getValue());
+                String responseToString = response.readEntity(String.class);
+                logger.info("RESPONSE: {}", responseToString);
+                try {
+                    traiterReponseSDMService.traiterReponseKo(responseToString, responseMsg, resource);
+                } catch (Exception e) {
+                    Error error = new Error();
+                    responseMsg.setError(error);
+                    error.setErrorMessage("Erreur lors du parsing de la réponse de la SDM");
+                    error.setErrorLabel("Erreur lors du parsing de la réponse de la SDM");
+                    //mapping à faire
+                    error.setErrorCode(ErrorCodeType.INTERNAL_CLIENT_ERROR);
+                }
+                // Fill the method used during the request
+                responseMsg.getError().setMethodType(methodType);
+            } else {
+                // No error occurred during the request
+                String responseToString = response.readEntity(String.class);
+                // Display response content
+                logger.info("RESPONSE: {}", responseToString);
+                //traiter la reponse de la SDM
+                try {
+                    traiterReponseSDMService.traiterReponseOk(resource, responseToString);
+                } catch (Exception e) {
+                    logger.error("Error when parsing the OK response from the SDM", e);
+                    throw e;
+                }
 
-		throw new UnsupportedOperationException("Not implemented.");
-	}
+                responseMsg.setError(null);
+            }
+        } else {
+            throw new Exception("The HTTP status returned is not managed : " + response.getStatus());
+        }
+        return responseMsg;
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public ResponseMessage put(Resource resource, SynchronizationSubscription synchronizationSubscription) {
-		throw new UnsupportedOperationException("Not implemented.");
-	}
+    /**
+     * Set {@link Error} into {@link ResponseMessage} if the http status returned
+     * equals 500 or 503
+     *
+     * @param resource   : the {@link Resource} concerned by the request
+     * @param httpStatus : the httpStatus returned by the client
+     * @param methodType : the type of REST request used
+     * @return a ResponseMessage
+     */
+    private ResponseMessage buildServerErrorMessage(Resource resource, HttpStatus httpStatus, ErrorCodeType errorCode,
+                                                    MethodType methodType, String errorLabel, String errorMessage) {
+        ResponseMessage responseMsg = new ResponseMessage();
+        // Create error
+        Error error = new Error();
+        error.setErrorLabel(errorLabel);
+        error.setErrorMessage(errorMessage);
+        error.setResourceId(resource.getId());
+        error.setMethodType(methodType);
+        error.setErrorCode(errorCode);
 
-	@Override
-	public ResponseMessage putComplete(Resource resource, SynchronizationSubscription synchronizationSubscription) {
-		throw new UnsupportedOperationException("Not implemented.");
-	}
+        // Create responseMessage
+        responseMsg.setHttpStatus(httpStatus);
+        responseMsg.setError(error);
 
-	@Override
-	public ResponseMessage delete(Resource resource, SynchronizationSubscription synchronizationSubscription) {
-		throw new UnsupportedOperationException("Not implemented.");
-	}
+        return responseMsg;
+    }
+
+    public ResponseMessage post(Resource resource, SdmResource resourceSDM, SynchronizationSubscription synchronizationSubscription) {
+        WebTarget webResource = getClientWs().target(synchronizationSubscription.getUri());
+
+        Invocation.Builder builder = webResource.request().accept(MediaType.APPLICATION_JSON);
+        prepareHeaderAtexo(builder);
+        logger.info("[POST] on URI: {}", synchronizationSubscription.getUri());
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            String json = mapper.writeValueAsString(resourceSDM);
+            logger.info("[POST] REQUEST: {}", json);
+        } catch (Exception e) {
+            logger.warn("[POST] Problems encountered when processing JSON content", e);
+        }
+        try {
+
+            Response response = builder.post(Entity.json(resourceSDM));
+            return buildResponseMessage(response, MethodType.POST, resource);
+        } catch (ClientErrorException ex) {
+            if (ex.getMessage().contains(CONNECTION_EXCEPTION)) {
+                logger.error("[POST][ConnectException] Server Unavailable HTTP status 503", ex);
+                return this.buildServerErrorMessage(resource, HttpStatus.SERVER_UNAVAILABLE, null, MethodType.POST,
+                        SERVER_UNVAILABLE_ERROR_LABEL, SERVER_UNVAILABLE_ERROR_MESSAGE);
+            } else {
+                logger.error("[POST] Exception in sync", ex);
+                return this.buildServerErrorMessage(resource, HttpStatus.BAD_REQUEST,
+                        ErrorCodeType.INTERNAL_CLIENT_ERROR, MethodType.POST, CLIENT_EXCEPTION_ERROR_LABEL,
+                        ex.getMessage());
+            }
+        } catch (Exception ex) {
+            logger.error("[POST] Exception in sync", ex);
+            return this.buildServerErrorMessage(resource, HttpStatus.BAD_REQUEST,
+                    ErrorCodeType.INTERNAL_CLIENT_ERROR,
+                    MethodType.POST, CLIENT_EXCEPTION_ERROR_LABEL, ex.getMessage());
+        }
+    }
+
+    public ResponseMessage put(Resource resource, SdmResource resourceSDM, SynchronizationSubscription synchronizationSubscription) {
+        WebTarget webResource = getClientWs().target(synchronizationSubscription.getUri());
+
+        Invocation.Builder builder = webResource.request().accept(MediaType.APPLICATION_JSON);
+        prepareHeaderAtexo(builder);
+
+        logger.info("[PUT] on URI: {}", synchronizationSubscription.getUri());
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            String json = mapper.writeValueAsString(resourceSDM);
+            logger.info("[PUT] REQUEST: {}", json);
+        } catch (Exception e) {
+            logger.warn("[PUT] Problems encountered when processing JSON content", e);
+        }
+
+        try {
+
+            Response response = builder.put(Entity.json(resourceSDM));
+            return buildResponseMessage(response, MethodType.PUT, resource);
+        } catch (ClientErrorException ex) {
+            if (ex.getMessage().contains(CONNECTION_EXCEPTION)) {
+                logger.error("[PUT][ConnectException] Server Unavailable HTTP status 503", ex);
+                return this.buildServerErrorMessage(resource, HttpStatus.SERVER_UNAVAILABLE, null, MethodType.PUT,
+                        SERVER_UNVAILABLE_ERROR_LABEL, SERVER_UNVAILABLE_ERROR_MESSAGE);
+            } else {
+                logger.error("[PUT] Exception in sync", ex);
+                return this.buildServerErrorMessage(resource, HttpStatus.BAD_REQUEST,
+                        ErrorCodeType.INTERNAL_CLIENT_ERROR, MethodType.PUT, CLIENT_EXCEPTION_ERROR_LABEL,
+                        ex.getMessage());
+            }
+        } catch (Exception ex) {
+            logger.error("[PUT] Exception in sync", ex);
+            return this.buildServerErrorMessage(resource, HttpStatus.BAD_REQUEST,
+                    ErrorCodeType.INTERNAL_CLIENT_ERROR,
+                    MethodType.PUT, CLIENT_EXCEPTION_ERROR_LABEL, ex.getMessage());
+        }
+    }
+
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Response get(Resource resource, SynchronizationSubscription synchronizationSubscription) {
+        throw new UnsupportedOperationException("Not implemented.");
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Response get(Long id, SynchronizationSubscription synchronizationSubscription) {
+        throw new UnsupportedOperationException("Not implemented.");
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public ResponseMessage post(Resource resource, SynchronizationSubscription synchronizationSubscription) {
+
+        throw new UnsupportedOperationException("Not implemented.");
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public ResponseMessage put(Resource resource, SynchronizationSubscription synchronizationSubscription) {
+        throw new UnsupportedOperationException("Not implemented.");
+    }
+
+    @Override
+    public ResponseMessage putComplete(Resource resource, SynchronizationSubscription synchronizationSubscription) {
+        throw new UnsupportedOperationException("Not implemented.");
+    }
+
+    @Override
+    public ResponseMessage delete(Resource resource, SynchronizationSubscription synchronizationSubscription) {
+        throw new UnsupportedOperationException("Not implemented.");
+    }
+
+    public ResponseMessage delete(Resource resource, SdmResource resourceSDM, SynchronizationSubscription synchronizationSubscription) {
+        WebTarget webResource = getClientWs().target(synchronizationSubscription.getUri());
+
+        Invocation.Builder builder = webResource.request().accept(MediaType.APPLICATION_JSON);
+        prepareHeaderAtexo(builder);
+
+        logger.info("[DELETE] on URI: {}", synchronizationSubscription.getUri());
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            String json = mapper.writeValueAsString(resourceSDM);
+            logger.info("[DELETE] REQUEST: {}", json);
+        } catch (JsonProcessingException e) {
+            logger.warn("[DELETE] Problems encountered when processing JSON content", e);
+        }
+
+        try {
+            Response response = builder.build(MethodType.DELETE.name(), Entity.json(resourceSDM)).invoke();
+            return buildResponseMessage(response, MethodType.DELETE, resource);
+        } catch (ClientErrorException ex) {
+            if (ex.getMessage().contains(CONNECTION_EXCEPTION)) {
+                logger.error("[DELETE][ConnectException] Server Unavailable HTTP status 503", ex);
+                return this.buildServerErrorMessage(resource, HttpStatus.SERVER_UNAVAILABLE, null, MethodType.DELETE,
+                        SERVER_UNVAILABLE_ERROR_LABEL, SERVER_UNVAILABLE_ERROR_MESSAGE);
+            } else {
+                logger.error("[DELETE] Exception in sync", ex);
+                return this.buildServerErrorMessage(resource, HttpStatus.BAD_REQUEST,
+                        ErrorCodeType.INTERNAL_CLIENT_ERROR, MethodType.DELETE, CLIENT_EXCEPTION_ERROR_LABEL,
+                        ex.getMessage());
+            }
+        } catch (Exception ex) {
+            logger.error("[DELETE] Exception in sync", ex);
+            return this.buildServerErrorMessage(resource, HttpStatus.BAD_REQUEST,
+                    ErrorCodeType.INTERNAL_CLIENT_ERROR,
+                    MethodType.DELETE, CLIENT_EXCEPTION_ERROR_LABEL, ex.getMessage());
+        }
+    }
 
 }
