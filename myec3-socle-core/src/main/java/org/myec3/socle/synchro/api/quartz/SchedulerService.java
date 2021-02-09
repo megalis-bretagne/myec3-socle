@@ -21,6 +21,7 @@ import java.util.List;
 
 import org.myec3.socle.core.domain.model.Application;
 import org.myec3.socle.core.domain.model.Resource;
+import org.myec3.socle.synchro.api.JMSSynchronizationServiceImpl;
 import org.myec3.socle.synchro.api.constants.SynchronizationJobType;
 import org.myec3.socle.synchro.api.constants.SynchronizationType;
 
@@ -28,7 +29,7 @@ import org.myec3.socle.synchro.api.constants.SynchronizationType;
  * Interface which defines methods used by the scheduler to send the correct JMS
  * message to remote ESB queue.
  * 
- * @see JMSSynchronizationServiceImpl.class
+ * @see JMSSynchronizationServiceImpl
  * 
  * @author Matthieu Proboeuf <matthieu.proboeuf@atosorigin.com>
  * @author Denis Cucchietti <denis.cucchietti@atosorigin.com>
