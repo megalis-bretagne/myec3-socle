@@ -9,7 +9,7 @@ import org.springframework.core.env.Environment;
 import org.springframework.scheduling.quartz.SchedulerFactoryBean;
 import org.springframework.stereotype.Component;
 
-@Component
+//@Component
 public class JmsSchedulerHealthIndicator implements HealthIndicator {
 
     @Autowired
