@@ -10,7 +10,8 @@ mvnDeploy:
   image : maven:3-jdk-8
   stage : mvn_deploy
   script :
-    - mvn -B -U clean deploy
+    - mvn -U -up clean
+    - mvn -U -up deploy
 
 buildSocleEsb:
   extends: .build
