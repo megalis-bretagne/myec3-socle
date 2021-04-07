@@ -7,7 +7,7 @@ stages:
   - deploy
 
 mvnDeploy:
-  image : maven:3-jdk-8
+  image : maven:3.6.2-jdk-8
   stage : mvn_deploy
   script :
     - mvn -B -U clean deploy
