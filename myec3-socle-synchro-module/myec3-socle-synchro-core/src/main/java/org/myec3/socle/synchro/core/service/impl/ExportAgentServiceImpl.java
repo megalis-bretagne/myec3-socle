@@ -311,6 +311,7 @@ public class ExportAgentServiceImpl implements ExportAgentService {
     private void setProfileData(HashMap<String, String> csvDataMap, Profile profile) {
         if (profile != null) {
             putElement(csvDataMap, "profil_id", profile.getId());
+            putElement(csvDataMap, "profil_externalId", profile.getExternalId());
             if (profile.getTechnicalIdentifier() != null) {
                 putElement(csvDataMap, "profil_technicalIdentifier", profile.getTechnicalIdentifier());
             } else {
@@ -330,6 +331,7 @@ public class ExportAgentServiceImpl implements ExportAgentService {
             putElement(csvDataMap, "profil_phone", profile.getPhone());
         } else {
             csvDataMap.put("profil_id", "");
+            csvDataMap.put("profil_externalId", "");
             csvDataMap.put("profil_canton", "");
             csvDataMap.put("profil_city", "");
             csvDataMap.put("profil_country", "");
@@ -385,6 +387,7 @@ public class ExportAgentServiceImpl implements ExportAgentService {
         header.add("user_expirationDatePassword");
         header.add("user_modifDatePassword");
         header.add("profil_id");
+        header.add("profil_externalId");
         header.add("profil_technicalIdentifier");
         header.add("profil_canton");
         header.add("profil_city");
@@ -414,6 +417,7 @@ public class ExportAgentServiceImpl implements ExportAgentService {
         header.add("organism_label");
         header.add("organism_siren");
         header.add("organism_nic");
+
 
         return header.toArray(new String[0]);
     }
