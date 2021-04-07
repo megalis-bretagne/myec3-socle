@@ -311,7 +311,7 @@ public class ExportAgentServiceImpl implements ExportAgentService {
     private void setProfileData(HashMap<String, String> csvDataMap, Profile profile) {
         if (profile != null) {
             putElement(csvDataMap, "profil_id", profile.getId());
-            putElement(csvDataMap, "profil_externalId", profile.getId());
+            putElement(csvDataMap, "profil_externalId", profile.getExternalId());
             if (profile.getTechnicalIdentifier() != null) {
                 putElement(csvDataMap, "profil_technicalIdentifier", profile.getTechnicalIdentifier());
             } else {
