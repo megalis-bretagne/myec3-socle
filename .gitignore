@@ -41,5 +41,5 @@ eb-socle-core/src/main/java/org/myec3/socle/core/service/impl/EmployeeProfileSer
 eb-socle-core/src/main/java/org/myec3/socle/core/domain/dao/jpa/JpaRoleDao.java.orig
 eb-socle-contract/src/main/java/org/myec3/socle/core/domain/model/enums/OrganismINSEECat.java.orig
 eb-socle-contract/src/main/java/org/myec3/socle/core/domain/model/User.java.orig
-/myec3-socle-synchro-module/myec3-socle-synchro/src/main/config/local/db/local/**
-/myec3-socle-webapp-module/myec3-socle-webapp/src/main/config/local/db/local/**
+/myec3-socle-synchro-module/myec3-socle-synchro/src/main/config/local/db/local/db.properties
+/myec3-socle-webapp-module/myec3-socle-webapp/src/main/config/local/db/local/db.properties
