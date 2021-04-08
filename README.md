@@ -89,7 +89,8 @@ A FAIRE (avec prez du CI/CD )
 
 ## Liens utiles
 
-|       Service\Domaine  | Intégration                      | Pré-prod                                      | Prod                                    | 
-| -------------          |: ------------------------------: | :--------------------------------------------:|:--------------------------------------: |
+
+|   Service\Domaine  | Intégration  | Pré-prod   | Prod  |
+| ------------------ | ------------ | ---------- | ----- |
 | Dashboard Exploitation | https://combrit-exploit.sib.fr/  | https://exploit-preprod.megalis.bretagne.bzh/ |   https://exploit.megalis.bretagne.bzh/ |
 | MyEC3                  | https://combrit-socle.sib.fr/    | https://socle-preprod.megalis.bretagne.bzh/   |   https://socle.megalis.bretagne.bzh/   |
