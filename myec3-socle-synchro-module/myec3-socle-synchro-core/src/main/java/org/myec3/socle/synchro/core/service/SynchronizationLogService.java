@@ -18,6 +18,7 @@
 package org.myec3.socle.synchro.core.service;
 
 import org.myec3.socle.core.domain.model.Application;
+import org.myec3.socle.core.domain.model.Company;
 import org.myec3.socle.core.domain.model.Organism;
 import org.myec3.socle.core.service.IGenericService;
 import org.myec3.socle.synchro.core.domain.dto.SynchronizationLogDTO;
@@ -65,6 +66,13 @@ public interface SynchronizationLogService extends IGenericService<Synchronizati
 	 * @return	List of {@link SynchronizationLog} associated
 	 */
 	List<SynchronizationLogDTO> findAllByOrganism(Organism organism);
+
+	/**
+	 * Find all {@link SynchronizationLog} by companyId
+	 * @param company	the company
+	 * @return	List of {@link SynchronizationLog} associated
+	 */
+	List<SynchronizationLogDTO> findAllByCompany(Company company);
 
 	/**
 	 * Find all {@link SynchronizationLog} associated directly to an

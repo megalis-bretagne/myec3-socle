@@ -4,11 +4,15 @@
     <t:form t:id="filter_form" async="true">
         <fieldset>
             <legend>${message:filter-log-label}</legend>
-
-
+                <p>
+                    <t:label for="resourceType">${message:application-label}</t:label>
+                    <t:select  t:id="application" t:model="applicationModel"
+                               t:value="searchApplication" t:blankLabel="TOUS"/>
+                </p>
                 <p>
                     <t:label for="resourceType">${message:resourceType-label}</t:label>
-                    <t:select  t:id="resourceType" t:model="resourceTypeModel" t:encoder="resourceTypeEncoder" t:value="searchResourceType" t:blankLabel="TOUS"/>
+                    <t:select  t:id="resourceType" t:model="resourceTypeModel"
+                               t:encoder="resourceTypeEncoder" t:value="searchResourceType" t:blankLabel="TOUS"/>
                 </p>
 
                 <p>

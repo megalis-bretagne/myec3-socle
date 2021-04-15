@@ -6,9 +6,12 @@
         <p><label for="applicationName">${message:detail-application}</label> :
             ${synchronizationLog.synchronizationLog.applicationName}
         </p>
+        <p><label for="resourceType">${message:detail-type}</label> :
+            ${typeLabel}
+        </p>
         <t:if test="agentProfile">
             <p><label for="resourceType">${message:detail-agent}</label> :
-                ${synchronizationLog.username} (${synchronizationLog.structureEmail}
+                ${synchronizationLog.username} - (${synchronizationLog.structureEmail})
             </p>
             <p:else>
                 <t:if test="organismProfile">
@@ -23,18 +26,14 @@
                 </t:if>
             </p:else>
         </t:if>
-
-        <p><label for="resourceType">${message:detail-type}</label> :
-            ${synchronizationLog.synchronizationLog.resourceType}
-        </p>
-        <t:if test="logError">
-            <p><label for="errorMessage">${message:detail-error}</label>
-                ${synchronizationLog.synchronizationLog.httpCode} - ${synchronizationLog.synchronizationLog.httpStatus} - ${synchronizationLog.synchronizationLog.errorMessage}
-            </p>
-        </t:if>
         <p><label for="synchronizationDate">${message:detail-date}</label> :
             ${synchronizationLog.synchronizationLog.synchronizationDate}
         </p>
+        <t:if test="logError">
+            <p><label for="errorMessage">${message:detail-error}</label> :
+                ${synchronizationLog.synchronizationLog.httpCode} - ${synchronizationLog.synchronizationLog.httpStatus} - ${synchronizationLog.synchronizationLog.errorMessage}
+            </p>
+        </t:if>
         <p><label for="nbAttempts">${message:detail-attempts}</label> :
             ${synchronizationLog.synchronizationLog.nbAttempts}
         </p>

@@ -4,30 +4,22 @@ import lombok.Getter;
 import lombok.Setter;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.tapestry5.EventConstants;
-import org.apache.tapestry5.annotations.*;
-import org.apache.tapestry5.beaneditor.BeanModel;
-import org.apache.tapestry5.corelib.components.Grid;
-import org.apache.tapestry5.corelib.components.Zone;
+import org.apache.tapestry5.annotations.OnEvent;
+import org.apache.tapestry5.annotations.Persist;
 import org.apache.tapestry5.ioc.annotations.Inject;
-import org.apache.tapestry5.services.BeanModelSource;
-import org.apache.tapestry5.services.PropertyConduitSource;
-import org.apache.tapestry5.services.ajax.AjaxResponseRenderer;
+import org.apache.tapestry5.services.PageRenderLinkSource;
 import org.myec3.socle.core.domain.model.Organism;
+import org.myec3.socle.core.domain.model.Profile;
 import org.myec3.socle.core.domain.model.enums.ResourceType;
 import org.myec3.socle.core.service.OrganismService;
-import org.myec3.socle.synchro.core.domain.dto.SynchronizationLogDTO;
+import org.myec3.socle.core.service.ProfileService;
 import org.myec3.socle.synchro.core.service.SynchronizationLogService;
-import org.myec3.socle.webapp.components.synchro.SynchroLogFilter;
-import org.myec3.socle.webapp.pages.AbstractPage;
+import org.myec3.socle.webapp.pages.AbtractListSynchronization;
 import org.myec3.socle.webapp.pages.Index;
-import org.springframework.beans.factory.annotation.Qualifier;
+import org.myec3.socle.webapp.pages.organism.agent.View;
 
-import javax.inject.Named;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 /**
  * Page used to display organism's Synchronization list
@@ -38,9 +30,8 @@ import java.util.Map;
  *
  *
  */
-public class ListSynchronization extends AbstractPage {
+public class ListSynchronization extends AbtractListSynchronization {
 
-    private static final SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 
     /** PERSIST OBJECT **/
     /**
@@ -51,65 +42,17 @@ public class ListSynchronization extends AbstractPage {
     @Persist
     private Organism organism;
 
-    /**
-     * All log associated to organism
-     */
-    @Getter
-    @Persist
-    private List<SynchronizationLogDTO> synchroLogResult;
-
-    /**
-     * The log selected to display is details
-     */
-    @Property
-    @Persist
-    private SynchronizationLogDTO synchronizationLog;
-
-    @Getter
-    private Map<ResourceType, String> resourceTypeModel;
-
-    /**
-     * List display in Grid
-     */
-    @Getter
-    @Setter
-    @Persist
-    private List<SynchronizationLogDTO> synchroLogFilter;
-
     @Inject
-    private BeanModelSource beanModelSource;
-
-    @Inject
-    private PropertyConduitSource propertyConduitSource;
-
-    @Inject
-    @Named("organismService")
     private OrganismService organismService;
 
     @Inject
-    @Qualifier("synchronizationLogService")
     private SynchronizationLogService synchronizationLogService;
 
-    @Property
-    private SynchronizationLogDTO logRow;
+    @Inject
+    private ProfileService profileService;
 
     @Inject
-    private AjaxResponseRenderer ajaxResponseRenderer;
-
-    /**
-     * Zone to display synchronizationLog object
-     */
-    @InjectComponent
-    private Zone detailLog;
-
-    @InjectComponent
-    private Zone zoneGrid;
-
-    @Component
-    private Grid logGrid;
-
-    @Component(id = "filterLog")
-    private SynchroLogFilter componentSynchroLogFilter;
+    private PageRenderLinkSource pageRedirectLink;
 
     @OnEvent(EventConstants.PASSIVATE)
     public Long onPassivate() {
@@ -125,9 +68,9 @@ public class ListSynchronization extends AbstractPage {
         }
         // init resourceTypeModel
         resourceTypeModel = new HashMap<>();
-        resourceTypeModel.put(ResourceType.AGENT_PROFILE, ResourceType.AGENT_PROFILE.name());
-        resourceTypeModel.put(ResourceType.ORGANISM, ResourceType.ORGANISM.name());
-        resourceTypeModel.put(ResourceType.ORGANISM_DEPARTMENT, ResourceType.ORGANISM_DEPARTMENT.name());
+        resourceTypeModel.put(ResourceType.AGENT_PROFILE,"Agent");
+        resourceTypeModel.put(ResourceType.ORGANISM,"Organisme");
+        resourceTypeModel.put(ResourceType.ORGANISM_DEPARTMENT,"Service");
 
         // get Data if scope changed
         if (this.organism == null || !id.equals(this.organism.getId())) {
@@ -143,77 +86,6 @@ public class ListSynchronization extends AbstractPage {
         return Boolean.TRUE;
     }
 
-    @SetupRender
-    public void setupGrid() {
-        // Sort syncroDate by default
-        if (this.logGrid.getSortModel().getSortConstraints().isEmpty()) {
-            // Twice for ASCENDING
-            logGrid.getSortModel().updateSort("synchronizationDate");
-            logGrid.getSortModel().updateSort("synchronizationDate");
-        }
-    }
-
-    /**
-     * update Grid component after filter ok
-     */
-    @OnEvent(value = "logFilterDone")
-    public void updateGridZoneWhenFilterDone() {
-        this.synchroLogFilter = this.componentSynchroLogFilter.getSynchroLogMatching();
-        this.ajaxResponseRenderer.addRender(zoneGrid);
-    }
-
-    /**
-     * Select Log du display detail
-     * @param logId the logId
-     */
-    public void onSelectLog(Long logId) {
-        if (synchroLogFilter != null) {
-            synchronizationLog = synchroLogFilter
-                    .stream().filter(synchronizationLogDTO -> synchronizationLogDTO.getSynchronizationLog().getId().equals(logId))
-                    .findFirst()
-                    .orElse(null);
-            ajaxResponseRenderer.addRender(detailLog);
-            // refresh zone to apply style css on row selected
-            ajaxResponseRenderer.addRender(zoneGrid);
-        }
-    }
-
-    /**
-     * Create model for table in page
-     * @return : bean model
-     */
-    public BeanModel<SynchronizationLogDTO> getGridModel() {
-        BeanModel<SynchronizationLogDTO> model = this.beanModelSource.createDisplayModel(
-                SynchronizationLogDTO.class, this.getMessages());
-        model.add("resourceType", this.propertyConduitSource
-                .create(SynchronizationLogDTO.class, "synchronizationLog.resourceType") );
-
-        model.add("synchronizationDate", this.propertyConduitSource
-                .create(SynchronizationLogDTO.class, "synchronizationLog.synchronizationDate") );
-        model.add("statut", this.propertyConduitSource
-                .create(SynchronizationLogDTO.class, "synchronizationLog.statut") );
-
-        model.add("actions", null);
-        // specific column to display username or structureLabel
-        model.add("identifier", null);
-
-        model.include("resourceType", "identifier",  "synchronizationDate", "statut", "actions");
-
-        return model;
-    }
-
-    public String getStatutImage() {
-        return this.logRow.getSynchronizationLog().getStatut().equals("ERROR") ? "ko.png" : "ok.png";
-    }
-
-    /**
-     * Get Date format du display synchronization Date
-     * @return  DateFormat
-     */
-    public SimpleDateFormat getDateFormat() {
-        return dateFormat;
-    }
-
     /**
      * Get Label for identifier column
      * @return  Identifier label
@@ -226,7 +98,7 @@ public class ListSynchronization extends AbstractPage {
             return this.logRow.getStructureLabel();
         }
         if (ResourceType.AGENT_PROFILE.equals(this.logRow.getSynchronizationLog().getResourceType())) {
-            return this.logRow.getUsername()+" - "+this.logRow.getStructureEmail();
+            return this.logRow.getUsername()+" - ("+this.logRow.getStructureEmail()+")";
         }
         if (ResourceType.ORGANISM_DEPARTMENT.equals(this.logRow.getSynchronizationLog().getResourceType())) {
             return this.logRow.getStructureLabel()+" - "+this.logRow.getStructureEmail();
@@ -235,18 +107,47 @@ public class ListSynchronization extends AbstractPage {
     }
 
     /**
-     * Get row class for grid
-     * @return  "selected" css CLASS if row is selected
+     * Get Label for resource Type column
+     * @return resource Label
      */
-    public String getRowClass() {
-        if (this.logRow == null || this.synchronizationLog == null) {
+    public String getResourceLabel() {
+        if (this.logRow == null) {
             return StringUtils.EMPTY;
         }
-
-        if (this.synchronizationLog.getSynchronizationLog().getId().equals(this.logRow.getSynchronizationLog().getId())){
-            return "selected";
+        if (ResourceType.ORGANISM.equals(this.logRow.getSynchronizationLog().getResourceType())) {
+            return "Organisme";
+        }
+        if (ResourceType.AGENT_PROFILE.equals(this.logRow.getSynchronizationLog().getResourceType())) {
+            return "Agent";
+        }
+        if (ResourceType.ORGANISM_DEPARTMENT.equals(this.logRow.getSynchronizationLog().getResourceType())) {
+            return "Service";
         }
         return StringUtils.EMPTY;
     }
 
+    /**
+     * Go to agent detail
+     * @param agentIdentifier the logId
+     */
+    public Object onSeeAgent(String agentIdentifier) {
+        if (agentIdentifier != null) {
+            Profile userProfile = profileService.findByUsername(agentIdentifier);
+            if (userProfile != null) {
+                return pageRedirectLink.createPageRenderLinkWithContext(View.class,userProfile.getId());
+            }
+        }
+        return Boolean.FALSE;
+    }
+
+    /**
+     * Check if logRow is type AGENT_PROFILE
+     * @return  true is AGENT_PROFILE
+     */
+    public boolean isAgentProfile() {
+        if (logRow == null) {
+            return false;
+        }
+        return logRow.getSynchronizationLog().getResourceType().equals(ResourceType.AGENT_PROFILE);
+    }
 }

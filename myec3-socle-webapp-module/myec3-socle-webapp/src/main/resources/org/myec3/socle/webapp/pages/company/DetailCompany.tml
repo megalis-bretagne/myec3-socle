@@ -9,8 +9,14 @@
 			<ul class="tabs"> 
 				<li class="active"><strong>${message:info-label}</strong></li>
 				<li><t:pagelink page="company/establishment/listestablishments" context="company.id">${message:establishment-label}</t:pagelink></li> 
-				<li><t:pagelink page="company/employee/listemployees" context="company.id">${message:User-label}</t:pagelink></li> 
-			</ul> 
+				<li><t:pagelink page="company/employee/listemployees" context="company.id">${message:User-label}</t:pagelink></li>
+				<t:if test="isAdmin">
+					<li>
+						<t:pagelink page="company/synchro/listSynchronization"
+									context="company.id">${message:synchronization-label}</t:pagelink>
+					</li>
+				</t:if>
+			</ul>
 			<div class="tabs-content">
 				<p class="mandatory">&nbsp;</p>
 				<div class="actions-bar">
