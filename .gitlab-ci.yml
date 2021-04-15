@@ -2,15 +2,32 @@ include:
   - 'https://gitlab.sib.fr/megalis/megalis-template/raw/master/.docker-template.yml'
 
 stages:
-  - mvn_deploy
+  - mvn_build
   - build
   - deploy
+  
+  
+
+    
+mvnInstall:
+  image : maven:3.6.2-jdk-8
+  stage : mvn_build
+  except:
+    - master
+    - develop
+    - tags
+  script :
+    - mvn -U clean install
 
 mvnDeploy:
   image : maven:3.6.2-jdk-8
-  stage : mvn_deploy
+  stage : mvn_build
+  only:
+    - master
+    - develop
+    - tags
   script :
-    - mvn -B -U clean deploy
+    - mvn -U clean deploy
 
 buildSocleEsb:
   extends: .build

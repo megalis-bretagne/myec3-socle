@@ -1,9 +1,5 @@
 package org.myec3.socle.webapp.pages.synchroman.synchronization;
 
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.List;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.tapestry5.annotations.Component;
@@ -38,6 +34,10 @@ import org.myec3.socle.synchro.core.domain.model.SynchronizationLog;
 import org.myec3.socle.synchro.core.service.SynchronizationInitialService;
 import org.myec3.socle.synchro.core.service.SynchronizationLogService;
 import org.myec3.socle.webapp.pages.AbstractPage;
+
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 

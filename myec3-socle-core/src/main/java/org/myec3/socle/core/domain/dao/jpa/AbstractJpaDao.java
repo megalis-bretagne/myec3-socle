@@ -1,14 +1,13 @@
 package org.myec3.socle.core.domain.dao.jpa;
 
-import java.util.List;
+import org.myec3.socle.core.domain.model.PE;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.annotation.PostConstruct;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-
-import org.myec3.socle.core.domain.model.PE;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.util.List;
 
 /**
  * Abstract DAO class for Project Entities. This class implements generic DAO
@@ -17,6 +16,9 @@ import org.slf4j.LoggerFactory;
  * @param <T> {@link PE}.
  */
 public abstract class AbstractJpaDao<T extends PE> {
+
+	protected static final String AND_OPERATOR = " AND ";
+	protected static final String SELECT_OPERATOR = " SELECT ";
 
 	private Class<T> clazz;
 
