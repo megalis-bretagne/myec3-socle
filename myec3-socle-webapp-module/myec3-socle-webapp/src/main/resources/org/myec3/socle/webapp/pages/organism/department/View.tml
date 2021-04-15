@@ -30,6 +30,12 @@
       <li>
         <t:pagelink page="organism/agent/listAgents" context="organism.id">${message:User-label}</t:pagelink>
       </li>
+      <t:if test="isAdmin">
+        <li>
+          <t:pagelink page="organism/synchro/listSynchronization"
+                      context="organism.id">${message:synchronization-label}</t:pagelink>
+        </li>
+      </t:if>
     </ul>
     <div class="tabs-content">
       <div class="actions-bar">

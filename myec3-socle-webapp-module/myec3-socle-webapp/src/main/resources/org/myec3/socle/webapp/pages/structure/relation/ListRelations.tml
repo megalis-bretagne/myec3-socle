@@ -44,6 +44,12 @@
             ${message:User-label}
           </t:pagelink>
         </li>
+        <t:if test="isAdmin">
+          <li>
+            <t:pagelink page="organism/synchro/listSynchronization"
+                        context="structure.id">${message:synchronization-label}</t:pagelink>
+          </li>
+        </t:if>
       </t:if>
     </ul>
     <div class="tabs-content">

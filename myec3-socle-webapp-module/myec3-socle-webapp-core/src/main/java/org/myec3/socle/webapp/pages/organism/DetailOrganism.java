@@ -17,11 +17,8 @@
  */
 package org.myec3.socle.webapp.pages.organism;
 
-import java.text.SimpleDateFormat;
-import java.util.*;
-
-import javax.inject.Named;
-
+import lombok.Getter;
+import lombok.Setter;
 import org.apache.tapestry5.EventConstants;
 import org.apache.tapestry5.PersistenceConstants;
 import org.apache.tapestry5.annotations.OnEvent;
@@ -33,6 +30,13 @@ import org.myec3.socle.core.domain.model.OrganismStatus;
 import org.myec3.socle.core.service.OrganismService;
 import org.myec3.socle.webapp.pages.AbstractPage;
 import org.myec3.socle.webapp.pages.Index;
+
+import javax.inject.Named;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 
 /**
  * Page used to display organism's informations {@link Organism}<br />
@@ -50,6 +54,8 @@ import org.myec3.socle.webapp.pages.Index;
  */
 public class DetailOrganism extends AbstractPage {
 
+  @Getter
+  @Setter
   @Persist(PersistenceConstants.FLASH)
   private String successMessage;
 
@@ -61,6 +67,8 @@ public class DetailOrganism extends AbstractPage {
   @Named("organismService")
   private OrganismService organismService;
 
+  @Getter
+  @Setter
   private Organism organism;
 
   // Only used in Tapestry
@@ -103,23 +111,6 @@ public class DetailOrganism extends AbstractPage {
   @OnEvent(EventConstants.PASSIVATE)
   public Long onPassivate() {
     return (this.organism != null) ? this.organism.getId() : null;
-  }
-
-  // Getters n Setters
-  public String getSuccessMessage() {
-    return this.successMessage;
-  }
-
-  public void setSuccessMessage(String message) {
-    this.successMessage = message;
-  }
-
-  public Organism getOrganism() {
-    return organism;
-  }
-
-  public void setOrganism(Organism organism) {
-    this.organism = organism;
   }
 
   public String getLegalCategoryLabel() {
