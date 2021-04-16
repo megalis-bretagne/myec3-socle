@@ -52,8 +52,9 @@
 
             <t:parameter name="statutCell">
                 <img src="${context:static/images}/${statutImage}"
-                     alt="${logRow.synchronizationLog.statut}"
-                     title="${logRow.synchronizationLog.statut}" />
+                     alt="${logRow.synchronizationLog.statut}  (${logRow.synchronizationLog.nbAttempts} tentatives)"
+                     title="${logRow.synchronizationLog.statut} (${logRow.synchronizationLog.nbAttempts} tentatives)" />
+                (${logRow.synchronizationLog.nbAttempts})
             </t:parameter>
 
             <t:parameter name="synchronizationDateCell">
@@ -66,6 +67,11 @@
                          alt="${message:detail-log}"
                          title="${message:detail-log}" />
                 </t:eventlink>
+                <t:if test="employeeProfile">
+                    <t:eventlink event="seeEmployee" context="logRow.username">
+                        <img src="${context:static/images/agent_voir.png}" alt="${message:view-label}" title="${message:view-label}" />
+                    </t:eventlink>
+                </t:if>
             </t:parameter>
 
         </table>

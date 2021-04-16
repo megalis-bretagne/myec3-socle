@@ -7,7 +7,6 @@ import org.apache.tapestry5.EventConstants;
 import org.apache.tapestry5.annotations.OnEvent;
 import org.apache.tapestry5.annotations.Persist;
 import org.apache.tapestry5.ioc.annotations.Inject;
-import org.apache.tapestry5.services.PageRenderLinkSource;
 import org.myec3.socle.core.domain.model.Organism;
 import org.myec3.socle.core.domain.model.Profile;
 import org.myec3.socle.core.domain.model.enums.ResourceType;
@@ -50,9 +49,6 @@ public class ListSynchronization extends AbtractListSynchronization {
 
     @Inject
     private ProfileService profileService;
-
-    @Inject
-    private PageRenderLinkSource pageRedirectLink;
 
     @OnEvent(EventConstants.PASSIVATE)
     public Long onPassivate() {

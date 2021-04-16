@@ -5,7 +5,10 @@ import lombok.Setter;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.tapestry5.ComponentResources;
 import org.apache.tapestry5.EventConstants;
-import org.apache.tapestry5.annotations.*;
+import org.apache.tapestry5.annotations.Component;
+import org.apache.tapestry5.annotations.OnEvent;
+import org.apache.tapestry5.annotations.Parameter;
+import org.apache.tapestry5.annotations.Property;
 import org.apache.tapestry5.corelib.components.Form;
 import org.apache.tapestry5.ioc.annotations.Inject;
 import org.myec3.socle.core.domain.model.enums.ResourceType;
@@ -69,8 +72,6 @@ public class SynchroLogFilter extends AbstractPage {
      */
     @OnEvent(value = EventConstants.VALIDATE, component = "filter_form")
     public void onValidate() {
-        this.synchroLogMatching = new ArrayList<>();
-
         this.synchroLogMatching = this.toFilter.stream()
                 .filter(logDTO -> filterOnStatut(logDTO)
                         && filterOnIdentifier(logDTO)

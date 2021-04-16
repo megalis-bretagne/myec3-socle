@@ -3,12 +3,14 @@ package org.myec3.socle.webapp.pages;
 import lombok.Getter;
 import lombok.Setter;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.tapestry5.PersistenceConstants;
 import org.apache.tapestry5.annotations.*;
 import org.apache.tapestry5.beaneditor.BeanModel;
 import org.apache.tapestry5.corelib.components.Grid;
 import org.apache.tapestry5.corelib.components.Zone;
 import org.apache.tapestry5.ioc.annotations.Inject;
 import org.apache.tapestry5.services.BeanModelSource;
+import org.apache.tapestry5.services.PageRenderLinkSource;
 import org.apache.tapestry5.services.PropertyConduitSource;
 import org.apache.tapestry5.services.ajax.AjaxResponseRenderer;
 import org.myec3.socle.core.domain.model.enums.ResourceType;
@@ -32,14 +34,14 @@ public abstract class AbtractListSynchronization extends AbstractPage {
      * All log associated to organism
      */
     @Getter
-    @Persist
+    @Persist(PersistenceConstants.FLASH)
     protected List<SynchronizationLogDTO> synchroLogResult;
 
     /**
      * The log selected to display is details
      */
     @Property
-    @Persist
+    @Persist(PersistenceConstants.FLASH)
     protected SynchronizationLogDTO synchronizationLog;
 
     @Getter
@@ -50,7 +52,7 @@ public abstract class AbtractListSynchronization extends AbstractPage {
      */
     @Getter
     @Setter
-    @Persist
+    @Persist(PersistenceConstants.FLASH)
     protected List<SynchronizationLogDTO> synchroLogFilter;
 
     @Inject
@@ -79,6 +81,9 @@ public abstract class AbtractListSynchronization extends AbstractPage {
 
     @Component(id = "filterLog")
     protected SynchroLogFilter componentSynchroLogFilter;
+
+    @Inject
+    protected PageRenderLinkSource pageRedirectLink;
 
     @SetupRender
     public void setupGrid() {
