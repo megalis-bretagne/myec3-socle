@@ -32,7 +32,6 @@
         </t:if>
     </t:zone>
 
-
     <t:zone t:id="zoneGrid">
 
         <table t:id="logGrid" t:empty="block:empty"
@@ -47,6 +46,10 @@
                 <t:textoutput t:value="identifierLabel" />
             </t:parameter>
 
+            <t:parameter name="resourceTypeCell">
+                <t:textoutput t:value="resourceLabel" />
+            </t:parameter>
+
             <t:parameter name="statutCell">
                 <img src="${context:static/images}/${statutImage}"
                      alt="${logRow.synchronizationLog.statut}"
@@ -57,7 +60,7 @@
                 <t:output format="dateFormat" t:value="logRow.synchronizationLog.synchronizationDate"/>
             </t:parameter>
 
-            <t:parameter name="actionsCell">
+            <t:parameter name="viewCell">
                 <t:eventlink event="selectLog" context="logRow.synchronizationLog.id" async="true">
                     <img src="${context:static/images/organisme_voir.png}"
                          alt="${message:detail-log}"

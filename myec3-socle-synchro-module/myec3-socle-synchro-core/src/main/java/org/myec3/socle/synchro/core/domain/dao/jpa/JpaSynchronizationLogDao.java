@@ -252,7 +252,7 @@ public class JpaSynchronizationLogDao extends JpaGenericSynchronizationDao<Synch
 		List<SynchronizationLogDTO> synchronizationLogDTOList = new ArrayList<>();
 		if (id != null) {
 			try {
-				Query queryOrganism = buildQuerySelectSynchronizationLogDTOByOrganismId(id);
+				Query queryOrganism = buildQuerySelectSynchronizationLogDTOByressourceIdAndType(id, ResourceType.ORGANISM);
 				Query queryDepartement = buildQuerySelectSynchronizationLogDTOForOrgaDepartmentByOrganismId(id);
 				Query queryProfile = buildQuerySelectSynchronizationLogDTOForAgentProfileByOrganismId(id);
 
@@ -272,15 +272,41 @@ public class JpaSynchronizationLogDao extends JpaGenericSynchronizationDao<Synch
 	}
 
 	@Override
+	public List<SynchronizationLogDTO> findAllSynchronizationLogByCompany(Long id) {
+		List<SynchronizationLogDTO> synchronizationLogDTOList = new ArrayList<>();
+		if (id != null) {
+			try {
+				Query queryCompany = buildQuerySelectSynchronizationLogDTOByressourceIdAndType(id, ResourceType.COMPANY);
+				Query queryEstablishment = buildQuerySelectSynchronizationLogDTOForEstablishmentByCompanyId(id);
+				Query queryEmployee = buildQuerySelectSynchronizationLogDTOForEmployeeByCompanyId(id);
+
+				synchronizationLogDTOList.addAll(queryCompany.getResultList());
+				synchronizationLogDTOList.addAll(queryEstablishment.getResultList());
+				synchronizationLogDTOList.addAll(queryEmployee.getResultList());
+				return synchronizationLogDTOList;
+			} catch (NoResultException e) {
+				this.getLog().info("findAllSynchronizationLogByOrganismId returned no result");
+				return new ArrayList<>();
+			} catch (RuntimeException re) {
+				this.getLog().error("findAllSynchronizationLogByOrganismId failed.", re);
+				throw re;
+			}
+		}
+		return synchronizationLogDTOList;
+	}
+
+	@Override
 	public Class<SynchronizationLog> getType() {
 		return SynchronizationLog.class;
 	}
 
 	/**
-	 * Build Query to retrieve all synchronizationLog by Organism Id
+	 * Build Query to retrieve all synchronizationLog by resource Id and type
+	 * @param resourceId	identifier resource
+	 * @param type			resource Type
 	 * @return Query to select {@link SynchronizationLogDTO}
 	 */
-	private Query buildQuerySelectSynchronizationLogDTOByOrganismId(Long organismId) {
+	private Query buildQuerySelectSynchronizationLogDTOByressourceIdAndType(Long resourceId, ResourceType type) {
 		String queryStringOrganism = SELECT_OPERATOR +
 				"new org.myec3.socle.synchro.core.domain.dto.SynchronizationLogDTO(s, '', struct.email, struct.label) " +
 				"FROM " + this.getDomainClass().getSimpleName() +" s " +
@@ -288,12 +314,13 @@ public class JpaSynchronizationLogDao extends JpaGenericSynchronizationDao<Synch
 				"WHERE  s.resourceType = :resourceType "+AND_OPERATOR+" s.resourceId = :resourceId";
 
 		return this.getEm().createQuery(queryStringOrganism, SynchronizationLogDTO.class)
-			.setParameter(RESOURCE_TYPE_FIELD, ResourceType.ORGANISM)
-			.setParameter(RESOURCE_ID_FIELD, organismId);
+			.setParameter(RESOURCE_TYPE_FIELD, type)
+			.setParameter(RESOURCE_ID_FIELD, resourceId);
 	}
 
 	/**
 	 * Build Query to retrieve all synchronizationLog for ORGANISM_DEPARTMENT by Organism Id
+	 * @param organismId organism identifier
 	 * @return Query to select {@link SynchronizationLogDTO}
 	 */
 	private Query buildQuerySelectSynchronizationLogDTOForOrgaDepartmentByOrganismId(Long organismId) {
@@ -308,6 +335,44 @@ public class JpaSynchronizationLogDao extends JpaGenericSynchronizationDao<Synch
 		return this.getEm().createQuery(queryStringDepartment, SynchronizationLogDTO.class)
 			.setParameter(RESOURCE_TYPE_FIELD, ResourceType.ORGANISM_DEPARTMENT)
 			.setParameter(RESOURCE_ID_FIELD, organismId);
+	}
+
+	/**
+	 * Build Query to retrieve all synchronizationLog for EMPLOYEE by company Id
+	 * @param companyId company identifier
+	 * @return Query to select {@link SynchronizationLogDTO}
+	 */
+	private Query buildQuerySelectSynchronizationLogDTOForEmployeeByCompanyId(Long companyId) {
+		String queryStringProfile = SELECT_OPERATOR +
+				"new org.myec3.socle.synchro.core.domain.dto.SynchronizationLogDTO(s, user.username, pro.email, pro.label) " +
+				"FROM " + this.getDomainClass().getSimpleName() +" s " +
+				"LEFT JOIN Profile pro ON pro.id = s.resourceId " +
+				"LEFT JOIN User user ON user.id = pro.user.id "+
+				"WHERE  s.resourceType = :resourceType "+AND_OPERATOR+" s.resourceId IN ( " +
+				"SELECT employee.id FROM EmployeeProfile employee WHERE employee.establishment.id IN " +
+				"(SELECT est.id FROM Establishment est WHERE est.company.id = :resourceId)" +
+				")";
+
+		return this.getEm().createQuery(queryStringProfile, SynchronizationLogDTO.class)
+				.setParameter(RESOURCE_TYPE_FIELD, ResourceType.EMPLOYEE_PROFILE)
+				.setParameter(RESOURCE_ID_FIELD, companyId);
+	}
+
+	/**
+	 * Build Query to retrieve all synchronizationLog for ESTABLISHEMENT by Company Id
+	 * @param companyId company identifier
+	 * @return
+	 */
+	private Query buildQuerySelectSynchronizationLogDTOForEstablishmentByCompanyId(Long companyId) {
+		String queryString = SELECT_OPERATOR +
+				"new org.myec3.socle.synchro.core.domain.dto.SynchronizationLogDTO(s, '', est.email, est.name) " +
+				"FROM " + this.getDomainClass().getSimpleName() +" s " +
+				"LEFT JOIN Establishment est ON est.id = s.resourceId " +
+				"WHERE  s.resourceType = :resourceType "+AND_OPERATOR+" est.company.id = :companyId";
+
+		return this.getEm().createQuery(queryString, SynchronizationLogDTO.class)
+				.setParameter(RESOURCE_TYPE_FIELD, ResourceType.ESTABLISHMENT)
+				.setParameter("companyId", companyId);
 	}
 
 	/**

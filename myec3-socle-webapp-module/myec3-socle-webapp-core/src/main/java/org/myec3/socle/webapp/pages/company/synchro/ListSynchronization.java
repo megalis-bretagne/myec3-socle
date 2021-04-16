@@ -53,9 +53,9 @@ public class ListSynchronization extends AbtractListSynchronization {
         }
         // init resourceTypeModel
         resourceTypeModel = new HashMap<>();
-//        resourceTypeModel.put(ResourceType.AGENT_PROFILE, ResourceType.EMPLOYEE_PROFILE.name());
-//        resourceTypeModel.put(ResourceType.ORGANISM, ResourceType.COMPANY.name());
-//        resourceTypeModel.put(ResourceType.ORGANISM_DEPARTMENT, ResourceType.ESTABLISHMENT.name());
+        resourceTypeModel.put(ResourceType.COMPANY, ResourceType.EMPLOYEE_PROFILE.name());
+        resourceTypeModel.put(ResourceType.ESTABLISHMENT, ResourceType.COMPANY.name());
+        resourceTypeModel.put(ResourceType.EMPLOYEE_PROFILE, ResourceType.ESTABLISHMENT.name());
 
         // get Data if scope changed
         if (this.company == null || !id.equals(this.company.getId())) {
@@ -79,13 +79,13 @@ public class ListSynchronization extends AbtractListSynchronization {
         if (this.logRow == null) {
             return StringUtils.EMPTY;
         }
-        if (ResourceType.ORGANISM.equals(this.logRow.getSynchronizationLog().getResourceType())) {
+        if (ResourceType.COMPANY.equals(this.logRow.getSynchronizationLog().getResourceType())) {
             return this.logRow.getStructureLabel();
         }
-        if (ResourceType.AGENT_PROFILE.equals(this.logRow.getSynchronizationLog().getResourceType())) {
+        if (ResourceType.EMPLOYEE_PROFILE.equals(this.logRow.getSynchronizationLog().getResourceType())) {
             return this.logRow.getUsername()+" - "+this.logRow.getStructureEmail();
         }
-        if (ResourceType.ORGANISM_DEPARTMENT.equals(this.logRow.getSynchronizationLog().getResourceType())) {
+        if (ResourceType.ESTABLISHMENT.equals(this.logRow.getSynchronizationLog().getResourceType())) {
             return this.logRow.getStructureLabel()+" - "+this.logRow.getStructureEmail();
         }
         return StringUtils.EMPTY;
@@ -99,14 +99,14 @@ public class ListSynchronization extends AbtractListSynchronization {
         if (this.logRow == null) {
             return StringUtils.EMPTY;
         }
-        if (ResourceType.ORGANISM.equals(this.logRow.getSynchronizationLog().getResourceType())) {
-            return "Organisme";
+        if (ResourceType.COMPANY.equals(this.logRow.getSynchronizationLog().getResourceType())) {
+            return "Entreprise";
         }
-        if (ResourceType.AGENT_PROFILE.equals(this.logRow.getSynchronizationLog().getResourceType())) {
-            return "Agent";
+        if (ResourceType.EMPLOYEE_PROFILE.equals(this.logRow.getSynchronizationLog().getResourceType())) {
+            return "Employé";
         }
-        if (ResourceType.ORGANISM_DEPARTMENT.equals(this.logRow.getSynchronizationLog().getResourceType())) {
-            return "Service";
+        if (ResourceType.ESTABLISHMENT.equals(this.logRow.getSynchronizationLog().getResourceType())) {
+            return "Etablissement";
         }
         return StringUtils.EMPTY;
     }

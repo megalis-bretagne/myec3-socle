@@ -27,7 +27,6 @@ import org.myec3.socle.synchro.core.domain.model.SynchronizationLog;
 import org.myec3.socle.synchro.core.service.SynchronizationLogService;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -66,8 +65,7 @@ public class SynchronizationLogServiceImpl extends AbstractGenericServiceImpl<Sy
 
 	@Override
 	public List<SynchronizationLogDTO> findAllByCompany(Company company) {
-		// TODO
-		return new ArrayList<>();
+		return this.dao.findAllSynchronizationLogByCompany(company.getId());
 	}
 
 	/**

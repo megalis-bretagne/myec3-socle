@@ -121,4 +121,13 @@ public interface SynchronizationLogDao extends
 	 * @return	list of {@link SynchronizationLog}
 	 */
 	List<SynchronizationLogDTO> findAllSynchronizationLogByOrganism(Long id);
+
+	/**
+	 *
+	 * Retrive all synchroLog associated to a Company
+	 * List contains Log for Company, Establishment and EmployeeProfile Associated
+	 * @param id	the Company Id
+	 * @return	list of {@link SynchronizationLog}
+	 */
+    List<SynchronizationLogDTO> findAllSynchronizationLogByCompany(Long id);
 }
