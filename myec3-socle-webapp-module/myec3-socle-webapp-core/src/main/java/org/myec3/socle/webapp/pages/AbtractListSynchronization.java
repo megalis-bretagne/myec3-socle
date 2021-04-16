@@ -3,7 +3,6 @@ package org.myec3.socle.webapp.pages;
 import lombok.Getter;
 import lombok.Setter;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.tapestry5.PersistenceConstants;
 import org.apache.tapestry5.annotations.*;
 import org.apache.tapestry5.beaneditor.BeanModel;
 import org.apache.tapestry5.corelib.components.Grid;
@@ -34,14 +33,14 @@ public abstract class AbtractListSynchronization extends AbstractPage {
      * All log associated to organism
      */
     @Getter
-    @Persist(PersistenceConstants.FLASH)
+    @Persist
     protected List<SynchronizationLogDTO> synchroLogResult;
 
     /**
      * The log selected to display is details
      */
     @Property
-    @Persist(PersistenceConstants.FLASH)
+    @Persist
     protected SynchronizationLogDTO synchronizationLog;
 
     @Getter
@@ -52,7 +51,7 @@ public abstract class AbtractListSynchronization extends AbstractPage {
      */
     @Getter
     @Setter
-    @Persist(PersistenceConstants.FLASH)
+    @Persist
     protected List<SynchronizationLogDTO> synchroLogFilter;
 
     @Inject

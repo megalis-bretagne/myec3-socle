@@ -9,23 +9,9 @@
         <p><label for="resourceType">${message:detail-type}</label> :
             ${typeLabel}
         </p>
-        <t:if test="agentProfile">
-            <p><label for="resourceType">${message:detail-agent}</label> :
-                ${synchronizationLog.username} - (${synchronizationLog.structureEmail})
-            </p>
-            <p:else>
-                <t:if test="organismProfile">
-                    <p><label for="resourceType">${message:detail-organism}</label> :
-                        ${synchronizationLog.structureEmail}
-                    </p>
-                    <p:else>
-                        <p><label for="resourceType">${message:detail-organism-department}</label> :
-                            ${synchronizationLog.structureLabel} - ${synchronizationLog.structureEmail}
-                        </p>
-                    </p:else>
-                </t:if>
-            </p:else>
-        </t:if>
+        <p><label for="resourceType">${message:detail-identifier}</label> :
+            ${resourceLabel}
+        </p>
         <p><label for="synchronizationDate">${message:detail-date}</label> :
             ${synchronizationLog.synchronizationLog.synchronizationDate}
         </p>

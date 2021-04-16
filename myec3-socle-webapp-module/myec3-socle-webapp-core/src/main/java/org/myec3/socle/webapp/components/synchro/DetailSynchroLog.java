@@ -3,7 +3,6 @@ package org.myec3.socle.webapp.components.synchro;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.tapestry5.annotations.Parameter;
 import org.apache.tapestry5.annotations.Property;
-import org.myec3.socle.core.domain.model.enums.ResourceType;
 import org.myec3.socle.synchro.core.domain.dto.SynchronizationLogDTO;
 import org.myec3.socle.webapp.pages.AbstractPage;
 
@@ -17,27 +16,6 @@ public class DetailSynchroLog extends AbstractPage {
     private SynchronizationLogDTO synchronizationLog;
 
 
-    /**
-     * Check if log selected is for ORGANISM
-     * @return  true if getResourceType if Organism
-     */
-    public boolean isOrganismProfile() {
-        if (this.synchronizationLog != null) {
-            return ResourceType.ORGANISM.equals(this.synchronizationLog.getSynchronizationLog().getResourceType());
-        }
-        return false;
-    }
-
-    /**
-     * Check if log selected is for Agent Profile
-     * @return  true if getResourceType if AGENT_PROFILE
-     */
-    public boolean isAgentProfile() {
-        if (this.synchronizationLog != null) {
-            return ResourceType.AGENT_PROFILE.equals(this.synchronizationLog.getSynchronizationLog().getResourceType());
-        }
-        return false;
-    }
 
     /**
      * Check if log selected is an error
@@ -70,6 +48,26 @@ public class DetailSynchroLog extends AbstractPage {
                     return "Etablissement";
                 case ORGANISM:
                     return "Organisme";
+                default:
+                    return StringUtils.EMPTY;
+            }
+        }
+        return StringUtils.EMPTY;
+    }
+
+
+    public String getResourceLabel() {
+        if (this.synchronizationLog != null) {
+            switch (this.synchronizationLog.getSynchronizationLog().getResourceType()) {
+                case AGENT_PROFILE:
+                case EMPLOYEE_PROFILE:
+                    return this.synchronizationLog.getUsername()+" - "+this.synchronizationLog.getStructureEmail();
+                case COMPANY:
+                case ORGANISM:
+                    return this.synchronizationLog.getStructureLabel();
+                case ORGANISM_DEPARTMENT:
+                case ESTABLISHMENT:
+                    return this.synchronizationLog.getStructureLabel()+" - "+this.synchronizationLog.getStructureEmail();
                 default:
                     return StringUtils.EMPTY;
             }

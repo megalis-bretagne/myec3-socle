@@ -4,7 +4,6 @@ import lombok.Getter;
 import lombok.Setter;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.tapestry5.EventConstants;
-import org.apache.tapestry5.PersistenceConstants;
 import org.apache.tapestry5.annotations.OnEvent;
 import org.apache.tapestry5.annotations.Persist;
 import org.apache.tapestry5.ioc.annotations.Inject;
@@ -29,7 +28,7 @@ public class ListSynchronization extends AbtractListSynchronization {
      */
     @Getter
     @Setter
-    @Persist(PersistenceConstants.FLASH)
+    @Persist
     private Company company;
 
     @Inject
