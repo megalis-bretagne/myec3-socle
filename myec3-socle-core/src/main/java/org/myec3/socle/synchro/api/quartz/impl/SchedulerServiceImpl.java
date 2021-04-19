@@ -17,12 +17,6 @@
  */
 package org.myec3.socle.synchro.api.quartz.impl;
 
-import static org.quartz.TriggerBuilder.newTrigger;
-
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
-
 import org.myec3.socle.core.constants.MyEc3EsbConstants;
 import org.myec3.socle.core.domain.model.Resource;
 import org.myec3.socle.synchro.api.constants.SynchronizationJobType;
@@ -32,17 +26,19 @@ import org.myec3.socle.synchro.api.quartz.SchedulerService;
 import org.myec3.socle.synchro.api.quartz.job.PropagateCCSynchronizationJob;
 import org.myec3.socle.synchro.api.quartz.job.PropagateCUDSynchronizationJob;
 import org.myec3.socle.synchro.api.quartz.job.PropagateCUSynchronizationJob;
-import org.quartz.JobBuilder;
-import org.quartz.JobDetail;
-import org.quartz.Scheduler;
-import org.quartz.SchedulerException;
-import org.quartz.SimpleTrigger;
+import org.quartz.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.scheduling.quartz.SchedulerFactoryBean;
 import org.springframework.stereotype.Service;
+
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
+
+import static org.quartz.TriggerBuilder.newTrigger;
 
 /**
  * Concrete implementation of the Scheduler Service used during synchronization
