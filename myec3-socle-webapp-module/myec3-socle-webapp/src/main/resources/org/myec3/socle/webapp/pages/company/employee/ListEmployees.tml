@@ -50,6 +50,12 @@
 							</t:pagelink>
 						</t:if>
 					</t:parameter>
+
+					<t:parameter name="establishmentCell">
+						<t:pagelink page="company/establishment/view" context="employeeProfileRow.establishment.id">
+							${employeeProfileRow?.establishment?.label}
+						</t:pagelink>
+					</t:parameter>
 					<t:parameter name="expirationDatePasswordCell">
 						<t:if test="belongsToEstablishment">
 							${employeeProfileRow?.user?.expirationDatePassword}

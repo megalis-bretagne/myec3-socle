@@ -17,11 +17,6 @@
  */
 package org.myec3.socle.webapp.pages.company.employee;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.inject.Named;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.tapestry5.EventConstants;
@@ -44,6 +39,10 @@ import org.myec3.socle.core.service.EmployeeProfileService;
 import org.myec3.socle.synchro.api.SynchronizationNotificationService;
 import org.myec3.socle.webapp.pages.AbstractPage;
 import org.myec3.socle.webapp.pages.Index;
+
+import javax.inject.Named;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Page used to list all employees{@link EmployeeProfile} of a company
@@ -125,20 +124,14 @@ public class ListEmployees extends AbstractPage {
 	private String successMessage;
 
 	@OnEvent(EventConstants.ACTIVATE)
-	public Object Activation(Long id) {
+	public Object activation(Long id) {
 		super.initUser();
-
-		// REMOVED : USELESS AND BUGGY AFTER MERGE SIPPEREC (multiple ressources with
-		// same id)
-		// this.companyDepartment = this.companyDepartmentService.findOne(id);
-		// if (null == this.companyDepartment) {
 		// its organism
 		this.company = this.companyService.findOne(id);
 		this.companyDepartment = this.companyDepartmentService.findRootCompanyDepartmentByCompany(this.company);
 		if (null == this.company) {
 			return Boolean.FALSE;
 		}
-		// }
 
 		// Check if loggedUser can access to this company
 		return this.hasRights(this.companyDepartment.getCompany());
@@ -157,7 +150,7 @@ public class ListEmployees extends AbstractPage {
 	}
 
 	@OnEvent(EventConstants.ACTIVATE)
-	public Object Activation() {
+	public Object activation() {
 		return Index.class;
 	}
 
@@ -211,10 +204,10 @@ public class ListEmployees extends AbstractPage {
 		if (this.company != null) {
 			List<CompanyDepartment> companyDepartments = this.companyDepartmentService
 					.findAllDepartmentByCompany(this.company);
-			List<EmployeeProfile> employeeProfiles = new ArrayList<EmployeeProfile>();
-			for (CompanyDepartment companyDepartment : companyDepartments) {
+			List<EmployeeProfile> employeeProfiles = new ArrayList<>();
+			for (CompanyDepartment department : companyDepartments) {
 				employeeProfiles.addAll(
-						this.employeeProfileService.findAllEmployeeProfilesByCompanyDepartment(companyDepartment));
+						this.employeeProfileService.findAllEmployeeProfilesByCompanyDepartment(department));
 			}
 			return employeeProfiles;
 		}
@@ -232,10 +225,13 @@ public class ListEmployees extends AbstractPage {
 		PropertyConduit propCdtAttributeUser = this.propertyConduitSource.create(EmployeeProfile.class, "user");
 		PropertyConduit propCdtAttributeExpirationDatePassword = this.propertyConduitSource
 				.create(EmployeeProfile.class, "user.expirationDatePassword");
+		PropertyConduit proCdtAttribueEstablishement =
+				this.propertyConduitSource.create(EmployeeProfile.class, "establishment.label");
 
 		model.add("user", propCdtAttributeUser);
 		model.add("expirationDatePassword", propCdtAttributeExpirationDatePassword).sortable(true);
-		model.include("user", "email", "expirationDatePassword", "actions");
+		model.add("establishment", proCdtAttribueEstablishement).sortable(true);
+		model.include("user", "email", "establishment","expirationDatePassword", "actions");
 		return model;
 	}
 
@@ -283,12 +279,10 @@ public class ListEmployees extends AbstractPage {
 	 * @return TRUE if the EmployeeProfileRow is the currentLoggedUser, else FALSE
 	 */
 	public Boolean getIsEmployeeRowLogged() {
-		if (this.getLoggedProfileExists()) {
-			if ((null != this.getLoggedProfile()) && (null != this.getLoggedProfile().getId())) {
-				if (this.getLoggedProfile().equals(this.employeeProfileRow)) {
-					return Boolean.TRUE;
-				}
-			}
+		if (this.getLoggedProfileExists() &&
+				(null != this.getLoggedProfile()) && (null != this.getLoggedProfile().getId()) &&
+				this.getLoggedProfile().equals(this.employeeProfileRow)) {
+			return Boolean.TRUE;
 		}
 		return Boolean.FALSE;
 	}
@@ -301,7 +295,7 @@ public class ListEmployees extends AbstractPage {
 					if (this.employeeProfileRow.getEstablishment().equals(myUser.getEstablishment())) {
 						return Boolean.TRUE;
 					}
-				} else if (this.getIsAdmin()) {
+				} else if (Boolean.TRUE.equals(this.getIsAdmin())) {
 					return Boolean.TRUE;
 				}
 			}
