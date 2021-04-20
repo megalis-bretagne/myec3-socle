@@ -1,0 +1,84 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html t:type="layout" xmlns:t="http://tapestry.apache.org/schema/tapestry_5_1_0.xsd" xmlns:p="tapestry:parameter">
+<div id="main-content">
+    <h2>${company?.label}</h2>
+</div>
+
+<div class="tabbed-data">
+    <ul class="tabs">
+        <li><t:pagelink page="company/detailcompany" context="company.id">${message:info-label}</t:pagelink></li>
+        <li><t:pagelink page="company/establishment/listestablishments" context="company.id">${message:establishment-label}</t:pagelink></li>
+        <li><t:pagelink page="company/employee/listemployees" context="company.id">${message:User-label}</t:pagelink></li>
+        <li class="active"><strong>${message:synchronization-label}</strong></li>
+    </ul>
+</div>
+
+<div class="tabs-content">
+    <div t:id="filterLog" t:type="synchro/synchroLogFilter" toFilter="synchroLogResult" resourceTypeModel="resourceTypeModel" />
+</div>
+
+<div class="tabs-content">
+
+    <t:zone t:id="detailLog" id="detailLog">
+        <t:if test="synchronizationLog">
+            <div t:id="componentDetailLog" t:type="synchro/detailSynchrolog"
+                 synchronizationLog="synchronizationLog"/>
+            <p:else>
+                <fieldset>
+                    <legend> ${message:description-detail-select}</legend>
+                </fieldset>
+            </p:else>
+        </t:if>
+    </t:zone>
+
+    <t:zone t:id="zoneGrid">
+
+        <table t:id="logGrid" t:empty="block:empty"
+               pagerPosition="bottom"
+               model="gridModel"
+               t:type="grid"
+               t:rowClass="rowClass"
+               t:row="logRow"
+               t:source="synchroLogFilter" t:rowsPerPage="${message:rowsPerPage}">
+
+            <t:parameter name="identifierCell">
+                <t:textoutput t:value="identifierLabel" />
+            </t:parameter>
+
+            <t:parameter name="resourceTypeCell">
+                <t:textoutput t:value="resourceLabel" />
+            </t:parameter>
+
+            <t:parameter name="statutCell">
+                <img src="${context:static/images}/${statutImage}"
+                     alt="${logRow.synchronizationLog.statut}  (${logRow.synchronizationLog.nbAttempts} tentatives)"
+                     title="${logRow.synchronizationLog.statut} (${logRow.synchronizationLog.nbAttempts} tentatives)" />
+                (${logRow.synchronizationLog.nbAttempts})
+            </t:parameter>
+
+            <t:parameter name="synchronizationDateCell">
+                <t:output format="dateFormat" t:value="logRow.synchronizationLog.synchronizationDate"/>
+            </t:parameter>
+
+            <t:parameter name="viewCell">
+                <t:eventlink event="selectLog" context="logRow.synchronizationLog.id" async="true">
+                    <img src="${context:static/images/organisme_voir.png}"
+                         alt="${message:detail-log}"
+                         title="${message:detail-log}" />
+                </t:eventlink>
+                <t:if test="employeeProfile">
+                    <t:eventlink event="seeEmployee" context="logRow.username">
+                        <img src="${context:static/images/agent_voir.png}" alt="${message:view-label}" title="${message:view-label}" />
+                    </t:eventlink>
+                </t:if>
+            </t:parameter>
+
+        </table>
+        <t:block t:id="empty">
+            ${message:empty-message}
+        </t:block>
+    </t:zone>
+</div>
+
+</html>

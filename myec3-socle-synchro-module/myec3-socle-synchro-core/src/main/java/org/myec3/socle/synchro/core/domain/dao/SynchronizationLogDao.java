@@ -17,12 +17,13 @@
 */
 package org.myec3.socle.synchro.core.domain.dao;
 
-import java.util.Date;
-import java.util.List;
-
 import org.myec3.socle.core.domain.model.Application;
+import org.myec3.socle.synchro.core.domain.dto.SynchronizationLogDTO;
 import org.myec3.socle.synchro.core.domain.model.SynchronizationInitial;
 import org.myec3.socle.synchro.core.domain.model.SynchronizationLog;
+
+import java.util.Date;
+import java.util.List;
 
 /**
  * This interface define methods to perform specific queries on
@@ -111,4 +112,22 @@ public interface SynchronizationLogDao extends
 			Date startDate, Date endDate, Application application,
 			String resourceType, String httpStatus, String synchronizationType,
 			String methodType, String statut, Boolean isFinal);
+
+	/**
+	 *
+	 * Retrive all synchroLog associated to an organism
+	 * List contains Log for Organism, OrganismeDepartement and AgentProfile Associated
+	 * @param id	the organism Id
+	 * @return	list of {@link SynchronizationLog}
+	 */
+	List<SynchronizationLogDTO> findAllSynchronizationLogByOrganism(Long id);
+
+	/**
+	 *
+	 * Retrive all synchroLog associated to a Company
+	 * List contains Log for Company, Establishment and EmployeeProfile Associated
+	 * @param id	the Company Id
+	 * @return	list of {@link SynchronizationLog}
+	 */
+    List<SynchronizationLogDTO> findAllSynchronizationLogByCompany(Long id);
 }

@@ -120,7 +120,6 @@ public class Search extends AbstractPage {
 			this.infoMessage = this.messages.get("empty-result-message");
 			return null;
 		}
-
 		this.searchResultPage
 				.setSynchronizationLogResult(synchronizationLogResult);
 		return SearchResult.class;

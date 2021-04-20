@@ -17,13 +17,16 @@
 */
 package org.myec3.socle.synchro.core.service;
 
-import java.util.Date;
-import java.util.List;
-
 import org.myec3.socle.core.domain.model.Application;
+import org.myec3.socle.core.domain.model.Company;
+import org.myec3.socle.core.domain.model.Organism;
 import org.myec3.socle.core.service.IGenericService;
+import org.myec3.socle.synchro.core.domain.dto.SynchronizationLogDTO;
 import org.myec3.socle.synchro.core.domain.model.SynchronizationInitial;
 import org.myec3.socle.synchro.core.domain.model.SynchronizationLog;
+
+import java.util.Date;
+import java.util.List;
 
 /**
  * Interface defining Business Services methods and providing
@@ -56,6 +59,20 @@ public interface SynchronizationLogService extends IGenericService<Synchronizati
 	 * 
 	 */
 	List<SynchronizationLog> findAllSynchronizationLogBySynchronizationLogId(Long synchronizationLogId);
+
+	/**
+	 * Find all {@link SynchronizationLog} by organismId
+	 * @param organism	the organismeIdentifier
+	 * @return	List of {@link SynchronizationLog} associated
+	 */
+	List<SynchronizationLogDTO> findAllByOrganism(Organism organism);
+
+	/**
+	 * Find all {@link SynchronizationLog} by companyId
+	 * @param company	the company
+	 * @return	List of {@link SynchronizationLog} associated
+	 */
+	List<SynchronizationLogDTO> findAllByCompany(Company company);
 
 	/**
 	 * Find all {@link SynchronizationLog} associated directly to an

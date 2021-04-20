@@ -10,7 +10,13 @@
 				<ul class="tabs"> 
 					<li><t:pagelink page="company/detailcompany" context="company.id">${message:info-label}</t:pagelink></li>
 					<li class="active"><strong>${message:establishment-label}</strong></li> 
-					<li><t:pagelink page="company/employee/listemployees" context="company.id">${message:User-label}</t:pagelink></li> 
+					<li><t:pagelink page="company/employee/listemployees" context="company.id">${message:User-label}</t:pagelink></li>
+					<t:if test="isAdmin">
+						<li>
+							<t:pagelink page="company/synchro/listSynchronization"
+										context="company.id">${message:synchronization-label}</t:pagelink>
+						</li>
+					</t:if>
 				</ul>
 			</t:if>
 			<div class="tabs-content">

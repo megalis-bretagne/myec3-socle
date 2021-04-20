@@ -763,6 +763,10 @@ tr.alternate th, tr.alternate td {
 	background: #F5F4F0;
 }
 
+tr.selected {
+	background-color: #DDD;
+}
+
 /* List of actions in a table */
 td.table-actions {text-align: center;}
 td.table-actions li {

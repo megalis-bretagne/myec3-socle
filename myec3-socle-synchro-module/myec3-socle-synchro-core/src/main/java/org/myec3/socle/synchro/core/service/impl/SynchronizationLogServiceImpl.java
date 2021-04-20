@@ -17,15 +17,18 @@
 */
 package org.myec3.socle.synchro.core.service.impl;
 
-import java.util.Date;
-import java.util.List;
-
 import org.myec3.socle.core.domain.model.Application;
+import org.myec3.socle.core.domain.model.Company;
+import org.myec3.socle.core.domain.model.Organism;
 import org.myec3.socle.core.service.impl.AbstractGenericServiceImpl;
 import org.myec3.socle.synchro.core.domain.dao.SynchronizationLogDao;
+import org.myec3.socle.synchro.core.domain.dto.SynchronizationLogDTO;
 import org.myec3.socle.synchro.core.domain.model.SynchronizationLog;
 import org.myec3.socle.synchro.core.service.SynchronizationLogService;
 import org.springframework.stereotype.Service;
+
+import java.util.Date;
+import java.util.List;
 
 /**
  * Concrete Service implementation providing methods specific to
@@ -53,6 +56,16 @@ public class SynchronizationLogServiceImpl extends AbstractGenericServiceImpl<Sy
 	@Override
 	public List<SynchronizationLog> findAllSynchronizationLogBySynchronizationLogId(Long synchronizationLogId) {
 		return this.dao.findAllSynchronizationLogBySynchronizationLogId(synchronizationLogId);
+	}
+
+	@Override
+	public List<SynchronizationLogDTO> findAllByOrganism(Organism organism) {
+		return this.dao.findAllSynchronizationLogByOrganism(organism.getId());
+	}
+
+	@Override
+	public List<SynchronizationLogDTO> findAllByCompany(Company company) {
+		return this.dao.findAllSynchronizationLogByCompany(company.getId());
 	}
 
 	/**

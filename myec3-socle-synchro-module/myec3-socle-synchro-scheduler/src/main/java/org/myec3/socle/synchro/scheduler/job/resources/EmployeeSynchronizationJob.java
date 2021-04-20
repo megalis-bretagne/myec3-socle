@@ -21,6 +21,7 @@ import org.myec3.socle.core.domain.model.EmployeeProfile;
 import org.myec3.socle.core.domain.model.Role;
 import org.myec3.socle.core.domain.model.enums.ResourceType;
 import org.myec3.socle.core.domain.sdm.model.SdmInscrit;
+import org.myec3.socle.core.domain.sdm.model.SdmResource;
 import org.myec3.socle.core.sync.api.ResponseMessage;
 import org.myec3.socle.synchro.core.domain.model.SynchroIdentifiantExterne;
 import org.myec3.socle.synchro.core.domain.model.SynchronizationSubscription;
@@ -83,26 +84,11 @@ public class EmployeeSynchronizationJob extends
                                   SynchronizationSubscription synchronizationSubscription,
                                   ResourceWsClient resourceWsClient) {
         if ("SDM".equals(synchronizationSubscription.getApplication().getName())) {
-            SdmInscrit inscritSDM = convertToSdmInscrit(resource);
-            List<SynchroIdentifiantExterne> synchroIdentifiantExterne = synchroIdentifiantExterneService.findListByIdSocle(resource.getUser().getId(), ResourceType.EMPLOYEE_PROFILE);
+            SdmResource sdmResourceToDelete = new SdmResource();
+            sdmResourceToDelete.setIdExterne(resource.getExternalId().toString());
             SdmWsClientImpl sdmWsClient = (SdmWsClientImpl) resourceWsClient;
-            if (synchroIdentifiantExterne !=null && !synchroIdentifiantExterne.isEmpty()){
-                inscritSDM.setId(synchroIdentifiantExterne.get(0).getIdAppliExterne());
-                if (synchroIdentifiantExterne.size()>1){
-                    logger.warn("Employe id: {} a plusieurs IdAppliExterne en bdd ",resource.getId());
-                    for(SynchroIdentifiantExterne s:synchroIdentifiantExterne){
-                        logger.warn(" idSocle {} IdAppliExterne {} ",s.getIdSocle(),s.getIdAppliExterne());
-                    }
-                }
-                inscritSDM.setActif("0");
-                return sdmWsClient.put(resource, inscritSDM, synchronizationSubscription);
-            }else{
-                logger.warn("EmployeeProfile.user id: {} n'a pas d'idApplicationExterne (SDM) dans la table synchroIdentifiantExterneService",resource.getUser().getId());
-                //todo return null à voir si ça fonctionne dans ce cas
-                return null;
-            }
 
-
+            return sdmWsClient.delete(resource, sdmResourceToDelete, synchronizationSubscription);
         } else {
             return resourceWsClient.delete(resource, synchronizationSubscription);
         }
