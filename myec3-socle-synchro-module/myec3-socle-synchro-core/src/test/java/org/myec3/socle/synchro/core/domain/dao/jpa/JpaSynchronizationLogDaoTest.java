@@ -7,6 +7,7 @@ import org.myec3.socle.synchro.core.AbstractDbUnitTest;
 import org.myec3.socle.synchro.core.domain.dao.SynchronizationLogDao;
 import org.myec3.socle.synchro.core.domain.dto.SynchronizationLogDTO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.SqlGroup;
 
@@ -15,10 +16,14 @@ import java.util.stream.Collectors;
 
 @SqlGroup({
         @Sql(value = {"classpath:/db/test/initData.sql"}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD),
+        // organism
         @Sql(value = {"classpath:/db/test/organism/organism_1.sql"}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD),
         @Sql(value = {"classpath:/db/test/organism/organism_31952.sql"}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD),
+        // company
+        @Sql(value = {"classpath:/db/test/company/company_2.sql"}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD),
         @Sql(value = {"classpath:/db/test/synchroLog/initSynchro.sql"}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD),
 })
+@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 public class JpaSynchronizationLogDaoTest extends AbstractDbUnitTest {
 
     @Autowired
@@ -74,4 +79,54 @@ public class JpaSynchronizationLogDaoTest extends AbstractDbUnitTest {
         ));
     }
 
+
+    @Test
+    public void testFindAllSynchronizationLogByCompany() {
+        //GIVEN
+        Long companyId = new Long(2);
+        Long companyNull = null;
+        Long companyNotExist = new Long(200);
+
+        //DO
+        Assert.assertTrue(synchronizationLogDao.findAllSynchronizationLogByCompany(companyNull).isEmpty());
+        Assert.assertTrue(synchronizationLogDao.findAllSynchronizationLogByCompany(companyNotExist).isEmpty());
+        List<SynchronizationLogDTO> list =
+                synchronizationLogDao.findAllSynchronizationLogByCompany(companyId);
+        // ASSERT
+        Assert.assertNotNull(list);
+
+        List<SynchronizationLogDTO> listCompanyType = list.stream()
+                .filter(sychronizationLogDTO -> sychronizationLogDTO.getSynchronizationLog().getResourceType().equals(ResourceType.COMPANY)).collect(Collectors.toList());
+        List<SynchronizationLogDTO> listEstablishment = list.stream()
+                .filter(sychronizationLogDTO -> sychronizationLogDTO.getSynchronizationLog().getResourceType().equals(ResourceType.ESTABLISHMENT)).collect(Collectors.toList());
+
+        List<SynchronizationLogDTO> listEmployee = list.stream()
+                .filter(sychronizationLogDTO -> sychronizationLogDTO.getSynchronizationLog().getResourceType().equals(ResourceType.EMPLOYEE_PROFILE)).collect(Collectors.toList());
+
+
+        // 2 type COMany
+        Assert.assertEquals(2, listCompanyType.size());
+        Assert.assertTrue(listCompanyType.stream().allMatch(synchronizationLogDTO ->
+                synchronizationLogDTO.getUsername().equals("") &&
+                        synchronizationLogDTO.getStructureEmail().equals("structure-2@mail.fr") &&
+                        synchronizationLogDTO.getStructureLabel().equals("Company test u")));
+        // 2 type establishement
+        Assert.assertEquals(2, listEstablishment.size());
+        Assert.assertTrue(listEstablishment.stream().allMatch(synchronizationLogDTO ->
+                synchronizationLogDTO.getUsername().equals("") &&
+                        synchronizationLogDTO.getStructureEmail().equals("myec3test@mail.fr") &&
+                        synchronizationLogDTO.getStructureLabel().equals("MYEC3 test")));
+
+        // 2 type Employee
+        Assert.assertEquals(2, listEmployee.size());
+        Assert.assertTrue(listEmployee.stream().anyMatch(synchronizationLogDTO ->
+                synchronizationLogDTO.getUsername().equals("USER-2000@mail.fr") &&
+                        synchronizationLogDTO.getStructureEmail().equals("lapin@mail.fr") &&
+                        synchronizationLogDTO.getStructureLabel().equals("Profil 2000 Est 1")));
+        Assert.assertTrue(listEmployee.stream().anyMatch(synchronizationLogDTO ->
+                synchronizationLogDTO.getUsername().equals("USER-2002@mail.fr") &&
+                        synchronizationLogDTO.getStructureEmail().equals("sib@mail.fr") &&
+                        synchronizationLogDTO.getStructureLabel().equals("Profil 2002 Est 2")));
+
+    }
 }

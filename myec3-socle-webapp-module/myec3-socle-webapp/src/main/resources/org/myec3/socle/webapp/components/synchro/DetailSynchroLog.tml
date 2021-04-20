@@ -6,35 +6,20 @@
         <p><label for="applicationName">${message:detail-application}</label> :
             ${synchronizationLog.synchronizationLog.applicationName}
         </p>
-        <t:if test="agentProfile">
-            <p><label for="resourceType">${message:detail-agent}</label> :
-                ${synchronizationLog.username} (${synchronizationLog.structureEmail}
-            </p>
-            <p:else>
-                <t:if test="organismProfile">
-                    <p><label for="resourceType">${message:detail-organism}</label> :
-                        ${synchronizationLog.structureEmail}
-                    </p>
-                    <p:else>
-                        <p><label for="resourceType">${message:detail-organism-department}</label> :
-                            ${synchronizationLog.structureLabel} - ${synchronizationLog.structureEmail}
-                        </p>
-                    </p:else>
-                </t:if>
-            </p:else>
-        </t:if>
-
         <p><label for="resourceType">${message:detail-type}</label> :
-            ${synchronizationLog.synchronizationLog.resourceType}
+            ${typeLabel}
         </p>
-        <t:if test="logError">
-            <p><label for="errorMessage">${message:detail-error}</label>
-                ${synchronizationLog.synchronizationLog.httpCode} - ${synchronizationLog.synchronizationLog.httpStatus} - ${synchronizationLog.synchronizationLog.errorMessage}
-            </p>
-        </t:if>
+        <p><label for="resourceType">${message:detail-identifier}</label> :
+            ${resourceLabel}
+        </p>
         <p><label for="synchronizationDate">${message:detail-date}</label> :
             ${synchronizationLog.synchronizationLog.synchronizationDate}
         </p>
+        <t:if test="logError">
+            <p><label for="errorMessage">${message:detail-error}</label> :
+                ${synchronizationLog.synchronizationLog.httpCode} - ${synchronizationLog.synchronizationLog.httpStatus} - ${synchronizationLog.synchronizationLog.errorMessage}
+            </p>
+        </t:if>
         <p><label for="nbAttempts">${message:detail-attempts}</label> :
             ${synchronizationLog.synchronizationLog.nbAttempts}
         </p>

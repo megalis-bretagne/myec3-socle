@@ -1,30 +1,35 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <t:container xmlns:t="http://tapestry.apache.org/schema/tapestry_5_1_0.xsd" xmlns:p="tapestry:parameter">
+        <t:form t:id="filter_form" async="true">
+            <fieldset>
+                <legend>${message:filter-log-label}</legend>
+                    <p>
+                        <t:label for="resourceType">${message:application-label}</t:label>
+                        <t:select  t:id="application" t:model="applicationModel"
+                                   t:value="searchApplication" t:blankLabel="TOUS"/>
+                    </p>
+                    <p>
+                        <t:label for="resourceType">${message:resourceType-label}</t:label>
+                        <t:select  t:id="resourceType" t:model="resourceTypeModel"
+                                   t:encoder="resourceTypeEncoder" t:value="searchResourceType" t:blankLabel="TOUS"/>
+                    </p>
 
-    <t:form t:id="filter_form" async="true">
-        <fieldset>
-            <legend>${message:filter-log-label}</legend>
+                    <p>
+                        <t:label for="statut">${message:statut-label}</t:label>
+                        <t:select  t:id="statut" model="literal:SUCCESS,ERROR" t:value="searchStatut" t:blankLabel="TOUS"/>
+                    </p>
 
+                    <p>
+                        <t:label for="identifier">${message:identifier-label} :</t:label>
+                        <t:textfield t:id="identifier" t:value="searchIdentifier"/>
+                    </p>
+                    <p>
+                        <t:submit t:id="submitFilter" class="button btnOk" value="message:filter-label" />
+                        <input type="reset"  class="button"  value="${message:reset-label}" />
+                    </p>
+            </fieldset>
+        </t:form>
 
-                <p>
-                    <t:label for="resourceType">${message:resourceType-label}</t:label>
-                    <t:select  t:id="resourceType" t:model="resourceTypeModel" t:encoder="resourceTypeEncoder" t:value="searchResourceType" t:blankLabel="TOUS"/>
-                </p>
-
-                <p>
-                    <t:label for="statut">${message:statut-label}</t:label>
-                    <t:select  t:id="statut" model="literal:SUCCESS,ERROR" t:value="searchStatut" t:blankLabel="TOUS"/>
-                </p>
-
-                <p>
-                    <t:label for="identifier">${message:identifier-label} :</t:label>
-                    <t:textfield t:id="identifier" t:value="searchIdentifier"/>
-                </p>
-                <p>
-                    <t:submit t:id="submitFilter" class="button btnOk" value="message:filter-label" />
-                </p>
-        </fieldset>
-    </t:form>
 
 
 </t:container>

@@ -64,22 +64,32 @@
                 <t:textoutput t:value="identifierLabel" />
             </t:parameter>
 
+            <t:parameter name="resourceTypeCell">
+                <t:textoutput t:value="resourceLabel" />
+            </t:parameter>
+
             <t:parameter name="statutCell">
                 <img src="${context:static/images}/${statutImage}"
-                     alt="${logRow.synchronizationLog.statut}"
-                     title="${logRow.synchronizationLog.statut}" />
+                     alt="${logRow.synchronizationLog.statut}  (${logRow.synchronizationLog.nbAttempts} tentatives)"
+                     title="${logRow.synchronizationLog.statut} (${logRow.synchronizationLog.nbAttempts} tentatives)" />
+                (${logRow.synchronizationLog.nbAttempts})
             </t:parameter>
 
             <t:parameter name="synchronizationDateCell">
                 <t:output format="dateFormat" t:value="logRow.synchronizationLog.synchronizationDate"/>
             </t:parameter>
 
-            <t:parameter name="actionsCell">
+            <t:parameter name="viewCell">
                 <t:eventlink event="selectLog" context="logRow.synchronizationLog.id" async="true">
                     <img src="${context:static/images/organisme_voir.png}"
                          alt="${message:detail-log}"
                          title="${message:detail-log}" />
                 </t:eventlink>
+                <t:if test="agentProfile">
+                    <t:eventlink event="seeAgent" context="logRow.username">
+                        <img src="${context:static/images/agent_voir.png}" alt="${message:view-label}" title="${message:view-label}" />
+                    </t:eventlink>
+                </t:if>
             </t:parameter>
 
         </table>

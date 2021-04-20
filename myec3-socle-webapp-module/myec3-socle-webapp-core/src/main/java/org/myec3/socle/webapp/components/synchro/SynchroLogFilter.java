@@ -5,7 +5,10 @@ import lombok.Setter;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.tapestry5.ComponentResources;
 import org.apache.tapestry5.EventConstants;
-import org.apache.tapestry5.annotations.*;
+import org.apache.tapestry5.annotations.Component;
+import org.apache.tapestry5.annotations.OnEvent;
+import org.apache.tapestry5.annotations.Parameter;
+import org.apache.tapestry5.annotations.Property;
 import org.apache.tapestry5.corelib.components.Form;
 import org.apache.tapestry5.ioc.annotations.Inject;
 import org.myec3.socle.core.domain.model.enums.ResourceType;
@@ -36,6 +39,10 @@ public class SynchroLogFilter extends AbstractPage {
 
     @Getter
     @Setter
+    private String searchApplication;
+
+    @Getter
+    @Setter
     private String searchIdentifier;
 
     @Getter
@@ -51,7 +58,7 @@ public class SynchroLogFilter extends AbstractPage {
 
     @Parameter(required = true)
     @Property
-    private Map<ResourceType, String> resourceTypeModel;
+    private Map<ResourceType,String> resourceTypeModel;
 
     /**
      * List filter
@@ -65,10 +72,11 @@ public class SynchroLogFilter extends AbstractPage {
      */
     @OnEvent(value = EventConstants.VALIDATE, component = "filter_form")
     public void onValidate() {
-        this.synchroLogMatching = new ArrayList<>();
-
         this.synchroLogMatching = this.toFilter.stream()
-                .filter(logDTO -> filterOnStatut(logDTO) && filterOnIdentifier(logDTO) && filterOnResource(logDTO))
+                .filter(logDTO -> filterOnStatut(logDTO)
+                        && filterOnIdentifier(logDTO)
+                        && filterOnApplication(logDTO)
+                        && filterOnResource(logDTO))
                 .collect(Collectors.toList());
 
         componentResources.triggerEvent("logFilterDone", null, null);
@@ -82,17 +90,39 @@ public class SynchroLogFilter extends AbstractPage {
         return new GenericListEncoder<>(new ArrayList<>(resourceTypeModel.keySet()));
     }
 
+    public List<String> getApplicationModel() {
+       return toFilter.stream().map(logDTO -> logDTO.getSynchronizationLog().getApplicationName())
+                .distinct()
+                .collect(Collectors.toList());
+    }
+
     /**
      * Apply Filter on resourceType
      * @param logDTO {@link SynchronizationLogDTO} to match
      * @return true if match
      */
     private boolean filterOnResource(SynchronizationLogDTO logDTO) {
-        if (searchResourceType == null) {
+        if (StringUtils.isEmpty(searchResourceType)) {
             return true;
         }
+        try {
+            ResourceType typeToFind = ResourceType.valueOf(searchResourceType);
+            return typeToFind.equals(logDTO.getSynchronizationLog().getResourceType());
+        } catch (IllegalArgumentException e) {
+            return true;
+        }
+    }
 
-        return searchResourceType.equals(logDTO.getSynchronizationLog().getResourceType().name());
+    /**
+     * Apply Filter on Application
+     * @param logDTO {@link SynchronizationLogDTO} to match
+     * @return true if match
+     */
+    private boolean filterOnApplication(SynchronizationLogDTO logDTO) {
+        if (StringUtils.isEmpty(searchApplication)) {
+            return true;
+        }
+        return searchApplication.equals(logDTO.getSynchronizationLog().getApplicationName());
     }
 
     /**
@@ -101,7 +131,7 @@ public class SynchroLogFilter extends AbstractPage {
      * @return true if match
      */
     private boolean filterOnStatut(SynchronizationLogDTO logDTO) {
-        if (searchStatut == null) {
+        if (StringUtils.isEmpty(searchStatut)) {
             return true;
         }
         return logDTO.getSynchronizationLog().getStatut().equals(searchStatut);

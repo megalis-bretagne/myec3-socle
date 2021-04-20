@@ -26,6 +26,25 @@ VALUES
     (4, 'AGENT_PROFILE',13,  'Portail megalis', '2021-01-03 12:10:33', NULL, NULL, NULL, 200, 'OK', 1, 'PUT', 2, NULL, 'Socle GU', 'SUCCESS', 'SYNCHRONIZATION');
 
 
+-- Synchro Log Company 2
+INSERT INTO SynchronizationLog
+(resourceId, resourceType, synchronizationSubscription_id, applicationName, synchronizationDate, errorCodeType, errorLabel, errorMessage, httpCode, httpStatus, isFinal, methodType, nbAttempts, responseMessageResourceId, sendingApplication, statut, synchronizationType )
+VALUES
+    -- TYPE ORGANISM
+    (2, 'COMPANY',10, 'Pastell', '2021-02-05 12:29:33', NULL, NULL, NULL, 404, 'NOT_FOUND', 0, 'PUT', 0, NULL, 'Socle GU', 'ERROR', 'SYNCHRONIZATION'),
+    (2, 'COMPANY',3,  'SDM', '2021-02-04 12:00:33', NULL, NULL, NULL, 200, 'OK', 0, 'POST', 0, NULL, 'Socle GU', 'SUCCESS', 'SYNCHRONIZATION'),
+
+    -- TYPE ESTABLISHEMENT
+    (1, 'ESTABLISHMENT', 3,  'SDM', '2021-02-04 12:00:33', NULL, NULL, NULL, 500, 'INTERNAL_SERVER_ERROR', 0, 'POST', 0, NULL, 'Socle GU', 'ERROR', 'SYNCHRONIZATION'),
+    (1, 'ESTABLISHMENT', 3,  'SDM', '2021-02-04 12:12:33', NULL, NULL, NULL, 200, 'OK', 0, 'POST', 0, NULL, 'Socle GU', 'SUCCESS', 'SYNCHRONIZATION'),
+
+    -- TYPE EMPLOYEE
+    (2000, 'EMPLOYEE_PROFILE', 13,  'Portail megalis', '2021-02-04 12:00:33', NULL, NULL, NULL, 500, 'INTERNAL_SERVER_ERROR', 0, 'POST', 0, NULL, 'Socle GU', 'ERROR', 'SYNCHRONIZATION'),
+    (2002, 'EMPLOYEE_PROFILE', 13,  'Portail megalis', '2021-02-04 12:12:33', NULL, NULL, NULL, 200, 'OK', 0, 'POST', 0, NULL, 'Socle GU', 'SUCCESS', 'SYNCHRONIZATION');
+
+
+
+
 
 
 

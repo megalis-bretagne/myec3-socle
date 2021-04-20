@@ -18,6 +18,7 @@
 package org.myec3.socle.synchro.core.service.impl;
 
 import org.myec3.socle.core.domain.model.Application;
+import org.myec3.socle.core.domain.model.Company;
 import org.myec3.socle.core.domain.model.Organism;
 import org.myec3.socle.core.service.impl.AbstractGenericServiceImpl;
 import org.myec3.socle.synchro.core.domain.dao.SynchronizationLogDao;
@@ -60,6 +61,11 @@ public class SynchronizationLogServiceImpl extends AbstractGenericServiceImpl<Sy
 	@Override
 	public List<SynchronizationLogDTO> findAllByOrganism(Organism organism) {
 		return this.dao.findAllSynchronizationLogByOrganism(organism.getId());
+	}
+
+	@Override
+	public List<SynchronizationLogDTO> findAllByCompany(Company company) {
+		return this.dao.findAllSynchronizationLogByCompany(company.getId());
 	}
 
 	/**
