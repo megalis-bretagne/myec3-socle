@@ -17,8 +17,6 @@
  */
 package org.myec3.socle.synchro.scheduler.service.impl;
 
-import java.util.List;
-
 import org.myec3.socle.core.domain.model.Resource;
 import org.myec3.socle.synchro.api.SynchronizationService;
 import org.myec3.socle.synchro.api.constants.SynchronizationType;
@@ -27,6 +25,8 @@ import org.myec3.socle.synchro.scheduler.service.SchedulerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
+
+import java.util.List;
 
 /**
  * Implementation of synchronization services. This service creates the jobs and
@@ -76,7 +76,6 @@ public class SynchronizationServiceImpl implements SynchronizationService {
 			SynchronizationType synchronizationType, String sendingApplication) {
 		schedulerService.addImmediateDeletionTrigger(MyEc3JobConstants.DELETION_JOB, resource,
 				listApplicationIdToResynchronize, synchronizationType, sendingApplication);
-
 	}
 
 	/**

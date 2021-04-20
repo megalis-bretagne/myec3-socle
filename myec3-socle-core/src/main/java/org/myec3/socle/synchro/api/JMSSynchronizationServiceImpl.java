@@ -17,40 +17,10 @@
  */
 package org.myec3.socle.synchro.api;
 
-import java.io.ByteArrayOutputStream;
-import java.io.OutputStream;
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.annotation.PostConstruct;
-import javax.jms.Connection;
-import javax.jms.ConnectionFactory;
-import javax.jms.DeliveryMode;
-import javax.jms.MapMessage;
-import javax.jms.Message;
-import javax.jms.MessageProducer;
-import javax.jms.Queue;
-import javax.jms.Session;
-
 import org.apache.activemq.ActiveMQConnectionFactory;
 import org.myec3.socle.core.constants.MyEc3EsbConstants;
-import org.myec3.socle.core.domain.model.AgentProfile;
-import org.myec3.socle.core.domain.model.Company;
-import org.myec3.socle.core.domain.model.CompanyDepartment;
-import org.myec3.socle.core.domain.model.EmployeeProfile;
-import org.myec3.socle.core.domain.model.Establishment;
-import org.myec3.socle.core.domain.model.Organism;
-import org.myec3.socle.core.domain.model.OrganismDepartment;
-import org.myec3.socle.core.domain.model.Profile;
-import org.myec3.socle.core.domain.model.Resource;
-import org.myec3.socle.core.domain.model.Synchronized;
-import org.myec3.socle.core.service.AgentProfileService;
-import org.myec3.socle.core.service.CompanyDepartmentService;
-import org.myec3.socle.core.service.CompanyService;
-import org.myec3.socle.core.service.EmployeeProfileService;
-import org.myec3.socle.core.service.EstablishmentService;
-import org.myec3.socle.core.service.OrganismDepartmentService;
-import org.myec3.socle.core.service.OrganismService;
+import org.myec3.socle.core.domain.model.*;
+import org.myec3.socle.core.service.*;
 import org.myec3.socle.core.service.impl.ServiceManager;
 import org.myec3.socle.core.tools.SynchronizationMarshaller;
 import org.myec3.socle.synchro.api.constants.SynchronizationJobType;
@@ -62,8 +32,14 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
+
+import javax.annotation.PostConstruct;
+import javax.jms.*;
+import java.io.ByteArrayOutputStream;
+import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Implementation of synchronization service used to send JMS messages to the

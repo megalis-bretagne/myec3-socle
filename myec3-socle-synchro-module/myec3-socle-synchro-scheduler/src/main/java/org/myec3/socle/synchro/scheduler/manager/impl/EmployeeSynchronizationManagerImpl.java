@@ -17,9 +17,6 @@
 */
 package org.myec3.socle.synchro.scheduler.manager.impl;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.myec3.socle.core.domain.model.Application;
 import org.myec3.socle.core.domain.model.EmployeeProfile;
 import org.myec3.socle.core.domain.model.Resource;
@@ -37,6 +34,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Concrete implementation of synchronization manager to perform synchronization
@@ -144,7 +144,7 @@ public class EmployeeSynchronizationManagerImpl extends ResourceSynchronizationM
 			this.getLogger().info("sending DELETE Employee to all applications");
 			for (SynchronizationSubscription subscription : subscriptionList) {
 				this.getSchedulerService().addImmediateSynchronizationSubscriptionEmployeeProfileTrigger(
-						MyEc3JobConstants.EMPLOYEE_JOB, resource, new ArrayList<Role>(), subscription,
+						MyEc3JobConstants.EMPLOYEE_JOB, resource, new ArrayList<>(), subscription,
 						synchronizationJobType, synchronizationType, sendingApplication);
 			}
 		}
