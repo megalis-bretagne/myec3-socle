@@ -1,9 +1,13 @@
 package org.myec3.socle.synchro.controller;
 
+import org.myec3.socle.core.domain.dto.OrganismLightDTO;
 import org.myec3.socle.core.domain.model.*;
 import org.myec3.socle.core.service.*;
+import org.myec3.socle.core.tools.UnaccentLetter;
 import org.myec3.socle.synchro.api.constants.SynchronizationType;
 import org.myec3.socle.synchro.scheduler.manager.ResourceSynchronizationManager;
+import org.myec3.socle.ws.client.impl.mps.MpsWsClient;
+import org.myec3.socle.ws.client.impl.mps.response.ResponseEntreprises;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,11 +19,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 @RestController
-public class TestSynchroSDMController {
+public class SynchroController {
 
-    private static final Logger logger = LoggerFactory.getLogger(TestSynchroSDMController.class);
+    private static final Logger logger = LoggerFactory.getLogger(SynchroController.class);
 
     @Autowired
     @Qualifier("agentProfileService")
@@ -77,6 +82,8 @@ public class TestSynchroSDMController {
     @Autowired
     @Qualifier("applicationService")
     private ApplicationService applicationService;
+
+    private MpsWsClient mpsWsClient = new MpsWsClient();
 
     @RequestMapping(value = "/jcms/agent/", method = {RequestMethod.GET})
     public String agentJcms(@RequestParam long id) {
@@ -226,10 +233,9 @@ public class TestSynchroSDMController {
         return "synchro emplyoee "+ company.getName();
     }
 
-
     @RequestMapping(value = "/sdm/establishment/", method = {RequestMethod.GET})
     public String establishment(@RequestParam long id) {
-        Establishment establishment =establishmentService.findOne(id);
+        Establishment establishment = establishmentService.findOne(id);
 
         Application applicationASynchroniser = applicationService.findByName("SDM");
         List<Long> listApplicationIdToResynchronize = new ArrayList<>();
@@ -240,6 +246,59 @@ public class TestSynchroSDMController {
         establishmentSynchronizer.synchronizeUpdate(establishment, listApplicationIdToResynchronize, synchronizationType, sendingApplication);
 
         return "synchro emplyoee "+ establishment.getName();
+    }
+
+    /**
+     * MEGALIS-152 - API to resync company label for SDM
+     * @param launchUpdate set true to update data in DB and send synchro to SDM.
+     *                     If false, launch the process and return result as string.
+     * @return
+     */
+    @RequestMapping(value = "/sdm/organism/resync", method = {RequestMethod.GET})
+    public String resyncCompanySdm(@RequestParam boolean launchUpdate) {
+        logger.info("[RESYNC] Call resync company for SDM");
+        Application sdmApplication = applicationService.findByName("SDM");
+
+        List<Long> listApplicationIdToResynchronize = new ArrayList<>();
+        listApplicationIdToResynchronize.add(sdmApplication.getId());
+        SynchronizationType synchronizationType = SynchronizationType.SYNCHRONIZATION;
+        String sendingApplication = "GU";
+
+        // Get all organism subscribe to SDM
+        List<OrganismLightDTO> organisms = organismService.findOrganismLightByApplication(sdmApplication);
+
+        logger.info("[RESYNC] call API siren for each organism");
+        StringBuilder result = new StringBuilder("");
+        AtomicInteger index = new AtomicInteger(0);
+        organisms.stream().forEach( organismLightDTO -> {
+            ResponseEntreprises entreprises = mpsWsClient.getInfoEntreprises(organismLightDTO.getSiren());
+            String temp = organismLightDTO.getLabel();
+            temp = UnaccentLetter.unaccentString(temp);
+            temp = temp.toUpperCase();
+
+            if (!temp.equals(entreprises.getEntreprise().getLabel())) {
+                logger.info("[RESYNC] Organism "+organismLightDTO.getId()+" TO Update");
+                result.append("["+organismLightDTO.getId()+"] ["+ organismLightDTO.getLabel()+"] ==> ["+  entreprises.getEntreprise().getLabel()+"] <br>");
+                Organism organism = organismService.findOne(organismLightDTO.getId());
+                organism.setLabel(entreprises.getEntreprise().getLabel());
+                if (launchUpdate) {
+                    organism = organismService.update(organism);
+                    organismSynchronizer.synchronizeUpdate(organism, listApplicationIdToResynchronize, synchronizationType, sendingApplication);
+                    logger.info("[RESYNC] Organism "+organismLightDTO.getId()+" Updated");
+                }
+                // Sleep d'1 seconde toutes les 4 itérations pour ne pas atteindre les 2000 requêtes / 10 minutes sur l'API INSEE
+                if (index.incrementAndGet() >= 4) {
+                    try {
+                        Thread.sleep(1500);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    index.set(0);
+                }
+            }
+        });
+
+        return result.toString();
     }
 
 }

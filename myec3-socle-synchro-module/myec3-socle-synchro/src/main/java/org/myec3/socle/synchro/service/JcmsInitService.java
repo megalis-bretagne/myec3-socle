@@ -1,4 +1,4 @@
-package org.myec3.socle.synchro.controller;
+package org.myec3.socle.synchro.service;
 
 import org.myec3.socle.core.domain.model.AgentProfile;
 import org.myec3.socle.core.domain.model.Application;

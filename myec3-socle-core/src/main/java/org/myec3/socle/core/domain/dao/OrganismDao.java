@@ -17,11 +17,11 @@
  */
 package org.myec3.socle.core.domain.dao;
 
-import java.util.List;
-
-import org.myec3.socle.core.domain.model.AgentProfile;
+import org.myec3.socle.core.domain.dto.OrganismLightDTO;
 import org.myec3.socle.core.domain.model.Customer;
 import org.myec3.socle.core.domain.model.Organism;
+
+import java.util.List;
 
 /**
  * This interface define methods to perform specific queries on {@link Organism}
@@ -61,6 +61,13 @@ public interface OrganismDao extends GenericStructureDao<Organism> {
 	 */
 	List<Organism> findAllByCriteria(String label, String siren,
 			String postalCode, String city, Customer customer);
+
+	/**
+	 * Retrive all organism by application
+	 * @param applicationId	the application identifier
+	 * @return	list of organism
+	 */
+	List<OrganismLightDTO> findOrganismLightByApplicationId(Long applicationId);
 
 	Organism findOrganismByIdSdm(long idSdm);
 }
