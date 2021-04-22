@@ -25,6 +25,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class SynchroController {
 
     private static final Logger logger = LoggerFactory.getLogger(SynchroController.class);
+    private static final String ACTION_SOCIALE = "ACTION SOCIALE";
 
     @Autowired
     @Qualifier("agentProfileService")
@@ -270,34 +271,51 @@ public class SynchroController {
         logger.info("[RESYNC] call API siren for each organism");
         StringBuilder result = new StringBuilder("");
         AtomicInteger index = new AtomicInteger(0);
-        organisms.stream().forEach( organismLightDTO -> {
+        organisms.forEach( organismLightDTO -> {
             ResponseEntreprises entreprises = mpsWsClient.getInfoEntreprises(organismLightDTO.getSiren());
-            String temp = organismLightDTO.getLabel();
-            temp = UnaccentLetter.unaccentString(temp);
-            temp = temp.toUpperCase();
+            if (entreprises.getEntreprise() == null) {
+                logger.info("[RESYNC] [\"+organismLightDTO.getId()+\"] [\"+organismLightDTO.getSiren()+\"] Pas de reponse de API INSEE");
+                result.append("[RESYNC] [\"+organismLightDTO.getId()+\"] [\"+organismLightDTO.getSiren()+\"] Pas de reponse de API INSEE <br/>");
+            } else {
+                // Mise en Majuscule et sans accent
+                String labelSocle = UnaccentLetter.unaccentString(organismLightDTO.getLabel())
+                        .toUpperCase();
 
-            if (!temp.equals(entreprises.getEntreprise().getLabel())) {
-                logger.info("[RESYNC] Organism "+organismLightDTO.getId()+" TO Update");
-                result.append("["+organismLightDTO.getId()+"] ["+ organismLightDTO.getLabel()+"] ==> ["+  entreprises.getEntreprise().getLabel()+"] <br>");
-                Organism organism = organismService.findOne(organismLightDTO.getId());
-                organism.setLabel(entreprises.getEntreprise().getLabel());
-                if (launchUpdate) {
-                    organism = organismService.update(organism);
-                    organismSynchronizer.synchronizeUpdate(organism, listApplicationIdToResynchronize, synchronizationType, sendingApplication);
-                    logger.info("[RESYNC] Organism "+organismLightDTO.getId()+" Updated");
-                }
-                // Sleep d'1 seconde toutes les 4 itérations pour ne pas atteindre les 2000 requêtes / 10 minutes sur l'API INSEE
-                if (index.incrementAndGet() >= 4) {
-                    try {
-                        Thread.sleep(1500);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
+                String labelInsee = entreprises.getEntreprise().getLabel();
+                String city = entreprises.getEtablissement_siege().getAddress().getCity();
+
+                if (!labelSocle.equals(labelInsee) || (labelInsee.contains(ACTION_SOCIALE) && !labelInsee.contains(city)) ) {
+                    // SI le libelle ACTION SOCIALE est présent et sans la présence de la commune, alors on ajoute la commune dans le label
+                    if (labelInsee.contains(ACTION_SOCIALE) && !labelInsee.contains(city)) {
+                        labelInsee = labelInsee + " DE "+city;
                     }
-                    index.set(0);
+                    logger.info("[RESYNC] ["+organismLightDTO.getId()+"] ["+organismLightDTO.getSiren()+"] ["+ organismLightDTO.getLabel()+"] ==> ["+ labelInsee +"]");
+                    result.append("["+organismLightDTO.getId()+"] ["+ organismLightDTO.getLabel()+"] ==> ["+ labelInsee +"] <br>");
+
+                    if (launchUpdate) {
+                        Organism organism = organismService.findOne(organismLightDTO.getId());
+                        organism.setLabel(labelInsee);
+                        organism = organismService.update(organism);
+                        organismSynchronizer.synchronizeUpdate(organism, listApplicationIdToResynchronize, synchronizationType, sendingApplication);
+                        logger.info("[RESYNC] Organism "+organismLightDTO.getId()+" Updated");
+                    }
+                } else {
+                    logger.info("[RESYNC] ["+organismLightDTO.getId()+"] ["+organismLightDTO.getSiren()+"] ["+ organismLightDTO.getLabel()+"] ==> PAS DE CHANGEMENT");
                 }
             }
-        });
 
+            // Sleep d'1 seconde toutes les 4 itérations pour ne pas atteindre les 2000 requêtes / 10 minutes sur l'API INSEE
+            if (index.incrementAndGet() >= 4) {
+                try {
+                    Thread.sleep(1500);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                index.set(0);
+            }
+
+        });
+        logger.info("[RESYNC] END");
         return result.toString();
     }
 
