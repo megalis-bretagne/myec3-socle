@@ -14,10 +14,10 @@
 		                <t:label for="label">${message:establishment-view-label} *:</t:label>
 		                <t:textfield t:id="label" t:value="establishment.label" t:validate="required, maxlength=255"/>
 		            </p>	            
-		            <t:if test="siretDisplay">
+		            <t:if test="establishment.siret">
 			            <p>
 			                <t:label for="establishmentSiret">${message:siret-label} *:</t:label>
-			                <t:textfield t:id="establishmentSiret" t:value="establishment.siret" t:validate="required" t:disabled="true"/>
+			                <t:textfield t:id="establishmentSiret" t:value="establishment.siret" t:validate="required" t:disabled="disableSiret"/>
 			            </p>
 			        </t:if>	            
 					<p>

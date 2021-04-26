@@ -266,7 +266,20 @@ public class MpsWsClient implements CompanyWSinfo {
         try {
             String url = this.getUrlEntreprise(company.getSiren());
             HttpURLConnection conn = this.getUrlConnection(url);
-            return conn.getResponseCode() >= HttpStatus.OK.getValue() && conn.getResponseCode() <= HttpStatus.NO_CONTENT.getValue();
+            return conn != null && conn.getResponseCode() >= HttpStatus.OK.getValue() && conn.getResponseCode() <= HttpStatus.NO_CONTENT.getValue();
+        } catch (IOException e) {
+            return false;
+        }
+    }
+
+    @Override
+    public boolean establishmentExist(Establishment establishment) {
+        logger.info("Check establishment with siret " + establishment.getSiret() + " exist");
+
+        try {
+            String url = this.getUrlEtablissement(establishment.getSiret());
+            HttpURLConnection conn = this.getUrlConnection(url);
+            return conn != null && conn.getResponseCode() >= HttpStatus.OK.getValue() && conn.getResponseCode() <= HttpStatus.NO_CONTENT.getValue();
         } catch (IOException e) {
             return false;
         }

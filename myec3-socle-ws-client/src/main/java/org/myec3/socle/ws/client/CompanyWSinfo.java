@@ -26,4 +26,11 @@ public interface CompanyWSinfo {
 	 * @return	true is exist
 	 */
 	boolean companyExist(Company company);
+
+	/**
+	 * Check if establishment with siret exist
+	 * @param establishment
+	 * @return	true is exist
+	 */
+	boolean establishmentExist(Establishment establishment);
 }
