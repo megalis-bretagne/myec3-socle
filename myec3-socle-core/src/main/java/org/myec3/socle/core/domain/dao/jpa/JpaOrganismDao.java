@@ -17,18 +17,18 @@
  */
 package org.myec3.socle.core.domain.dao.jpa;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.persistence.NoResultException;
-import javax.persistence.Query;
-
+import org.hibernate.transform.Transformers;
 import org.myec3.socle.core.domain.dao.OrganismDao;
-import org.myec3.socle.core.domain.model.Company;
+import org.myec3.socle.core.domain.dto.OrganismLightDTO;
 import org.myec3.socle.core.domain.model.Customer;
 import org.myec3.socle.core.domain.model.Organism;
 import org.myec3.socle.core.domain.model.enums.ResourceType;
 import org.springframework.stereotype.Repository;
+
+import javax.persistence.NoResultException;
+import javax.persistence.Query;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Provide specific implementations to perform operations on {@link Organism}
@@ -122,6 +122,24 @@ public class JpaOrganismDao extends JpaGenericStructureDao<Organism> implements 
 			return new ArrayList<Organism>();
 		}
 	}
+
+	@Override
+	public List<OrganismLightDTO> findOrganismLightByApplicationId(Long applicationId) {
+		String queryString = SELECT_OPERATOR +
+				" c.id as id , c.label as label, c.siren as siren" +
+				" FROM Organism c " +
+				"INNER JOIN c.applications a where a.id = :applicationId ";
+
+
+		List<OrganismLightDTO> result =  this.getEm().createQuery(queryString)
+				.setParameter("applicationId", applicationId)
+				.unwrap(org.hibernate.query.Query.class)
+				.setResultTransformer(Transformers.aliasToBean(OrganismLightDTO.class))
+				.getResultList();
+
+		return result;
+	}
+
 
 	@Override
 	public Organism findOrganismByIdSdm(long idSdm) {

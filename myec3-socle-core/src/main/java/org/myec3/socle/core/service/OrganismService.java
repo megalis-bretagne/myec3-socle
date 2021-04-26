@@ -17,13 +17,14 @@
  */
 package org.myec3.socle.core.service;
 
-import java.util.List;
-
+import org.myec3.socle.core.domain.dto.OrganismLightDTO;
+import org.myec3.socle.core.domain.model.Application;
 import org.myec3.socle.core.domain.model.Customer;
 import org.myec3.socle.core.domain.model.Organism;
-import org.myec3.socle.core.domain.model.OrganismDepartment;
 import org.myec3.socle.core.service.exceptions.AllAcronymsUsedException;
 import org.myec3.socle.core.service.exceptions.OrganismCreationException;
+
+import java.util.List;
 
 /**
  * Interface defining Business Services methods and providing {@link Organism}
@@ -96,4 +97,11 @@ public interface OrganismService extends GenericStructureService<Organism> {
 
 
 	Organism findOrganismByIdSdm(long idSdm);
+
+	/**
+	 * Retrive all organism by application
+	 * @param application	the application
+	 * @return	list of organism light
+	 */
+	List<OrganismLightDTO> findOrganismLightByApplication(Application application);
 }

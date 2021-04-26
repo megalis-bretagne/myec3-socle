@@ -17,30 +17,15 @@
  */
 package org.myec3.socle.core.service.impl;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.myec3.socle.core.constants.MyEc3Constants;
 import org.myec3.socle.core.domain.dao.OrganismDao;
-import org.myec3.socle.core.domain.model.AcronymsList;
-import org.myec3.socle.core.domain.model.Application;
-import org.myec3.socle.core.domain.model.Customer;
-import org.myec3.socle.core.domain.model.Organism;
-import org.myec3.socle.core.domain.model.OrganismDepartment;
-import org.myec3.socle.core.domain.model.OrganismStatus;
-import org.myec3.socle.core.domain.model.Structure;
+import org.myec3.socle.core.domain.dto.OrganismLightDTO;
+import org.myec3.socle.core.domain.model.*;
 import org.myec3.socle.core.domain.model.enums.StructureTypeValue;
 import org.myec3.socle.core.domain.model.meta.StructureType;
-import org.myec3.socle.core.service.AcronymsListService;
-import org.myec3.socle.core.service.ApplicationService;
-import org.myec3.socle.core.service.OrganismDepartmentService;
-import org.myec3.socle.core.service.OrganismService;
-import org.myec3.socle.core.service.OrganismStatusService;
-import org.myec3.socle.core.service.StructureService;
-import org.myec3.socle.core.service.StructureTypeService;
+import org.myec3.socle.core.service.*;
 import org.myec3.socle.core.service.exceptions.AllAcronymsUsedException;
 import org.myec3.socle.core.service.exceptions.OrganismCreationException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,6 +33,10 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
 
 /**
  * Concrete Service implementation providing specific methods to
@@ -230,5 +219,12 @@ public class OrganismServiceImpl extends GenericStructureServiceImpl<Organism, O
 	@Override
 	public Organism findOrganismByIdSdm(long idSdm) {
 		return this.dao.findOrganismByIdSdm(idSdm);
+	}
+
+	@Override
+	public List<OrganismLightDTO> findOrganismLightByApplication(Application application) {
+		// validate parameters
+		Assert.notNull(application, "Application should not be null");
+		return this.dao.findOrganismLightByApplicationId(application.getId());
 	}
 }

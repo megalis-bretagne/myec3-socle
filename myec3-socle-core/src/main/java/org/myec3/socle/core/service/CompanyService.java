@@ -17,11 +17,11 @@
  */
 package org.myec3.socle.core.service;
 
-import java.util.List;
-
 import org.myec3.socle.core.domain.model.Company;
 import org.myec3.socle.core.domain.model.MpsUpdateJob;
 import org.myec3.socle.core.service.exceptions.CompanyCreationException;
+
+import java.util.List;
 
 /**
  * Interface defining Business Services methods and providing {@link Company}
