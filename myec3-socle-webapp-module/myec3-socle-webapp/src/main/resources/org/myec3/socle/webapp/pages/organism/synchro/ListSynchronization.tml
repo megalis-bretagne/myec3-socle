@@ -70,9 +70,9 @@
 
             <t:parameter name="statutCell">
                 <img src="${context:static/images}/${statutImage}"
-                     alt="${logRow.synchronizationLog.statut}  (${logRow.synchronizationLog.nbAttempts} tentatives)"
-                     title="${logRow.synchronizationLog.statut} (${logRow.synchronizationLog.nbAttempts} tentatives)" />
-                (${logRow.synchronizationLog.nbAttempts})
+                     alt="${logRow.synchronizationLog.statut}  (${nbAttempts} tentatives)"
+                     title="${logRow.synchronizationLog.statut} (${nbAttempts} tentatives)" />
+                (${nbAttempts})
             </t:parameter>
 
             <t:parameter name="synchronizationDateCell">
