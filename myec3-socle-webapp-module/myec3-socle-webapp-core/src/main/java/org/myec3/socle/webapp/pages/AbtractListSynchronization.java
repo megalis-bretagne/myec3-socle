@@ -183,4 +183,15 @@ public abstract class AbtractListSynchronization extends AbstractPage {
         }
         return StringUtils.EMPTY;
     }
+
+    /**
+     * Get nbAttempts for log row
+     * @return   nbAttempt + 1
+     */
+    public String getNbAttempts() {
+        if (this.logRow == null) {
+            return StringUtils.EMPTY;
+        }
+        return String.valueOf(this.logRow.getSynchronizationLog().getNbAttempts() + 1);
+    }
 }
