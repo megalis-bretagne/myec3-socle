@@ -9,6 +9,7 @@ import org.myec3.socle.core.domain.model.Person;
 import org.myec3.socle.core.domain.model.enums.CompanyINSEECat;
 import org.myec3.socle.core.domain.model.enums.Country;
 import org.myec3.socle.core.service.InseeLegalCategoryService;
+import org.myec3.socle.core.sync.api.HttpStatus;
 import org.myec3.socle.ws.client.CompanyWSinfo;
 import org.myec3.socle.ws.client.impl.mps.response.ResponseEntreprises;
 import org.myec3.socle.ws.client.impl.mps.response.ResponseEtablissements;
@@ -138,6 +139,7 @@ public class MpsWsClient implements CompanyWSinfo {
         return response;
     }
 
+    @Override
     public Company updateCompanyInfo(Company company, InseeLegalCategoryService inseeLegalCategoryService) {
         logger.info("Update Company " + company.getSiren() + " Information with the MPS WS ");
 
@@ -150,6 +152,7 @@ public class MpsWsClient implements CompanyWSinfo {
         return company;
     }
 
+    @Override
     public Establishment updateEstablishmentInfo(Establishment establishment, Company company) throws IOException {
         if (establishment.getSiret() != null) {
             String finalAddresse = "";
@@ -209,6 +212,7 @@ public class MpsWsClient implements CompanyWSinfo {
         return establishment;
     }
 
+    @Override
     public Establishment getEstablishment(String siret) throws IOException {
         Establishment establishment = new Establishment();
         if (siret != null) {
@@ -237,6 +241,7 @@ public class MpsWsClient implements CompanyWSinfo {
         return establishment;
     }
 
+    @Override
     public Company updateCompany(String siren, InseeLegalCategoryService inseeLegalCategoryService) {
         Company company = new Company();
         if (siren != null) {
@@ -252,6 +257,32 @@ public class MpsWsClient implements CompanyWSinfo {
             logger.info("SIREN invalid or null !");
         }
         return company;
+    }
+
+    @Override
+    public boolean companyExist(Company company) {
+        logger.info("Check Company with siren " + company.getSiren() + " exist");
+
+        try {
+            String url = this.getUrlEntreprise(company.getSiren());
+            HttpURLConnection conn = this.getUrlConnection(url);
+            return conn != null && conn.getResponseCode() >= HttpStatus.OK.getValue() && conn.getResponseCode() <= HttpStatus.NO_CONTENT.getValue();
+        } catch (IOException e) {
+            return false;
+        }
+    }
+
+    @Override
+    public boolean establishmentExist(Establishment establishment) {
+        logger.info("Check establishment with siret " + establishment.getSiret() + " exist");
+
+        try {
+            String url = this.getUrlEtablissement(establishment.getSiret());
+            HttpURLConnection conn = this.getUrlConnection(url);
+            return conn != null && conn.getResponseCode() >= HttpStatus.OK.getValue() && conn.getResponseCode() <= HttpStatus.NO_CONTENT.getValue();
+        } catch (IOException e) {
+            return false;
+        }
     }
 
     private String getUrlEntreprise(String companySiren) {

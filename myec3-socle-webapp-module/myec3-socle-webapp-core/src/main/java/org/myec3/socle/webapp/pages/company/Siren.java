@@ -21,12 +21,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.tapestry5.EventConstants;
 import org.apache.tapestry5.PersistenceConstants;
-import org.apache.tapestry5.annotations.Component;
-import org.apache.tapestry5.annotations.InjectPage;
-import org.apache.tapestry5.annotations.OnEvent;
-import org.apache.tapestry5.annotations.Persist;
-import org.apache.tapestry5.annotations.Property;
-import org.apache.tapestry5.annotations.Service;
+import org.apache.tapestry5.annotations.*;
 import org.apache.tapestry5.corelib.components.Form;
 import org.apache.tapestry5.corelib.components.Submit;
 import org.apache.tapestry5.ioc.Messages;
@@ -34,10 +29,8 @@ import org.apache.tapestry5.ioc.annotations.Inject;
 import org.apache.tapestry5.services.Request;
 import org.myec3.socle.core.domain.model.Address;
 import org.myec3.socle.core.domain.model.Company;
-import org.myec3.socle.core.domain.model.Structure;
 import org.myec3.socle.core.domain.model.enums.Country;
 import org.myec3.socle.core.service.CompanyService;
-import org.myec3.socle.core.service.StructureService;
 import org.myec3.socle.webapp.pages.Index;
 
 /**
@@ -66,14 +59,6 @@ import org.myec3.socle.webapp.pages.Index;
 public class Siren {
 
 	private static final Log logger = LogFactory.getLog(Siren.class);
-
-	/**
-	 * Business Service providing methods and specifics operations on
-	 * {@link Structure} objects
-	 */
-	@Inject
-	@Service("structureService")
-	private StructureService structureService;
 
 	/**
 	 * Business Service providing methods and specifics operations on
@@ -179,7 +164,7 @@ public class Siren {
 	public void onValidate() {
 		if (this.formFrenchCompany != null) {
 			if (null != this.company.getSiren()) {
-				if (!this.structureService
+				if (!this.companyService
 						.isSirenValid(this.company.getSiren())) {
 					this.formFrenchCompany.recordError(this.messages
 							.get("invalid-siren-error"));
