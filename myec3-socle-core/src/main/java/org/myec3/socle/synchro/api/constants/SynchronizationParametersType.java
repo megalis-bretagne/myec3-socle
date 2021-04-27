@@ -18,10 +18,11 @@
 package org.myec3.socle.synchro.api.constants;
 
 import org.myec3.socle.core.domain.model.Application;
+import org.myec3.socle.core.domain.model.Resource;
 
 /**
  * Enumeration used to identify what are the parameters sent into the JMS during
- * the synchronization of a {@link Resource}
+ * the synchronization of a {@link org.myec3.socle.core.domain.model.Resource}
  * 
  * @author Matthieu Proboeuf <matthieu.proboeuf@atosorigin.com>
  * 
@@ -42,14 +43,14 @@ public enum SynchronizationParametersType {
 	 * The Type of synchronization. Used to know what service is responsible for
 	 * the current synchronization
 	 * 
-	 * @see SynchronizationType.class
+	 * @see SynchronizationType
 	 */
 	SYNCHRONIZATION_TYPE("synchronizationType"),
 
 	/**
 	 * The Type of synchronization job.
 	 * 
-	 * @see SynchronizationJobType.class
+	 * @see SynchronizationJobType
 	 */
 	SYNCHRONIZATION_JOB_TYPE("synchronizationJobType"),
 
