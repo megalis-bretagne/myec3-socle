@@ -75,7 +75,7 @@ public class EmployeeSynchronizationManagerImpl extends ResourceSynchronizationM
 
 		this.getLogger().info("[setCommonJob] of EmployeeProfile : " + resource.getName());
 
-		List<SynchronizationSubscription> subscriptionList = new ArrayList<SynchronizationSubscription>();
+		List<SynchronizationSubscription> subscriptionList = new ArrayList<>();
 
 		if (listApplicationIdToResynchronize == null) {
 			// get the list of subscription for this type of resource

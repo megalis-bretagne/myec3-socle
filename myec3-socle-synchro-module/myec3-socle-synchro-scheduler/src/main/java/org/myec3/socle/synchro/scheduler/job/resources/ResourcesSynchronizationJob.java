@@ -17,6 +17,7 @@
  */
 package org.myec3.socle.synchro.scheduler.job.resources;
 
+import org.apache.commons.lang3.BooleanUtils;
 import org.myec3.socle.core.domain.model.*;
 import org.myec3.socle.core.domain.model.enums.ResourceType;
 import org.myec3.socle.core.domain.sdm.model.SdmAdresse;
@@ -687,7 +688,7 @@ public abstract class ResourcesSynchronizationJob<T extends Resource> extends Qu
 		if ("SDM".equals(synchronizationSubscription.getApplication().getName())) {
 			return sdmWsClientImpl;
 		}
-		if (synchronizationSubscription.getHttps()) {
+		if (BooleanUtils.isTrue(synchronizationSubscription.getHttps())) {
 			return externalWsClientService;
 		} else {
 			return resourceWsClientService;
@@ -724,82 +725,45 @@ public abstract class ResourcesSynchronizationJob<T extends Resource> extends Qu
 		switch (this.getResponseMessage().getHttpStatus()) {
 			// Success cases
 			case OK:
-				logger.info("[checkResponseMessage][OK] " + "HTTP Status 200 : synchronization successful to "
-						+ synchronizationSubscription.getApplication().getName());
-				break;
-
 			case CREATED:
-				logger.info("[checkResponseMessage][CREATED] " + "HTTP Status 201 : synchronization successful to "
-						+ synchronizationSubscription.getApplication().getName());
-				break;
-
 			case ACCEPTED:
-				logger.info("[checkResponseMessage][ACCEPTED] " + "HTTP Status 202 : synchronization successful to "
-						+ synchronizationSubscription.getApplication().getName());
-				break;
-
 			case NO_CONTENT:
-				logger.info("[checkResponseMessage][NO CONTENT] " + "HTTP Status 204 : synchronization successful to "
-						+ synchronizationSubscription.getApplication().getName());
+				logger.info("[checkResponseMessage][{}] HTTP Status {} : synchronization successful to {}",
+						this.getResponseMessage().getHttpStatus().getLabel(),
+						this.getResponseMessage().getHttpStatus().getValue(),
+						synchronizationSubscription.getApplication().getName());
+				this.schedulerService.deleteDelayedAfterSucess(resource, synchronizationSubscription);
 				break;
-
-			// Error cases
-			case BAD_REQUEST:
-				logger.info("[checkResponseMessage][BAD_REQUEST][" + responseMessage.getError().getMethodType()
-						+ "] HTTP Status 400 : synchronization error ");
-				// check the error code type in order to know what is the action to
-				// perform
-				this.checkResponseMessageErrorCodeType(responseMessage, resource, synchronizationSubscription,
-						this.synchronizationJobType);
-				break;
-
 			case UNAUTHORIZED:
-				// Nothing to do, the synchronization error is already logged into
-				// the database
-				logger.info("[checkResponseMessage][UNAUTHORIZED][" + responseMessage.getError().getMethodType()
-						+ "] HTTP Status 401 : synchronization error ");
-				break;
-
 			case FORBIDDEN:
-				// Nothing to do, the synchronization error is already logged into
-				// the database
-				logger.info("[checkResponseMessage][FORBIDDEN][" + responseMessage.getError().getMethodType()
-						+ "] HTTP Status 403 : synchronization error ");
-				break;
-
-			case NOT_FOUND:
-				logger.info("[checkResponseMessage][NOT FOUND][" + responseMessage.getError().getMethodType()
-						+ "] HTTP Status 404 : synchronization error ");
-				// check the error code type in order to know what is the action to
-				// perform
-				this.checkResponseMessageErrorCodeType(responseMessage, resource, synchronizationSubscription,
-						this.synchronizationJobType);
-				break;
-
 			case METHOD_NOT_ALLOWED:
 				// Nothing to do, the synchronization error is already logged into
 				// the database
-				logger.info("[checkResponseMessage][METHOD NOT ALLOWED][" + responseMessage.getError().getMethodType()
-						+ "] HTTP Status 405 : synchronization error ");
+				logger.info("[checkResponseMessage][{}][{}] HTTP Status {} : synchronization error ",
+						this.getResponseMessage().getHttpStatus().getLabel(),
+						responseMessage.getError().getMethodType(),
+						this.getResponseMessage().getHttpStatus().getValue());
 				break;
-
+			// Error cases
+			case BAD_REQUEST:
+			case NOT_FOUND:
 			case INTERNAL_SERVER_ERROR:
-				logger.info("[checkResponseMessage][INTERNAL SERVER ERROR][" + responseMessage.getError().getMethodType()
-						+ "] HTTP Status 500 : synchronization error ");
+				logger.info("[checkResponseMessage][{}][{}] HTTP Status {} : synchronization error ",
+						this.getResponseMessage().getHttpStatus().getLabel(),
+						responseMessage.getError().getMethodType(),
+						this.getResponseMessage().getHttpStatus().getValue());
 				// check the error code type in order to know what is the action to
 				// perform
 				this.checkResponseMessageErrorCodeType(responseMessage, resource, synchronizationSubscription,
 						this.synchronizationJobType);
 				break;
-
 			case SERVER_UNAVAILABLE:
-				logger.info("[checkResponseMessage][SERVER UNAVAILABLE][" + responseMessage.getError().getMethodType()
-						+ "] HTTP Status 503 : synchronization error ");
-
+				logger.info("[checkResponseMessage][SERVER UNAVAILABLE][{}] HTTP Status 503 : synchronization error",responseMessage.getError().getMethodType());
 				// Log the error
 				logger.error(
-						"Impossible de contacter l'application " + synchronizationSubscription.getApplication().getName()
-								+ ". La synchronisation de la ressource d'id : " + resource.getId() + " a echoue.");
+						"Impossible de contacter l'application {}. La synchronisation de la ressource d'id : {} a echoue.",
+						synchronizationSubscription.getApplication().getName(),
+						resource.getId());
 
 				// Manage the synchronization error in order to know what we must do
 				this.manageSynchronizationError(responseMessage, resource, synchronizationSubscription,
@@ -828,21 +792,13 @@ public abstract class ResourcesSynchronizationJob<T extends Resource> extends Qu
 			// check error code type contained into the response message
 			switch (errorCodeType) {
 				case SYNTAX_ERROR:
-					// Http code : 400, error code type : 001 (SYNTAX ERROR)
-					logger.info("[ERROR] 400 [ERROR_CODE_TYPE] 001 : syntax error");
-					// Manage the synchronization error
-					this.manageSynchronizationError(responseMessage, resource, synchronizationSubscription,
-							synchronizationJobType, ErrorCodeType.SYNTAX_ERROR);
-					break;
-
 				case FORMAT_ERROR:
-					// Http code : 400, error code type : 002
-					logger.info("[ERROR] 400 [ERROR_CODE_TYPE] 002 : Format error");
+					// Http code : 400, error code type : 001|002
+					logger.info("[ERROR] 400 [ERROR_CODE_TYPE] {} : {}", errorCodeType.getLabel(), errorCodeType);
 					// Manage the synchronization error
 					this.manageSynchronizationError(responseMessage, resource, synchronizationSubscription,
-							synchronizationJobType, ErrorCodeType.FORMAT_ERROR);
+							synchronizationJobType, errorCodeType);
 					break;
-
 				case RESOURCE_MISSING:
 					// Http code : 404, error code type : 003
 					// In this case the error returned is not important because we
@@ -957,13 +913,11 @@ public abstract class ResourcesSynchronizationJob<T extends Resource> extends Qu
 										  SynchronizationSubscription synchronizationSubscription, ErrorCodeType errorCodeType) {
 		logger.debug("Starting checkSynchronizationError");
 		// Find SynchronizationError from database
-		Long synchronisationErrorId = new Long(this.synchronizationErrorId);
-		SynchronizationError newSynchronizationError = synchronizationErrorService.findOne(synchronisationErrorId);
+		SynchronizationError newSynchronizationError = synchronizationErrorService.findOne(this.synchronizationErrorId);
 
 		// check number of attempts. If synchronization error > at the maximum
 		// defined in the properties file we delete it
-		if (synchronizationErrorService.findOne(newSynchronizationError.getId())
-				.getNbAttempts() >= MyEc3SynchroConstants.MAX_ATTEMPTS) {
+		if (newSynchronizationError.getNbAttempts() >= MyEc3SynchroConstants.MAX_ATTEMPTS) {
 			synchronizationErrorService.deleteById(newSynchronizationError.getId());
 			logger.error("The error handling of resource : " + resource.getName() + ", id : " + resource.getId()
 					+ " have failed " + MyEc3SynchroConstants.MAX_ATTEMPTS
@@ -1643,7 +1597,7 @@ public abstract class ResourcesSynchronizationJob<T extends Resource> extends Qu
 	 */
 	@SuppressWarnings("rawtypes")
 	public ResourceService getResourceService(ClassType classType) {
-		logger.debug("Enterring in method getResourceService with classType : " + classType);
+		logger.debug("Enterring in method getResourceService with classType : {}", classType);
 
 		switch (classType) {
 			case ADMIN_PROFILE:

@@ -73,7 +73,7 @@ public class JMSSynchronizationServiceImpl implements SynchronizationService {
 	 * Initialize JMS Connection Factory
 	 */
 	public JMSSynchronizationServiceImpl() {
-
+		// empty
 	}
 
 	/**
@@ -192,7 +192,7 @@ public class JMSSynchronizationServiceImpl implements SynchronizationService {
 					MyEc3EsbConstants.getApplicationSendingJmsName());
 
 			if (createdResources != null) {
-				resourcesStream = new ArrayList<String>();
+				resourcesStream = new ArrayList<>();
 				for (Resource createdResource : createdResources) {
 					outputStream = this.cleanAndMarshalResource(createdResource);
 					resourcesStream.add(outputStream.toString());
@@ -249,7 +249,7 @@ public class JMSSynchronizationServiceImpl implements SynchronizationService {
 					MyEc3EsbConstants.getApplicationSendingJmsName());
 
 			if (updatedResources != null) {
-				resourcesStream = new ArrayList<String>();
+				resourcesStream = new ArrayList<>();
 				for (Resource updatedResource : updatedResources) {
 					outputStream = this.cleanAndMarshalResource(updatedResource);
 					resourcesStream.add(outputStream.toString());
@@ -259,7 +259,7 @@ public class JMSSynchronizationServiceImpl implements SynchronizationService {
 
 			msg.setObject(SynchronizationParametersType.UPDATED_RESOURCES.toString(), resourcesStream);
 			if (addedResources != null) {
-				resourcesStream = new ArrayList<String>();
+				resourcesStream = new ArrayList<>();
 				for (Resource addedResource : addedResources) {
 					outputStream = this.cleanAndMarshalResource(addedResource);
 					resourcesStream.add(outputStream.toString());
@@ -269,7 +269,7 @@ public class JMSSynchronizationServiceImpl implements SynchronizationService {
 
 			msg.setObject(SynchronizationParametersType.ADDED_RESOURCES.toString(), resourcesStream);
 			if (removedResources != null) {
-				resourcesStream = new ArrayList<String>();
+				resourcesStream = new ArrayList<>();
 				for (Resource removedResource : removedResources) {
 					outputStream = this.cleanAndMarshalResource(removedResource);
 					resourcesStream.add(outputStream.toString());
