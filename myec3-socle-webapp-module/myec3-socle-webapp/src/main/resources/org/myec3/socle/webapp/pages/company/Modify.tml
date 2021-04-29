@@ -23,13 +23,13 @@
 				<p>
 	                <t:if test="company.siren">
 	                	<t:label for="siren">${message:siren-label} :</t:label>
-	                	<t:textfield t:id="siren" t:value="company.siren" t:validate="regexp" disabled="literal:disabled" />
+						<t:textfield t:id="siren" t:value="company.siren" t:validate="required,regexp,minlength=9,maxlength=9" t:disabled="disableSiren" />
 	                </t:if>
 	            </p>
 				<p>
 					<t:if test ="company.nic">
-						<t:label for="nic">${message:headOfficeNic-label} :</t:label>
-						<t:textfield t:id="nic" t:value="company.nic" t:disabled="nicDisplay"></t:textfield>
+						<t:label for="siret">${message:headOfficeNic-label} :</t:label>
+						<t:textfield t:id="siret" t:value="company.nic" t:validate="required,regexp,minlength=5,maxlength=5" t:disabled="disableSiren"></t:textfield>
 					</t:if>
 				</p>
 				<p>			

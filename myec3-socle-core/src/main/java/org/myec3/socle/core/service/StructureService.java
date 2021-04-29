@@ -17,10 +17,10 @@
  */
 package org.myec3.socle.core.service;
 
-import java.util.List;
-
 import org.myec3.socle.core.domain.model.Application;
 import org.myec3.socle.core.domain.model.Structure;
+
+import java.util.List;
 
 /**
  * Interface defining Business Services methods and providing {@link Structure}
@@ -56,15 +56,6 @@ public interface StructureService extends ResourceService<Structure> {
 	 *             if application is null.
 	 */
 	List<Structure> findAllStructureByApplication(Application application);
-
-	/**
-	 * Test if structure (organism or company) siren is valid
-	 * 
-	 * @param siren
-	 *            : siren number to check
-	 * @return true if valid, false if null or otherwise.
-	 */
-	Boolean isSirenValid(String siren);
 
 	/**
 	 * Find an organism or company by its siren

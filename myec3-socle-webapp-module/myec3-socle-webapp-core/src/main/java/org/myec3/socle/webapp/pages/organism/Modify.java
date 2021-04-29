@@ -17,44 +17,40 @@
  */
 package org.myec3.socle.webapp.pages.organism;
 
-import java.awt.Graphics2D;
-import java.awt.RenderingHints;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.FileInputStream;
-import java.util.*;
-
-import javax.imageio.ImageIO;
-import javax.inject.Named;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.tapestry5.Block;
 import org.apache.tapestry5.EventConstants;
 import org.apache.tapestry5.SelectModel;
 import org.apache.tapestry5.ValueEncoder;
-import org.apache.tapestry5.annotations.AfterRender;
 import org.apache.tapestry5.annotations.Component;
-import org.apache.tapestry5.annotations.Import;
-import org.apache.tapestry5.annotations.InjectPage;
-import org.apache.tapestry5.annotations.OnEvent;
-import org.apache.tapestry5.annotations.Persist;
-import org.apache.tapestry5.annotations.Property;
+import org.apache.tapestry5.annotations.*;
 import org.apache.tapestry5.corelib.components.Form;
 import org.apache.tapestry5.ioc.annotations.Inject;
 import org.apache.tapestry5.services.SelectModelFactory;
 import org.apache.tapestry5.services.javascript.JavaScriptSupport;
 import org.apache.tapestry5.upload.services.UploadedFile;
-import org.myec3.socle.core.domain.model.*;
+import org.myec3.socle.core.domain.model.Address;
+import org.myec3.socle.core.domain.model.Organism;
+import org.myec3.socle.core.domain.model.OrganismStatus;
+import org.myec3.socle.core.domain.model.Resource;
 import org.myec3.socle.core.domain.model.enums.AuthorizedMimeType;
 import org.myec3.socle.core.domain.model.enums.OrganismMemberStatus;
 import org.myec3.socle.core.domain.model.enums.OrganismNafCode;
 import org.myec3.socle.core.service.OrganismService;
-import org.myec3.socle.core.service.StructureService;
 import org.myec3.socle.synchro.api.SynchronizationNotificationService;
 import org.myec3.socle.webapp.constants.GuWebAppConstants;
 import org.myec3.socle.webapp.encoder.GenericListEncoder;
 import org.myec3.socle.webapp.pages.AbstractPage;
+
+import javax.imageio.ImageIO;
+import javax.inject.Named;
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.FileInputStream;
+import java.util.List;
+import java.util.*;
 
 /**
  * Page used to modify the organism{@link Organism}<br />
@@ -94,14 +90,6 @@ public class Modify extends AbstractPage {
 	@Inject
 	@Named("organismService")
 	private OrganismService organismService;
-
-	/**
-	 * Business Service providing methods and specifics operations on
-	 * {@link Structure} objects
-	 */
-	@Inject
-	@Named("structureService")
-	private StructureService structureService;
 
 	@InjectPage
 	private DetailOrganism detailOrganismPage;
@@ -227,7 +215,7 @@ public class Modify extends AbstractPage {
 	@OnEvent(value = EventConstants.VALIDATE, component = "modification_form")
 	public void onValidate() {
 		if (null != this.organism.getSiren()) {
-			if (!this.structureService.isSirenValid(this.organism.getSiren())) {
+			if (!this.organismService.isSirenValid(this.organism.getSiren())) {
 				this.form.recordError(this.getMessages().get("invalid-siren-error"));
 			}
 		}

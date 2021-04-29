@@ -17,14 +17,14 @@
  */
 package org.myec3.socle.core.service.impl;
 
-import java.util.List;
-
 import org.myec3.socle.core.domain.dao.GenericStructureDao;
 import org.myec3.socle.core.domain.model.Structure;
 import org.myec3.socle.core.service.GenericStructureService;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
+
+import java.util.List;
 
 /**
  * This abstract implementation service provides commons methods that could be
@@ -70,22 +70,25 @@ public abstract class GenericStructureServiceImpl<T extends Structure, D extends
 			return Boolean.FALSE;
 		}
 
-		int sum = 0;
-		for (int i = 0; i < siren.length(); i++) {
-			int value = Integer.valueOf(String.valueOf(siren.charAt(i)));
-			// Attention, les conditions sont inversés pour verifier un SIRET
-			// (sur 14 chiffres)
-			if (i % 2 == 0) {
-				sum += value;
-			} else {
-				sum += 2 * value > 9 ? 2 * value - 9 : 2 * value;
+		try {
+			int sum = 0;
+			for (int i = 0; i < siren.length(); i++) {
+				int value = Integer.valueOf(String.valueOf(siren.charAt(i)));
+				// Attention, les conditions sont inversés pour verifier un SIRET
+				// (sur 14 chiffres)
+				if (i % 2 == 0) {
+					sum += value;
+				} else {
+					sum += 2 * value > 9 ? 2 * value - 9 : 2 * value;
+				}
 			}
-		}
 
-		if (sum % 10 != 0) {
+			if (sum % 10 != 0) {
+				return Boolean.FALSE;
+			}
+		} catch (RuntimeException e) {
 			return Boolean.FALSE;
 		}
-
 		return Boolean.TRUE;
 	}
 

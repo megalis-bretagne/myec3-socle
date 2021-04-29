@@ -17,41 +17,29 @@
  */
 package org.myec3.socle.webapp.pages.company.establishment;
 
-import java.util.Arrays;
-import java.util.LinkedHashMap;
-import java.util.Map;
-
-import javax.inject.Named;
-
+import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.tapestry5.EventConstants;
 import org.apache.tapestry5.PersistenceConstants;
 import org.apache.tapestry5.ValueEncoder;
-import org.apache.tapestry5.annotations.Component;
-import org.apache.tapestry5.annotations.InjectPage;
-import org.apache.tapestry5.annotations.OnEvent;
-import org.apache.tapestry5.annotations.Persist;
-import org.apache.tapestry5.annotations.Property;
+import org.apache.tapestry5.annotations.*;
 import org.apache.tapestry5.corelib.components.Form;
 import org.apache.tapestry5.ioc.Messages;
 import org.apache.tapestry5.ioc.annotations.Inject;
-import org.myec3.socle.core.domain.model.Establishment;
-import org.myec3.socle.core.domain.model.InseeBorough;
-import org.myec3.socle.core.domain.model.InseeCanton;
-import org.myec3.socle.core.domain.model.InseeCounty;
-import org.myec3.socle.core.domain.model.InseeGeoCode;
-import org.myec3.socle.core.domain.model.InseeRegion;
+import org.myec3.socle.core.domain.model.*;
 import org.myec3.socle.core.domain.model.enums.CompanyNafCode;
-import org.myec3.socle.core.service.EstablishmentService;
-import org.myec3.socle.core.service.InseeBoroughService;
-import org.myec3.socle.core.service.InseeCantonService;
-import org.myec3.socle.core.service.InseeCountyService;
-import org.myec3.socle.core.service.InseeGeoCodeService;
-import org.myec3.socle.core.service.InseeRegionService;
+import org.myec3.socle.core.service.*;
 import org.myec3.socle.synchro.api.SynchronizationNotificationService;
 import org.myec3.socle.webapp.encoder.GenericListEncoder;
 import org.myec3.socle.webapp.pages.AbstractPage;
+import org.myec3.socle.ws.client.CompanyWSinfo;
+import org.myec3.socle.ws.client.impl.mps.MpsWsClient;
+
+import javax.inject.Named;
+import java.util.Arrays;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * Page used to modify an establishment {@link Establishment}.<br />
@@ -137,6 +125,8 @@ public class Modify extends AbstractPage {
 	@InjectPage
 	@Property
 	private View viewEstablishmentsPage;
+
+	private CompanyWSinfo mpsWS = new MpsWsClient();
 
 	/**
 	 * @param id : establishment id
@@ -234,11 +224,12 @@ public class Modify extends AbstractPage {
 	@OnEvent(value = EventConstants.VALIDATE, component = "modification_form")
 	public void onValidate() {
 
-		if (!(this.establishment.getCompany().getForeignIdentifier().equals(Boolean.TRUE))) {
-			if (null == this.establishment.getSiret()) {
+		if (BooleanUtils.isFalse(this.establishment.getCompany().getForeignIdentifier())) {
+			if (null == this.establishment.getSiret() || !mpsWS.establishmentExist(this.establishment)) {
 				this.form.recordError(this.getMessages().get("invalid-siret-error"));
 			}
 		}
+
 		if (null == this.establishment.getLabel()) {
 			this.form.recordError(this.getMessages().get("label-required-message"));
 		}
@@ -300,7 +291,7 @@ public class Modify extends AbstractPage {
 	}
 
 	@OnEvent(EventConstants.ACTIVATE)
-	public void Activation() {
+	public void activation() {
 		super.initUser();
 	}
 
@@ -336,8 +327,12 @@ public class Modify extends AbstractPage {
 		return this.companyNafCode != null && !this.companyNafCode.getApeCode().isEmpty();
 	}
 
-	public Boolean getSiretDisplay() {
-		return this.establishment.getSiret() != null && !this.establishment.getSiret().isEmpty();
+	/**
+	 * Enable Update Siret for Admin only
+	 * @return
+	 */
+	public Boolean getDisableSiret() {
+		return !this.getIsAdmin();
 	}
 
 	public Boolean getAdministrativeStateValueDisplay() {
@@ -355,10 +350,10 @@ public class Modify extends AbstractPage {
 	}
 
 	public Map<CompanyNafCode, String> getListOfCompanyApeCode() {
-		Map<CompanyNafCode, String> companies = new LinkedHashMap<CompanyNafCode, String>();
+		Map<CompanyNafCode, String> companies = new LinkedHashMap<>();
 		CompanyNafCode[] companiesList = CompanyNafCode.values();
-		for (CompanyNafCode companyNafCode : companiesList) {
-			companies.put(companyNafCode, companyNafCode + " - " + this.getApeNaflabelValue(companyNafCode.name()));
+		for (CompanyNafCode nafcode : companiesList) {
+			companies.put(nafcode, nafcode + " - " + this.getApeNaflabelValue(nafcode.name()));
 		}
 		return companies;
 	}

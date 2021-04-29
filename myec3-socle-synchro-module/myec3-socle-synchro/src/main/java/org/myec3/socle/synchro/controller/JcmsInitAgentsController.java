@@ -1,19 +1,12 @@
 package org.myec3.socle.synchro.controller;
 
-import com.mchange.v1.util.ListUtils;
-import org.glassfish.jersey.internal.guava.Lists;
 import org.myec3.socle.core.domain.model.AgentProfile;
-import org.myec3.socle.core.domain.model.Application;
 import org.myec3.socle.core.service.AgentProfileService;
-import org.myec3.socle.core.service.ApplicationService;
-import org.myec3.socle.core.service.UserService;
-import org.myec3.socle.synchro.api.constants.SynchronizationType;
-import org.myec3.socle.synchro.scheduler.manager.ResourceSynchronizationManager;
+import org.myec3.socle.synchro.service.JcmsInitService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;

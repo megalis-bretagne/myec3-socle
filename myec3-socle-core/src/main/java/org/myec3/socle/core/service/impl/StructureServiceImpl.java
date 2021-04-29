@@ -52,39 +52,6 @@ public class StructureServiceImpl extends ResourceServiceImpl<Structure, Structu
 	 * {@inheritDoc}
 	 */
 	@Override
-	@Transactional(propagation = Propagation.SUPPORTS)
-	public Boolean isSirenValid(String siren) {
-		if (null == siren) {
-			return Boolean.FALSE;
-		}
-
-		try {
-			int sum = 0;
-			for (int i = 0; i < siren.length(); i++) {
-				int value = Integer.valueOf(String.valueOf(siren.charAt(i)));
-				// Warning : conditions are inversed tp check a SIRET (14
-				// numeric characters)
-				if (i % 2 == 0) {
-					sum += value;
-				} else {
-					sum += 2 * value > 9 ? 2 * value - 9 : 2 * value;
-				}
-			}
-
-			if (sum % 10 != 0) {
-				return Boolean.FALSE;
-			}
-		} catch (RuntimeException e) {
-			return Boolean.FALSE;
-		}
-
-		return Boolean.TRUE;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
 	public List<Structure> findAllChildStructuresByStructure(Structure structure) {
 		Assert.notNull(structure, "structure is mandatory. null value is forbidden");
 		return this.dao.findAllChildStructuresByStructure(structure);
