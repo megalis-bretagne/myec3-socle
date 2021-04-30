@@ -99,10 +99,6 @@ public interface SynchronizationLogService extends IGenericService<Synchronizati
 	 *                            ResourceType)
 	 * @param httpStatus          : the http status returned during the
 	 *                            synchronization
-	 * @param synchronizationType : The type of the synchronization used (@see
-	 *                            SynchronizationType)
-	 * @param methodType          : the method used to synchronize the resource
-	 *                            (@see MethodType)
 	 * @param statut              : the statut of the synchronization
 	 * @param isFinal             : boolean used to know if the synchronization is
 	 *                            finished or not
@@ -111,6 +107,6 @@ public interface SynchronizationLogService extends IGenericService<Synchronizati
 	 *         Return an empty list if no results or null in case of error.
 	 */
 	List<SynchronizationLog> findAllSynchronizationLogByCriteria(Date startDate, Date endDate, Application application,
-			String resourceType, String httpStatus, String synchronizationType, String methodType, String statut,
+			String resourceType, String httpStatus, String statut,
 			Boolean isFinal);
 }

@@ -20,8 +20,6 @@ package org.myec3.socle.synchro.core.domain.dao.jpa;
 import org.myec3.socle.core.domain.model.Application;
 import org.myec3.socle.core.domain.model.enums.ResourceType;
 import org.myec3.socle.core.sync.api.HttpStatus;
-import org.myec3.socle.core.sync.api.MethodType;
-import org.myec3.socle.synchro.api.constants.SynchronizationType;
 import org.myec3.socle.synchro.core.domain.dao.SynchronizationLogDao;
 import org.myec3.socle.synchro.core.domain.dto.SynchronizationLogDTO;
 import org.myec3.socle.synchro.core.domain.model.SynchronizationLog;
@@ -127,8 +125,7 @@ public class JpaSynchronizationLogDao extends JpaGenericSynchronizationDao<Synch
 	@Override
 	@SuppressWarnings("unchecked")
 	public List<SynchronizationLog> findAllSynchronizationLogByCriteria(Date startDate, Date endDate,
-			Application application, String resourceType, String httpStatus, String synchronizationType,
-			String methodType, String statut, Boolean isFinal) {
+			Application application, String resourceType, String httpStatus, String statut, Boolean isFinal) {
 
 		this.getLog().debug("Finding all SynchronizationLog by applicationName, httpStatus, methodType, statut");
 		try {
@@ -137,8 +134,7 @@ public class JpaSynchronizationLogDao extends JpaGenericSynchronizationDao<Synch
 			StringBuilder queryString = new StringBuilder(
 					"select s from " + this.getDomainClass().getSimpleName() + " s");
 			if ((null != startDate) || (null != endDate) || (null != application) || (null != resourceType)
-					|| (null != httpStatus) || (null != synchronizationType) || (null != methodType) || (null != statut)
-					|| (null != isFinal)) {
+					|| (null != httpStatus) || (null != statut)	|| (null != isFinal)) {
 				queryString.append(" where ");
 
 				if ((null != startDate) && (null == endDate)) {
@@ -170,20 +166,6 @@ public class JpaSynchronizationLogDao extends JpaGenericSynchronizationDao<Synch
 					else
 						hasCriteria = Boolean.TRUE;
 					queryString.append("s.httpStatus =:httpStatus");
-				}
-				if (null != synchronizationType) {
-					if (Boolean.TRUE.equals(hasCriteria))
-						queryString.append(AND_OPERATOR);
-					else
-						hasCriteria = Boolean.TRUE;
-					queryString.append("s.synchronizationType =:synchronizationType");
-				}
-				if (null != methodType) {
-					if (Boolean.TRUE.equals(hasCriteria))
-						queryString.append(AND_OPERATOR);
-					else
-						hasCriteria = Boolean.TRUE;
-					queryString.append("s.methodType =:methodType");
 				}
 				if (null != statut) {
 					if (Boolean.TRUE.equals(hasCriteria))
@@ -226,10 +208,6 @@ public class JpaSynchronizationLogDao extends JpaGenericSynchronizationDao<Synch
 				query.setParameter(RESOURCE_TYPE_FIELD, ResourceType.valueOf(resourceType));
 			if (null != httpStatus)
 				query.setParameter("httpStatus", HttpStatus.valueOf(httpStatus));
-			if (null != synchronizationType)
-				query.setParameter("synchronizationType", SynchronizationType.valueOf(synchronizationType));
-			if (null != methodType)
-				query.setParameter("methodType", MethodType.valueOf(methodType));
 			if (null != statut)
 				query.setParameter("statut", statut);
 			if (null != isFinal)

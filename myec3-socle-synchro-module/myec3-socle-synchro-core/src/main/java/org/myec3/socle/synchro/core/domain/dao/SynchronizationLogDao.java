@@ -92,12 +92,6 @@ public interface SynchronizationLogDao extends
 	 *            : the type of the resource synchronized (@see ResourceType)
 	 * @param httpStatus
 	 *            : the http status returned during the synchronization
-	 * @param synchronizationType
-	 *            : The type of the synchronization used (@see
-	 *            SynchronizationType)
-	 * @param methodType
-	 *            : the method used to synchronize the resource (@see
-	 *            MethodType)
 	 * @param statut
 	 *            : the statut of the synchronization
 	 * @param isFinal
@@ -110,8 +104,7 @@ public interface SynchronizationLogDao extends
 	 */
 	List<SynchronizationLog> findAllSynchronizationLogByCriteria(
 			Date startDate, Date endDate, Application application,
-			String resourceType, String httpStatus, String synchronizationType,
-			String methodType, String statut, Boolean isFinal);
+			String resourceType, String httpStatus, String statut, Boolean isFinal);
 
 	/**
 	 *
