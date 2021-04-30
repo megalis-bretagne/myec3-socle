@@ -507,9 +507,7 @@ public abstract class SchedulerServiceImpl implements SchedulerService {
 		try {
 			scheduler.scheduleJob(job, trig);
 		} catch (SchedulerException e) {
-			logger.error(
-					"[addImmediateCollectionUpdateTrigger] An error has occured during lauch collection update job: "
-							+ e.getMessage());
+			logger.error("[addImmediateCollectionUpdateTrigger] An error has occured during lauch collection update job",e);
 		}
 	}
 
@@ -540,9 +538,7 @@ public abstract class SchedulerServiceImpl implements SchedulerService {
 		try {
 			scheduler.scheduleJob(job, trig);
 		} catch (SchedulerException e) {
-			logger.error(
-					"[addImmediateCollectionRemoveTrigger] An error has occured during lauch collection remove job: "
-							+ e.getMessage());
+			logger.error("[addImmediateCollectionRemoveTrigger] An error has occured during lauch collection remove job",e);
 		}
 	}
 
@@ -560,11 +556,10 @@ public abstract class SchedulerServiceImpl implements SchedulerService {
 			logger.error("[addDelayedResourceTrigger] delay is null for handling errors : " + "MethodType : "
 					+ synchronizationError.getMethodType() + " Resource : " + resource.getName() + ", id : "
 					+ resource.getId());
-
 			// We set a default delay to continue handling errors
-			delay = new Long(10000);
+			delay = 1000L;
 		}
-		logger.info("Initializing newDelayedResourceTrigger with a delay = " + delay + " ms");
+		logger.info("[addDelayedResourceTrigger] Initializing newDelayedResourceTrigger with a delay = {} ms" ,delay);
 
 		// Create new trigger with a delay
 		SimpleTrigger trig = (SimpleTrigger) newTrigger()
@@ -594,8 +589,7 @@ public abstract class SchedulerServiceImpl implements SchedulerService {
 		try {
 			scheduler.scheduleJob(jobDetail, trig);
 		} catch (SchedulerException e) {
-			logger.error(
-					"[addDelayedResourceTrigger] An error has occured during lauch delayed job: " + e.getMessage());
+			logger.error("[addDelayedResourceTrigger] An error has occured during lauch delayed job", e);
 		}
 	}
 
@@ -611,19 +605,29 @@ public abstract class SchedulerServiceImpl implements SchedulerService {
 					.collect(Collectors.toList());
 
 			// Get job Identifier for DELAYED GROUP ONLY
-			List<JobKey> jobKeyToDelete = scheduler.getJobKeys(GroupMatcher.jobGroupEquals(QUARTZ_DELAYED_GROUP)).stream()
+			scheduler.getJobKeys(GroupMatcher.jobGroupEquals(QUARTZ_DELAYED_GROUP)).stream()
 					.filter(jobKey -> jobKey.getName().startsWith(identiferJobToFind) && !jobKeyInProgressNotToDelete.contains(jobKey.getName()))
-					.collect(Collectors.toList());
-
-			for (JobKey jobKey : jobKeyToDelete) {
-				logger.info("[DELETE JOB] DELAYED JOB {} AFTER SUCCESS on ressource {} and subscription {} ",
-						jobKey.getName(),
-						resource.getId(), synchronizationSubscription.getId());
-				scheduler.deleteJob(jobKey);
-			}
+					.forEach(jobKey -> 	deleteJob(jobKey, resource, synchronizationSubscription));
 		}
 		catch (SchedulerException e) {
-			logger.error("[DELETE JOB] Error when try delete Job" ,e);
+			logger.error("[DELETE JOB] Error when try delete Job for resource {}, subscription {}",
+					resource.getId(), synchronizationSubscription.getId() ,e);
+		}
+	}
+
+	/**
+	 * Delete Job given a JobKey
+	 * @param jobKey	jobkey identifier
+	 * @param resource	resource associated
+	 * @param synchronizationSubscriptio	subcription associated
+	 */
+	private void deleteJob(JobKey jobKey, Resource resource, SynchronizationSubscription synchronizationSubscriptio) {
+		try {
+			logger.info("[DELETE JOB] DELAYED JOB {} AFTER SUCCESS on ressource {} and subscription {} ",
+					jobKey.getName(), resource.getId(), synchronizationSubscriptio.getId());
+			scheduler.deleteJob(jobKey);
+		}  catch (SchedulerException e) {
+			logger.error("[DELETE JOB] Error when try delete Job {}", jobKey.getName() ,e);
 		}
 	}
 
