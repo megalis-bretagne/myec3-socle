@@ -1,29 +1,21 @@
 package org.myec3.socle.webapp.pages.synchroman.synchronization;
 
+import org.apache.commons.lang3.BooleanUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.apache.tapestry5.annotations.Component;
-import org.apache.tapestry5.annotations.OnEvent;
-import org.apache.tapestry5.annotations.Persist;
-import org.apache.tapestry5.annotations.Property;
-import org.apache.tapestry5.annotations.Service;
-import org.apache.tapestry5.annotations.SetupRender;
+import org.apache.tapestry5.annotations.*;
 import org.apache.tapestry5.beaneditor.BeanModel;
 import org.apache.tapestry5.corelib.components.Grid;
 import org.apache.tapestry5.ioc.Messages;
 import org.apache.tapestry5.ioc.annotations.Inject;
 import org.apache.tapestry5.services.BeanModelSource;
+import org.apache.tapestry5.services.PageRenderLinkSource;
 import org.apache.tapestry5.services.PropertyConduitSource;
 import org.apache.tapestry5.services.javascript.JavaScriptSupport;
 import org.myec3.socle.core.domain.model.Resource;
 import org.myec3.socle.core.domain.model.enums.ResourceType;
-import org.myec3.socle.core.service.AgentProfileService;
-import org.myec3.socle.core.service.CompanyDepartmentService;
-import org.myec3.socle.core.service.CompanyService;
-import org.myec3.socle.core.service.EmployeeProfileService;
-import org.myec3.socle.core.service.OrganismDepartmentService;
-import org.myec3.socle.core.service.OrganismService;
-import org.myec3.socle.core.service.ResourceService;
+import org.myec3.socle.core.service.*;
 import org.myec3.socle.core.sync.api.ErrorCodeType;
 import org.myec3.socle.core.sync.api.HttpStatus;
 import org.myec3.socle.core.sync.api.MethodType;
@@ -34,285 +26,307 @@ import org.myec3.socle.synchro.core.domain.model.SynchronizationLog;
 import org.myec3.socle.synchro.core.service.SynchronizationInitialService;
 import org.myec3.socle.synchro.core.service.SynchronizationLogService;
 import org.myec3.socle.webapp.pages.AbstractPage;
+import org.myec3.socle.webapp.pages.company.DetailCompany;
+import org.myec3.socle.webapp.pages.organism.DetailOrganism;
+import org.myec3.socle.webapp.pages.organism.agent.View;
+import org.myec3.socle.webapp.pages.organism.department.DetailDepartment;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * 
  * @author Denis Cucchietti <denis.cucchietti@atosorigin.com>
  */
 public class SearchResult extends AbstractPage {
 
-	private static Logger logger = LogManager.getLogger(SearchResult.class);
+    private static Logger logger = LogManager.getLogger(SearchResult.class);
 
-	// Template attributes
-	@Persist
-	private List<SynchronizationLog> synchronizationLogResult;
+    // Template attributes
+    @Persist
+    private List<SynchronizationLog> synchronizationLogResult;
 
-	private Resource resource;
+    @Inject
+    @Service("synchronizationCoreService")
+    private SynchronizationService synchronizationService;
 
-	@Inject
-	@Service("synchronizationCoreService")
-	private SynchronizationService synchronizationService;
+    @Inject
+    @Service("agentProfileService")
+    private AgentProfileService agentProfileService;
 
-	@Inject
-	@Service("agentProfileService")
-	private AgentProfileService agentProfileService;
+    @Inject
+    @Service("employeeProfileService")
+    private EmployeeProfileService employeeProfileService;
 
-	@Inject
-	@Service("employeeProfileService")
-	private EmployeeProfileService employeeProfileService;
+    @Inject
+    @Service("organismService")
+    private OrganismService organismService;
 
-	@Inject
-	@Service("organismService")
-	private OrganismService organismService;
+    @Inject
+    @Service("organismDepartmentService")
+    private OrganismDepartmentService organismDepartmentService;
 
-	@Inject
-	@Service("organismDepartmentService")
-	private OrganismDepartmentService organismDepartmentService;
+    @Inject
+    @Service("companyService")
+    private CompanyService companyService;
 
-	@Inject
-	@Service("companyService")
-	private CompanyService companyService;
+    @Inject
+    @Service("companyDepartmentService")
+    private CompanyDepartmentService companyDepartmentService;
 
-	@Inject
-	@Service("companyDepartmentService")
-	private CompanyDepartmentService companyDepartmentService;
+    @Inject
+    @Service("synchronizationInitialService")
+    private SynchronizationInitialService synchronizationInitialService;
 
-	@Inject
-	@Service("synchronizationInitialService")
-	private SynchronizationInitialService synchronizationInitialService;
+    @Inject
+    @Service("synchronizationLogService")
+    private SynchronizationLogService synchronizationLogService;
 
-	@Inject
-	@Service("synchronizationLogService")
-	private SynchronizationLogService synchronizationLogService;
+    @SuppressWarnings("unused")
+    @Property
+    private Integer rowIndex;
 
-	@SuppressWarnings("unused")
-	@Property
-	private Integer rowIndex;
+    private SynchronizationLog synchronizationLog;
 
-	private SynchronizationLog synchronizationLog;
+    @Property
+    private SynchronizationLog synchronizationLogRow;
 
-	@Property
-	private SynchronizationLog synchronizationLogRow;
+    @SuppressWarnings("unused")
+    @Inject
+    private PropertyConduitSource propertyConduitSource;
 
-	@SuppressWarnings("unused")
-	@Inject
-	private PropertyConduitSource propertyConduitSource;
+    @Persist("Flash")
+    private String successMessage;
 
-	@Persist("Flash")
-	private String successMessage;
+    // Services
+    @SuppressWarnings("unused")
+    @Inject
+    private JavaScriptSupport renderSupport;
 
-	// Services
-	@SuppressWarnings("unused")
-	@Inject
-	private JavaScriptSupport renderSupport;
+    // Services
+    @Inject
+    private BeanModelSource beanModelSource;
 
-	// Services
-	@Inject
-	private BeanModelSource beanModelSource;
+    @Inject
+    private Messages messages;
 
-	@Inject
-	private Messages messages;
+    // // Getters n Setters
+    @Component
+    private Grid synchronizationLogGrid;
 
-	// // Getters n Setters
-	@Component
-	private Grid synchronizationLogGrid;
+    @Inject
+    protected PageRenderLinkSource pageRedirectLink;
 
-	@SetupRender
-	public void setupGrid() {
-		if (this.synchronizationLogGrid.getSortModel().getSortConstraints().isEmpty()) {
-			// Twice for ASCENDING
-			synchronizationLogGrid.getSortModel().updateSort("synchronizationDate");
-			synchronizationLogGrid.getSortModel().updateSort("synchronizationDate");
-		}
-	}
+    @SetupRender
+    public void setupGrid() {
+        if (this.synchronizationLogGrid.getSortModel().getSortConstraints().isEmpty()) {
+            // Twice for ASCENDING
+            synchronizationLogGrid.getSortModel().updateSort("synchronizationDate");
+            synchronizationLogGrid.getSortModel().updateSort("synchronizationDate");
+        }
+    }
 
-	/**
-	 * @return : bean model
-	 */
-	public BeanModel<SynchronizationLog> getGridModel() {
-		BeanModel<SynchronizationLog> model = this.beanModelSource.createDisplayModel(SynchronizationLog.class,
-				this.messages);
-		model.add("actions", null);
-		model.add("application", null);
-		model.add("synchronizationInitial", null);
-		model.include("application", "resourceType", "resourceId", "synchronizationInitial",
-				"httpStatus", "nbAttempts", "isFinal", "synchronizationDate","actions");
-		return model;
-	}
+    /**
+     * @return : bean model
+     */
+    public BeanModel<SynchronizationLog> getGridModel() {
+        BeanModel<SynchronizationLog> model = this.beanModelSource.createDisplayModel(SynchronizationLog.class,
+                this.messages);
+        model.add("actions", null);
+        model.add("application", null);
+        model.add("synchronizationInitial", null);
+        model.include("application", "resourceType", "resourceId", "synchronizationInitial",
+                "httpStatus", "nbAttempts", "isFinal", "synchronizationDate", "actions");
+        return model;
+    }
 
-	@OnEvent(value = "action", component = "replay")
-	public Object replaySynchronization(Long id) {
+    @OnEvent(value = "action", component = "replay")
+    public Object replaySynchronization(Long id) {
 
-		// Get synchronization log from the database
-		this.synchronizationLog = this.synchronizationLogService.findOne(id);
+        // Get synchronization log from the database
+        this.synchronizationLog = this.synchronizationLogService.findOne(id);
 
-		if (null == this.synchronizationLog) {
-			logger.info("Finding synchronization log failed");
-			return Boolean.FALSE;
-		}
-		logger.info("Finding synchronization log successful");
+        if (null == this.synchronizationLog) {
+            logger.info("Finding synchronization log failed");
+            return Boolean.FALSE;
+        }
+        logger.info("Finding synchronization log successful");
 
-		// Get resource to synchronize from the database
-		this.resource = (Resource) this.getResourceService(this.synchronizationLog.getResourceType())
-				.findOne(this.synchronizationLog.getResourceId());
+        // Get resource to synchronize from the database
+        Resource resource = (Resource) this.getResourceService(this.synchronizationLog.getResourceType())
+                .findOne(this.synchronizationLog.getResourceId());
 
-		if (null == this.resource) {
-			logger.error("Finding resource failed");
-			return Boolean.FALSE;
-		}
-		logger.info("Finding resource of type :" + this.resource.getClass() + " successful");
+        if (null == resource) {
+            logger.error("Finding resource failed");
+            return Boolean.FALSE;
+        }
+        logger.info("Finding resource of type :" + resource.getClass() + " successful");
 
-		List<Long> listApplicationIdToResynchronize = new ArrayList<Long>();
-		listApplicationIdToResynchronize
-				.add(this.synchronizationLog.getSynchronizationSubscription().getApplication().getId());
+        List<Long> listApplicationIdToResynchronize = new ArrayList<>();
+        listApplicationIdToResynchronize
+                .add(this.synchronizationLog.getSynchronizationSubscription().getApplication().getId());
 
-		if (listApplicationIdToResynchronize.size() > 0) {
-			this.resynchronizeResource(resource, listApplicationIdToResynchronize);
-		} else {
-			logger.error("There are no application to resynchronize");
-			return Boolean.FALSE;
-		}
+        if (!listApplicationIdToResynchronize.isEmpty()) {
+            this.resynchronizeResource(resource, listApplicationIdToResynchronize);
+        } else {
+            logger.error("There are no application to resynchronize");
+            return Boolean.FALSE;
+        }
 
-		this.successMessage = this.messages.get("replay-success");
-		return this;
-	}
+        this.successMessage = this.messages.get("replay-success");
+        return this;
+    }
 
-	/**
-	 * 
-	 * @param resource
-	 * @param listApplicationIdToResynchronize
-	 */
-	public void resynchronizeResource(Resource resource, List<Long> listApplicationIdToResynchronize) {
-		switch (this.synchronizationLog.getMethodType()) {
-		case POST:
-			this.synchronizationService.propagateCreation(resource, listApplicationIdToResynchronize,
-					SynchronizationType.RESYNCHRONIZATION, null);
-			break;
-		case PUT:
-			this.synchronizationService.propagateUpdate(resource, listApplicationIdToResynchronize,
-					SynchronizationType.RESYNCHRONIZATION, null);
-			break;
-		case DELETE:
-			this.synchronizationService.propagateDeletion(resource, listApplicationIdToResynchronize,
-					SynchronizationType.RESYNCHRONIZATION, null);
-			break;
-		}
-	}
 
-	/**
-	 * 
-	 * @param resourceType
-	 * @return ResourceService
-	 */
-	@SuppressWarnings("unchecked")
-	public ResourceService getResourceService(ResourceType resourceType) {
-		logger.debug("Enterring in method getResourceService with resourceType : " + resourceType);
+    /**
+     * REdirect to view page given type resource and his id
+     * @param ressourceId   resource Identifier
+     * @param resourceType  resourceType
+     * @return  page
+     */
+    public Object onSeeResource(String ressourceId, ResourceType resourceType) {
+        switch (resourceType) {
+            case AGENT_PROFILE:
+                return pageRedirectLink.createPageRenderLinkWithContext(View.class, ressourceId);
+            case EMPLOYEE_PROFILE:
+                return pageRedirectLink.createPageRenderLinkWithContext(org.myec3.socle.webapp.pages.company.employee.View.class, ressourceId);
+            case COMPANY:
+                return pageRedirectLink.createPageRenderLinkWithContext(DetailCompany.class, ressourceId);
+            case ESTABLISHMENT:
+                return pageRedirectLink.createPageRenderLinkWithContext(org.myec3.socle.webapp.pages.company.establishment.View.class, ressourceId);
+            case ORGANISM:
+                return pageRedirectLink.createPageRenderLinkWithContext(DetailOrganism.class, ressourceId);
+            case ORGANISM_DEPARTMENT:
+                return pageRedirectLink.createPageRenderLinkWithContext(DetailDepartment.class, ressourceId);
+            default:
+                return Boolean.FALSE;
+        }
+    }
 
-		switch (resourceType) {
-		case AGENT_PROFILE:
-			return agentProfileService;
-		case EMPLOYEE_PROFILE:
-			return employeeProfileService;
-		case ORGANISM:
-			return organismService;
-		case ORGANISM_DEPARTMENT:
-			return organismDepartmentService;
-		case COMPANY:
-			return companyService;
-		case COMPANY_DEPARTMENT:
-			return companyDepartmentService;
-		}
+    /**
+     * @param resource
+     * @param listApplicationIdToResynchronize
+     */
+    public void resynchronizeResource(Resource resource, List<Long> listApplicationIdToResynchronize) {
+        switch (this.synchronizationLog.getMethodType()) {
+            case POST:
+                this.synchronizationService.propagateCreation(resource, listApplicationIdToResynchronize,
+                        SynchronizationType.RESYNCHRONIZATION, null);
+                break;
+            case PUT:
+                this.synchronizationService.propagateUpdate(resource, listApplicationIdToResynchronize,
+                        SynchronizationType.RESYNCHRONIZATION, null);
+                break;
+            case DELETE:
+                this.synchronizationService.propagateDeletion(resource, listApplicationIdToResynchronize,
+                        SynchronizationType.RESYNCHRONIZATION, null);
+                break;
+        }
+    }
 
-		logger.error("no resource service was found for this type of resource : " + resourceType);
+    /**
+     * @param resourceType
+     * @return ResourceService
+     */
+    @SuppressWarnings("unchecked")
+    public ResourceService getResourceService(ResourceType resourceType) {
+        logger.debug("Enterring in method getResourceService with resourceType : " + resourceType);
 
-		return null;
-	}
+        switch (resourceType) {
+            case AGENT_PROFILE:
+                return agentProfileService;
+            case EMPLOYEE_PROFILE:
+                return employeeProfileService;
+            case ORGANISM:
+                return organismService;
+            case ORGANISM_DEPARTMENT:
+                return organismDepartmentService;
+            case COMPANY:
+                return companyService;
+            case COMPANY_DEPARTMENT:
+                return companyDepartmentService;
+        }
 
-	public List<SynchronizationLog> getSynchronizationLogResult() {
-		return synchronizationLogResult;
-	}
+        logger.error("no resource service was found for this type of resource : " + resourceType);
 
-	public void setSynchronizationLogResult(List<SynchronizationLog> synchronizationLogResult) {
-		this.synchronizationLogResult = synchronizationLogResult;
-	}
+        return null;
+    }
 
-	public Integer getResultsNumber() {
-		if (null == this.synchronizationLogResult)
-			return 0;
-		return this.synchronizationLogResult.size();
-	}
+    public List<SynchronizationLog> getSynchronizationLogResult() {
+        return synchronizationLogResult;
+    }
 
-	public SimpleDateFormat getDateFormat() {
-		SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-		return dateFormat;
-	}
+    public void setSynchronizationLogResult(List<SynchronizationLog> synchronizationLogResult) {
+        this.synchronizationLogResult = synchronizationLogResult;
+    }
 
-	public String getIsFinalLabel() {
-		if (synchronizationLogRow.getIsFinal()) {
-			return "TERMINEE";
-		}
-		return "EN COURS";
-	}
+    public Integer getResultsNumber() {
+        if (null == this.synchronizationLogResult)
+            return 0;
+        return this.synchronizationLogResult.size();
+    }
 
-	public String getSynchronizationInitialValue() {
-		SynchronizationInitial synchronizationInitial = synchronizationInitialService
-				.findBySynchronizationLog(synchronizationLogRow);
-		if (synchronizationInitial == null) {
-			return "";
-		}
-		return synchronizationInitial.getInitialSynchronizationId().toString();
-	}
+    public SimpleDateFormat getDateFormat() {
+        return new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+    }
 
-	public String getSuccessMessage() {
-		return successMessage;
-	}
+    public String getIsFinalLabel() {
+        return BooleanUtils.isTrue(synchronizationLogRow.getIsFinal()) ? "TERMINEE" : "EN COURS";
+    }
 
-	public void setSuccessMessage(String successMessage) {
-		this.successMessage = successMessage;
-	}
+    public String getSynchronizationInitialValue() {
+        SynchronizationInitial synchronizationInitial = synchronizationInitialService
+                .findBySynchronizationLog(synchronizationLogRow);
+        if (synchronizationInitial == null) {
+            return "";
+        }
+        return synchronizationInitial.getInitialSynchronizationId().toString();
+    }
 
-	public String getRowClass() {
-		if (synchronizationLogRow.getStatut().equals("ERROR")) {
+    public String getSuccessMessage() {
+        return successMessage;
+    }
 
-			// Resource already exists 400, 005
-			if ((synchronizationLogRow.getHttpCode() == HttpStatus.BAD_REQUEST.getValue())
-					&& (synchronizationLogRow.getErrorCodeType().equals(ErrorCodeType.RESOURCE_ALREADY_EXISTS))) {
-				return "greenBackground";
-			}
+    public void setSuccessMessage(String successMessage) {
+        this.successMessage = successMessage;
+    }
 
-			// DELETE returning an error NOT FOUND 003
-			if ((synchronizationLogRow.getHttpCode() == HttpStatus.NOT_FOUND.getValue())
-					&& (synchronizationLogRow.getErrorCodeType().equals(ErrorCodeType.RESOURCE_MISSING))
-					&& (synchronizationLogRow.getMethodType().equals(MethodType.DELETE))) {
-				return "greenBackground";
-			}
+    public String getRowClass() {
+        if (synchronizationLogRow.getStatut().equals("ERROR")) {
 
-			if (synchronizationLogRow.getIsFinal()) {
-				return "redBackground";
-			} else {
-				return "orangeBackground";
-			}
-		}
-		return "";
-	}
+            // Resource already exists 400, 005
+            if ((synchronizationLogRow.getHttpCode() == HttpStatus.BAD_REQUEST.getValue())
+                    && (synchronizationLogRow.getErrorCodeType().equals(ErrorCodeType.RESOURCE_ALREADY_EXISTS))) {
+                return "greenBackground";
+            }
 
-	/**
-	 * 
-	 * @return
-	 */
-	public SynchronizationLog getSynchronizationLog() {
-		return synchronizationLog;
-	}
+            // DELETE returning an error NOT FOUND 003
+            if ((synchronizationLogRow.getHttpCode() == HttpStatus.NOT_FOUND.getValue())
+                    && (ErrorCodeType.RESOURCE_MISSING.equals(synchronizationLogRow.getErrorCodeType()))
+                    && (MethodType.DELETE.equals(synchronizationLogRow.getMethodType()))) {
+                return "greenBackground";
+            }
 
-	/**
-	 * 
-	 * @param synchronizationLog
-	 */
-	public void setSynchronizationLog(SynchronizationLog synchronizationLog) {
-		this.synchronizationLog = synchronizationLog;
-	}
+            if (BooleanUtils.isTrue(synchronizationLogRow.getIsFinal())) {
+                return "redBackground";
+            } else {
+                return "orangeBackground";
+            }
+        }
+        return StringUtils.EMPTY;
+    }
+
+    /**
+     * @return
+     */
+    public SynchronizationLog getSynchronizationLog() {
+        return synchronizationLog;
+    }
+
+    /**
+     * @param synchronizationLog
+     */
+    public void setSynchronizationLog(SynchronizationLog synchronizationLog) {
+        this.synchronizationLog = synchronizationLog;
+    }
 }
