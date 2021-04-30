@@ -46,9 +46,6 @@ public class Search extends AbstractPage {
 	private String searchResourceType;
 
 	@Property
-	private String searchStatut;
-
-	@Property
 	private String searchIsFinal;
 
 	@Property
@@ -92,9 +89,6 @@ public class Search extends AbstractPage {
 	// Form
 	@OnEvent(component = "synchronization_search_form", value = EventConstants.SUCCESS)
 	public Object onSuccess() {
-		if (searchStatut.equals("TOUS")) {
-			this.searchStatut = null;
-		}
 		if (searchIsFinal.equals("TOUS")) {
 			this.searchIsFinal = null;
 			this.searchIsFinalValue = null;
@@ -108,7 +102,7 @@ public class Search extends AbstractPage {
 				.findAllSynchronizationLogByCriteria(searchStartDate,
 						searchEndDate, searchApplication,
 						searchResourceType, searchHttpStatus,
-						searchStatut, searchIsFinalValue);
+						"ERROR", searchIsFinalValue);
 
 		if (this.synchronizationLogResult.isEmpty()) {
 			this.infoMessage = this.messages.get("empty-result-message");

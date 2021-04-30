@@ -123,8 +123,11 @@ public class SearchResult extends AbstractPage {
 
 	@SetupRender
 	public void setupGrid() {
-		synchronizationLogGrid.getSortModel().clear();
-		synchronizationLogGrid.getSortModel().updateSort("synchronizationDate");
+		if (this.synchronizationLogGrid.getSortModel().getSortConstraints().isEmpty()) {
+			// Twice for ASCENDING
+			synchronizationLogGrid.getSortModel().updateSort("synchronizationDate");
+			synchronizationLogGrid.getSortModel().updateSort("synchronizationDate");
+		}
 	}
 
 	/**
@@ -136,9 +139,8 @@ public class SearchResult extends AbstractPage {
 		model.add("actions", null);
 		model.add("application", null);
 		model.add("synchronizationInitial", null);
-		model.include("id", "application", "resourceType", "resourceId", "synchronizationInitial", "methodType",
-				"synchronizationType", "httpStatus", "nbAttempts", "isFinal", "synchronizationDate", "statut",
-				"actions");
+		model.include("application", "resourceType", "resourceId", "synchronizationInitial",
+				"httpStatus", "nbAttempts", "isFinal", "synchronizationDate","actions");
 		return model;
 	}
 
