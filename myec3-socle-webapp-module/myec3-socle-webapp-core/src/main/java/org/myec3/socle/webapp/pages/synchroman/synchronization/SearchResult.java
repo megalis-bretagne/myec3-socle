@@ -32,7 +32,6 @@ import org.myec3.socle.webapp.pages.organism.agent.View;
 import org.myec3.socle.webapp.pages.organism.department.DetailDepartment;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -138,43 +137,6 @@ public class SearchResult extends AbstractPage {
         model.include("application", "resourceType", "resourceId", "synchronizationInitial",
                 "httpStatus", "nbAttempts", "isFinal", "synchronizationDate", "actions");
         return model;
-    }
-
-    @OnEvent(value = "action", component = "replay")
-    public Object replaySynchronization(Long id) {
-
-        // Get synchronization log from the database
-        this.synchronizationLog = this.synchronizationLogService.findOne(id);
-
-        if (null == this.synchronizationLog) {
-            logger.info("Finding synchronization log failed");
-            return Boolean.FALSE;
-        }
-        logger.info("Finding synchronization log successful");
-
-        // Get resource to synchronize from the database
-        Resource resource = (Resource) this.getResourceService(this.synchronizationLog.getResourceType())
-                .findOne(this.synchronizationLog.getResourceId());
-
-        if (null == resource) {
-            logger.error("Finding resource failed");
-            return Boolean.FALSE;
-        }
-        logger.info("Finding resource of type : {} successful", resource.getClass());
-
-        List<Long> listApplicationIdToResynchronize = new ArrayList<>();
-        listApplicationIdToResynchronize
-                .add(this.synchronizationLog.getSynchronizationSubscription().getApplication().getId());
-
-        if (!listApplicationIdToResynchronize.isEmpty()) {
-            this.resynchronizeResource(resource, listApplicationIdToResynchronize);
-        } else {
-            logger.error("There are no application to resynchronize");
-            return Boolean.FALSE;
-        }
-
-        this.successMessage = this.messages.get("replay-success");
-        return this;
     }
 
 
