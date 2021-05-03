@@ -160,7 +160,7 @@ public class SearchResult extends AbstractPage {
             logger.error("Finding resource failed");
             return Boolean.FALSE;
         }
-        logger.info("Finding resource of type :" + resource.getClass() + " successful");
+        logger.info("Finding resource of type : {} successful", resource.getClass());
 
         List<Long> listApplicationIdToResynchronize = new ArrayList<>();
         listApplicationIdToResynchronize
@@ -221,6 +221,8 @@ public class SearchResult extends AbstractPage {
                 this.synchronizationService.propagateDeletion(resource, listApplicationIdToResynchronize,
                         SynchronizationType.RESYNCHRONIZATION, null);
                 break;
+            default:
+                break;
         }
     }
 
@@ -230,7 +232,9 @@ public class SearchResult extends AbstractPage {
      */
     @SuppressWarnings("unchecked")
     public ResourceService getResourceService(ResourceType resourceType) {
-        logger.debug("Enterring in method getResourceService with resourceType : " + resourceType);
+        if (logger.isDebugEnabled()) {
+            logger.debug("Enterring in method getResourceService with resourceType : {} ", resourceType.name());
+        }
 
         switch (resourceType) {
             case AGENT_PROFILE:
@@ -245,11 +249,35 @@ public class SearchResult extends AbstractPage {
                 return companyService;
             case COMPANY_DEPARTMENT:
                 return companyDepartmentService;
+            default:
+                return null;
         }
+    }
 
-        logger.error("no resource service was found for this type of resource : " + resourceType);
-
-        return null;
+    /**
+     * Get Label for resource Type column
+     * @return resource Label
+     */
+    public String getResourceLabel() {
+        if (this.synchronizationLogRow == null) {
+            return StringUtils.EMPTY;
+        }
+        switch (this.synchronizationLogRow.getResourceType()) {
+            case AGENT_PROFILE:
+                return "Agent";
+            case EMPLOYEE_PROFILE:
+                return "Employé";
+            case COMPANY:
+                return "Entreprise";
+            case ESTABLISHMENT:
+                return "Etablissement";
+            case ORGANISM:
+                return "Organisme";
+            case ORGANISM_DEPARTMENT:
+                return "Service";
+            default:
+                return StringUtils.EMPTY;
+        }
     }
 
     public List<SynchronizationLog> getSynchronizationLogResult() {

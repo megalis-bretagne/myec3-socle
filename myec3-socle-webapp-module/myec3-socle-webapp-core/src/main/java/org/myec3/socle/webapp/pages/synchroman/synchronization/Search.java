@@ -18,6 +18,8 @@ import javax.inject.Named;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * 
@@ -143,13 +145,14 @@ public class Search extends AbstractPage {
 	}
 
 	public Map<ResourceType, String> getResourceTypeModel() {
-		ResourceType[] availableResourceType = ResourceType.values();
-
-		Map<ResourceType, String> mapResourceType = new HashMap<>();
-		for (ResourceType resourceType : availableResourceType) {
-			mapResourceType.put(resourceType, resourceType.toString());
-		}
-		return mapResourceType;
+		return Stream.of(
+				new AbstractMap.SimpleEntry<>(ResourceType.EMPLOYEE_PROFILE, "Employé"),
+				new AbstractMap.SimpleEntry<>(ResourceType.AGENT_PROFILE, "Agent"),
+				new AbstractMap.SimpleEntry<>(ResourceType.COMPANY, "Entreprise"),
+				new AbstractMap.SimpleEntry<>(ResourceType.ORGANISM, "Organisme"),
+				new AbstractMap.SimpleEntry<>(ResourceType.ORGANISM_DEPARTMENT, "Service"),
+				new AbstractMap.SimpleEntry<>(ResourceType.ESTABLISHMENT, "Etablissement")
+		).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
 	}
 
 	public GenericListEncoder<ResourceType> getResourceTypeEncoder() {

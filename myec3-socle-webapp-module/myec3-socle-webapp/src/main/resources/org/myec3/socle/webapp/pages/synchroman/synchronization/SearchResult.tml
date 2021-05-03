@@ -28,6 +28,10 @@
 				<t:pagelink page="synchroman/synchronization/DetailSynchronization" context="synchronizationInitialValue"><t:textoutput t:value="synchronizationInitialValue" /></t:pagelink>
 			</t:parameter>
 
+			<t:parameter name="resourceTypeCell">
+				<t:textoutput t:value="resourceLabel" />
+			</t:parameter>
+
 			<t:parameter name="resourceIdCell">
 				<t:eventlink event="seeResource" context="[synchronizationLogRow.resourceId,synchronizationLogRow.resourceType]">
 					${synchronizationLogRow.resourceId}
