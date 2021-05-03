@@ -17,20 +17,6 @@
  */
 package org.myec3.socle.synchro.core.domain.model;
 
-import java.io.Serializable;
-import java.util.Date;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-
 import org.myec3.socle.core.domain.model.Application;
 import org.myec3.socle.core.domain.model.PE;
 import org.myec3.socle.core.domain.model.Resource;
@@ -39,6 +25,10 @@ import org.myec3.socle.core.sync.api.ErrorCodeType;
 import org.myec3.socle.core.sync.api.HttpStatus;
 import org.myec3.socle.core.sync.api.MethodType;
 import org.myec3.socle.synchro.api.constants.SynchronizationType;
+
+import javax.persistence.*;
+import java.io.Serializable;
+import java.util.Date;
 
 /**
  * This class is used to log all informations about synchronizations sent at the
@@ -209,7 +199,7 @@ public class SynchronizationLog implements Serializable, PE {
 	 * 
 	 * @see Error
 	 */
-	@Column(nullable = true)
+	@Column(nullable = true, columnDefinition = "TEXT")
 	public String getErrorMessage() {
 		return errorMessage;
 	}

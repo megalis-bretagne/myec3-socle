@@ -17,24 +17,14 @@
  */
 package org.myec3.socle.synchro.scheduler.service;
 
-import java.util.List;
-
-import org.myec3.socle.core.domain.model.AdminProfile;
-import org.myec3.socle.core.domain.model.AgentProfile;
-import org.myec3.socle.core.domain.model.Company;
-import org.myec3.socle.core.domain.model.CompanyDepartment;
-import org.myec3.socle.core.domain.model.Customer;
-import org.myec3.socle.core.domain.model.EmployeeProfile;
-import org.myec3.socle.core.domain.model.Organism;
-import org.myec3.socle.core.domain.model.OrganismDepartment;
-import org.myec3.socle.core.domain.model.Profile;
-import org.myec3.socle.core.domain.model.Resource;
-import org.myec3.socle.core.domain.model.Role;
+import org.myec3.socle.core.domain.model.*;
 import org.myec3.socle.synchro.api.constants.SynchronizationJobType;
 import org.myec3.socle.synchro.api.constants.SynchronizationType;
 import org.myec3.socle.synchro.core.domain.model.SynchronizationError;
 import org.myec3.socle.synchro.core.domain.model.SynchronizationSubscription;
 import org.quartz.Scheduler;
+
+import java.util.List;
 
 /**
  * This service provides an API to store trigger jobs "on the fly", based on
@@ -457,4 +447,12 @@ public interface SchedulerService {
 	void addImmediateCollectionRemoveTrigger(String jobName, Resource resource,
 			String relationName, List<Resource> removedResources,
 			String sendingApplication);
+
+	/**
+	 * Delete JOB on scheduler when an other JOB finish with SUCCESS.
+	 *
+	 * @param resource 		the resource to Find
+	 * @param synchronizationSubscription	the subscription associed
+	 */
+	default void deleteDelayedAfterSucess(Resource resource, SynchronizationSubscription synchronizationSubscription) {}
 }
