@@ -81,9 +81,8 @@ public class SynchronizationLogServiceImpl extends AbstractGenericServiceImpl<Sy
 	 */
 	@Override
 	public List<SynchronizationLog> findAllSynchronizationLogByCriteria(Date startDate, Date endDate,
-			Application application, String resourceType, String httpStatus, String synchronizationType,
-			String methodType, String statut, Boolean isFinal) {
-		return this.dao.findAllSynchronizationLogByCriteria(startDate, endDate, application, resourceType, httpStatus,
-				synchronizationType, methodType, statut, isFinal);
+			Application application, String resourceType, String httpStatus,
+			String statut, Boolean isFinal) {
+		return this.dao.findAllSynchronizationLogByCriteria(startDate, endDate, application, resourceType, httpStatus, statut, isFinal);
 	}
 }

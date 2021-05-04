@@ -27,6 +27,16 @@
 			<t:parameter name="synchronizationInitialCell">
 				<t:pagelink page="synchroman/synchronization/DetailSynchronization" context="synchronizationInitialValue"><t:textoutput t:value="synchronizationInitialValue" /></t:pagelink>
 			</t:parameter>
+
+			<t:parameter name="resourceTypeCell">
+				<t:textoutput t:value="resourceLabel" />
+			</t:parameter>
+
+			<t:parameter name="resourceIdCell">
+				<t:eventlink event="seeResource" context="[synchronizationLogRow.resourceId,synchronizationLogRow.resourceType]">
+					${synchronizationLogRow.resourceId}
+				</t:eventlink>
+			</t:parameter>
 			
 			<t:parameter name="isFinalCell">
 				<t:textoutput t:value="isFinalLabel" />
@@ -38,12 +48,8 @@
 	        
 			<t:parameter name="actionsCell">
 				<t:pagelink page="synchroman/synchronization/DetailSynchronization" context="synchronizationLogRow.id">
-		        	 <img src="${context:static/images/synchronization_view.png}" alt="${message:view-label}" title="${message:view-label}" />
+		        	 <img src="${context:static/images/organisme_voir.png}" alt="${message:view-label}" title="${message:view-label}" />
 	        	</t:pagelink>
-	        	
-				<t:actionlink t:id="replay" context="synchronizationLogRow.id" t:mixins="confirm" t:message="message:confirm-label">
-					<img src="${context:static/images/replay.png}" alt="${message:replay-label}" title="${message:replay-label}" />
-				</t:actionlink>
 	        </t:parameter>
   		</table>
   		

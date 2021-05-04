@@ -54,7 +54,7 @@
 	            <t:body/>
 	        </div>
 			<div id="footer">
-				<p class="copyright">&copy; <a href="${message:company-website-label}">${message:company-name-label}</a>, ${copyright_year}</p>
+				<p class="copyright">&copy; <a href="${message:company-website-label}">${message:company-name-label}</a>, ${copyrightYear}</p>
 				<ul>
 					<li><a href="${legalNoticeUrl}">${message:legal-notice-label}</a></li>
 				</ul>

@@ -1,32 +1,25 @@
 package org.myec3.socle.webapp.pages.synchroman.synchronization;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.inject.Named;
-
 import org.apache.tapestry5.EventConstants;
-import org.apache.tapestry5.annotations.Component;
-import org.apache.tapestry5.annotations.InjectPage;
-import org.apache.tapestry5.annotations.OnEvent;
-import org.apache.tapestry5.annotations.Persist;
-import org.apache.tapestry5.annotations.Property;
+import org.apache.tapestry5.annotations.*;
 import org.apache.tapestry5.corelib.components.Form;
 import org.apache.tapestry5.ioc.Messages;
 import org.apache.tapestry5.ioc.annotations.Inject;
 import org.myec3.socle.core.domain.model.Application;
 import org.myec3.socle.core.domain.model.enums.ResourceType;
 import org.myec3.socle.core.sync.api.HttpStatus;
-import org.myec3.socle.core.sync.api.MethodType;
-import org.myec3.socle.synchro.api.constants.SynchronizationType;
 import org.myec3.socle.synchro.core.domain.model.SynchronizationLog;
 import org.myec3.socle.synchro.core.service.SynchronizationLogService;
 import org.myec3.socle.synchro.core.service.SynchronizationSubscriptionService;
 import org.myec3.socle.webapp.encoder.GenericListEncoder;
 import org.myec3.socle.webapp.pages.AbstractPage;
+
+import javax.inject.Named;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * 
@@ -53,15 +46,6 @@ public class Search extends AbstractPage {
 
 	@Property
 	private String searchResourceType;
-
-	@Property
-	private String searchMethodType;
-
-	@Property
-	private String searchSynchronizationType;
-
-	@Property
-	private String searchStatut;
 
 	@Property
 	private String searchIsFinal;
@@ -93,13 +77,20 @@ public class Search extends AbstractPage {
 	private SearchResult searchResultPage;
 
 	// Activation n Passivation
+	@OnEvent(EventConstants.ACTIVATE)
+	public void activation() {
+		// INIT Search Date now() - 7 days
+		LocalDate dateLastWeek = LocalDate.now().minusDays(7L);
+		this.searchStartDate = Date.from(dateLastWeek.atStartOfDay()
+				.atZone(ZoneId.systemDefault())
+				.toInstant());
+		// init end date to now
+		this.searchEndDate = new Date();
+	}
 
 	// Form
 	@OnEvent(component = "synchronization_search_form", value = EventConstants.SUCCESS)
 	public Object onSuccess() {
-		if (searchStatut.equals("TOUS")) {
-			this.searchStatut = null;
-		}
 		if (searchIsFinal.equals("TOUS")) {
 			this.searchIsFinal = null;
 			this.searchIsFinalValue = null;
@@ -113,8 +104,7 @@ public class Search extends AbstractPage {
 				.findAllSynchronizationLogByCriteria(searchStartDate,
 						searchEndDate, searchApplication,
 						searchResourceType, searchHttpStatus,
-						searchSynchronizationType, searchMethodType,
-						searchStatut, searchIsFinalValue);
+						"ERROR", searchIsFinalValue);
 
 		if (this.synchronizationLogResult.isEmpty()) {
 			this.infoMessage = this.messages.get("empty-result-message");
@@ -126,10 +116,9 @@ public class Search extends AbstractPage {
 	}
 
 	public Map<Application, String> getApplicationSynchronizedList() {
-		List<Application> applicationSynchronizedList = new ArrayList<Application>();
-		applicationSynchronizedList = this.synchronizationSubscriptionService
+		List<Application> applicationSynchronizedList = this.synchronizationSubscriptionService
 				.findAllApplicationsSubscribe();
-		Map<Application, String> mapApplicationSynchronized = new HashMap<Application, String>();
+		Map<Application, String> mapApplicationSynchronized = new HashMap<>();
 		for (Application application : applicationSynchronizedList) {
 			mapApplicationSynchronized.put(application, application.getName());
 		}
@@ -137,17 +126,14 @@ public class Search extends AbstractPage {
 	}
 
 	public GenericListEncoder<Application> getApplicationSynchronizedEncoder() {
-		List<Application> applicationSynchronizedList = new ArrayList<Application>();
-		applicationSynchronizedList = this.synchronizationSubscriptionService
-				.findAllApplicationsSubscribe();
-		GenericListEncoder<Application> encoder = new GenericListEncoder<Application>(
-				applicationSynchronizedList);
-		return encoder;
+		return new GenericListEncoder<>(
+				this.synchronizationSubscriptionService
+						.findAllApplicationsSubscribe());
 	}
 
 	public Map<HttpStatus, String> getHttpStatusModel() {
 		HttpStatus[] availableHttpStatus = HttpStatus.values();
-		Map<HttpStatus, String> mapHttpStatus = new HashMap<HttpStatus, String>();
+		Map<HttpStatus, String> mapHttpStatus = new HashMap<>();
 		for (HttpStatus httpStatus : availableHttpStatus) {
 			mapHttpStatus.put(httpStatus, httpStatus.toString());
 		}
@@ -155,77 +141,21 @@ public class Search extends AbstractPage {
 	}
 
 	public GenericListEncoder<HttpStatus> getHttpStatusEncoder() {
-		HttpStatus[] availableHttpStatus = HttpStatus.values();
-		List<HttpStatus> listHttpStatus = new ArrayList<HttpStatus>();
-		for (HttpStatus httpStatus : availableHttpStatus) {
-			listHttpStatus.add(httpStatus);
-		}
-		GenericListEncoder<HttpStatus> encoder = new GenericListEncoder<HttpStatus>(
-				listHttpStatus);
-		return encoder;
-	}
-
-	public Map<MethodType, String> getMethodTypeModel() {
-		MethodType[] availableMethodType = MethodType.values();
-		Map<MethodType, String> mapMethodType = new HashMap<MethodType, String>();
-		for (MethodType methodType : availableMethodType) {
-			mapMethodType.put(methodType, methodType.toString());
-		}
-		return mapMethodType;
-	}
-
-	public GenericListEncoder<MethodType> getMethodTypeEncoder() {
-		MethodType[] availableMethodType = MethodType.values();
-		List<MethodType> listMethodType = new ArrayList<MethodType>();
-		for (MethodType methodType : availableMethodType) {
-			listMethodType.add(methodType);
-		}
-		GenericListEncoder<MethodType> encoder = new GenericListEncoder<MethodType>(
-				listMethodType);
-		return encoder;
-	}
-
-	public Map<SynchronizationType, String> getSynchronizationTypeModel() {
-		SynchronizationType[] availableSynchronizationType = SynchronizationType
-				.values();
-		Map<SynchronizationType, String> mapSynchronizationType = new HashMap<SynchronizationType, String>();
-		for (SynchronizationType synchronizationType : availableSynchronizationType) {
-			mapSynchronizationType.put(synchronizationType, synchronizationType
-					.toString());
-		}
-		return mapSynchronizationType;
-	}
-
-	public GenericListEncoder<SynchronizationType> getSynchronizationTypeEncoder() {
-		SynchronizationType[] availableSynchronizationType = SynchronizationType
-				.values();
-		List<SynchronizationType> listSynchronizationType = new ArrayList<SynchronizationType>();
-		for (SynchronizationType synchronizationType : availableSynchronizationType) {
-			listSynchronizationType.add(synchronizationType);
-		}
-		GenericListEncoder<SynchronizationType> encoder = new GenericListEncoder<SynchronizationType>(
-				listSynchronizationType);
-		return encoder;
+		return  new GenericListEncoder<>(Arrays.asList(HttpStatus.values()));
 	}
 
 	public Map<ResourceType, String> getResourceTypeModel() {
-		ResourceType[] availableResourceType = ResourceType.values();
-
-		Map<ResourceType, String> mapResourceType = new HashMap<ResourceType, String>();
-		for (ResourceType resourceType : availableResourceType) {
-			mapResourceType.put(resourceType, resourceType.toString());
-		}
-		return mapResourceType;
+		return Stream.of(
+				new AbstractMap.SimpleEntry<>(ResourceType.EMPLOYEE_PROFILE, "Employé"),
+				new AbstractMap.SimpleEntry<>(ResourceType.AGENT_PROFILE, "Agent"),
+				new AbstractMap.SimpleEntry<>(ResourceType.COMPANY, "Entreprise"),
+				new AbstractMap.SimpleEntry<>(ResourceType.ORGANISM, "Organisme"),
+				new AbstractMap.SimpleEntry<>(ResourceType.ORGANISM_DEPARTMENT, "Service"),
+				new AbstractMap.SimpleEntry<>(ResourceType.ESTABLISHMENT, "Etablissement")
+		).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
 	}
 
 	public GenericListEncoder<ResourceType> getResourceTypeEncoder() {
-		ResourceType[] availableResourceType = ResourceType.values();
-		List<ResourceType> listResourceType = new ArrayList<ResourceType>();
-		for (ResourceType resourceType : availableResourceType) {
-			listResourceType.add(resourceType);
-		}
-		GenericListEncoder<ResourceType> encoder = new GenericListEncoder<ResourceType>(
-				listResourceType);
-		return encoder;
+		return new GenericListEncoder<>(Arrays.asList(ResourceType.values()));
 	}
 }
