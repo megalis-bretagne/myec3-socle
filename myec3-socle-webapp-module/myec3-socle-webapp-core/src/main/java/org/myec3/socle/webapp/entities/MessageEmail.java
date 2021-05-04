@@ -287,7 +287,7 @@ public class MessageEmail {
 		// account (no customer linked). In this case we are looking into file
 		// app.properties to fill
 		// logoUrl and hotlinePhone values.
-		String logoUrl = GuWebAppConstants.MYEC3_BASE_URL + "/static/images/logoformail.png";;
+		String logoUrl = GuWebAppConstants.MYEC3_BASE_URL + "/static/images/logoformail.png";
 		String hotlinePhone = null;
 
 		// set logo url and hotlinePhone
@@ -486,7 +486,7 @@ public class MessageEmail {
 							messages,
 							"content-email-password-about-to-expired-"
 									+ mapAttributes.get(ATTR_NB_DAYS_EXPIRATION_DATE_PASSWORD)),
-							mapAttributes.get(ATTR_PROFIL_MAIL),
+							mapAttributes.get(ATTR_USER_ID),
 							mapAttributes.get(ATTR_STRUCTURE_NAME),
 							mapAttributes.get(ATTR_EXPIRATION_DATE_PASSWORD)));
 
@@ -510,7 +510,7 @@ public class MessageEmail {
 		case EXPIRED_PASSWORD:
 			content.append(MessageFormat.format(
 					getMessage(messages, "content-email-password-expired"),
-					mapAttributes.get(ATTR_PROFIL_MAIL),
+					mapAttributes.get(ATTR_USER_ID),
 					mapAttributes.get(ATTR_STRUCTURE_NAME)));
 
 			content.append("<br/><br/>");
