@@ -17,22 +17,17 @@
  */
 package org.myec3.socle.webapp.pages.company;
 
-import java.util.List;
-
-import javax.inject.Named;
-
 import org.apache.tapestry5.EventConstants;
 import org.apache.tapestry5.PersistenceConstants;
-import org.apache.tapestry5.annotations.Component;
-import org.apache.tapestry5.annotations.InjectPage;
-import org.apache.tapestry5.annotations.OnEvent;
-import org.apache.tapestry5.annotations.Persist;
-import org.apache.tapestry5.annotations.Property;
+import org.apache.tapestry5.annotations.*;
 import org.apache.tapestry5.corelib.components.Form;
 import org.apache.tapestry5.ioc.annotations.Inject;
 import org.myec3.socle.core.domain.model.Company;
 import org.myec3.socle.core.service.CompanyService;
 import org.myec3.socle.webapp.pages.AbstractPage;
+
+import javax.inject.Named;
+import java.util.List;
 
 /**
  * Page used to search companies{@link Company} from the databse<br />

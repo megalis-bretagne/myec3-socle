@@ -9,13 +9,16 @@
     </p>
     <div class="steps">
       <ol>
-        <li id="step1" class="active">
+        <li id="step1">
+          ${message:step-siren-label}
+        </li>
+        <li id="step2" class="active">
           ${message:step-organism-label}
         </li>
-        <li id="step2">
+        <li id="step3">
           ${message:step-subscriptions-label}
         </li>
-        <li id="step3">
+        <li id="step4">
           ${message:step-agent-label}
         </li>
       </ol>

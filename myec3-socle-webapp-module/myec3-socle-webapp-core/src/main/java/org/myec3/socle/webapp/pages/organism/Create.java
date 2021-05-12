@@ -17,18 +17,8 @@
  */
 package org.myec3.socle.webapp.pages.organism;
 
-import java.awt.Graphics2D;
-import java.awt.RenderingHints;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.util.*;
-
-import javax.imageio.ImageIO;
-import javax.inject.Named;
-
+import lombok.Getter;
+import lombok.Setter;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.logging.Log;
@@ -38,17 +28,16 @@ import org.apache.tapestry5.PersistenceConstants;
 import org.apache.tapestry5.SelectModel;
 import org.apache.tapestry5.ValueEncoder;
 import org.apache.tapestry5.annotations.Component;
-import org.apache.tapestry5.annotations.InjectPage;
-import org.apache.tapestry5.annotations.OnEvent;
-import org.apache.tapestry5.annotations.Persist;
-import org.apache.tapestry5.annotations.Property;
+import org.apache.tapestry5.annotations.*;
 import org.apache.tapestry5.corelib.components.Form;
 import org.apache.tapestry5.ioc.annotations.Inject;
 import org.apache.tapestry5.services.SelectModelFactory;
 import org.apache.tapestry5.upload.services.UploadedFile;
-import org.myec3.socle.core.domain.model.*;
+import org.myec3.socle.core.domain.model.AdminProfile;
+import org.myec3.socle.core.domain.model.Customer;
+import org.myec3.socle.core.domain.model.Organism;
+import org.myec3.socle.core.domain.model.OrganismStatus;
 import org.myec3.socle.core.domain.model.enums.AuthorizedMimeType;
-import org.myec3.socle.core.domain.model.enums.Country;
 import org.myec3.socle.core.domain.model.enums.OrganismMemberStatus;
 import org.myec3.socle.core.domain.model.enums.OrganismNafCode;
 import org.myec3.socle.core.service.CustomerService;
@@ -59,6 +48,17 @@ import org.myec3.socle.webapp.constants.GuWebAppConstants;
 import org.myec3.socle.webapp.encoder.GenericListEncoder;
 import org.myec3.socle.webapp.pages.AbstractPage;
 import org.myec3.socle.webapp.pages.Index;
+
+import javax.imageio.ImageIO;
+import javax.inject.Named;
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.List;
+import java.util.*;
 
 /**
  * Page used during organism{@link Organism} creation process.<br />
@@ -103,11 +103,13 @@ public class Create extends AbstractPage {
   private CreateSubscriptions createSubscriptions;
 
   @OnEvent(EventConstants.ACTIVATE)
-  public void Activation() {
+  public void activation() {
     super.initUser();
   }
 
-  @Property
+  @Getter
+  @Setter
+  @Persist(PersistenceConstants.FLASH)
   private Organism organism;
 
   @Component(id = "modification_form")
@@ -149,14 +151,12 @@ public class Create extends AbstractPage {
    */
   @OnEvent(EventConstants.ACTIVATE)
   public Object onActivate() {
-    organism = new Organism();
-    organismStatus = new OrganismStatus();
-    organism.setAddress(new Address());
-    organism.getAddress().setCity("");
-    organism.getAddress().setPostalAddress("");
-    organism.getAddress().setPostalCode("");
-    organism.getAddress().setCountry(Country.FR);
-    return Boolean.TRUE;
+    if (this.organism != null ) {
+      organismStatus = new OrganismStatus();
+      return Boolean.TRUE;
+    } else {
+      return Boolean.FALSE;
+    }
   }
 
   // Form events
@@ -191,23 +191,6 @@ public class Create extends AbstractPage {
         logo.getContentType())) {
         this.form.recordError(this.getMessages().get(
           "invalid-file-type-error"));
-      }
-    }
-  }
-
-  @OnEvent(value = EventConstants.VALIDATE, component = "siren")
-  public void validateSiren(String siren) {
-    if (null != siren) {
-      if (!this.organismService.isSirenValid(siren)) {
-        this.form.recordError(this.getMessages().get(
-          "invalid-siren-error"));
-      }
-
-      // We check if an organism with this siren not already exists into
-      // the database
-      if (null != this.organismService.findBySiren(siren)) {
-        this.form.recordError(this.getMessages().get(
-          "organism-exists-error"));
       }
     }
   }

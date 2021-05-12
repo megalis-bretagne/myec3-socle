@@ -119,7 +119,7 @@ public class Layout extends AbstractPage {
 			for (Role role : roles) {
 				if (this.getLoggedProfile().isAdmin()) {
 					mainMenuList.add(new MenuItem(this.getMessages().get("newOrganism-label"),
-							org.myec3.socle.webapp.pages.organism.Create.class, true));
+							org.myec3.socle.webapp.pages.organism.Siren.class, true));
 					mainMenuList.add(new MenuItem(this.getMessages().get("searchOrganism-label"),
 							org.myec3.socle.webapp.pages.organism.Search.class, true));
 

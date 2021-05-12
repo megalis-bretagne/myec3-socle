@@ -73,7 +73,7 @@ public abstract class GenericStructureServiceImpl<T extends Structure, D extends
 		try {
 			int sum = 0;
 			for (int i = 0; i < siren.length(); i++) {
-				int value = Integer.valueOf(String.valueOf(siren.charAt(i)));
+				int value = Integer.parseInt(String.valueOf(siren.charAt(i)));
 				// Attention, les conditions sont inversés pour verifier un SIRET
 				// (sur 14 chiffres)
 				if (i % 2 == 0) {
@@ -89,6 +89,37 @@ public abstract class GenericStructureServiceImpl<T extends Structure, D extends
 		} catch (RuntimeException e) {
 			return Boolean.FALSE;
 		}
+		return Boolean.TRUE;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	@Transactional(propagation = Propagation.SUPPORTS)
+	public Boolean isSiretValid(String siren, String nic) {
+		if (null == siren || null == nic) {
+			return Boolean.FALSE;
+		}
+
+		int sum = 0;
+		StringBuilder siret = new StringBuilder();
+		siret.append(siren);
+		siret.append(nic);
+
+		for (int i = 0; i < siret.length(); i++) {
+			int value = Integer.parseInt(String.valueOf(siret.charAt(i)));
+			if (i % 2 != 0) {
+				sum += value;
+			} else {
+				sum += 2 * value > 9 ? 2 * value - 9 : 2 * value;
+			}
+		}
+
+		if (sum % 10 != 0) {
+			return Boolean.FALSE;
+		}
+
 		return Boolean.TRUE;
 	}
 
