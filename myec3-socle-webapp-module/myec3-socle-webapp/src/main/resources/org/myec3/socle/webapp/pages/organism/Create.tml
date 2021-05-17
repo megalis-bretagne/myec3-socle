@@ -89,13 +89,13 @@
         <t:label for="siren">
           ${message:siren-label} *:
         </t:label>
-        <t:textfield t:id="siren" t:value="organism.siren" t:maxlength="9" t:validate="required, regexp"/>
+        <t:textfield t:id="siren" t:value="organism.siren" disabled="literal:disabled"/>
       </p>
       <p>
         <t:label for="siret">
           ${message:organism-nic-label} :
         </t:label>
-        <t:textfield t:id="siret" t:value="organism.nic" t:maxlength="5" t:validate="regexp"/>
+        <t:textfield t:id="siret" t:value="organism.nic" disabled="literal:disabled"/>
       </p>
       <p>
         <t:label for="legalCategory">

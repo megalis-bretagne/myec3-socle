@@ -55,7 +55,6 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.List;
 import java.util.*;
@@ -159,6 +158,13 @@ public class Create extends AbstractPage {
     }
   }
 
+  @SuppressWarnings("squid:S4165")
+  @OnEvent(EventConstants.PASSIVATE)
+  public void onPassivate() {
+    // NECESSAIRE POUR VALIDER LE FORMULAIRE => sinon NULL POINTER
+    this.organism = organism;
+  }
+
   // Form events
   @OnEvent(value = EventConstants.VALIDATE, component = "modification_form")
   public void onValidate() {
@@ -227,9 +233,9 @@ public class Create extends AbstractPage {
         // eb-core does'nt import tapestry
         AuthorizedMimeType mimeType = AuthorizedMimeType
           .getTypeByLabel(this.logo.getContentType());
-        String file_extension = mimeType.toString().toLowerCase();
+        String fileExtension = mimeType.toString().toLowerCase();
 
-        String finNomFic = "structure_id_" + this.organism.getId() + "." + file_extension;
+        String finNomFic = "structure_id_" + this.organism.getId() + "." + fileExtension;
         String nomFicLogoFull = "logo_full_" + finNomFic;
         String nomFicLogo = "logo_" + finNomFic;
         String nomFicIcon = "icon_" + finNomFic;
@@ -244,7 +250,7 @@ public class Create extends AbstractPage {
         File resizedLogo = new File(GuWebAppConstants.FILER_LOGO_PATH + nomFicLogo);
 
         // write logo.jpeg
-        ImageIO.write(resizeBufferLogo, file_extension, resizedLogo);
+        ImageIO.write(resizeBufferLogo, fileExtension, resizedLogo);
 
         this.organism.setLogoUrl(GuWebAppConstants.FILER_LOGO_URL + nomFicLogo);
 
@@ -252,7 +258,7 @@ public class Create extends AbstractPage {
         this.organism.setIconUrl(GuWebAppConstants.FILER_LOGO_URL + nomFicIcon);
 
         // write icon.jpeg
-        ImageIO.write(resizeBufferLogo, file_extension, copiedIcon);
+        ImageIO.write(resizeBufferLogo, fileExtension, copiedIcon);
 
         this.organismService.update(organism);
       }
@@ -263,10 +269,6 @@ public class Create extends AbstractPage {
     } catch (OrganismCreationException e) {
       this.errorMessage = this.getMessages().get(
         "organism-creation-error");
-      logger.error(e);
-      return null;
-    } catch (FileNotFoundException e) {
-      this.errorMessage = this.getMessages().get("file-copying-error");
       logger.error(e);
       return null;
     } catch (IOException e) {
@@ -306,7 +308,7 @@ public class Create extends AbstractPage {
    * list for select NafCode
    */
   public Map<OrganismNafCode, String> getListOfOrganismNafCode() {
-    Map<OrganismNafCode, String> availablesNafCodes = new LinkedHashMap<OrganismNafCode, String>();
+    Map<OrganismNafCode, String> availablesNafCodes = new LinkedHashMap<>();
     OrganismNafCode[] nafCodeList = OrganismNafCode.values();
     for (OrganismNafCode organismNafCode : nafCodeList) {
       availablesNafCodes
@@ -314,19 +316,14 @@ public class Create extends AbstractPage {
           organismNafCode
             + " - "
             + this.getMessages().get(
-            organismNafCode.name().toString()));
+            organismNafCode.name()));
     }
 
     return availablesNafCodes;
   }
 
   public ValueEncoder<OrganismNafCode> getNafCodeEncoder() {
-    OrganismNafCode[] availablesNafCodes = OrganismNafCode.values();
-    List<OrganismNafCode> nafCodeList = new ArrayList<OrganismNafCode>();
-    for (OrganismNafCode organismNafCode : availablesNafCodes) {
-      nafCodeList.add(organismNafCode);
-    }
-    return new GenericListEncoder<OrganismNafCode>(nafCodeList);
+    return new GenericListEncoder<>(Arrays.asList(OrganismNafCode.values()));
   }
 
   /**
@@ -334,7 +331,7 @@ public class Create extends AbstractPage {
    */
   public Map<Customer, String> getCustomersList() {
     List<Customer> customersList = this.customerService.findAll();
-    Map<Customer, String> customersMap = new LinkedHashMap<Customer, String>();
+    Map<Customer, String> customersMap = new LinkedHashMap<>();
     for (Customer customer : customersList) {
       customersMap.put(customer, customer.getLabel());
     }

@@ -40,18 +40,18 @@ public class Siren {
     private MpsWsClient mpsWsClient = new MpsWsClient();
 
     @OnEvent(EventConstants.ACTIVATE)
-    public void activation() {
+    public Object activation() {
         organism = new Organism();
         organism.setAddress(new Address());
         organism.getAddress().setCity("");
         organism.getAddress().setPostalAddress("");
         organism.getAddress().setPostalCode("");
         organism.getAddress().setCountry(Country.FR);
+        return Boolean.TRUE;
     }
 
     @OnEvent(EventConstants.SUCCESS)
     public Object onSuccess() {
-
         this.createPage.setOrganism(this.organism);
         return this.createPage;
     }
@@ -85,11 +85,13 @@ public class Siren {
      */
     private void completeOrganismInfo() {
         try {
-            // TODO faire un autre service pour mapper les company
             ResponseEntreprises infos = mpsWsClient.getInfoEntreprises(organism.getSiren());
             this.organism.setLabel(infos.getEntreprise().getLabel());
-            // TODO améliorer la récupération de l'adresse et du code NAF
-            this.organism.setAddress(infos.getEtablissement_siege().getAddress());
+            Address address = infos.getEtablissement_siege().getAddress();
+
+            // complete postalAddress with streetNumber/Street type and streetName
+            address.setPostalAddress(address.getStreetNumber()+" "+address.getStreetType()+" "+address.getStreetName());
+            this.organism.setAddress(address);
         } catch (Exception e) {
             this.errorMessage = this.messages.get("mps-error-message");
         }
