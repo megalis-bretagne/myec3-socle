@@ -48,17 +48,17 @@ buildSocleWebapp:
     IMAGE_NAME: "megalis/socle-webapp"
 
 deployWebapp:
-  extends: .deployDev
+  extends: .deployInteg
   variables:
     STACK_NAME: "socle-webapp"
 
 deploySynchro:
-  extends: .deployDev
+  extends: .deployInteg
   variables:
     STACK_NAME: "socle-synchro"
 
 deployEsb:
-  extends: .deployDev
+  extends: .deployInteg
   variables:
     STACK_NAME: "socle-esb"
 
@@ -68,10 +68,6 @@ deployPreprodWebapp:
   variables:
     STACK_NAME: "socle-webapp"
     
-deployPreprodWebapp:on-schedule:
-  extends: .deployPreprod:on-schedule
-  variables:
-    STACK_NAME: "socle-webapp"
 
 deployPreprodSynchro:
   extends: .deployPreprod
@@ -82,7 +78,26 @@ deployPreprodEsb:
   extends: .deployPreprod
   variables:
     STACK_NAME: "socle-esb"
+    
+ 
+deployPreprodWebappManual:
+  extends: .deployPreprodManual
+  variables:
+    STACK_NAME: "socle-webapp"
+    
 
+deployPreprodSynchroManual:
+  extends: .deployPreprodManual
+  variables:
+    STACK_NAME: "socle-synchro"
+
+deployPreprodEsbManual:
+  extends: .deployPreprodManual
+  variables:
+    STACK_NAME: "socle-esb"
+     
+    
+    
 deployProdWebapp:
   extends: .deployProd
   variables:
