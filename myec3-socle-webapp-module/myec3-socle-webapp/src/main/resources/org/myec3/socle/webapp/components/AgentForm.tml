@@ -113,7 +113,7 @@
             src="${context:static/images/pic_help.png}" class="picHelp" alt="${message:certificate-help}"/></a>
           :
         </t:label>
-        <t:textarea t:id="certificate" t:value="agentProfile.user.certificate"/>
+        <t:textarea t:id="certificate" t:value="agentProfile.user.certificate" t:validate="regexp"/>
         <t:submit t:id="checkCertificate" class="button btnOk" value="message:check-certificate"/>
       </p>
       <p>
