@@ -1,23 +1,8 @@
 package org.myec3.socle.ws.batch.job;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.util.*;
-
-import org.myec3.socle.core.domain.model.AdministrativeState;
-import org.myec3.socle.core.domain.model.Company;
-import org.myec3.socle.core.domain.model.Establishment;
-import org.myec3.socle.core.domain.model.InseeGeoCode;
-import org.myec3.socle.core.domain.model.MpsUpdateJob;
-import org.myec3.socle.core.domain.model.Person;
+import org.myec3.socle.core.domain.model.*;
 import org.myec3.socle.core.domain.model.enums.*;
-import org.myec3.socle.core.service.CompanyService;
-import org.myec3.socle.core.service.EmployeeProfileService;
-import org.myec3.socle.core.service.EstablishmentService;
-import org.myec3.socle.core.service.InseeGeoCodeService;
-import org.myec3.socle.core.service.InseeLegalCategoryService;
-import org.myec3.socle.core.service.MpsUpdateJobService;
-import org.myec3.socle.core.service.PersonService;
+import org.myec3.socle.core.service.*;
 import org.myec3.socle.synchro.api.constants.SynchronizationType;
 import org.myec3.socle.synchro.scheduler.manager.ResourceSynchronizationManager;
 import org.myec3.socle.ws.client.CompanyWSinfo;
@@ -28,6 +13,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
+
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.*;
 
 @Component
 public class UnstackUpdateList {
@@ -82,7 +71,7 @@ public class UnstackUpdateList {
 
         updateErrors = 0;
 
-        Map<Long, String> updateErrorId = new HashMap<Long, String>();
+        Map<Long, String> updateErrorId = new HashMap();
 
         logger.debug("Unstack CRON !");
 
@@ -245,25 +234,24 @@ public class UnstackUpdateList {
 
 
                             } catch (Exception e) {
-                                logger.info("Error while updating Company : " + e);
+                                logger.error("Error while updating Company : " + e);
                                 this.companyUpdateError(companyToUpdate, updateErrorId, resourceToUnstack);
-                            } finally {
-                                this.mpsUpdateJobService.deleteById(resourceToUnstack.getId());
-                                logger.debug("mpsUpdateJobService deleted !");
+                                continue;
                             }
                         } else {
                             logger.debug("No update for the Company :" + companyToUpdate.toString());
                             this.mpsUpdateJobService.deleteById(resourceToUnstack.getId());
                             logger.debug("mpsUpdateJobService deleted !");
+                            // necessaire ?
                             Date dateCompany = new Date();
                             companyToUpdate.setLastUpdate(dateCompany);
                             this.companyService.update(companyToUpdate);
                         }
                     } else {
                         logger.info("Error : Couldn't find company in database or company is a foreign company !");
-                        this.mpsUpdateJobService.deleteById(resourceToUnstack.getId());
-                        logger.info("mpsUpdateJobService deleted !");
                     }
+                    this.mpsUpdateJobService.deleteById(resourceToUnstack.getId());
+                    logger.info("mpsUpdateJobService deleted !");
 
                     // establishment update case
                 } else if (resourceToUnstack.getType().equals(ResourceType.ESTABLISHMENT.getLabel())) {
@@ -304,17 +292,17 @@ public class UnstackUpdateList {
                                 continue;
                             }
                         } catch (FileNotFoundException e) {
-                            logger.warn("Contacting MPS with invalid siret : " + e);
+                            logger.error("Contacting MPS with invalid siret : " + resourceToUnstack.toString(), e);
                             this.establishmentUpdateError(establishmentToUpdate, updateErrorId, resourceToUnstack);
                             continue;
 
                         } catch (IOException e) {
-                            logger.warn("MPS is not responding : " + e);
+                            logger.error("MPS is not responding : " + resourceToUnstack.toString(),e);
                             this.establishmentUpdateError(establishmentToUpdate, updateErrorId, resourceToUnstack);
                             continue;
 
                         } catch (Exception e) {
-                            logger.warn("Error while requesting MPS : " + e);
+                            logger.error("Error while requesting MPS : " + resourceToUnstack.toString(),e);
                             this.establishmentUpdateError(establishmentToUpdate, updateErrorId, resourceToUnstack);
                             continue;
                         }
@@ -382,7 +370,7 @@ public class UnstackUpdateList {
                                 establishmentSynchronizer.synchronizeUpdate(establishmentToUpdate, null, synchronizationType, sendingApplication);
 
                             } catch (Exception e) {
-                                logger.warn("Error while updating Establishment : " + e);
+                                logger.error("Error while updating Establishment : " + resourceToUnstack.toString(), e);
                                 this.updateErrors += 1;
                                 updateErrorId.put(establishmentToUpdate.getId(),
                                         ResourceType.ESTABLISHMENT.getLabel());
@@ -398,11 +386,14 @@ public class UnstackUpdateList {
 
                                 establishmentToUpdate.setAdministrativeState(administrativeStateEstablishment);
 
+                                // can throw exception if error validation
                                 this.establishmentService.update(establishmentToUpdate);
-
+                                continue;
                             } finally {
+                                logger.info("Deleting mpsUpdate in DB {}", resourceToUnstack.getId());
                                 this.mpsUpdateJobService.deleteById(resourceToUnstack.getId());
-                                logger.debug("mpsUpdateJobService deleted !");
+                                logger.info("mpsUpdateJobService deleted !");
+                                continue;
                             }
 
                         }
@@ -411,12 +402,14 @@ public class UnstackUpdateList {
                             logger.warn("No update for the Establishment :" + establishmentToUpdate.toString());
                             this.mpsUpdateJobService.deleteById(resourceToUnstack.getId());
                             logger.debug("mpsUpdateJobService deleted !");
+                            // necessaire ?
                             Date dateEstablishment = new Date();
                             establishmentToUpdate.setLastUpdate(dateEstablishment);
                             this.establishmentService.update(establishmentToUpdate);
                         }
                     } else {
                         logger.warn("Error : Couldn't find establishment in database !");
+                        logger.info("Deleting mpsUpdate in DB {}", resourceToUnstack.getId());
                         this.mpsUpdateJobService.deleteById(resourceToUnstack.getId());
                         logger.info("mpsUpdateJobService deleted !");
                     }
@@ -445,7 +438,11 @@ public class UnstackUpdateList {
 
         companyToUpdate.setAdministrativeState(administrativeState);
         this.mpsUpdateJobService.deleteById(resourceToUnstack.getId());
-        this.companyService.update(companyToUpdate);
+        try {
+            this.companyService.update(companyToUpdate);
+        } catch (Exception e) {
+            logger.error("Erreur update company error", e);
+        }
         logger.debug("mpsUpdateJobService deleted !");
     }
 

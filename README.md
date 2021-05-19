@@ -139,6 +139,7 @@ Eviter les commentaires "oups", "fix" etc...
 | ------------------ | ------------ | ---------- | ----- |
 | Dashboard Exploitation | https://combrit-exploit.sib.fr/  | https://exploit-preprod.megalis.bretagne.bzh/ |   https://exploit.megalis.bretagne.bzh/ |
 | MyEC3                  | https://combrit-socle.sib.fr/    | https://socle-preprod.megalis.bretagne.bzh/   |   https://socle.megalis.bretagne.bzh/   |
+| Portainer              | https://combrit-exploit.sib.fr/portainer/# | https://exploit-preprod.megalis.bretagne.bzh/portainer/#/ | https://exploit.megalis.bretagne.bzh/portainer/#/ |
 
 
 ### VM de DEV
