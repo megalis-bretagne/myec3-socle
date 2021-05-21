@@ -60,6 +60,9 @@
 		<config.env.filtering>true</config.env.filtering>
 		<git-repo-url>https://gitlab.kazan.priv.atos.fr/myec3/myec3-socle</git-repo-url>
 		<lombok-version>1.16.20</lombok-version>
+		<sonar.qualitygate.wait>true</sonar.qualitygate.wait>
+		<sonar.java.source>8</sonar.java.source>
+		<sonar.exclusions>**/src/main/resources/**,**/src/main/filters/**,**/src/main/config/**,**/src/main/descriptors/**</sonar.exclusions>
 	</properties>
 
     <!-- SCM connection -->
