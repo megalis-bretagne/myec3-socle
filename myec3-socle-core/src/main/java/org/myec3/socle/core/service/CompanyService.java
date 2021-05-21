@@ -50,15 +50,6 @@ public interface CompanyService extends GenericStructureService<Company> {
 	void create(Company company) throws CompanyCreationException;
 
 	/**
-	 * Check if siren is valid depending on siren an nic
-	 * 
-	 * @param siren : siren to check
-	 * @param nic   : nic to check
-	 * @return TRUE if siren is valid, FALSE otherwise or if siren or nic is null
-	 */
-	Boolean isSiretValid(String siren, String nic);
-
-	/**
 	 * This method allows to populate company's collections
 	 * 
 	 * @param company : company to populate

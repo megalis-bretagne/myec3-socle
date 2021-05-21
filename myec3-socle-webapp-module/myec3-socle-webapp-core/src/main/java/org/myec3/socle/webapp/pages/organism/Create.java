@@ -17,18 +17,8 @@
  */
 package org.myec3.socle.webapp.pages.organism;
 
-import java.awt.Graphics2D;
-import java.awt.RenderingHints;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.util.*;
-
-import javax.imageio.ImageIO;
-import javax.inject.Named;
-
+import lombok.Getter;
+import lombok.Setter;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.logging.Log;
@@ -38,17 +28,16 @@ import org.apache.tapestry5.PersistenceConstants;
 import org.apache.tapestry5.SelectModel;
 import org.apache.tapestry5.ValueEncoder;
 import org.apache.tapestry5.annotations.Component;
-import org.apache.tapestry5.annotations.InjectPage;
-import org.apache.tapestry5.annotations.OnEvent;
-import org.apache.tapestry5.annotations.Persist;
-import org.apache.tapestry5.annotations.Property;
+import org.apache.tapestry5.annotations.*;
 import org.apache.tapestry5.corelib.components.Form;
 import org.apache.tapestry5.ioc.annotations.Inject;
 import org.apache.tapestry5.services.SelectModelFactory;
 import org.apache.tapestry5.upload.services.UploadedFile;
-import org.myec3.socle.core.domain.model.*;
+import org.myec3.socle.core.domain.model.AdminProfile;
+import org.myec3.socle.core.domain.model.Customer;
+import org.myec3.socle.core.domain.model.Organism;
+import org.myec3.socle.core.domain.model.OrganismStatus;
 import org.myec3.socle.core.domain.model.enums.AuthorizedMimeType;
-import org.myec3.socle.core.domain.model.enums.Country;
 import org.myec3.socle.core.domain.model.enums.OrganismMemberStatus;
 import org.myec3.socle.core.domain.model.enums.OrganismNafCode;
 import org.myec3.socle.core.service.CustomerService;
@@ -59,6 +48,16 @@ import org.myec3.socle.webapp.constants.GuWebAppConstants;
 import org.myec3.socle.webapp.encoder.GenericListEncoder;
 import org.myec3.socle.webapp.pages.AbstractPage;
 import org.myec3.socle.webapp.pages.Index;
+
+import javax.imageio.ImageIO;
+import javax.inject.Named;
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.util.List;
+import java.util.*;
 
 /**
  * Page used during organism{@link Organism} creation process.<br />
@@ -103,11 +102,13 @@ public class Create extends AbstractPage {
   private CreateSubscriptions createSubscriptions;
 
   @OnEvent(EventConstants.ACTIVATE)
-  public void Activation() {
+  public void activation() {
     super.initUser();
   }
 
-  @Property
+  @Getter
+  @Setter
+  @Persist(PersistenceConstants.FLASH)
   private Organism organism;
 
   @Component(id = "modification_form")
@@ -149,14 +150,19 @@ public class Create extends AbstractPage {
    */
   @OnEvent(EventConstants.ACTIVATE)
   public Object onActivate() {
-    organism = new Organism();
-    organismStatus = new OrganismStatus();
-    organism.setAddress(new Address());
-    organism.getAddress().setCity("");
-    organism.getAddress().setPostalAddress("");
-    organism.getAddress().setPostalCode("");
-    organism.getAddress().setCountry(Country.FR);
-    return Boolean.TRUE;
+    if (this.organism != null ) {
+      organismStatus = new OrganismStatus();
+      return Boolean.TRUE;
+    } else {
+      return Boolean.FALSE;
+    }
+  }
+
+  @SuppressWarnings("squid:S4165")
+  @OnEvent(EventConstants.PASSIVATE)
+  public void onPassivate() {
+    // NECESSAIRE POUR VALIDER LE FORMULAIRE => sinon NULL POINTER
+    this.organism = organism;
   }
 
   // Form events
@@ -195,23 +201,6 @@ public class Create extends AbstractPage {
     }
   }
 
-  @OnEvent(value = EventConstants.VALIDATE, component = "siren")
-  public void validateSiren(String siren) {
-    if (null != siren) {
-      if (!this.organismService.isSirenValid(siren)) {
-        this.form.recordError(this.getMessages().get(
-          "invalid-siren-error"));
-      }
-
-      // We check if an organism with this siren not already exists into
-      // the database
-      if (null != this.organismService.findBySiren(siren)) {
-        this.form.recordError(this.getMessages().get(
-          "organism-exists-error"));
-      }
-    }
-  }
-
   @OnEvent(EventConstants.SUCCESS)
   public Object onSuccess() {
     this.organism.setName(organism.getLabel());
@@ -244,9 +233,9 @@ public class Create extends AbstractPage {
         // eb-core does'nt import tapestry
         AuthorizedMimeType mimeType = AuthorizedMimeType
           .getTypeByLabel(this.logo.getContentType());
-        String file_extension = mimeType.toString().toLowerCase();
+        String fileExtension = mimeType.toString().toLowerCase();
 
-        String finNomFic = "structure_id_" + this.organism.getId() + "." + file_extension;
+        String finNomFic = "structure_id_" + this.organism.getId() + "." + fileExtension;
         String nomFicLogoFull = "logo_full_" + finNomFic;
         String nomFicLogo = "logo_" + finNomFic;
         String nomFicIcon = "icon_" + finNomFic;
@@ -261,7 +250,7 @@ public class Create extends AbstractPage {
         File resizedLogo = new File(GuWebAppConstants.FILER_LOGO_PATH + nomFicLogo);
 
         // write logo.jpeg
-        ImageIO.write(resizeBufferLogo, file_extension, resizedLogo);
+        ImageIO.write(resizeBufferLogo, fileExtension, resizedLogo);
 
         this.organism.setLogoUrl(GuWebAppConstants.FILER_LOGO_URL + nomFicLogo);
 
@@ -269,7 +258,7 @@ public class Create extends AbstractPage {
         this.organism.setIconUrl(GuWebAppConstants.FILER_LOGO_URL + nomFicIcon);
 
         // write icon.jpeg
-        ImageIO.write(resizeBufferLogo, file_extension, copiedIcon);
+        ImageIO.write(resizeBufferLogo, fileExtension, copiedIcon);
 
         this.organismService.update(organism);
       }
@@ -280,10 +269,6 @@ public class Create extends AbstractPage {
     } catch (OrganismCreationException e) {
       this.errorMessage = this.getMessages().get(
         "organism-creation-error");
-      logger.error(e);
-      return null;
-    } catch (FileNotFoundException e) {
-      this.errorMessage = this.getMessages().get("file-copying-error");
       logger.error(e);
       return null;
     } catch (IOException e) {
@@ -323,7 +308,7 @@ public class Create extends AbstractPage {
    * list for select NafCode
    */
   public Map<OrganismNafCode, String> getListOfOrganismNafCode() {
-    Map<OrganismNafCode, String> availablesNafCodes = new LinkedHashMap<OrganismNafCode, String>();
+    Map<OrganismNafCode, String> availablesNafCodes = new LinkedHashMap<>();
     OrganismNafCode[] nafCodeList = OrganismNafCode.values();
     for (OrganismNafCode organismNafCode : nafCodeList) {
       availablesNafCodes
@@ -331,19 +316,14 @@ public class Create extends AbstractPage {
           organismNafCode
             + " - "
             + this.getMessages().get(
-            organismNafCode.name().toString()));
+            organismNafCode.name()));
     }
 
     return availablesNafCodes;
   }
 
   public ValueEncoder<OrganismNafCode> getNafCodeEncoder() {
-    OrganismNafCode[] availablesNafCodes = OrganismNafCode.values();
-    List<OrganismNafCode> nafCodeList = new ArrayList<OrganismNafCode>();
-    for (OrganismNafCode organismNafCode : availablesNafCodes) {
-      nafCodeList.add(organismNafCode);
-    }
-    return new GenericListEncoder<OrganismNafCode>(nafCodeList);
+    return new GenericListEncoder<>(Arrays.asList(OrganismNafCode.values()));
   }
 
   /**
@@ -351,7 +331,7 @@ public class Create extends AbstractPage {
    */
   public Map<Customer, String> getCustomersList() {
     List<Customer> customersList = this.customerService.findAll();
-    Map<Customer, String> customersMap = new LinkedHashMap<Customer, String>();
+    Map<Customer, String> customersMap = new LinkedHashMap<>();
     for (Customer customer : customersList) {
       customersMap.put(customer, customer.getLabel());
     }

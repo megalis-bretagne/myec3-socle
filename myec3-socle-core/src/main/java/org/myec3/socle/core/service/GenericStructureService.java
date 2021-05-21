@@ -17,9 +17,9 @@
  */
 package org.myec3.socle.core.service;
 
-import java.util.List;
-
 import org.myec3.socle.core.domain.model.Structure;
+
+import java.util.List;
 
 /**
  * This interface provide common method signatures for all resources
@@ -83,6 +83,15 @@ public interface GenericStructureService<T extends Structure> extends
 	 * @return TRUE if siren is valid, FALSE otherwise of if siren is null
 	 */
 	Boolean isSirenValid(String siren);
+
+	/**
+	 * Check if siren is valid depending on siren an nic
+	 *
+	 * @param siren : siren to check
+	 * @param nic   : nic to check
+	 * @return TRUE if siren is valid, FALSE otherwise or if siren or nic is null
+	 */
+	Boolean isSiretValid(String siren, String nic);
 
 	/**
 	 * Find a structure by acronym
