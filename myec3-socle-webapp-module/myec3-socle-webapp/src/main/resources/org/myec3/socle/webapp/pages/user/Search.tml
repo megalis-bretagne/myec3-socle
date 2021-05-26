@@ -2,6 +2,9 @@
 <html t:type="layout" xmlns:t="http://tapestry.apache.org/schema/tapestry_5_1_0.xsd" xmlns:p="tapestry:parameter">
     <div id="main-content">
         <h2>${message:user-search-label}</h2>
+        <t:if test="errorMessage">
+            <p class="error">${errorMessage}</p>
+        </t:if>
         <t:if test="infoMessage">
             <p class="info">
                 ${infoMessage}
