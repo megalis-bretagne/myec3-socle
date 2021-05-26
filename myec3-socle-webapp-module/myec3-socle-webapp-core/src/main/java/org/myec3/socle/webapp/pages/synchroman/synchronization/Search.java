@@ -7,7 +7,6 @@ import org.apache.tapestry5.ioc.Messages;
 import org.apache.tapestry5.ioc.annotations.Inject;
 import org.myec3.socle.core.domain.model.Application;
 import org.myec3.socle.core.domain.model.enums.ResourceType;
-import org.myec3.socle.core.sync.api.HttpStatus;
 import org.myec3.socle.synchro.core.domain.model.SynchronizationLog;
 import org.myec3.socle.synchro.core.service.SynchronizationLogService;
 import org.myec3.socle.synchro.core.service.SynchronizationSubscriptionService;
@@ -42,7 +41,7 @@ public class Search extends AbstractPage {
 	private Application searchApplication;
 
 	@Property
-	private String searchHttpStatus;
+	private String searchStatut;
 
 	@Property
 	private String searchResourceType;
@@ -103,8 +102,8 @@ public class Search extends AbstractPage {
 		this.synchronizationLogResult = this.synchronizationLogService
 				.findAllSynchronizationLogByCriteria(searchStartDate,
 						searchEndDate, searchApplication,
-						searchResourceType, searchHttpStatus,
-						"ERROR", searchIsFinalValue);
+						searchResourceType, null,
+						searchStatut, searchIsFinalValue);
 
 		if (this.synchronizationLogResult.isEmpty()) {
 			this.infoMessage = this.messages.get("empty-result-message");
@@ -129,19 +128,6 @@ public class Search extends AbstractPage {
 		return new GenericListEncoder<>(
 				this.synchronizationSubscriptionService
 						.findAllApplicationsSubscribe());
-	}
-
-	public Map<HttpStatus, String> getHttpStatusModel() {
-		HttpStatus[] availableHttpStatus = HttpStatus.values();
-		Map<HttpStatus, String> mapHttpStatus = new HashMap<>();
-		for (HttpStatus httpStatus : availableHttpStatus) {
-			mapHttpStatus.put(httpStatus, httpStatus.toString());
-		}
-		return mapHttpStatus;
-	}
-
-	public GenericListEncoder<HttpStatus> getHttpStatusEncoder() {
-		return  new GenericListEncoder<>(Arrays.asList(HttpStatus.values()));
 	}
 
 	public Map<ResourceType, String> getResourceTypeModel() {

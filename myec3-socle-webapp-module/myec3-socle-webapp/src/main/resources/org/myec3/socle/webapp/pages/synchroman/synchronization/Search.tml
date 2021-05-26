@@ -44,11 +44,11 @@
 				</p>
 
 				<p>
-	                <t:label for="httpStatus">${message:httpStatus-label}</t:label>
-	                <t:select  t:id="httpStatus" t:model="httpStatusModel" t:encoder="httpStatusEncoder" t:value="searchHttpStatus" t:blankLabel="TOUS"/>
-	        		<a href="#" title="${message:httpStatus-help}">
-	        			<img src="${context:static/images/pic_help.png}" class="picHelp" alt="${message:help-label}"/>
-	        		</a>
+					<t:label for="statut">${message:statut-label}</t:label>
+					<t:select  t:id="statut" model="literal:SUCCESS,ERROR" t:value="searchStatut" t:blankLabel="TOUS"/>
+					<a href="#" title="${message:statut-help}">
+						<img src="${context:static/images/pic_help.png}" class="picHelp" alt="${message:help-label}"/>
+					</a>
 				</p>
 
 				<p>
