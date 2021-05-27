@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
 
 @RestController
 public class SynchroController {
@@ -265,7 +266,8 @@ public class SynchroController {
         String sendingApplication = "GU";
 
         // Get all organism subscribe to SDM
-        List<OrganismLightDTO> organisms = organismService.findOrganismLightByApplication(sdmApplication);
+        List<OrganismLightDTO> organisms = organismService.findOrganismLightByApplication(sdmApplication)
+                .stream().filter(organismLightDTO -> organismLightDTO.getSiren() != null ).collect(Collectors.toList());
 
         logger.info("[RESYNC] call API siren for each organism : {}", organisms.size() );
 
