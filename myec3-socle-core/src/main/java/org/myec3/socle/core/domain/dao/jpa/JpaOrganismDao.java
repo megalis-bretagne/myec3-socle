@@ -128,7 +128,7 @@ public class JpaOrganismDao extends JpaGenericStructureDao<Organism> implements 
 		String queryString = SELECT_OPERATOR +
 				" c.id as id , c.label as label, c.siren as siren" +
 				" FROM Organism c " +
-				"INNER JOIN c.applications a where a.id = :applicationId ";
+				"INNER JOIN c.applications a where a.id = :applicationId ORDER BY id";
 
 
 		List<OrganismLightDTO> result =  this.getEm().createQuery(queryString)
