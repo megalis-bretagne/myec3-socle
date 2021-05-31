@@ -10,6 +10,8 @@ import org.apache.tapestry5.ioc.annotations.Inject;
 import org.myec3.socle.core.domain.model.Address;
 import org.myec3.socle.core.domain.model.Organism;
 import org.myec3.socle.core.domain.model.enums.Country;
+import org.myec3.socle.core.domain.model.enums.OrganismINSEECat;
+import org.myec3.socle.core.domain.model.enums.OrganismNafCode;
 import org.myec3.socle.core.service.OrganismService;
 import org.myec3.socle.webapp.pages.Index;
 import org.myec3.socle.ws.client.impl.mps.MpsWsClient;
@@ -91,6 +93,17 @@ public class Siren {
 
             // complete postalAddress with streetNumber/Street type and streetName
             address.setPostalAddress(address.getStreetNumber()+" "+address.getStreetType()+" "+address.getStreetName());
+            // complete with forme_juridique
+            OrganismNafCode naf = OrganismNafCode.fromApeCode(infos.getEtablissement_siege().getApeCode());
+            this.organism.setApeCode(naf);
+
+            String formeJuridique = infos.getEntreprise().getApeCode();
+            // La forme juridique est sur 4 caractère (refentiel INSEE). Il faut le code ABCD en A.B.CD pour obtenir le bon enum
+            if (formeJuridique.length() == 4) {
+                String id = formeJuridique.charAt(0) + "."+formeJuridique.charAt(1)+"."+formeJuridique.substring(2);
+                OrganismINSEECat categogry = OrganismINSEECat.fromId(id);
+                this.organism.setLegalCategory(categogry);
+            }
             this.organism.setAddress(address);
         } catch (Exception e) {
             this.errorMessage = this.messages.get("mps-error-message");

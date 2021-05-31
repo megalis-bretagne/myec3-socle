@@ -137,20 +137,13 @@ public class JpaSynchronizationLogDao extends JpaGenericSynchronizationDao<Synch
 					|| (null != httpStatus) || (null != statut)	|| (null != isFinal)) {
 				queryString.append(" where ");
 
-				if ((null != startDate) && (null == endDate)) {
-					queryString.append("s.synchronizationDate > :startDate");
-					hasCriteria = Boolean.TRUE;
-				}
-				if ((null != endDate) && (null == startDate)) {
-					queryString.append("s.synchronizationDate < :endDate");
-					hasCriteria = Boolean.TRUE;
-				}
 				if ((null != startDate) && (null != endDate)) {
-					queryString.append("s.synchronizationDate between :startDate and :endDate");
+					queryString.append("s.synchronizationDate between :startDate and :endDate ");
 					hasCriteria = Boolean.TRUE;
 				}
 				if (null != application) {
-					queryString.append("s.applicationName like :applicationName");
+					queryString.append(AND_OPERATOR);
+					queryString.append("s.applicationName like :applicationName ");
 					hasCriteria = Boolean.TRUE;
 				}
 				if (null != resourceType) {
@@ -158,26 +151,26 @@ public class JpaSynchronizationLogDao extends JpaGenericSynchronizationDao<Synch
 						queryString.append(AND_OPERATOR);
 					else
 						hasCriteria = Boolean.TRUE;
-					queryString.append("s.resourceType =:resourceType");
+					queryString.append("s.resourceType =:resourceType ");
 				}
 				if (null != httpStatus) {
 					if (Boolean.TRUE.equals(hasCriteria))
 						queryString.append(AND_OPERATOR);
 					else
 						hasCriteria = Boolean.TRUE;
-					queryString.append("s.httpStatus =:httpStatus");
+					queryString.append("s.httpStatus =:httpStatus ");
 				}
 				if (null != statut) {
 					if (Boolean.TRUE.equals(hasCriteria))
 						queryString.append(AND_OPERATOR);
 					else
 						hasCriteria = Boolean.TRUE;
-					queryString.append("s.statut like :statut");
+					queryString.append("s.statut like :statut ");
 				}
 				if (null != isFinal) {
 					if (Boolean.TRUE.equals(hasCriteria))
 						queryString.append(AND_OPERATOR);
-					queryString.append("s.isFinal =:isFinal");
+					queryString.append("s.isFinal =:isFinal ");
 				}
 			}
 
