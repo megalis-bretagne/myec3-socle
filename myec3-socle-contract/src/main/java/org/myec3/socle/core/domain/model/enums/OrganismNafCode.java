@@ -19,6 +19,7 @@ package org.myec3.socle.core.domain.model.enums;
 
 import javax.xml.bind.annotation.XmlEnum;
 import javax.xml.bind.annotation.XmlEnumValue;
+import java.util.Arrays;
 
 
 /**
@@ -775,5 +776,16 @@ public enum OrganismNafCode implements StructureNafCode {
 	@Override
 	public String toString() {
 		return this.apeCode;
+	}
+
+	/**
+	 * Get OrganismNafCode given String apeCode
+	 * @param apeCode
+	 * @return
+	 */
+	public static OrganismNafCode fromApeCode(String apeCode) {
+
+		return Arrays.stream(OrganismNafCode.values()).filter(organismNafCode -> organismNafCode.getApeCode().equals(apeCode))
+				.findFirst().orElse(null);
 	}
 }
