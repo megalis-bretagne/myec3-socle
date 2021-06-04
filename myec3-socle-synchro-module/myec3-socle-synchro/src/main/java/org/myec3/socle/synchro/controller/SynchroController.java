@@ -257,16 +257,15 @@ public class SynchroController {
      *                     If false, launch the process and return result as string.
      * @return
      */
-    @RequestMapping(value = "/sdm/organism/resync", method = {RequestMethod.GET})
+    @RequestMapping(value = "/organism/resync", method = {RequestMethod.GET})
     public String resyncCompanySdm(@RequestParam boolean launchUpdate) {
-        logger.info("[RESYNC] Call resync company for SDM");
-        Application sdmApplication = applicationService.findByName("SDM");
+        logger.info("[RESYNC] Call resync Organism");
 
         SynchronizationType synchronizationType = SynchronizationType.SYNCHRONIZATION;
         String sendingApplication = "GU";
 
         // Get all organism subscribe to SDM
-        List<OrganismLightDTO> organisms = organismService.findOrganismLightByApplication(sdmApplication)
+        List<OrganismLightDTO> organisms = organismService.findOrganismLight()
                 .stream().filter(organismLightDTO -> organismLightDTO.getSiren() != null ).collect(Collectors.toList());
 
         logger.info("[RESYNC] call API siren for each organism : {}", organisms.size() );

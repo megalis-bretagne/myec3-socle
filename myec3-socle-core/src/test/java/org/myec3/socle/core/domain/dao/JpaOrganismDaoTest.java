@@ -26,7 +26,7 @@ public class JpaOrganismDaoTest extends AbstractDbSocleUnitTest {
 
     @Test
     public void testQuery() {
-        List<OrganismLightDTO>  organismList = jpaOrganismDao.findOrganismLightByApplicationId(1L);
+        List<OrganismLightDTO>  organismList = jpaOrganismDao.findOrganismLight();
         Assert.assertNotNull(organismList);
     }
 }

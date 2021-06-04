@@ -18,7 +18,6 @@
 package org.myec3.socle.core.service;
 
 import org.myec3.socle.core.domain.dto.OrganismLightDTO;
-import org.myec3.socle.core.domain.model.Application;
 import org.myec3.socle.core.domain.model.Customer;
 import org.myec3.socle.core.domain.model.Organism;
 import org.myec3.socle.core.service.exceptions.AllAcronymsUsedException;
@@ -99,9 +98,8 @@ public interface OrganismService extends GenericStructureService<Organism> {
 	Organism findOrganismByIdSdm(long idSdm);
 
 	/**
-	 * Retrive all organism by application
-	 * @param application	the application
+	 * Retrive all organism
 	 * @return	list of organism light
 	 */
-	List<OrganismLightDTO> findOrganismLightByApplication(Application application);
+	List<OrganismLightDTO> findOrganismLight();
 }
