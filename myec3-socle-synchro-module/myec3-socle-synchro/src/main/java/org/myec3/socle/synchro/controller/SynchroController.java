@@ -3,7 +3,6 @@ package org.myec3.socle.synchro.controller;
 import org.myec3.socle.core.domain.dto.OrganismLightDTO;
 import org.myec3.socle.core.domain.model.*;
 import org.myec3.socle.core.service.*;
-import org.myec3.socle.core.tools.UnaccentLetter;
 import org.myec3.socle.synchro.api.constants.SynchronizationType;
 import org.myec3.socle.synchro.scheduler.manager.ResourceSynchronizationManager;
 import org.myec3.socle.ws.client.impl.mps.MpsWsClient;
@@ -280,9 +279,7 @@ public class SynchroController {
                     logger.info("[RESYNC] ["+organismLightDTO.getId()+"] ["+organismLightDTO.getSiren()+"] Pas de reponse de API INSEE");
                     result.append("[RESYNC] ["+organismLightDTO.getId()+"] ["+organismLightDTO.getSiren()+"] Pas de reponse de API INSEE <br/>");
                 } else {
-                    // Mise en Majuscule et sans accent
-                    String labelSocle = UnaccentLetter.unaccentString(organismLightDTO.getLabel())
-                            .toUpperCase();
+                    String labelSocle = organismLightDTO.getLabel();
 
                     String labelInsee = entreprises.getEntreprise().getLabel();
                     String city = entreprises.getEtablissement_siege().getAddress().getCity();
