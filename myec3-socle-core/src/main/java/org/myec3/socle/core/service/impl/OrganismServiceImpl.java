@@ -222,9 +222,7 @@ public class OrganismServiceImpl extends GenericStructureServiceImpl<Organism, O
 	}
 
 	@Override
-	public List<OrganismLightDTO> findOrganismLightByApplication(Application application) {
-		// validate parameters
-		Assert.notNull(application, "Application should not be null");
-		return this.dao.findOrganismLightByApplicationId(application.getId());
+	public List<OrganismLightDTO> findOrganismLight() {
+		return this.dao.findOrganismLight();
 	}
 }
