@@ -27,6 +27,7 @@ public class SynchroController {
 
     private static final Logger logger = LoggerFactory.getLogger(SynchroController.class);
     private static final String ACTION_SOCIALE = "ACTION SOCIALE";
+    private static final String CAISSE_ECOLE = "CAISSE DES ECOLES";
 
     @Autowired
     @Qualifier("agentProfileService")
@@ -271,26 +272,24 @@ public class SynchroController {
 
         // Mise dans un Thread pour éviter les pb de timeout
         CompletableFuture.supplyAsync(() -> {
-            StringBuilder result = new StringBuilder("");
             AtomicInteger index = new AtomicInteger(0);
             organisms.forEach( organismLightDTO -> {
                 ResponseEntreprises entreprises = mpsWsClient.getInfoEntreprises(organismLightDTO.getSiren());
                 if (entreprises.getEntreprise() == null) {
                     logger.info("[RESYNC] ["+organismLightDTO.getId()+"] ["+organismLightDTO.getSiren()+"] Pas de reponse de API INSEE");
-                    result.append("[RESYNC] ["+organismLightDTO.getId()+"] ["+organismLightDTO.getSiren()+"] Pas de reponse de API INSEE <br/>");
                 } else {
                     String labelSocle = organismLightDTO.getLabel();
 
                     String labelInsee = entreprises.getEntreprise().getLabel();
                     String city = entreprises.getEtablissement_siege().getAddress().getCity();
 
-                    if (!labelSocle.equals(labelInsee) || (labelInsee.contains(ACTION_SOCIALE) && !labelInsee.contains(city)) ) {
+                    if (!labelSocle.equals(labelInsee) || (labelInsee.contains(ACTION_SOCIALE) && !labelInsee.contains(city))
+                            || (labelInsee.contains(CAISSE_ECOLE) && !labelInsee.contains(city))) {
                         // SI le libelle ACTION SOCIALE est présent et sans la présence de la commune, alors on ajoute la commune dans le label
-                        if (labelInsee.contains(ACTION_SOCIALE) && !labelInsee.contains(city)) {
+                        if ((labelInsee.contains(ACTION_SOCIALE) || labelInsee.contains(CAISSE_ECOLE)) && !labelInsee.contains(city)) {
                             labelInsee = labelInsee + " DE "+city;
                         }
                         logger.info("[RESYNC] ["+organismLightDTO.getId()+"] ["+organismLightDTO.getSiren()+"] ["+ organismLightDTO.getLabel()+"] ==> ["+ labelInsee +"]");
-                        result.append("["+organismLightDTO.getId()+"] ["+ organismLightDTO.getLabel()+"] ==> ["+ labelInsee +"] <br>");
 
                         if (launchUpdate) {
                             Organism organism = organismService.findOne(organismLightDTO.getId());
@@ -316,7 +315,7 @@ public class SynchroController {
 
             });
             logger.info("[RESYNC] END");
-            return result.toString();
+            return "END";
         });
         return "inprogress";
     }
