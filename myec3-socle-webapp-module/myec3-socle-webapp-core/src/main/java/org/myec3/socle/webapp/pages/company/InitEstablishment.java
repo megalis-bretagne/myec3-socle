@@ -17,25 +17,12 @@
  */
 package org.myec3.socle.webapp.pages.company;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.inject.Named;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.tapestry5.EventConstants;
 import org.apache.tapestry5.PersistenceConstants;
 import org.apache.tapestry5.ValueEncoder;
-import org.apache.tapestry5.annotations.Component;
-import org.apache.tapestry5.annotations.Import;
-import org.apache.tapestry5.annotations.InjectPage;
-import org.apache.tapestry5.annotations.OnEvent;
-import org.apache.tapestry5.annotations.Persist;
-import org.apache.tapestry5.annotations.Property;
-import org.apache.tapestry5.annotations.Service;
+import org.apache.tapestry5.annotations.*;
 import org.apache.tapestry5.beaneditor.BeanModel;
 import org.apache.tapestry5.corelib.components.Form;
 import org.apache.tapestry5.ioc.Messages;
@@ -43,11 +30,7 @@ import org.apache.tapestry5.ioc.annotations.Inject;
 import org.apache.tapestry5.services.BeanModelSource;
 import org.apache.tapestry5.services.javascript.JavaScriptSupport;
 import org.myec3.socle.core.constants.MyEc3Constants;
-import org.myec3.socle.core.domain.model.Address;
-import org.myec3.socle.core.domain.model.Company;
-import org.myec3.socle.core.domain.model.EmployeeProfile;
-import org.myec3.socle.core.domain.model.Establishment;
-import org.myec3.socle.core.domain.model.Person;
+import org.myec3.socle.core.domain.model.*;
 import org.myec3.socle.core.domain.model.enums.AdministrativeStateValue;
 import org.myec3.socle.core.domain.model.enums.CompanyNafCode;
 import org.myec3.socle.core.domain.model.enums.Country;
@@ -57,6 +40,12 @@ import org.myec3.socle.webapp.encoder.GenericListEncoder;
 import org.myec3.socle.webapp.pages.AbstractPage;
 import org.myec3.socle.ws.client.CompanyWSinfo;
 import org.myec3.socle.ws.client.impl.mps.MpsWsClient;
+
+import javax.inject.Named;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Page used during creation company process {@link Company}<br />
@@ -217,6 +206,7 @@ public class InitEstablishment extends AbstractPage {
 
 		// init employeeProfile
 		this.employeeProfile = new EmployeeProfile();
+		this.employeeProfile.setCreatedUserId(this.getUserIdLogged());
 
 		if (this.establishment == null) {
 			this.establishment = new Establishment();

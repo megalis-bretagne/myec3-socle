@@ -188,6 +188,7 @@ public class Create extends AbstractPage {
 			userService.create(this.employeeProfile.getUser());
 			User user = userService.findByName(this.employeeProfile.getUser().getName());
 			this.employeeProfile.setUser(user);
+			this.employeeProfile.setCreatedUserId(this.getUserIdLogged());
 
 			// EMPLOYEE
 			this.employeeProfile.setName(

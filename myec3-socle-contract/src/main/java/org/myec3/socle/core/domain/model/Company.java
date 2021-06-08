@@ -17,27 +17,9 @@
  */
 package org.myec3.socle.core.domain.model;
 
-import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Embedded;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.FetchType;
-import javax.persistence.OneToMany;
-import javax.persistence.Transient;
-import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlElementWrapper;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
-
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonSetter;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 import org.hibernate.envers.Audited;
@@ -47,9 +29,17 @@ import org.myec3.socle.core.domain.model.enums.Country;
 import org.myec3.socle.core.domain.model.enums.StructureINSEECat;
 import org.springframework.util.Assert;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonSetter;
+import javax.persistence.*;
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlElementWrapper;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
+import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 /**
  * This class represents a Company. A company can have one or many departements
@@ -88,9 +78,9 @@ public class Company extends Structure {
 	private Date lastUpdate;
 	private Date creationDate;
 	private Date radiationDate;
-	private List<CompanyDepartment> departments = new ArrayList<CompanyDepartment>();
-	private List<Establishment> establishments = new ArrayList<Establishment>();
-	private List<Person> responsibles = new ArrayList<Person>();
+	private List<CompanyDepartment> departments = new ArrayList<>();
+	private List<Establishment> establishments = new ArrayList<>();
+	private List<Person> responsibles = new ArrayList<>();
 	private String companyAcronym;
 	private CompanyCategory companyCategory;
 	private String legalCategoryString;

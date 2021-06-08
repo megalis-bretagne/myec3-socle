@@ -17,40 +17,25 @@
  */
 package org.myec3.socle.webapp.pages.organism.agent;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.inject.Named;
-import javax.mail.MessagingException;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.tapestry5.EventConstants;
 import org.apache.tapestry5.PersistenceConstants;
-import org.apache.tapestry5.annotations.Component;
-import org.apache.tapestry5.annotations.InjectPage;
-import org.apache.tapestry5.annotations.OnEvent;
-import org.apache.tapestry5.annotations.Persist;
-import org.apache.tapestry5.annotations.Property;
+import org.apache.tapestry5.annotations.*;
 import org.apache.tapestry5.ioc.annotations.Inject;
 import org.myec3.socle.core.constants.MyEc3EmailConstants;
-import org.myec3.socle.core.domain.model.Address;
-import org.myec3.socle.core.domain.model.AgentProfile;
-import org.myec3.socle.core.domain.model.OrganismDepartment;
-import org.myec3.socle.core.domain.model.Profile;
-import org.myec3.socle.core.domain.model.Resource;
-import org.myec3.socle.core.domain.model.Structure;
-import org.myec3.socle.core.domain.model.User;
+import org.myec3.socle.core.domain.model.*;
 import org.myec3.socle.core.domain.model.enums.ProfileTypeValue;
-import org.myec3.socle.core.service.AgentProfileService;
-import org.myec3.socle.core.service.EmailService;
-import org.myec3.socle.core.service.OrganismDepartmentService;
-import org.myec3.socle.core.service.ProfileService;
-import org.myec3.socle.core.service.UserService;
+import org.myec3.socle.core.service.*;
 import org.myec3.socle.synchro.api.SynchronizationNotificationService;
 import org.myec3.socle.webapp.components.AgentForm;
 import org.myec3.socle.webapp.entities.MessageEmail;
 import org.myec3.socle.webapp.pages.AbstractPage;
+
+import javax.inject.Named;
+import javax.mail.MessagingException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Page used to create new agent{@link AgentProfile}.<br />
@@ -203,6 +188,7 @@ public class Create extends AbstractPage {
 				return Boolean.FALSE;
 			}
 
+			this.agentProfile.setCreatedUserId(this.getUserIdLogged());
 			this.agentProfile.setOrganismDepartment(this.organismDepartment);
 
 			if ((null == this.agentProfile.getOrganismDepartment().getOrganism())

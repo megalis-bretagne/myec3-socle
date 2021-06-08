@@ -145,6 +145,7 @@ public class OrganismServiceImpl extends GenericStructureServiceImpl<Organism, O
 				OrganismDepartment organismDepartment = new OrganismDepartment(MyEc3Constants.ROOT_DEPARTMENT_NAME,
 						MyEc3Constants.ROOT_DEPARTMENT_LABEL);
 				organismDepartment.setExternalId(Long.valueOf(0));
+				organismDepartment.setCreatedUserId(organism.getCreatedUserId());
 				organismDepartment.setAddress(organism.getAddress());
 				organismDepartment.setEmail(organism.getEmail());
 				organismDepartment.setOrganism(organism);

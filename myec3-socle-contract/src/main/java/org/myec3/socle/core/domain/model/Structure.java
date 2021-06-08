@@ -17,27 +17,9 @@
  */
 package org.myec3.socle.core.domain.model;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.persistence.Column;
-import javax.persistence.Embedded;
-import javax.persistence.Entity;
-import javax.persistence.Inheritance;
-import javax.persistence.InheritanceType;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
-import javax.persistence.Transient;
-import javax.validation.Valid;
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotNull;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlElementWrapper;
-import javax.xml.bind.annotation.XmlTransient;
-import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.Getter;
+import lombok.Setter;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 import org.hibernate.envers.Audited;
@@ -46,6 +28,18 @@ import org.myec3.socle.core.domain.model.adapter.ParentStructuresAdapter;
 import org.myec3.socle.core.domain.model.constants.MyEc3AlfrescoConstants;
 import org.myec3.socle.core.domain.model.enums.StructureINSEECat;
 import org.myec3.socle.core.domain.model.meta.StructureType;
+
+import javax.persistence.*;
+import javax.validation.Valid;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotNull;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlElementWrapper;
+import javax.xml.bind.annotation.XmlTransient;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 /**
  * This class represents a structure, i.e. an organization, public or
@@ -65,8 +59,13 @@ import org.myec3.socle.core.domain.model.meta.StructureType;
 public abstract class Structure extends Resource {
 
 	private static final long serialVersionUID = 4886581410509064914L;
+
+	@Getter
+	@Setter
+	@Column(nullable = true, columnDefinition = "LONGTEXT")
+	@XmlElement(required = false)
 	private String description;
-	private Boolean enabled = true;
+	private Boolean enabled;
 	private String email;
 	private String phone;
 	private String fax;
@@ -80,29 +79,31 @@ public abstract class Structure extends Resource {
 	private Integer workforce;
 	private String tenantIdentifier;
 
-	private List<Application> applications = new ArrayList<Application>();
-	private List<Structure> parentStructures = new ArrayList<Structure>();
-	private List<Structure> childStructures = new ArrayList<Structure>();
+	@Getter
+	@Setter
+	@Column(nullable = false)
+	private Date createdDate;
+
+	/**
+	 * Id du user
+	 */
+	@Getter
+	@Setter
+	@Column()
+	private Long createdUserId;
+
+	private List<Application> applications = new ArrayList<>();
+	private List<Structure> parentStructures = new ArrayList<>();
+	private List<Structure> childStructures = new ArrayList<>();
 
 	/**
 	 * Default constructor. Initialize an empty address
 	 */
 	public Structure() {
 		super();
+		this.enabled = Boolean.TRUE;
 		this.address = new Address();
-	}
-
-	/**
-	 * @return the description of the structure.
-	 */
-	@Column(nullable = true, columnDefinition = "LONGTEXT")
-	@XmlElement(required = false)
-	public String getDescription() {
-		return description;
-	}
-
-	public void setDescription(String description) {
-		this.description = description;
+		this.createdDate = new Date(System.currentTimeMillis());
 	}
 
 	/**
@@ -193,9 +194,7 @@ public abstract class Structure extends Resource {
 	 */
 	public void setApplications(List<Application> newApplications) {
 
-		if (this.applications == null) {
-			this.applications = newApplications;
-		} else if (this.applications.isEmpty()) {
+		if (this.applications == null || this.applications.isEmpty()) {
 			this.applications = newApplications;
 		}
 
@@ -215,7 +214,7 @@ public abstract class Structure extends Resource {
 			// listNewApplications
 			// = resources
 			// removed
-			List<Application> listApplicationToDelete = new ArrayList<Application>();
+			List<Application> listApplicationToDelete = new ArrayList<>();
 
 			for (Application application : this.applications) {
 				if (!listNewApplications.contains(application)) {
