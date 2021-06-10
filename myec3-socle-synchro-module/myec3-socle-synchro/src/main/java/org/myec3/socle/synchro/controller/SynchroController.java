@@ -278,28 +278,21 @@ public class SynchroController {
                 if (entreprises.getEntreprise() == null) {
                     logger.info("[RESYNC] ["+organismLightDTO.getId()+"] ["+organismLightDTO.getSiren()+"] Pas de reponse de API INSEE");
                 } else {
-                    String labelSocle = organismLightDTO.getLabel();
-
                     String labelInsee = entreprises.getEntreprise().getLabel();
                     String city = entreprises.getEtablissement_siege().getAddress().getCity();
 
-                    if (!labelSocle.equals(labelInsee) || (labelInsee.contains(ACTION_SOCIALE) && !labelInsee.contains(city))
-                            || (labelInsee.contains(CAISSE_ECOLE) && !labelInsee.contains(city))) {
-                        // SI le libelle ACTION SOCIALE est présent et sans la présence de la commune, alors on ajoute la commune dans le label
-                        if ((labelInsee.contains(ACTION_SOCIALE) || labelInsee.contains(CAISSE_ECOLE)) && !labelInsee.contains(city)) {
-                            labelInsee = labelInsee + " DE "+city;
-                        }
-                        logger.info("[RESYNC] ["+organismLightDTO.getId()+"] ["+organismLightDTO.getSiren()+"] ["+ organismLightDTO.getLabel()+"] ==> ["+ labelInsee +"]");
+                    // SI le libelle ACTION SOCIALE est présent et sans la présence de la commune, alors on ajoute la commune dans le label
+                    if ((labelInsee.contains(ACTION_SOCIALE) || labelInsee.contains(CAISSE_ECOLE)) && !labelInsee.contains(city)) {
+                        labelInsee = labelInsee + " DE "+city;
+                    }
+                    logger.info("[RESYNC] ["+organismLightDTO.getId()+"] ["+organismLightDTO.getSiren()+"] ["+ organismLightDTO.getLabel()+"] ==> ["+ labelInsee +"]");
 
-                        if (launchUpdate) {
-                            Organism organism = organismService.findOne(organismLightDTO.getId());
-                            organism.setLabel(labelInsee);
-                            organism = organismService.update(organism);
-                            organismSynchronizer.synchronizeUpdate(organism, null, synchronizationType, sendingApplication);
-                            logger.info("[RESYNC] Organism "+organismLightDTO.getId()+" Updated");
-                        }
-                    } else {
-                        logger.info("[RESYNC] ["+organismLightDTO.getId()+"] ["+organismLightDTO.getSiren()+"] ["+ organismLightDTO.getLabel()+"] ==> PAS DE CHANGEMENT");
+                    if (launchUpdate) {
+                        Organism organism = organismService.findOne(organismLightDTO.getId());
+                        organism.setLabel(labelInsee);
+                        organism = organismService.update(organism);
+                        organismSynchronizer.synchronizeUpdate(organism, null, synchronizationType, sendingApplication);
+                        logger.info("[RESYNC] Organism "+organismLightDTO.getId()+" Updated");
                     }
                 }
 
