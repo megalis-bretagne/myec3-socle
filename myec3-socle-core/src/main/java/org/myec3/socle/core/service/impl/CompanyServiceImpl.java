@@ -17,41 +17,28 @@
  */
 package org.myec3.socle.core.service.impl;
 
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.List;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.myec3.socle.core.constants.MyEc3Constants;
 import org.myec3.socle.core.constants.MyEc3MpsUpdateConstants;
 import org.myec3.socle.core.domain.dao.CompanyDao;
-import org.myec3.socle.core.domain.model.Application;
-import org.myec3.socle.core.domain.model.Company;
-import org.myec3.socle.core.domain.model.CompanyDepartment;
-import org.myec3.socle.core.domain.model.Establishment;
-import org.myec3.socle.core.domain.model.MpsUpdateJob;
-import org.myec3.socle.core.domain.model.Person;
-import org.myec3.socle.core.domain.model.Structure;
+import org.myec3.socle.core.domain.model.*;
 import org.myec3.socle.core.domain.model.enums.MpsUpdateTypeValue;
 import org.myec3.socle.core.domain.model.enums.ResourceType;
 import org.myec3.socle.core.domain.model.enums.StructureTypeValue;
 import org.myec3.socle.core.domain.model.meta.StructureType;
-import org.myec3.socle.core.service.ApplicationService;
-import org.myec3.socle.core.service.CompanyDepartmentService;
-import org.myec3.socle.core.service.CompanyService;
-import org.myec3.socle.core.service.EstablishmentService;
-import org.myec3.socle.core.service.PersonService;
-import org.myec3.socle.core.service.StructureService;
-import org.myec3.socle.core.service.StructureTypeService;
+import org.myec3.socle.core.service.*;
 import org.myec3.socle.core.service.exceptions.CompanyCreationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
+
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.List;
 
 /**
  * Concrete Service implementation providing specific methods to {@link Company}
@@ -161,37 +148,6 @@ public class CompanyServiceImpl extends GenericStructureServiceImpl<Company, Com
 		} catch (RuntimeException re) {
 			throw new CompanyCreationException(re.getMessage(), re);
 		}
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	@Transactional(propagation = Propagation.SUPPORTS)
-	public Boolean isSiretValid(String siren, String nic) {
-		if (null == siren || null == nic) {
-			return Boolean.FALSE;
-		}
-
-		int sum = 0;
-		StringBuffer siret = new StringBuffer();
-		siret.append(siren);
-		siret.append(nic);
-
-		for (int i = 0; i < siret.length(); i++) {
-			int value = Integer.valueOf(String.valueOf(siret.charAt(i)));
-			if (i % 2 != 0) {
-				sum += value;
-			} else {
-				sum += 2 * value > 9 ? 2 * value - 9 : 2 * value;
-			}
-		}
-
-		if (sum % 10 != 0) {
-			return Boolean.FALSE;
-		}
-
-		return Boolean.TRUE;
 	}
 
 	/**

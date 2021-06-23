@@ -86,8 +86,50 @@ CREATE DATABASE keycloak;
 Faire un import dump de l'intégration pour initialiser les données
 
 
-## Règle de développement
-A FAIRE (avec prez du CI/CD )
+## Règle de développement <a name="to_best_practice"></a>
+
+### Développement de feature/fix non urgent
+Pour traiter un ticket JIRA, suivre le process suivant :
+* Se mettre sur develop
+  ```  
+  git pull
+  ```  
+* Tirer une branche avec le nom feature/MEGALIS-[ID-JIRA]-description
+* Mettre le ticket JIRA à "en cours" 
+* Réaliser le dev sur cette branche, tester en locale.
+* Une fois le dev terminé, faire une merge request de la branche vers develop
+* Passer le ticket JIRA à "Test/review"
+* une autre personne va lire la MR et déployer en intégration pour valider la correction
+
+### Développement de hotfix urgent
+Pour traiter un ticket JIRA urgent (incident en prod), suivre le process suivant :
+* Se mettre sur master
+  ```  
+  git pull
+  ``` 
+* Tirer une branche avec le nom hotfix/MEGALIS-[ID-JIRA]-description
+* Mettre le ticket JIRA à "en cours"
+* Réaliser le dev sur cette branche, tester en locale.
+* Une fois le dev terminé, faire une merge request de la branche vers master ET develop
+* Passer le ticket JIRA à "Test/review"
+* Une autre personne doit lire la MR puis déployer rapidement en prod
+
+
+### Bonne pratique GIT
+Nommage des branches :
+* feature/MEGALIS-[ID-JIRA]-description
+* hotfix/MEGALIS-[ID-JIRA]-description
+
+Message de commit :
+* [FEAT] MEGALIS-[ID-JIRA] : description détailler du dev
+* [FIX] MEGALIS-[ID-JIRA]: description détaillé du fix
+
+:warning: ** ATTENTION** chaque commit doit être tracable par le numéro du ticket JIRA. La description doit être claire et assez détaillé.
+Eviter les commentaires "oups", "fix" etc...
+
+### Présentation du CI
+
+[voir le PowerPoint](doc/GitFlowMyEC3.ppt)
 
 ## Liens utiles
 
@@ -97,6 +139,7 @@ A FAIRE (avec prez du CI/CD )
 | ------------------ | ------------ | ---------- | ----- |
 | Dashboard Exploitation | https://combrit-exploit.sib.fr/  | https://exploit-preprod.megalis.bretagne.bzh/ |   https://exploit.megalis.bretagne.bzh/ |
 | MyEC3                  | https://combrit-socle.sib.fr/    | https://socle-preprod.megalis.bretagne.bzh/   |   https://socle.megalis.bretagne.bzh/   |
+| Portainer              | https://combrit-exploit.sib.fr/portainer/# | https://exploit-preprod.megalis.bretagne.bzh/portainer/#/ | https://exploit.megalis.bretagne.bzh/portainer/#/ |
 
 
 ### VM de DEV

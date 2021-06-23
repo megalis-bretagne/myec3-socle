@@ -23,7 +23,7 @@
 	<dependencies>
 
 		<!-- Myec3 Socle core : we don't need to declare an applicationContext
-			for synchronization core module because coreMyec3Context.xml scan all our
+			for synchronization core module because coreMyec3Context.xml scran all our
 			entities and services by using RESThub -->
 		<dependency>
 			<groupId>org.myec3.socle</groupId>

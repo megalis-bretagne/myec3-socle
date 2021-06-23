@@ -17,20 +17,12 @@
  */
 package org.myec3.socle.webapp.pages.organism;
 
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.inject.Named;
-
+import org.apache.commons.lang3.BooleanUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.tapestry5.EventConstants;
 import org.apache.tapestry5.PersistenceConstants;
 import org.apache.tapestry5.ValueEncoder;
-import org.apache.tapestry5.annotations.Component;
-import org.apache.tapestry5.annotations.InjectPage;
-import org.apache.tapestry5.annotations.OnEvent;
-import org.apache.tapestry5.annotations.Persist;
-import org.apache.tapestry5.annotations.Property;
+import org.apache.tapestry5.annotations.*;
 import org.apache.tapestry5.corelib.components.Form;
 import org.apache.tapestry5.ioc.annotations.Inject;
 import org.myec3.socle.core.domain.model.Customer;
@@ -39,6 +31,11 @@ import org.myec3.socle.core.service.CustomerService;
 import org.myec3.socle.core.service.OrganismService;
 import org.myec3.socle.webapp.encoder.GenericListEncoder;
 import org.myec3.socle.webapp.pages.AbstractPage;
+
+import javax.inject.Named;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Page used to search an organism{@link Organism}<br />
@@ -59,6 +56,10 @@ public class Search extends AbstractPage {
 	@Property
 	@Persist(PersistenceConstants.FLASH)
 	private String infoMessage;
+
+	@Property
+	@Persist(PersistenceConstants.FLASH)
+	private String errorMessage;
 
 	/**
 	 * Business Service providing methods and specifics operations on
@@ -102,7 +103,7 @@ public class Search extends AbstractPage {
 
 	// Activation n Passivation
 	@OnEvent(EventConstants.ACTIVATE)
-	public void Activation() {
+	public void activation() {
 		super.initUser();
 	}
 
@@ -111,8 +112,13 @@ public class Search extends AbstractPage {
 	public Object onSuccess() {
 		// If logged user is not the technical admin we must search only
 		// organisms associated at the customer of logged user
-		if (!this.getIsTechnicalAdmin()) {
+		if (BooleanUtils.isFalse(this.getIsTechnicalAdmin())) {
 			this.searchCustomer = this.getCustomerOfLoggedProfile();
+		}
+
+		if (!canLaunchSearch()) {
+			this.errorMessage = this.getMessages().get("search-error");
+			return null;
 		}
 
 		this.organismsResult = this.organismService.findAllByCriteria(
@@ -122,7 +128,6 @@ public class Search extends AbstractPage {
 			this.infoMessage = this.getMessages().get("empty-result-message");
 			return null;
 		}
-
 		this.searchResultPage.setOrganismsResult(organismsResult);
 		return SearchResult.class;
 	}
@@ -132,7 +137,7 @@ public class Search extends AbstractPage {
 	 */
 	public Map<Customer, String> getCustomersList() {
 		List<Customer> customersList = this.customerService.findAll();
-		Map<Customer, String> customersMap = new LinkedHashMap<Customer, String>();
+		Map<Customer, String> customersMap = new LinkedHashMap<>();
 		for (Customer customer : customersList) {
 			customersMap.put(customer, customer.getLabel());
 		}
@@ -140,7 +145,20 @@ public class Search extends AbstractPage {
 	}
 
 	public ValueEncoder<Customer> getCustomerEncoder() {
-		return new GenericListEncoder<Customer>(this.customerService.findAll());
+		return new GenericListEncoder<>(this.customerService.findAll());
 
+	}
+
+	/**
+	 * Check if user can launch search.
+	 * Check all field are not null or empty
+	 *
+	 * @return true if can search
+	 */
+	private boolean canLaunchSearch() {
+		return !(StringUtils.isEmpty(searchLabel) &&
+				StringUtils.isEmpty(searchSiren) &&
+				StringUtils.isEmpty(searchPostalCode) &&
+				StringUtils.isEmpty(searchCity));
 	}
 }

@@ -17,42 +17,24 @@
  */
 package org.myec3.socle.webapp.pages.company.employee;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.inject.Named;
-import javax.mail.MessagingException;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.tapestry5.EventConstants;
 import org.apache.tapestry5.PersistenceConstants;
-import org.apache.tapestry5.annotations.Component;
-import org.apache.tapestry5.annotations.InjectPage;
-import org.apache.tapestry5.annotations.OnEvent;
-import org.apache.tapestry5.annotations.Persist;
-import org.apache.tapestry5.annotations.Property;
+import org.apache.tapestry5.annotations.*;
 import org.apache.tapestry5.ioc.annotations.Inject;
 import org.myec3.socle.core.constants.MyEc3EmailConstants;
-import org.myec3.socle.core.domain.model.Address;
-import org.myec3.socle.core.domain.model.CompanyDepartment;
-import org.myec3.socle.core.domain.model.EmployeeProfile;
-import org.myec3.socle.core.domain.model.Establishment;
-import org.myec3.socle.core.domain.model.Resource;
-import org.myec3.socle.core.domain.model.User;
+import org.myec3.socle.core.domain.model.*;
 import org.myec3.socle.core.domain.model.enums.Civility;
 import org.myec3.socle.core.domain.model.enums.Country;
 import org.myec3.socle.core.domain.model.enums.ProfileTypeValue;
-import org.myec3.socle.core.service.CompanyDepartmentService;
-import org.myec3.socle.core.service.CompanyService;
-import org.myec3.socle.core.service.EmailService;
-import org.myec3.socle.core.service.EmployeeProfileService;
-import org.myec3.socle.core.service.EstablishmentService;
-import org.myec3.socle.core.service.UserService;
+import org.myec3.socle.core.service.*;
 import org.myec3.socle.synchro.api.SynchronizationNotificationService;
 import org.myec3.socle.webapp.components.EmployeeForm;
 import org.myec3.socle.webapp.entities.MessageEmail;
 import org.myec3.socle.webapp.pages.AbstractPage;
+
+import javax.inject.Named;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Page used to create an employee {@link EmployeeProfile}<br />
@@ -68,15 +50,13 @@ import org.myec3.socle.webapp.pages.AbstractPage;
  */
 public class Create extends AbstractPage {
 
-	private static Log logger = LogFactory.getLog(Create.class);
-
 	/**
 	 * Business Service providing methods and specifics operations to synchronize
 	 * {@link Resource} objects to external applications
 	 */
 	@Inject
 	@Named("synchronizationNotificationService")
-	private SynchronizationNotificationService synchronizationService;
+	private SynchronizationNotificationService synchronizationNotificationService;
 
 	/**
 	 * Business Service providing methods and specifics operations on
@@ -140,7 +120,7 @@ public class Create extends AbstractPage {
 
 	// Page Activation n Passivation
 	@OnEvent(EventConstants.ACTIVATE)
-	public void Activation() {
+	public void activation() {
 		super.initUser();
 	}
 
@@ -222,7 +202,7 @@ public class Create extends AbstractPage {
 			sendNotificationToEmployee(password);
 
 			// Notify external applications
-			this.synchronizationService.notifyCreation(this.employeeProfile);
+			this.synchronizationNotificationService.notifyCreation(this.employeeProfile);
 
 		} catch (Exception e) {
 			this.errorMessage = this.getMessages().get("recording-error-message");
@@ -237,7 +217,7 @@ public class Create extends AbstractPage {
 	}
 
 	public Object onPassivate() {
-		List<Long> result = new ArrayList<Long>();
+		List<Long> result = new ArrayList<>();
 		if (this.employeeProfile.getEstablishment() != null) {
 			result.add(this.employeeProfile.getEstablishment().getCompany().getId());
 			result.add(this.employeeProfile.getEstablishment().getId());
@@ -252,11 +232,10 @@ public class Create extends AbstractPage {
 	 * Send email to the employee
 	 * 
 	 * @param password : the employee's password
-	 * @throws MessagingException
 	 */
-	public void sendNotificationToEmployee(String password) throws MessagingException {
+	public void sendNotificationToEmployee(String password) {
 		// message mail
-		StringBuffer message = new StringBuffer();
+		StringBuilder message = new StringBuilder();
 		message.append(this.getMessages().get("login-message"));
 		message.append(this.employeeProfile.getEmail());
 		message.append("\n");

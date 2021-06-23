@@ -17,6 +17,7 @@
  */
 package org.myec3.socle.webapp.components;
 
+import org.apache.commons.lang3.BooleanUtils;
 import org.apache.tapestry5.ComponentResources;
 import org.apache.tapestry5.EventConstants;
 import org.apache.tapestry5.annotations.OnEvent;
@@ -30,13 +31,13 @@ import org.myec3.socle.core.domain.model.Profile;
 import org.myec3.socle.core.domain.model.Role;
 import org.myec3.socle.core.domain.model.enums.ProfileTypeValue;
 import org.myec3.socle.core.domain.model.enums.RoleProfile;
-import org.myec3.socle.core.service.ApplicationService;
 import org.myec3.socle.core.service.ProfileService;
 import org.myec3.socle.core.service.RoleService;
 import org.myec3.socle.webapp.constants.GuWebAppConstants;
 import org.myec3.socle.webapp.entities.MenuItem;
 import org.myec3.socle.webapp.pages.AbstractPage;
 import org.myec3.socle.webapp.pages.Index;
+import org.myec3.socle.webapp.pages.synchroman.synchronization.Search;
 
 import javax.inject.Named;
 import java.util.ArrayList;
@@ -83,26 +84,12 @@ public class Layout extends AbstractPage {
 	@Named("roleService")
 	private RoleService roleService;
 
-	/**
-	 * Business Service providing methods and specifics operations on
-	 * {@link Application} objects
-	 */
-	@Inject
-	@Named("applicationService")
-	private ApplicationService applicationService;
-
 	@SuppressWarnings("unused")
 	@Inject
 	private PersistentLocale persistentLocaleService;
 
 	@Property
-	private int copyright_year = Calendar.getInstance().get(Calendar.YEAR);
-
-	@OnEvent(EventConstants.ACTIVATE)
-	public void Activation() {
-		super.initUser();
-	}
-
+	private int copyrightYear = Calendar.getInstance().get(Calendar.YEAR);
 	@SuppressWarnings("unused")
 	@Property
 	private String logoutUrl = MyEc3Constants.J_SPRING_SECURITY_LOGOUT;
@@ -110,45 +97,50 @@ public class Layout extends AbstractPage {
 	@Property
 	private String legalNoticeUrl = GuWebAppConstants.LEGAL_NOTICE_URL;
 
+
+	@OnEvent(EventConstants.ACTIVATE)
+	public void activation() {
+		super.initUser();
+	}
+
 	/**
 	 * @return List of menu items corresponding at the logged user
 	 */
 	public List<MenuItem> getMainMenuList() {
-		List<MenuItem> mainMenuList = new ArrayList<MenuItem>();
+		List<MenuItem> mainMenuList = new ArrayList<>();
 		if (this.getLoggedProfileExists()) {
+			// Accueil
 			mainMenuList.add(new MenuItem(this.getMessages().get("homepage-label"), Index.class, true));
-
+			// Mon mégalis
 			mainMenuList.add(new MenuItem(this.getMessages().get("my-portal-label"), null, true));
 
-			Profile profile = profileService.findOne(this.getLoggedProfile().getId());
 			List<Role> roles = roleService.findAllRoleByProfileAndApplication(this.getLoggedProfile(),
 					this.applicationService.findByName(MyEc3ApplicationConstants.GU));
 			for (Role role : roles) {
-				if (profile.isAdmin()) {
+				if (this.getLoggedProfile().isAdmin()) {
 					mainMenuList.add(new MenuItem(this.getMessages().get("newOrganism-label"),
-							org.myec3.socle.webapp.pages.organism.Create.class, true));
+							org.myec3.socle.webapp.pages.organism.Siren.class, true));
 					mainMenuList.add(new MenuItem(this.getMessages().get("searchOrganism-label"),
 							org.myec3.socle.webapp.pages.organism.Search.class, true));
 
 					// Check if profile has right to manage companies
-					if (isLoggedProfileAllowedToManageCompanies(profile)) {
+					if (BooleanUtils.isTrue(isLoggedProfileAllowedToManageCompanies(this.getLoggedProfile()))) {
 						mainMenuList.add(new MenuItem(this.getMessages().get("newCompany-label"),
 								org.myec3.socle.webapp.pages.company.Siren.class, true));
 						mainMenuList.add(new MenuItem(this.getMessages().get("searchCompany-label"),
 								org.myec3.socle.webapp.pages.company.Search.class, true));
 					}
-				} else if (profile.isAgent()) {
-					if (role.getName().equalsIgnoreCase(RoleProfile.ROLE_MANAGER_AGENT.toString())) {
+				} else if (this.getLoggedProfile().isAgent()) {
+					if (role.getName().equalsIgnoreCase(RoleProfile.ROLE_MANAGER_AGENT.toString()) &&
+							BooleanUtils.isTrue(super.getIsMember(this.getLoggedProfile()))) {
 						// If the organism of the agent is no longer member
 						// the agent musn't manage it
-						if (super.getIsMember(profile)) {
-							mainMenuList.add(new MenuItem(this.getMessages().get("viewOrganism-label"),
-									org.myec3.socle.webapp.pages.organism.DetailOrganism.class, true));
-							mainMenuList.add(new MenuItem(this.getMessages().get("viewDepartment-label"),
-									org.myec3.socle.webapp.pages.organism.department.View.class, true));
-						}
+						mainMenuList.add(new MenuItem(this.getMessages().get("viewOrganism-label"),
+								org.myec3.socle.webapp.pages.organism.DetailOrganism.class, true));
+						mainMenuList.add(new MenuItem(this.getMessages().get("viewDepartment-label"),
+								org.myec3.socle.webapp.pages.organism.department.View.class, true));
 					}
-				} else if (profile.isEmployee()) {
+				} else if (this.getLoggedProfile().isEmployee()) {
 					if (role.getName().equalsIgnoreCase(RoleProfile.ROLE_MANAGER_EMPLOYEE.toString())) {
 						mainMenuList.add(new MenuItem(this.getMessages().get("viewCompany-label"),
 								org.myec3.socle.webapp.pages.company.DetailCompany.class, true));
@@ -156,7 +148,11 @@ public class Layout extends AbstractPage {
 				}
 
 			}
-			// }
+			// MEGALIS-132 : add menu Synchro pour Super Admin
+			if (BooleanUtils.isTrue(this.getIsAdmin())) {
+				mainMenuList.add(new MenuItem(this.getMessages().get("sycnhro-label"),
+						Search.class, true));
+			}
 		} else
 			mainMenuList.add(new MenuItem(this.getMessages().get("login-label"), Index.class, true));
 

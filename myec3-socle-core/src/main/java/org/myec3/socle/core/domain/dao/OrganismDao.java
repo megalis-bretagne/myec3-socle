@@ -63,11 +63,10 @@ public interface OrganismDao extends GenericStructureDao<Organism> {
 			String postalCode, String city, Customer customer);
 
 	/**
-	 * Retrive all organism by application
-	 * @param applicationId	the application identifier
-	 * @return	list of organism
+	 * Retrive all organism
+	 * @return	list of organism Light
 	 */
-	List<OrganismLightDTO> findOrganismLightByApplicationId(Long applicationId);
+	List<OrganismLightDTO> findOrganismLight();
 
 	Organism findOrganismByIdSdm(long idSdm);
 }

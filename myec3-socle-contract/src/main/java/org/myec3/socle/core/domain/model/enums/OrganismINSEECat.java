@@ -19,6 +19,7 @@ package org.myec3.socle.core.domain.model.enums;
 
 import javax.xml.bind.annotation.XmlEnum;
 import javax.xml.bind.annotation.XmlEnumValue;
+import java.util.Arrays;
 
 
 /**
@@ -350,5 +351,15 @@ public enum OrganismINSEECat implements StructureINSEECat {
 	@Override
 	public String toString() {
 		return this.id;
+	}
+
+	/**
+	 * Get OrganismINSEECat given formeJuridique
+	 * @param formeJuridique forme juridique
+	 * @return
+	 */
+	public static OrganismINSEECat fromId(String formeJuridique) {
+		return Arrays.stream(OrganismINSEECat.values()).filter(organismNafCode -> organismNafCode.getId().equals(formeJuridique))
+				.findFirst().orElse(null);
 	}
 }

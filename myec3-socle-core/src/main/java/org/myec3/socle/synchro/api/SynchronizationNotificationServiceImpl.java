@@ -17,8 +17,6 @@
  */
 package org.myec3.socle.synchro.api;
 
-import java.util.List;
-
 import org.myec3.socle.core.constants.MyEc3EsbConstants;
 import org.myec3.socle.core.domain.model.Resource;
 import org.myec3.socle.synchro.api.constants.SynchronizationRelationsName;
@@ -27,6 +25,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
+
+import java.util.List;
 
 /**
  * Concrete Service implementation providing specific methods to notify external
@@ -37,6 +37,9 @@ import org.springframework.util.Assert;
 @Service("synchronizationNotificationService")
 public class SynchronizationNotificationServiceImpl implements SynchronizationNotificationService {
 
+	private static final String RESSOURCE_MANDATORY = "resource is mandatory. null value is forbidden";
+	private static final String CONFIG_SYNC_MANDATORY = "configSync is mandatory. null value is forbidden";
+
 	@Autowired
 	@Qualifier("synchronizationCoreService")
 	private SynchronizationService synchronizationService;
@@ -46,7 +49,7 @@ public class SynchronizationNotificationServiceImpl implements SynchronizationNo
 	 */
 	@Override
 	public void notifyCreation(Resource resource) {
-		Assert.notNull(resource, "resource is mandatory. null value is forbidden");
+		Assert.notNull(resource, RESSOURCE_MANDATORY);
 		this.synchronizationService.propagateCreation(resource, null, SynchronizationType.SYNCHRONIZATION,
 				MyEc3EsbConstants.getApplicationSendingJmsName());
 	}
@@ -56,8 +59,8 @@ public class SynchronizationNotificationServiceImpl implements SynchronizationNo
 	 */
 	@Override
 	public void notifyCreation(Resource resource, SynchronizationConfiguration configSync) {
-		Assert.notNull(resource, "resource is mandatory. null value is forbidden");
-		Assert.notNull(configSync, "configSync is mandatory. null value is forbidden");
+		Assert.notNull(resource, RESSOURCE_MANDATORY);
+		Assert.notNull(configSync, CONFIG_SYNC_MANDATORY);
 		this.synchronizationService.propagateCreation(resource, configSync.getListApplicationIdToResynchronize(),
 				configSync.getSynchronizationType(), configSync.getSendingApplication());
 	}
@@ -67,7 +70,7 @@ public class SynchronizationNotificationServiceImpl implements SynchronizationNo
 	 */
 	@Override
 	public void notifyUpdate(Resource resource) {
-		Assert.notNull(resource, "resource is mandatory. null value is forbidden");
+		Assert.notNull(resource, RESSOURCE_MANDATORY);
 		this.synchronizationService.propagateUpdate(resource, null, SynchronizationType.SYNCHRONIZATION,
 				MyEc3EsbConstants.getApplicationSendingJmsName());
 	}
@@ -77,8 +80,8 @@ public class SynchronizationNotificationServiceImpl implements SynchronizationNo
 	 */
 	@Override
 	public void notifyUpdate(Resource resource, SynchronizationConfiguration configSync) {
-		Assert.notNull(resource, "resource is mandatory. null value is forbidden");
-		Assert.notNull(configSync, "configSync is mandatory. null value is forbidden");
+		Assert.notNull(resource, RESSOURCE_MANDATORY);
+		Assert.notNull(configSync, CONFIG_SYNC_MANDATORY);
 		this.synchronizationService.propagateUpdate(resource, configSync.getListApplicationIdToResynchronize(),
 				configSync.getSynchronizationType(), configSync.getSendingApplication());
 	}
@@ -88,7 +91,7 @@ public class SynchronizationNotificationServiceImpl implements SynchronizationNo
 	 */
 	@Override
 	public void notifyDeletion(Resource resource) {
-		Assert.notNull(resource, "resource is mandatory. null value is forbidden");
+		Assert.notNull(resource, RESSOURCE_MANDATORY);
 		this.synchronizationService.propagateDeletion(resource, null, SynchronizationType.SYNCHRONIZATION,
 				MyEc3EsbConstants.getApplicationSendingJmsName());
 	}
@@ -98,8 +101,8 @@ public class SynchronizationNotificationServiceImpl implements SynchronizationNo
 	 */
 	@Override
 	public void notifyDeletion(Resource resource, SynchronizationConfiguration configSync) {
-		Assert.notNull(resource, "resource is mandatory. null value is forbidden");
-		Assert.notNull(configSync, "configSync is mandatory. null value is forbidden");
+		Assert.notNull(resource, RESSOURCE_MANDATORY);
+		Assert.notNull(configSync, CONFIG_SYNC_MANDATORY);
 		this.synchronizationService.propagateDeletion(resource, configSync.getListApplicationIdToResynchronize(),
 				configSync.getSynchronizationType(), configSync.getSendingApplication());
 	}
@@ -110,7 +113,7 @@ public class SynchronizationNotificationServiceImpl implements SynchronizationNo
 	@Override
 	public void notifyCollectionUpdate(Resource resource, SynchronizationRelationsName relationName,
 			List<Resource> updatedResources, List<Resource> addedResources, List<Resource> removedResources) {
-		Assert.notNull(resource, "resource is mandatory. null value is forbidden");
+		Assert.notNull(resource, RESSOURCE_MANDATORY);
 		Assert.notNull(relationName, "relationName is mandatory. null value is forbidden");
 
 		this.synchronizationService.propagateCollectionUpdate(resource, relationName.getValue(), updatedResources,

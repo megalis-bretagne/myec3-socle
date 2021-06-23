@@ -3,7 +3,6 @@ package org.myec3.socle.synchro.controller;
 import org.myec3.socle.core.domain.dto.OrganismLightDTO;
 import org.myec3.socle.core.domain.model.*;
 import org.myec3.socle.core.service.*;
-import org.myec3.socle.core.tools.UnaccentLetter;
 import org.myec3.socle.synchro.api.constants.SynchronizationType;
 import org.myec3.socle.synchro.scheduler.manager.ResourceSynchronizationManager;
 import org.myec3.socle.ws.client.impl.mps.MpsWsClient;
@@ -19,13 +18,16 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
 
 @RestController
 public class SynchroController {
 
     private static final Logger logger = LoggerFactory.getLogger(SynchroController.class);
     private static final String ACTION_SOCIALE = "ACTION SOCIALE";
+    private static final String CAISSE_ECOLE = "CAISSE DES ECOLES";
 
     @Autowired
     @Qualifier("agentProfileService")
@@ -255,68 +257,60 @@ public class SynchroController {
      *                     If false, launch the process and return result as string.
      * @return
      */
-    @RequestMapping(value = "/sdm/organism/resync", method = {RequestMethod.GET})
+    @RequestMapping(value = "/organism/resync", method = {RequestMethod.GET})
     public String resyncCompanySdm(@RequestParam boolean launchUpdate) {
-        logger.info("[RESYNC] Call resync company for SDM");
-        Application sdmApplication = applicationService.findByName("SDM");
+        logger.info("[RESYNC] Call resync Organism");
 
-        List<Long> listApplicationIdToResynchronize = new ArrayList<>();
-        listApplicationIdToResynchronize.add(sdmApplication.getId());
         SynchronizationType synchronizationType = SynchronizationType.SYNCHRONIZATION;
         String sendingApplication = "GU";
 
         // Get all organism subscribe to SDM
-        List<OrganismLightDTO> organisms = organismService.findOrganismLightByApplication(sdmApplication);
+        List<OrganismLightDTO> organisms = organismService.findOrganismLight()
+                .stream().filter(organismLightDTO -> organismLightDTO.getSiren() != null ).collect(Collectors.toList());
 
-        logger.info("[RESYNC] call API siren for each organism");
-        StringBuilder result = new StringBuilder("");
-        AtomicInteger index = new AtomicInteger(0);
-        organisms.forEach( organismLightDTO -> {
-            ResponseEntreprises entreprises = mpsWsClient.getInfoEntreprises(organismLightDTO.getSiren());
-            if (entreprises.getEntreprise() == null) {
-                logger.info("[RESYNC] [\"+organismLightDTO.getId()+\"] [\"+organismLightDTO.getSiren()+\"] Pas de reponse de API INSEE");
-                result.append("[RESYNC] [\"+organismLightDTO.getId()+\"] [\"+organismLightDTO.getSiren()+\"] Pas de reponse de API INSEE <br/>");
-            } else {
-                // Mise en Majuscule et sans accent
-                String labelSocle = UnaccentLetter.unaccentString(organismLightDTO.getLabel())
-                        .toUpperCase();
+        logger.info("[RESYNC] call API siren for each organism : {}", organisms.size() );
 
-                String labelInsee = entreprises.getEntreprise().getLabel();
-                String city = entreprises.getEtablissement_siege().getAddress().getCity();
+        // Mise dans un Thread pour éviter les pb de timeout
+        CompletableFuture.supplyAsync(() -> {
+            AtomicInteger index = new AtomicInteger(0);
+            organisms.forEach( organismLightDTO -> {
+                ResponseEntreprises entreprises = mpsWsClient.getInfoEntreprises(organismLightDTO.getSiren());
+                if (entreprises.getEntreprise() == null) {
+                    logger.info("[RESYNC] ["+organismLightDTO.getId()+"] ["+organismLightDTO.getSiren()+"] Pas de reponse de API INSEE");
+                } else {
+                    String labelInsee = entreprises.getEntreprise().getLabel();
+                    String city = entreprises.getEtablissement_siege().getAddress().getCity();
 
-                if (!labelSocle.equals(labelInsee) || (labelInsee.contains(ACTION_SOCIALE) && !labelInsee.contains(city)) ) {
                     // SI le libelle ACTION SOCIALE est présent et sans la présence de la commune, alors on ajoute la commune dans le label
-                    if (labelInsee.contains(ACTION_SOCIALE) && !labelInsee.contains(city)) {
+                    if ((labelInsee.contains(ACTION_SOCIALE) || labelInsee.contains(CAISSE_ECOLE)) && !labelInsee.contains(city)) {
                         labelInsee = labelInsee + " DE "+city;
                     }
                     logger.info("[RESYNC] ["+organismLightDTO.getId()+"] ["+organismLightDTO.getSiren()+"] ["+ organismLightDTO.getLabel()+"] ==> ["+ labelInsee +"]");
-                    result.append("["+organismLightDTO.getId()+"] ["+ organismLightDTO.getLabel()+"] ==> ["+ labelInsee +"] <br>");
 
                     if (launchUpdate) {
                         Organism organism = organismService.findOne(organismLightDTO.getId());
                         organism.setLabel(labelInsee);
                         organism = organismService.update(organism);
-                        organismSynchronizer.synchronizeUpdate(organism, listApplicationIdToResynchronize, synchronizationType, sendingApplication);
+                        organismSynchronizer.synchronizeUpdate(organism, null, synchronizationType, sendingApplication);
                         logger.info("[RESYNC] Organism "+organismLightDTO.getId()+" Updated");
                     }
-                } else {
-                    logger.info("[RESYNC] ["+organismLightDTO.getId()+"] ["+organismLightDTO.getSiren()+"] ["+ organismLightDTO.getLabel()+"] ==> PAS DE CHANGEMENT");
                 }
-            }
 
-            // Sleep d'1 seconde toutes les 4 itérations pour ne pas atteindre les 2000 requêtes / 10 minutes sur l'API INSEE
-            if (index.incrementAndGet() >= 4) {
-                try {
-                    Thread.sleep(1500);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
+                // Sleep d'1 seconde toutes les 4 itérations pour ne pas atteindre les 2000 requêtes / 10 minutes sur l'API INSEE
+                if (index.incrementAndGet() >= 4) {
+                    try {
+                        Thread.sleep(1500);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    index.set(0);
                 }
-                index.set(0);
-            }
 
+            });
+            logger.info("[RESYNC] END");
+            return "END";
         });
-        logger.info("[RESYNC] END");
-        return result.toString();
+        return "inprogress";
     }
 
 }

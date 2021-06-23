@@ -17,40 +17,22 @@
  */
 package org.myec3.socle.webapp.pages.user;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.inject.Named;
-
+import org.apache.commons.lang3.BooleanUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.tapestry5.EventConstants;
 import org.apache.tapestry5.PersistenceConstants;
-import org.apache.tapestry5.annotations.Component;
-import org.apache.tapestry5.annotations.InjectPage;
-import org.apache.tapestry5.annotations.OnEvent;
-import org.apache.tapestry5.annotations.Persist;
-import org.apache.tapestry5.annotations.Property;
+import org.apache.tapestry5.annotations.*;
 import org.apache.tapestry5.corelib.components.Form;
 import org.apache.tapestry5.ioc.annotations.Inject;
-import org.myec3.socle.core.domain.model.AgentProfile;
-import org.myec3.socle.core.domain.model.Company;
-import org.myec3.socle.core.domain.model.CompanyDepartment;
-import org.myec3.socle.core.domain.model.EmployeeProfile;
-import org.myec3.socle.core.domain.model.Organism;
-import org.myec3.socle.core.domain.model.OrganismDepartment;
-import org.myec3.socle.core.domain.model.Profile;
-import org.myec3.socle.core.domain.model.ProfileSearch;
-import org.myec3.socle.core.domain.model.Structure;
-import org.myec3.socle.core.domain.model.User;
-import org.myec3.socle.core.service.AgentProfileService;
-import org.myec3.socle.core.service.CompanyDepartmentService;
-import org.myec3.socle.core.service.EmployeeProfileService;
-import org.myec3.socle.core.service.EstablishmentService;
-import org.myec3.socle.core.service.OrganismDepartmentService;
-import org.myec3.socle.core.service.ProfileService;
-import org.myec3.socle.core.service.StructureService;
+import org.myec3.socle.core.domain.model.*;
+import org.myec3.socle.core.service.*;
 import org.myec3.socle.webapp.pages.AbstractPage;
+
+import javax.inject.Named;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Page used to search users{@link User} by using filters<br />
@@ -74,6 +56,10 @@ public class Search extends AbstractPage {
 	@Inject
 	@Named("profileService")
 	private ProfileService profileService;
+
+	@Property
+	@Persist(PersistenceConstants.FLASH)
+	private String errorMessage;
 
 	@Inject
 	@Named("employeeProfileService")
@@ -134,14 +120,20 @@ public class Search extends AbstractPage {
 	private String infoMessage;
 
 	@OnEvent(EventConstants.ACTIVATE)
-	public void Activation() {
+	public void activation() {
+		// EMPTY
 	}
 
 	@OnEvent(component = "user_search_form", value = EventConstants.SUCCESS)
 	public Object onSuccess() {
 
-		this.profileSearchList = new ArrayList<ProfileSearch>();
+		this.profileSearchList = new ArrayList<>();
 		Profile loggerUser = this.getLoggedProfile();
+
+		if (!canLaunchSearch()) {
+			this.errorMessage = this.getMessages().get("search-error");
+			return null;
+		}
 
 		// get the matching Profiles
 		this.profileResult = this.profileService.findAllByCriteria(searchEmail, searchUsername, searchFirstname,
@@ -155,7 +147,6 @@ public class Search extends AbstractPage {
 			// just get the next Profile
 			if (currentProfile.getEnabled().equals(Boolean.FALSE)) {
 				logger.debug("Profile Removed : " + currentProfile.getId());
-				continue;
 			} else {
 				// set the Profile for SearchResult
 				this.profileSearch.setSearchProfile(currentProfile);
@@ -168,7 +159,7 @@ public class Search extends AbstractPage {
 							.findOne(searchEmployeeProfile.getEstablishment().getCompany().getId());
 
 					// if loggerUser is a ManagerEmployee
-					if (this.getIsManagerEmployee()) {
+					if (BooleanUtils.isTrue(this.getIsManagerEmployee())) {
 
 						// get the loggedUser EmplyeeProfile
 						EmployeeProfile loggedEmployee = employeeProfileService.findOne(loggerUser.getId());
@@ -206,7 +197,7 @@ public class Search extends AbstractPage {
 					Structure searchStructure = this.structureService
 							.findOne(searchAgentProfile.getOrganismDepartment().getOrganism().getId());
 
-					if (this.getIsGlobalManagerAgent()) {
+					if (BooleanUtils.isTrue(this.getIsGlobalManagerAgent())) {
 
 						// get the loggedUser AgentProfile
 						AgentProfile loggedAgent = agentProfileService.findOne(loggerUser.getId());
@@ -249,7 +240,7 @@ public class Search extends AbstractPage {
 	}
 
 	public List<EmployeeProfile> getEmployeeProfileList(Company company) {
-		List<EmployeeProfile> employeeProfiles = new ArrayList<EmployeeProfile>();
+		List<EmployeeProfile> employeeProfiles = new ArrayList<>();
 		if (company != null) {
 			List<CompanyDepartment> companyDepartments = this.companyDepartmentService
 					.findAllDepartmentByCompany(company);
@@ -263,7 +254,7 @@ public class Search extends AbstractPage {
 	}
 
 	public List<AgentProfile> getAgentProfileList(Organism organism) {
-		List<AgentProfile> aProfiles = new ArrayList<AgentProfile>();
+		List<AgentProfile> aProfiles = new ArrayList<>();
 		if (organism != null) {
 			List<OrganismDepartment> organismDepartments = this.organismDepartmentService
 					.findAllDepartmentByOrganism(organism);
@@ -273,5 +264,17 @@ public class Search extends AbstractPage {
 			}
 		}
 		return aProfiles;
+	}
+
+	/**
+	 * Check if user can launch Search
+	 * @return	true if at least one field is not empty
+	 */
+	private boolean canLaunchSearch() {
+		return !(StringUtils.isEmpty(searchEmail) &&
+				StringUtils.isEmpty(searchUsername) &&
+				StringUtils.isEmpty(searchFirstname) &&
+				StringUtils.isEmpty(searchLastname) &&
+				searchSviProfile == null);
 	}
 }

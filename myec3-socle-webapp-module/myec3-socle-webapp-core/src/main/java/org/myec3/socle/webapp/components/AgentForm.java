@@ -17,37 +17,20 @@
  */
 package org.myec3.socle.webapp.components;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.tapestry5.ComponentResources;
 import org.apache.tapestry5.EventConstants;
-import org.apache.tapestry5.OptionModel;
 import org.apache.tapestry5.PersistenceConstants;
-import org.apache.tapestry5.SelectModel;
 import org.apache.tapestry5.ValueEncoder;
-import org.apache.tapestry5.annotations.Component;
-import org.apache.tapestry5.annotations.Environmental;
-import org.apache.tapestry5.annotations.InjectPage;
-import org.apache.tapestry5.annotations.OnEvent;
-import org.apache.tapestry5.annotations.Parameter;
-import org.apache.tapestry5.annotations.Persist;
-import org.apache.tapestry5.annotations.Property;
-import org.apache.tapestry5.annotations.Service;
-import org.apache.tapestry5.annotations.SetupRender;
+import org.apache.tapestry5.annotations.*;
 import org.apache.tapestry5.corelib.components.Form;
-import org.apache.tapestry5.internal.OptionModelImpl;
-import org.apache.tapestry5.internal.SelectModelImpl;
 import org.apache.tapestry5.internal.services.ComponentResultProcessorWrapper;
-import org.apache.tapestry5.ioc.Messages;
 import org.apache.tapestry5.ioc.annotations.Inject;
 import org.apache.tapestry5.services.ComponentEventResultProcessor;
 import org.apache.tapestry5.services.javascript.JavaScriptSupport;
 import org.myec3.socle.core.domain.model.AgentProfile;
-import org.myec3.socle.core.domain.model.Competence;
 import org.myec3.socle.core.domain.model.OrganismDepartment;
 import org.myec3.socle.core.domain.model.Profile;
 import org.myec3.socle.core.service.AgentProfileService;
-import org.myec3.socle.core.service.CompetenceService;
 import org.myec3.socle.core.service.OrganismDepartmentService;
 import org.myec3.socle.core.service.ProfileService;
 import org.myec3.socle.core.service.UserService;
@@ -56,7 +39,6 @@ import org.myec3.socle.webapp.pages.AbstractPage;
 import org.myec3.socle.webapp.pages.organism.agent.Create;
 import org.myec3.socle.webapp.pages.organism.agent.Modify;
 
-import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -73,16 +55,11 @@ import java.util.Map;
  */
 public class AgentForm extends AbstractPage {
 
-	private static final Log logger = LogFactory.getLog(AgentForm.class);
-
 	@InjectPage
 	private Modify modify;
 
 	@InjectPage
 	private Create create;
-
-	@Property
-	private Boolean CheckCertificate;
 
 	// Services n pages
 	@SuppressWarnings("rawtypes")
@@ -142,8 +119,8 @@ public class AgentForm extends AbstractPage {
 		return this.usernameDisabled;
 	}
 
-	public void setUsernameDisabled(Boolean Bool) {
-		this.usernameDisabled = Bool;
+	public void setUsernameDisabled(Boolean usernameDisabled) {
+		this.usernameDisabled = usernameDisabled;
 	}
 
 	@Persist
@@ -205,7 +182,6 @@ public class AgentForm extends AbstractPage {
 	public void onValidate() {
 
 		// In case of creation of new agentProfile (email equals username)
-		// if (this.getNewAgentProfile()) {
 		// Check if username not already exists
 		if (this.agentProfile.getEmail() != null
 				&& this.profileService.usernameAlreadyExists(this.agentProfile.getEmail(), this.agentProfile)) {
@@ -248,7 +224,7 @@ public class AgentForm extends AbstractPage {
 
 	// Getters
 	public ValueEncoder<OrganismDepartment> getDepartmentEncoder() {
-		return new GenericListEncoder<OrganismDepartment>(
+		return new GenericListEncoder<>(
 				this.organismDepartmentService.findAllDepartmentByOrganism(this.agentProfile.getOrganismDepartment()
 						.getOrganism()));
 	}
@@ -257,10 +233,8 @@ public class AgentForm extends AbstractPage {
 		OrganismDepartment rootDepartments = this.organismDepartmentService
 				.findRootOrganismDepartment(this.agentProfile.getOrganismDepartment().getOrganism());
 
-		Map<OrganismDepartment, String> departments = new LinkedHashMap<OrganismDepartment, String>();
-		departments = constructDepartementMap(departments, rootDepartments, 0);
-
-		return departments;
+		Map<OrganismDepartment, String> departments = new LinkedHashMap<>();
+		return  constructDepartementMap(departments, rootDepartments, 0);
 	}
 
 	/**
@@ -276,7 +250,7 @@ public class AgentForm extends AbstractPage {
 private Map<OrganismDepartment, String> constructDepartementMap(Map<OrganismDepartment, String> map,
 			OrganismDepartment parent, int depth) {
 
-		StringBuffer indent = new StringBuffer("");
+		StringBuilder indent = new StringBuilder("");
 		for (int i = 0; i < depth; i++) {
 			indent.append("-- \\ ");
 		}
@@ -352,7 +326,7 @@ private Map<OrganismDepartment, String> constructDepartementMap(Map<OrganismDepa
 		return Boolean.TRUE;
 	}
 
-	void onSelectedFromCheckCertificate() {
+	public void onSelectedFromCheckCertificate() {
 
 		// Tells the Modify page that we have to check certificate
 		this.modify.setCertificateValid(Boolean.TRUE);

@@ -124,15 +124,13 @@ public class JpaOrganismDao extends JpaGenericStructureDao<Organism> implements 
 	}
 
 	@Override
-	public List<OrganismLightDTO> findOrganismLightByApplicationId(Long applicationId) {
+	public List<OrganismLightDTO> findOrganismLight() {
 		String queryString = SELECT_OPERATOR +
 				" c.id as id , c.label as label, c.siren as siren" +
-				" FROM Organism c " +
-				"INNER JOIN c.applications a where a.id = :applicationId ";
+				" FROM Organism c ";
 
 
 		List<OrganismLightDTO> result =  this.getEm().createQuery(queryString)
-				.setParameter("applicationId", applicationId)
 				.unwrap(org.hibernate.query.Query.class)
 				.setResultTransformer(Transformers.aliasToBean(OrganismLightDTO.class))
 				.getResultList();

@@ -17,30 +17,15 @@
  */
 package org.myec3.socle.webapp.pages.organism;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
-import javax.inject.Named;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.tapestry5.EventConstants;
 import org.apache.tapestry5.PersistenceConstants;
-import org.apache.tapestry5.annotations.Component;
-import org.apache.tapestry5.annotations.InjectPage;
-import org.apache.tapestry5.annotations.OnEvent;
-import org.apache.tapestry5.annotations.Persist;
-import org.apache.tapestry5.annotations.Property;
+import org.apache.tapestry5.annotations.*;
 import org.apache.tapestry5.corelib.components.Form;
 import org.apache.tapestry5.ioc.annotations.Inject;
 import org.apache.tapestry5.ioc.services.PropertyAccess;
-import org.myec3.socle.core.domain.model.Address;
-import org.myec3.socle.core.domain.model.Application;
-import org.myec3.socle.core.domain.model.Organism;
-import org.myec3.socle.core.domain.model.OrganismDepartment;
-import org.myec3.socle.core.domain.model.Resource;
+import org.myec3.socle.core.domain.model.*;
 import org.myec3.socle.core.service.ApplicationService;
 import org.myec3.socle.core.service.OrganismDepartmentService;
 import org.myec3.socle.core.service.OrganismService;
@@ -48,6 +33,12 @@ import org.myec3.socle.synchro.api.SynchronizationNotificationService;
 import org.myec3.socle.webapp.encoder.GenericListEncoder;
 import org.myec3.socle.webapp.pages.AbstractPage;
 import org.myec3.socle.webapp.pages.Index;
+
+import javax.inject.Named;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 /**
  * Page used during organism{@link Organism} creation process.<br />
@@ -136,7 +127,7 @@ public class CreateSubscriptions extends AbstractPage {
 	}
 
 	@OnEvent(EventConstants.ACTIVATE)
-	public void Activation() {
+	public void activation() {
 		super.initUser();
 	}
 

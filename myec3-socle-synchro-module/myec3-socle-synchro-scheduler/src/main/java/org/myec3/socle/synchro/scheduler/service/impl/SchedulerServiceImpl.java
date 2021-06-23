@@ -17,54 +17,29 @@
  */
 package org.myec3.socle.synchro.scheduler.service.impl;
 
-import static org.quartz.TriggerBuilder.newTrigger;
-
-import java.time.Instant;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
-
-import org.myec3.socle.core.domain.model.AdminProfile;
-import org.myec3.socle.core.domain.model.AgentProfile;
-import org.myec3.socle.core.domain.model.Company;
-import org.myec3.socle.core.domain.model.CompanyDepartment;
-import org.myec3.socle.core.domain.model.Customer;
-import org.myec3.socle.core.domain.model.EmployeeProfile;
-import org.myec3.socle.core.domain.model.Establishment;
-import org.myec3.socle.core.domain.model.Organism;
-import org.myec3.socle.core.domain.model.OrganismDepartment;
-import org.myec3.socle.core.domain.model.Profile;
-import org.myec3.socle.core.domain.model.Resource;
-import org.myec3.socle.core.domain.model.Role;
+import org.myec3.socle.core.domain.model.*;
 import org.myec3.socle.synchro.api.constants.SynchronizationJobType;
 import org.myec3.socle.synchro.api.constants.SynchronizationType;
 import org.myec3.socle.synchro.core.domain.model.SynchronizationError;
 import org.myec3.socle.synchro.core.domain.model.SynchronizationSubscription;
 import org.myec3.socle.synchro.scheduler.constants.MyEc3SynchroConstants;
-import org.myec3.socle.synchro.scheduler.job.CollectionCreateSynchronizationJob;
-import org.myec3.socle.synchro.scheduler.job.CollectionRemoveSynchronizationJob;
-import org.myec3.socle.synchro.scheduler.job.CollectionUpdateSynchronizationJob;
-import org.myec3.socle.synchro.scheduler.job.CreationSynchronizationJob;
-import org.myec3.socle.synchro.scheduler.job.DeletionSynchronizationJob;
-import org.myec3.socle.synchro.scheduler.job.UpdateSynchronizationJob;
-import org.myec3.socle.synchro.scheduler.job.resources.AdminSynchronizationJob;
-import org.myec3.socle.synchro.scheduler.job.resources.AgentSynchronizationJob;
-import org.myec3.socle.synchro.scheduler.job.resources.CompanyDepartmentSynchronizationJob;
-import org.myec3.socle.synchro.scheduler.job.resources.CompanySynchronizationJob;
-import org.myec3.socle.synchro.scheduler.job.resources.CustomerSynchronizationJob;
-import org.myec3.socle.synchro.scheduler.job.resources.EmployeeSynchronizationJob;
-import org.myec3.socle.synchro.scheduler.job.resources.EstablishmentSynchronizationJob;
-import org.myec3.socle.synchro.scheduler.job.resources.OrganismDepartmentSynchronizationJob;
-import org.myec3.socle.synchro.scheduler.job.resources.OrganismSynchronizationJob;
+import org.myec3.socle.synchro.scheduler.job.*;
+import org.myec3.socle.synchro.scheduler.job.resources.*;
 import org.myec3.socle.synchro.scheduler.service.SchedulerService;
-import org.quartz.JobBuilder;
-import org.quartz.JobDetail;
-import org.quartz.Scheduler;
-import org.quartz.SchedulerException;
-import org.quartz.SimpleTrigger;
+import org.quartz.*;
+import org.quartz.impl.matchers.GroupMatcher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
+
+import java.time.Instant;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
+import java.util.UUID;
+import java.util.stream.Collectors;
+
+import static org.quartz.TriggerBuilder.newTrigger;
 
 /**
  * Concrete implementation of the Scheduler Service with quartz framework. It's
@@ -88,6 +63,7 @@ public abstract class SchedulerServiceImpl implements SchedulerService {
 	private static final String QUARTZ_SUBSCRIPTION_RESOURCE_GROUP = "SUBSCRIPTION RESOURCE";
 	private static final int NAME_MAX_LENGHT = 200;
 	private static final String TRIGGER_LABEL = "Trigger";
+	private static final String DELAYED_JOB_NAME = "delayedJob";
 
 	private static final Logger logger = LoggerFactory.getLogger(SchedulerServiceImpl.class);
 
@@ -127,9 +103,8 @@ public abstract class SchedulerServiceImpl implements SchedulerService {
 	 */
 	private String generateUniqueName(String jobName, Resource resource) {
 		logger.debug("Enterring method generateUniqueName");
-		double r = Math.random();
-		double s = Math.random();
-		String generatedName = jobName + resource.getId() + Calendar.getInstance().getTimeInMillis() + r + s;
+		String randomUuid = UUID.randomUUID().toString();
+		String generatedName = jobName + resource.getId() + Calendar.getInstance().getTimeInMillis() + randomUuid;
 		if (generatedName.length() >= NAME_MAX_LENGHT) {
 			return generatedName.substring(0, (NAME_MAX_LENGHT - 1));
 		}
@@ -532,9 +507,7 @@ public abstract class SchedulerServiceImpl implements SchedulerService {
 		try {
 			scheduler.scheduleJob(job, trig);
 		} catch (SchedulerException e) {
-			logger.error(
-					"[addImmediateCollectionUpdateTrigger] An error has occured during lauch collection update job: "
-							+ e.getMessage());
+			logger.error("[addImmediateCollectionUpdateTrigger] An error has occured during lauch collection update job",e);
 		}
 	}
 
@@ -565,9 +538,7 @@ public abstract class SchedulerServiceImpl implements SchedulerService {
 		try {
 			scheduler.scheduleJob(job, trig);
 		} catch (SchedulerException e) {
-			logger.error(
-					"[addImmediateCollectionRemoveTrigger] An error has occured during lauch collection remove job: "
-							+ e.getMessage());
+			logger.error("[addImmediateCollectionRemoveTrigger] An error has occured during lauch collection remove job",e);
 		}
 	}
 
@@ -585,15 +556,14 @@ public abstract class SchedulerServiceImpl implements SchedulerService {
 			logger.error("[addDelayedResourceTrigger] delay is null for handling errors : " + "MethodType : "
 					+ synchronizationError.getMethodType() + " Resource : " + resource.getName() + ", id : "
 					+ resource.getId());
-
 			// We set a default delay to continue handling errors
-			delay = new Long(10000);
+			delay = 1000L;
 		}
-		logger.info("Initializing newDelayedResourceTrigger with a delay = " + delay + " ms");
+		logger.info("[addDelayedResourceTrigger] Initializing newDelayedResourceTrigger with a delay = {} ms" ,delay);
 
 		// Create new trigger with a delay
 		SimpleTrigger trig = (SimpleTrigger) newTrigger()
-				.withIdentity(generateUniqueName(TRIGGER_LABEL + subscription.getId() + delay, resource),
+				.withIdentity(TRIGGER_LABEL + generateUniqueDelayedJob(resource, subscription, delay),
 						QUARTZ_DELAYED_GROUP)
 				.startAt(Date.from(Instant.now().plusMillis(delay))).build();
 
@@ -603,7 +573,7 @@ public abstract class SchedulerServiceImpl implements SchedulerService {
 
 		// Get the jobDetailBean corresponding to the resource class
 		JobDetail jobDetail = this.getResourceJobBuilder(resource)
-				.withIdentity(generateUniqueName("delayedJob" + subscription.getId() + delay, resource),
+				.withIdentity(generateUniqueDelayedJob(resource, subscription, delay),
 						QUARTZ_DELAYED_GROUP)
 				.storeDurably(false)
 				.build();
@@ -619,8 +589,79 @@ public abstract class SchedulerServiceImpl implements SchedulerService {
 		try {
 			scheduler.scheduleJob(jobDetail, trig);
 		} catch (SchedulerException e) {
-			logger.error(
-					"[addDelayedResourceTrigger] An error has occured during lauch delayed job: " + e.getMessage());
+			logger.error("[addDelayedResourceTrigger] An error has occured during lauch delayed job", e);
 		}
+	}
+
+	@Override
+	public void deleteDelayedAfterSucess(Resource resource, SynchronizationSubscription synchronizationSubscription) {
+		try {
+			String identiferJobToFind = buildPrefixUniqueDelayedJob(resource, synchronizationSubscription);
+
+			// First : getting all job key
+			List<String> jobKeyInProgressNotToDelete = scheduler.getCurrentlyExecutingJobs().stream()
+					.filter(jobExecutionContext -> jobExecutionContext.getJobDetail().getKey().getName().startsWith(identiferJobToFind))
+					.map(jobExecutionContext -> jobExecutionContext.getJobDetail().getKey().getName())
+					.collect(Collectors.toList());
+
+			// Get job Identifier for DELAYED GROUP ONLY
+			scheduler.getJobKeys(GroupMatcher.jobGroupEquals(QUARTZ_DELAYED_GROUP)).stream()
+					.filter(jobKey -> jobKey.getName().startsWith(identiferJobToFind) && !jobKeyInProgressNotToDelete.contains(jobKey.getName()))
+					.forEach(jobKey -> 	deleteJob(jobKey, resource, synchronizationSubscription));
+		}
+		catch (SchedulerException e) {
+			logger.error("[DELETE JOB] Error when try delete Job for resource {}, subscription {}",
+					resource.getId(), synchronizationSubscription.getId() ,e);
+		}
+	}
+
+	/**
+	 * Delete Job given a JobKey
+	 * @param jobKey	jobkey identifier
+	 * @param resource	resource associated
+	 * @param synchronizationSubscriptio	subcription associated
+	 */
+	private void deleteJob(JobKey jobKey, Resource resource, SynchronizationSubscription synchronizationSubscriptio) {
+		try {
+			logger.info("[DELETE JOB] DELAYED JOB {} AFTER SUCCESS on ressource {} and subscription {} ",
+					jobKey.getName(), resource.getId(), synchronizationSubscriptio.getId());
+			scheduler.deleteJob(jobKey);
+		}  catch (SchedulerException e) {
+			logger.error("[DELETE JOB] Error when try delete Job {}", jobKey.getName() ,e);
+		}
+	}
+
+	/**
+	 * Generate unique Job Name for a delayed JOB
+	 * Format Name :
+	 * 	delayedJob[subscriptionId][resourceId][Delay][timestamp][UUID]
+	 *
+	 * @param resource	resource tfor job
+	 * @param synchronizationSubscription	subscription job
+	 * @param delay	the delay for the next Trigger
+	 * @return	uniquement Name for Job
+	 */
+	private String generateUniqueDelayedJob(Resource resource, SynchronizationSubscription synchronizationSubscription, Long delay) {
+		logger.debug("Enterring method generateUniqueDelayedJob");
+		String randomUuid = UUID.randomUUID().toString();
+		String generatedName = buildPrefixUniqueDelayedJob(resource, synchronizationSubscription) +
+				delay +
+				Calendar.getInstance().getTimeInMillis() +
+				randomUuid;
+		if (generatedName.length() >= NAME_MAX_LENGHT) {
+			return generatedName.substring(0, (NAME_MAX_LENGHT - 1));
+		}
+		return generatedName;
+	}
+
+	/**
+	 * Build prefixe for generateUniqueDelayedJob
+	 * @param resource
+	 * @param synchronizationSubscription
+	 * @return prefix for Job
+	 */
+	private String buildPrefixUniqueDelayedJob(Resource resource, SynchronizationSubscription synchronizationSubscription) {
+		return DELAYED_JOB_NAME + synchronizationSubscription.getId() +
+				resource.getId();
 	}
 }

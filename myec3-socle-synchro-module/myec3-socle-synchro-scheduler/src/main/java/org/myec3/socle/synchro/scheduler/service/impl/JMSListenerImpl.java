@@ -17,18 +17,6 @@
  */
 package org.myec3.socle.synchro.scheduler.service.impl;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
-import javax.annotation.PostConstruct;
-import javax.jms.Connection;
-import javax.jms.ConnectionFactory;
-import javax.jms.MessageConsumer;
-import javax.jms.MessageListener;
-import javax.jms.Queue;
-import javax.jms.Session;
-
 import org.apache.activemq.ActiveMQConnectionFactory;
 import org.apache.activemq.command.ActiveMQMapMessage;
 import org.myec3.socle.core.domain.model.Resource;
@@ -45,6 +33,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
+
+import javax.annotation.PostConstruct;
+import javax.jms.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Concrete implementation of synchronization listener used to retrieve the JMS
@@ -202,7 +196,7 @@ public class JMSListenerImpl implements MessageListener {
 				}
 
 				if (createdResourcesObj != null) {
-					createdResources = new ArrayList<Resource>();
+					createdResources = new ArrayList<>();
 					for (Object createdResourceObj : createdResourcesObj) {
 						createdResources.add(
 								(Resource) SynchronizationMarshaller.unmarshalResource(createdResourceObj.toString()));
@@ -210,7 +204,7 @@ public class JMSListenerImpl implements MessageListener {
 				}
 
 				if (updatedResourcesObj != null) {
-					updatedResources = new ArrayList<Resource>();
+					updatedResources = new ArrayList<>();
 					for (Object updatedResourceObj : updatedResourcesObj) {
 						updatedResources.add(
 								(Resource) SynchronizationMarshaller.unmarshalResource(updatedResourceObj.toString()));
@@ -218,7 +212,7 @@ public class JMSListenerImpl implements MessageListener {
 				}
 
 				if (addedResourcesObj != null) {
-					addedResources = new ArrayList<Resource>();
+					addedResources = new ArrayList<>();
 					for (Object addedResourceObj : addedResourcesObj) {
 						addedResources.add(
 								(Resource) SynchronizationMarshaller.unmarshalResource(addedResourceObj.toString()));
@@ -226,7 +220,7 @@ public class JMSListenerImpl implements MessageListener {
 				}
 
 				if (removedResourcesObj != null) {
-					removedResources = new ArrayList<Resource>();
+					removedResources = new ArrayList<>();
 					for (Object removedResourceObj : removedResourcesObj) {
 						removedResources.add(
 								(Resource) SynchronizationMarshaller.unmarshalResource(removedResourceObj.toString()));

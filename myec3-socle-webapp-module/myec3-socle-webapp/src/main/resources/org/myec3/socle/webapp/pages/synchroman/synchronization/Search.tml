@@ -12,16 +12,16 @@
             	<legend>${message:legend-label}</legend>
             	 
             	<div class="datePicker-div">
-	                <t:label class="datePicker-label" for="startDate">${message:startDate-label}</t:label>
-                    <t:datefield class="datePicker-input" t:id="startDate" t:value="searchStartDate" t:format="literal:yyyy-MM-dd" />
+	                <t:label class="datePicker-label" for="startDate">${message:startDate-label} * :</t:label>
+                    <t:datefield class="datePicker-input" t:id="startDate" t:value="searchStartDate" t:format="literal:dd/MM/yyyy" t:validate="required"/>
 	        		<a href="#" title="${message:startDate-help}">
 	        			<img src="${context:static/images/pic_help.png}" class="picHelp" alt="${message:help-label}"/>
 	        		</a>
 				</div>
-				
+
 				<div class="datePicker-div">
-	                <t:label class="datePicker-label" for="endDate">${message:endDate-label}</t:label>
-                    <t:datefield class="datePicker-input" t:id="endDate" t:value="searchEndDate" t:format="literal:yyyy-MM-dd" />
+	                <t:label class="datePicker-label" for="endDate">${message:endDate-label} * :</t:label>
+                    <t:datefield class="datePicker-input" t:id="endDate" t:value="searchEndDate" t:format="literal:dd/MM/yyyy" t:validate="required" />
 	        		<a href="#" title="${message:endDate-help}">
 	        			<img src="${context:static/images/pic_help.png}" class="picHelp" alt="${message:help-label}"/>
 	        		</a>
@@ -42,39 +42,15 @@
 	        			<img src="${context:static/images/pic_help.png}" class="picHelp" alt="${message:help-label}"/>
 	        		</a>
 				</p>
-				
+
 				<p>
-	                <t:label for="methodType">${message:methodType-label}</t:label>
-	                <t:select  t:id="methodType" t:model="methodTypeModel" t:encoder="methodTypeEncoder" t:value="searchMethodType" t:blankLabel="TOUTES"/>
-	        		<a href="#" title="${message:methodType-help}">
-	        			<img src="${context:static/images/pic_help.png}" class="picHelp" alt="${message:help-label}"/>
-	        		</a>
+					<t:label for="statut">${message:statut-label}</t:label>
+					<t:select  t:id="statut" model="literal:SUCCESS,ERROR" t:value="searchStatut" t:blankLabel="TOUS"/>
+					<a href="#" title="${message:statut-help}">
+						<img src="${context:static/images/pic_help.png}" class="picHelp" alt="${message:help-label}"/>
+					</a>
 				</p>
-				
-				<p>
-	                <t:label for="httpStatus">${message:httpStatus-label}</t:label>
-	                <t:select  t:id="httpStatus" t:model="httpStatusModel" t:encoder="httpStatusEncoder" t:value="searchHttpStatus" t:blankLabel="TOUS"/>
-	        		<a href="#" title="${message:httpStatus-help}">
-	        			<img src="${context:static/images/pic_help.png}" class="picHelp" alt="${message:help-label}"/>
-	        		</a>
-				</p>
-				
-				<p>
-	                <t:label for="synchronizationType">${message:synchronizationType-label}</t:label>
-	                <t:select  t:id="synchronizationType" t:model="synchronizationTypeModel" t:encoder="synchronizationTypeEncoder" t:value="searchSynchronizationType" t:blankLabel="TOUS"/>
-	        		<a href="#" title="${message:synchronizationType-help}">
-	        			<img src="${context:static/images/pic_help.png}" class="picHelp" alt="${message:help-label}"/>
-	        		</a>
-				</p>
-				
-				<p>
-	                <t:label for="statut">${message:statut-label}</t:label>
-	                <t:select  t:id="statut" model="literal:TOUS,SUCCESS,ERROR" t:value="searchStatut" t:validate="required"/>
-	        		<a href="#" title="${message:statut-help}">
-	        			<img src="${context:static/images/pic_help.png}" class="picHelp" alt="${message:help-label}"/>
-	        		</a>
-				</p>
-				
+
 				<p>
 	                <t:label for="isFinal">${message:isFinal-label}</t:label>
 	                <t:select  t:id="isFinal" model="literal:TOUS,EN COURS,TERMINÉE" t:value="searchIsFinal" t:validate="required"/>
@@ -82,8 +58,7 @@
 	        			<img src="${context:static/images/pic_help.png}" class="picHelp" alt="${message:help-label}"/>
 	        		</a>
 				</p>
-				
-				
+
 				<div class="form-actions">
 					<p>
 						<t:submit t:id="submit" value="message:search-label" />
