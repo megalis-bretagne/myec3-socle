@@ -17,7 +17,9 @@
  */
 package org.myec3.socle.synchro.scheduler.job.resources;
 
+import org.apache.commons.lang3.BooleanUtils;
 import org.myec3.socle.core.domain.model.AgentProfile;
+import org.myec3.socle.core.domain.model.Application;
 import org.myec3.socle.core.domain.model.Role;
 import org.myec3.socle.core.domain.model.enums.ResourceType;
 import org.myec3.socle.core.domain.sdm.model.SdmAgent;
@@ -32,8 +34,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
+
+import java.util.List;
 
 /**
  * Concrete job implementation used when the resource to synchronize is an
@@ -53,6 +58,11 @@ public class AgentSynchronizationJob extends
 
     private static final Logger logger = LoggerFactory.getLogger(AgentSynchronizationJob.class);
 
+    private static final String SUFFIX_MONOTENANT = "@monotenant.megalis";
+
+    @Value("#{'${myec3.synchro.applications.monotenant.ids}'.split(',')}")
+    private List<Integer> idsApplicationMonotenant;
+
     @Autowired
     @Qualifier("synchroIdentifiantExterneService")
     private SynchroIdentifiantExterneService synchroIdentifiantExterneService;
@@ -70,8 +80,8 @@ public class AgentSynchronizationJob extends
             SdmWsClientImpl sdmWsClient = (SdmWsClientImpl) resourceWsClient;
             return sdmWsClient.post(resource, agentSDM, synchronizationSubscription);
         } else {
-            if (synchronizationSubscription.getApplication().getId() == 7) {
-                resource.setAlfUserName(resource.getId() + "@monotenant.megalis");
+            if (isMonotenant(synchronizationSubscription.getApplication())) {
+                resource.setAlfUserName(resource.getId() + SUFFIX_MONOTENANT);
             }
             return resourceWsClient.post(resource, synchronizationSubscription);
         }
@@ -97,8 +107,8 @@ public class AgentSynchronizationJob extends
                 return null;
             }
         } else {
-            if (synchronizationSubscription.getApplication().getId() == 7) {
-                resource.setAlfUserName(resource.getId() + "@monotenant.megalis");
+            if (isMonotenant(synchronizationSubscription.getApplication())) {
+                resource.setAlfUserName(resource.getId() + SUFFIX_MONOTENANT);
             }
             return resourceWsClient.delete(resource, synchronizationSubscription);
         }
@@ -123,8 +133,8 @@ public class AgentSynchronizationJob extends
             }
 
         } else {
-            if (synchronizationSubscription.getApplication().getId() == 7) {
-                resource.setAlfUserName(resource.getId() + "@monotenant.megalis");
+            if (isMonotenant(synchronizationSubscription.getApplication())) {
+                resource.setAlfUserName(resource.getId() + SUFFIX_MONOTENANT);
             }
             return resourceWsClient.put(resource, synchronizationSubscription);
         }
@@ -174,13 +184,13 @@ public class AgentSynchronizationJob extends
 
         agentSDM.setAdresse(convertToSdmAdresse(resource.getAddress()));
         // on ne renseigne pas le service dans le cas d'un service root
-        if (!resource.getOrganismDepartment().isRootDepartment()) {
+        if (BooleanUtils.isFalse(resource.getOrganismDepartment().isRootDepartment())) {
             SdmService serviceSDM = new SdmService();
             SynchroIdentifiantExterne synchroIdentifiantExterne = synchroIdentifiantExterneService.findByIdSocle(resource.getOrganismDepartment().getId(), ResourceType.ORGANISM_DEPARTMENT);
             if (synchroIdentifiantExterne != null) {
                 serviceSDM.setId(synchroIdentifiantExterne.getIdAppliExterne());
             } else {
-                logger.warn("Agent {} n'a pas de ORGANISM_DEPARTMENT SDM dans la table synchroIdentifiantExterneService pour l'idSocle ", resource.getId(), resource.getOrganismDepartment().getId());
+                logger.warn("Agent {} n'a pas de ORGANISM_DEPARTMENT SDM dans la table synchroIdentifiantExterneService pour l'idSocle {}", resource.getId(), resource.getOrganismDepartment().getId());
             }
             agentSDM.setService(serviceSDM);
         }
@@ -204,5 +214,15 @@ public class AgentSynchronizationJob extends
         return sdmAgent;
     }
 
-
+    /**
+     * Check if application is monotenant
+     * @param application the application to check
+     * @return  true if sucess
+     */
+    private boolean isMonotenant(Application application) {
+        if (application == null || application.getId() == null) {
+            return false;
+        }
+        return idsApplicationMonotenant.contains(application.getId().intValue());
+    }
 }
