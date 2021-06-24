@@ -26,6 +26,7 @@ import javax.validation.Valid;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlTransient;
 import java.util.Date;
 
 /**
@@ -58,6 +59,7 @@ public class Department extends Resource {
 	@Getter
 	@Setter
 	@Column(nullable = false)
+	@XmlTransient
 	private Date createdDate;
 
 	/**
@@ -66,6 +68,7 @@ public class Department extends Resource {
 	@Getter
 	@Setter
 	@Column()
+	@XmlTransient
 	private Long createdUserId;
 
 	/**
