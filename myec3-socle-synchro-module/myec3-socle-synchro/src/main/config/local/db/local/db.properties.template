@@ -6,3 +6,6 @@ bdd.dump.rep=/dump
 bdd.socle.schema=em_socle
 bdd.synchro.schema=em_synchro
 bdd.keycloak.schema=keycloak
+
+## MEGALIS-192 : APPLICATION MONOTENANT
+myec3.synchro.applications.monotenant.ids=7,10

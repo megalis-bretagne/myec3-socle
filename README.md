@@ -29,7 +29,7 @@ Sinon, le déploiement devra se faire manuellement (possibilité d'automatiser v
 * Copier les lib externes du dossier myec3-socle-webapp-module\myec3-socle-webapp\tomcat dans le dossier lib de tomcat   
 :warning: **Attention** ce dossier sera supprimé. Les librairies externes ne doivent pas être dans les sources du projet.  
 * Dans le dossier myec3-socle-synchro-module/myec3-socle-synchro/src/main/config/local/db/locale 
-* Copier le fichier db.properties.template en dv.properties
+* Copier le fichier db.properties.template en db.properties
  * Editer le fichier pour renseigner l'adresse de la BDD
 
   ```

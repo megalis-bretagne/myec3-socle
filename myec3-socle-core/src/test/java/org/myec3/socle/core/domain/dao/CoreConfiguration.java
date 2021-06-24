@@ -164,29 +164,13 @@ public class CoreConfiguration {
 
     @Bean
     public SchedulerFactoryBean ramScheduler() {
-        SchedulerFactoryBean scheduler = new SchedulerFactoryBean();
-//        Properties properties = new Properties();
-//        properties.setProperty("org.quartz.scheduler.instanceName", "ramScheduler");
-//        properties.setProperty("org.quartz.threadPool.class", "org.quartz.simpl.SimpleThreadPool");
-//        properties.setProperty("org.quartz.threadPool.threadCount", "5");
-//        properties.setProperty("org.quartz.threadPool.threadPriority", "1");
-//        properties.setProperty("org.quartz.jobStore.misfireThreshold", "60000");
-//        scheduler.setQuartzProperties(properties);
-
-        return scheduler;
+       return new SchedulerFactoryBean();
     }
 
     @Bean
     public SchedulerFactoryBean jmsScheduler(DataSource dataSourceSynchroParallel) {
-        SchedulerFactoryBean scheduler = new SchedulerFactoryBean();
-//        scheduler.setJobFactory(new SpringBeanJobFactory());
-//        scheduler.setConfigLocation(new ClassPathResource("socleCore.properties"));
-//        scheduler.setDataSource(dataSourceSynchroParallel);
-//        scheduler.setWaitForJobsToCompleteOnShutdown(true);
-        return scheduler;
+        return new SchedulerFactoryBean();
     }
-
-
 
 
 }
