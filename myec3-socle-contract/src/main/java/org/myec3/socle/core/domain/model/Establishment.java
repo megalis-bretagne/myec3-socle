@@ -83,6 +83,7 @@ public class Establishment extends Resource {
 	@Getter
 	@Setter
 	@Column(nullable = false)
+	@XmlTransient
 	private Date createdDate;
 
 	/**
@@ -91,6 +92,7 @@ public class Establishment extends Resource {
 	@Getter
 	@Setter
 	@Column()
+	@XmlTransient
 	private Long createdUserId;
 
 	/**

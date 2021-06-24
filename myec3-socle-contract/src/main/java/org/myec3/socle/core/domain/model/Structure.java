@@ -60,10 +60,6 @@ public abstract class Structure extends Resource {
 
 	private static final long serialVersionUID = 4886581410509064914L;
 
-	@Getter
-	@Setter
-	@Column(nullable = true, columnDefinition = "LONGTEXT")
-	@XmlElement(required = false)
 	private String description;
 	private Boolean enabled;
 	private String email;
@@ -82,6 +78,7 @@ public abstract class Structure extends Resource {
 	@Getter
 	@Setter
 	@Column(nullable = false)
+	@XmlTransient
 	private Date createdDate;
 
 	/**
@@ -90,6 +87,7 @@ public abstract class Structure extends Resource {
 	@Getter
 	@Setter
 	@Column()
+	@XmlTransient
 	private Long createdUserId;
 
 	private List<Application> applications = new ArrayList<>();
@@ -122,6 +120,19 @@ public abstract class Structure extends Resource {
 
 	public void setEmail(String email) {
 		this.email = email;
+	}
+
+	/**
+	 * @return the description of the structure.
+	 */
+	@Column(nullable = true, columnDefinition = "LONGTEXT")
+	@XmlElement(required = false)
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
 	}
 
 	/**

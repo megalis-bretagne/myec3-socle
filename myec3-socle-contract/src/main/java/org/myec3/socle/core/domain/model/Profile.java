@@ -84,6 +84,7 @@ public abstract class Profile extends Resource implements UserDetails {
 	@Getter
 	@Setter
 	@Column(nullable = false)
+	@XmlTransient
 	private Date createdDate;
 
 	/**
@@ -92,6 +93,7 @@ public abstract class Profile extends Resource implements UserDetails {
 	@Getter
 	@Setter
 	@Column()
+	@XmlTransient
 	private Long createdUserId;
 
 	/**
