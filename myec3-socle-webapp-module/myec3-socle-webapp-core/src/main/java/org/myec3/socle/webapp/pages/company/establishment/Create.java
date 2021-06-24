@@ -17,56 +17,32 @@
  */
 package org.myec3.socle.webapp.pages.company.establishment;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.inject.Named;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.tapestry5.EventConstants;
 import org.apache.tapestry5.PersistenceConstants;
 import org.apache.tapestry5.ValueEncoder;
-import org.apache.tapestry5.annotations.Component;
-import org.apache.tapestry5.annotations.InjectPage;
-import org.apache.tapestry5.annotations.OnEvent;
-import org.apache.tapestry5.annotations.Persist;
-import org.apache.tapestry5.annotations.Property;
+import org.apache.tapestry5.annotations.*;
 import org.apache.tapestry5.beaneditor.BeanModel;
 import org.apache.tapestry5.corelib.components.Form;
 import org.apache.tapestry5.ioc.Messages;
 import org.apache.tapestry5.ioc.annotations.Inject;
 import org.apache.tapestry5.services.BeanModelSource;
 import org.myec3.socle.core.constants.MyEc3Constants;
-import org.myec3.socle.core.domain.model.Address;
-import org.myec3.socle.core.domain.model.AdministrativeState;
-import org.myec3.socle.core.domain.model.Company;
-import org.myec3.socle.core.domain.model.EmployeeProfile;
-import org.myec3.socle.core.domain.model.Establishment;
-import org.myec3.socle.core.domain.model.InseeBorough;
-import org.myec3.socle.core.domain.model.InseeCanton;
-import org.myec3.socle.core.domain.model.InseeCounty;
-import org.myec3.socle.core.domain.model.InseeGeoCode;
-import org.myec3.socle.core.domain.model.InseeRegion;
+import org.myec3.socle.core.domain.model.*;
 import org.myec3.socle.core.domain.model.enums.AdministrativeStateValue;
 import org.myec3.socle.core.domain.model.enums.CompanyNafCode;
-import org.myec3.socle.core.service.CompanyService;
-import org.myec3.socle.core.service.EstablishmentService;
-import org.myec3.socle.core.service.InseeBoroughService;
-import org.myec3.socle.core.service.InseeCantonService;
-import org.myec3.socle.core.service.InseeCountyService;
-import org.myec3.socle.core.service.InseeGeoCodeService;
-import org.myec3.socle.core.service.InseeRegionService;
+import org.myec3.socle.core.service.*;
 import org.myec3.socle.synchro.api.SynchronizationNotificationService;
 import org.myec3.socle.webapp.encoder.GenericListEncoder;
 import org.myec3.socle.webapp.pages.AbstractPage;
 import org.myec3.socle.ws.client.CompanyWSinfo;
 import org.myec3.socle.ws.client.impl.mps.MpsWsClient;
+
+import javax.inject.Named;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.*;
 
 /**
  * Page used to create an establishment {@link Establishment}.<br />
@@ -359,6 +335,7 @@ public class Create extends AbstractPage {
 					// Go to company creation last step
 					EmployeeProfile newEmployee = new EmployeeProfile();
 					newEmployee.setAddress(this.company.getAddress());
+					newEmployee.setCreatedUserId(this.getUserIdLogged());
 
 					this.createPage.setEmployeeProfile(newEmployee);
 					this.createPage.setIsLocHallesTheme(this.isLocHallesTheme);
@@ -501,6 +478,7 @@ public class Create extends AbstractPage {
 		logger.info("Initiating head office for company " + company.getSiren());
 		Establishment headOfficeEstablishment = new Establishment();
 		if (company.getSiretHeadOffice() != null) {
+			headOfficeEstablishment.setCreatedUserId(this.getUserIdLogged());
 			headOfficeEstablishment.setSiret(company.getSiretHeadOffice());
 			logger.info("headOffice SIRET : " + company.getSiretHeadOffice());
 			try {
@@ -978,6 +956,7 @@ public class Create extends AbstractPage {
 	private void initEstablishment() {
 		logger.debug("Creating new Establishment !");
 		this.establishment = new Establishment();
+		this.establishment.setCreatedUserId(this.getUserIdLogged());
 		this.establishment.setCompany(this.company);
 		Address address = new Address();
 		this.establishment.setAddress(address);

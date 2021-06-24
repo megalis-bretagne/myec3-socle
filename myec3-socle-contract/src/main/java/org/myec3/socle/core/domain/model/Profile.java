@@ -19,6 +19,8 @@ package org.myec3.socle.core.domain.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import lombok.Getter;
+import lombok.Setter;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 import org.hibernate.envers.Audited;
@@ -37,6 +39,7 @@ import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlTransient;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -71,18 +74,32 @@ public abstract class Profile extends Resource implements UserDetails {
 	private PrefComMedia prefComMedia;
 	private User user;
 	private Address address;
-	private List<Role> roles = new ArrayList<Role>();;
+	private List<Role> roles = new ArrayList<>();
 	private ProfileType profileType;
 	private Collection<GrantedAuthority> grantedAuthorities;
 	private String alfUserName;
 	private String technicalIdentifier;
 	private String dashboard;
 
+	@Getter
+	@Setter
+	@Column(nullable = false)
+	private Date createdDate;
+
+	/**
+	 * Id du user
+	 */
+	@Getter
+	@Setter
+	@Column()
+	private Long createdUserId;
+
 	/**
 	 * Default constructor. Do nothing.
 	 */
 	public Profile() {
 		super();
+		this.createdDate = new Date(System.currentTimeMillis());
 	}
 
 	/**
@@ -92,6 +109,7 @@ public abstract class Profile extends Resource implements UserDetails {
 	 */
 	public Profile(String name) {
 		super(name);
+		this.createdDate = new Date(System.currentTimeMillis());
 	}
 
 	/**
@@ -106,6 +124,7 @@ public abstract class Profile extends Resource implements UserDetails {
 		super(name, label);
 		this.email = email;
 		this.function = function;
+		this.createdDate = new Date(System.currentTimeMillis());
 	}
 
 	/**
@@ -122,6 +141,7 @@ public abstract class Profile extends Resource implements UserDetails {
 		this.email = email;
 		this.function = function;
 		this.user = user;
+		this.createdDate = new Date(System.currentTimeMillis());
 	}
 
 	/**

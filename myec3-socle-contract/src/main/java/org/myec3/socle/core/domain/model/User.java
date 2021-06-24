@@ -17,26 +17,6 @@
  */
 package org.myec3.socle.core.domain.model;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-import javax.persistence.Transient;
-import javax.validation.constraints.NotNull;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
-import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.Type;
 import org.hibernate.envers.Audited;
@@ -44,6 +24,16 @@ import org.hibernate.envers.RelationTargetAuditMode;
 import org.myec3.socle.core.domain.model.adapter.DateAdapter;
 import org.myec3.socle.core.domain.model.adapter.TimestampAdapter;
 import org.myec3.socle.core.domain.model.enums.Civility;
+
+import javax.persistence.*;
+import javax.validation.constraints.NotNull;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 /**
  * This class represents a user of MYEC3. This class is audited by global audit
@@ -78,8 +68,8 @@ public class User extends Resource {
 	private Boolean enabled = true;
 	private Civility civility;
 	private SviProfile sviProfile;
-	private List<Profile> profiles = new ArrayList<Profile>();
-	private List<FunctionalAccount> functionalAccounts = new ArrayList<FunctionalAccount>();
+	private List<Profile> profiles = new ArrayList<>();
+	private List<FunctionalAccount> functionalAccounts = new ArrayList<>();
 	private ConnectionInfos connectionInfos;
 	private int connectionAttempts;
 	private Date birthDate;

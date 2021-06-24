@@ -136,6 +136,7 @@ public class CompanyServiceImpl extends GenericStructureServiceImpl<Company, Com
 				companyDepartment.setNic(company.getNic());
 				companyDepartment.setAcronym(company.getAcronym());
 				companyDepartment.setCompany(company);
+				companyDepartment.setCreatedUserId(company.getCreatedUserId());
 				this.companyDepartmentService.create(companyDepartment);
 			}
 

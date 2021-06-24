@@ -17,19 +17,9 @@
  */
 package org.myec3.socle.webapp.pages.organism.department;
 
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.List;
-
-import javax.inject.Named;
-
 import org.apache.tapestry5.EventConstants;
 import org.apache.tapestry5.PersistenceConstants;
-import org.apache.tapestry5.annotations.Component;
-import org.apache.tapestry5.annotations.InjectPage;
-import org.apache.tapestry5.annotations.OnEvent;
-import org.apache.tapestry5.annotations.Persist;
-import org.apache.tapestry5.annotations.Property;
+import org.apache.tapestry5.annotations.*;
 import org.apache.tapestry5.ioc.annotations.Inject;
 import org.myec3.socle.core.domain.model.Address;
 import org.myec3.socle.core.domain.model.Organism;
@@ -41,6 +31,11 @@ import org.myec3.socle.synchro.api.SynchronizationNotificationService;
 import org.myec3.socle.webapp.components.OrganismDepartmentForm;
 import org.myec3.socle.webapp.pages.AbstractPage;
 import org.myec3.socle.webapp.pages.Index;
+
+import javax.inject.Named;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.List;
 
 /**
  * Page used to create an organism department{@link OrganismDepartment}.<br />
@@ -113,6 +108,7 @@ public class Create extends AbstractPage {
 	@OnEvent(EventConstants.ACTIVATE)
 	public Object onActivate(Long id, Long idDepartment) {
 		this.department = new OrganismDepartment();
+		this.department.setCreatedUserId(this.getUserIdLogged());
 		this.department.setExternalId(new Long(0));
 		this.department.setParentDepartment(this.organismDepartmentService.findOne(idDepartment));
 		this.department.setOrganism(this.organismService.findOne(id));

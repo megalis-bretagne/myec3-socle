@@ -17,13 +17,6 @@
  */
 package org.myec3.socle.webapp.pages;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.ResourceBundle;
-
-import javax.inject.Named;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.tapestry5.annotations.PageLoaded;
@@ -32,17 +25,7 @@ import org.apache.tapestry5.ioc.Messages;
 import org.apache.tapestry5.ioc.annotations.Inject;
 import org.apache.tapestry5.services.Request;
 import org.apache.tapestry5.services.Session;
-import org.myec3.socle.core.domain.model.AdminProfile;
-import org.myec3.socle.core.domain.model.AgentProfile;
-import org.myec3.socle.core.domain.model.Application;
-import org.myec3.socle.core.domain.model.Company;
-import org.myec3.socle.core.domain.model.Customer;
-import org.myec3.socle.core.domain.model.EmployeeProfile;
-import org.myec3.socle.core.domain.model.Establishment;
-import org.myec3.socle.core.domain.model.Organism;
-import org.myec3.socle.core.domain.model.Profile;
-import org.myec3.socle.core.domain.model.Role;
-import org.myec3.socle.core.domain.model.Structure;
+import org.myec3.socle.core.domain.model.*;
 import org.myec3.socle.core.domain.model.enums.ProfileTypeValue;
 import org.myec3.socle.core.domain.model.enums.RoleProfile;
 import org.myec3.socle.core.service.ApplicationService;
@@ -50,6 +33,12 @@ import org.myec3.socle.core.service.RoleService;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;
+
+import javax.inject.Named;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.ResourceBundle;
 
 /**
  * Class containing all methods that must be accessible in all pages like
@@ -137,6 +126,17 @@ public class AbstractPage {
 	 */
 	public Profile getLoggedProfile() {
 		return this.loggedProfile;
+	}
+
+	/**
+	 * Get Id user Connected
+	 * @return	Long id
+	 */
+	public Long getUserIdLogged() {
+		if (this.loggedProfile == null || this.getLoggedProfile().getUser() == null) {
+			return null;
+		}
+		return this.loggedProfile.getUser().getId();
 	}
 
 	/**
