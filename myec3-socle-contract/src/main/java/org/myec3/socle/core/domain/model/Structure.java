@@ -75,19 +75,17 @@ public abstract class Structure extends Resource {
 	private Integer workforce;
 	private String tenantIdentifier;
 
-	@Getter
-	@Setter
+	@Getter(onMethod=@__(@XmlTransient))
 	@Column(nullable = false)
-	@XmlTransient
+	@Setter
 	private Date createdDate;
 
 	/**
 	 * Id du user
 	 */
-	@Getter
+	@Getter(onMethod=@__(@XmlTransient))
 	@Setter
 	@Column()
-	@XmlTransient
 	private Long createdUserId;
 
 	private List<Application> applications = new ArrayList<>();
@@ -529,5 +527,4 @@ public abstract class Structure extends Resource {
 			this.setTenantIdentifier(MyEc3AlfrescoConstants.getBeginTenantsName() + idTenant);
 		}
 	}
-
 }

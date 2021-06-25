@@ -80,19 +80,17 @@ public class Establishment extends Resource {
 	@Transient
 	private PaysImplantation pays;
 
-	@Getter
+	@Getter(onMethod=@__(@XmlTransient))
 	@Setter
 	@Column(nullable = false)
-	@XmlTransient
 	private Date createdDate;
 
 	/**
 	 * Id du user
 	 */
-	@Getter
+	@Getter(onMethod=@__(@XmlTransient))
 	@Setter
 	@Column()
-	@XmlTransient
 	private Long createdUserId;
 
 	/**

@@ -56,19 +56,17 @@ public class Department extends Resource {
 	private String siren;
 	private Address address;
 
-	@Getter
+	@Getter(onMethod=@__(@XmlTransient))
 	@Setter
 	@Column(nullable = false)
-	@XmlTransient
 	private Date createdDate;
 
 	/**
 	 * Id du user
 	 */
-	@Getter
+	@Getter(onMethod=@__(@XmlTransient))
 	@Setter
 	@Column()
-	@XmlTransient
 	private Long createdUserId;
 
 	/**

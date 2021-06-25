@@ -81,19 +81,17 @@ public abstract class Profile extends Resource implements UserDetails {
 	private String technicalIdentifier;
 	private String dashboard;
 
-	@Getter
+	@Getter(onMethod=@__(@XmlTransient))
 	@Setter
 	@Column(nullable = false)
-	@XmlTransient
 	private Date createdDate;
 
 	/**
 	 * Id du user
 	 */
-	@Getter
+	@Getter(onMethod=@__(@XmlTransient))
 	@Setter
 	@Column()
-	@XmlTransient
 	private Long createdUserId;
 
 	/**
