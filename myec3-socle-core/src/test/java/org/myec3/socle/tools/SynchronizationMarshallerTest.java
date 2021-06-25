@@ -40,4 +40,34 @@ public class SynchronizationMarshallerTest {
         Assert.assertNotNull(c2);
     }
 
+    @Test
+    public void testMarshallAgentEnabledFalse() {
+
+        AgentProfile agentProfile = new AgentProfile();
+        agentProfile.setUser(new User());
+        agentProfile.getUser().setEnabled(false);
+
+        agentProfile.setEnabled(false);
+        agentProfile.setElected(false);
+        agentProfile.setExecutive(false);
+        agentProfile.setSubstitute(false);
+
+
+        // MARSHAL OBJECT
+        ByteArrayOutputStream c = SynchronizationMarshaller.marshalResource(agentProfile);
+        String xmlMarshal = c.toString();
+        Assert.assertTrue(xmlMarshal.contains("<user><enabled>false</enabled></user>"));
+        Assert.assertEquals("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>" +
+                        "<agentProfile><enabled>false</enabled><roles/><user><enabled>false</enabled></user>" +
+                        "<elected>false</elected><executive>false</executive><representative>false</representative><substitute>false</substitute></agentProfile>",
+                xmlMarshal);
+
+        // UNMARSHAL THE MarShal Object
+        AgentProfile agentUnmarshall = (AgentProfile) SynchronizationMarshaller.unmarshalResource(xmlMarshal);
+        Assert.assertEquals(false, agentUnmarshall.getUser().isEnabled());
+        Assert.assertEquals(false, agentUnmarshall.getElected());
+        Assert.assertEquals(false, agentUnmarshall.getExecutive());
+        Assert.assertEquals(false, agentUnmarshall.getSubstitute());
+    }
+
 }

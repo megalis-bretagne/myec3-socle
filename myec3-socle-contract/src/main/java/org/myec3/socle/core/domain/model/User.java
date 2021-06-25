@@ -274,7 +274,7 @@ public class User extends Resource {
 	@NotNull
 	@Column(nullable = false)
 	@XmlElement(required = true)
-	public boolean isEnabled() {
+	public Boolean isEnabled() {
 		return enabled;
 	}
 
