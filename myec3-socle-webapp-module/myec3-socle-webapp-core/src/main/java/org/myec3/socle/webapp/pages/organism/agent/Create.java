@@ -17,6 +17,7 @@
  */
 package org.myec3.socle.webapp.pages.organism.agent;
 
+import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.tapestry5.EventConstants;
@@ -136,13 +137,9 @@ public class Create extends AbstractPage {
 	@Persist(PersistenceConstants.FLASH)
 	private Boolean activateOnce;
 
-	private Boolean checkCertificate;
-
-	private Boolean profileActivated;
-
 	// Page Activation n Passivation
 	@OnEvent(EventConstants.ACTIVATE)
-	public void Activation() {
+	public void activation() {
 		super.initUser();
 	}
 
@@ -208,78 +205,12 @@ public class Create extends AbstractPage {
 	}
 
 	public Object onPassivate() {
-		List<Long> result = new ArrayList<Long>();
+		List<Long> result = new ArrayList<>();
 		if (this.organismDepartment != null) {
 			result.add(this.organismDepartment.getOrganism().getId());
 			result.add(this.organismDepartment.getId());
 		}
 		return result;
-	}
-
-	private void checkCertificate() {
-
-		// initialize the check to false
-		this.checkCertificate = Boolean.FALSE;
-
-		// get the user who have the same certificate
-		List<User> users = this.userService.findUsersByCertificate(this.agentProfile.getUser().getCertificate());
-		logger.debug("Users matching the same certificate : " + users.toString());
-		// If we have at least 1 user with same certificate
-		String userInfos = " ";
-		if (users.size() > 0) {
-
-			// check the current users
-			for (User user : users) {
-
-				// Is it current user ? If yes, that's not okay
-				if ((user.getId() != this.agentProfile.getUser().getId())) {
-
-					// Get the user associate Profile
-					List<Profile> profiles = this.profileService.findAllProfilesByUser(user);
-
-					// We have at least a profile !
-					if (profiles != null && profiles.size() == 1) {
-						for (Profile userProfile : profiles) {
-
-							// Profile is deleted or not (FALSE means deleted)
-							logger.debug("Is Profile enabled : " + userProfile.getEnabled());
-							if (!userProfile.getEnabled().equals(Boolean.FALSE)) {
-
-								logger.debug("Certificate Already in use !");
-
-								// Display error message
-								this.checkCertificate = Boolean.TRUE;
-								Structure userStructure = this.userService.findUserOrganismStructure(user);
-
-								// Construction or error message
-								if (user.getCivility() != null) {
-									userInfos += user.getCivility() + " " + user.getFirstname() + " "
-											+ user.getLastname() + " ";
-								} else {
-									userInfos += user.getFirstname() + " " + user.getLastname() + " ";
-								}
-
-								if (userStructure != null) {
-									userInfos += "(Organisme : " + userStructure.getLabel() + "), ";
-								}
-
-								logger.debug("UserInfos : " + userInfos);
-							}
-						}
-					}
-				}
-			}
-		}
-
-		if (this.checkCertificate.equals(Boolean.TRUE)) {
-			logger.debug("Certificate already used !");
-			userInfos = userInfos.substring(0, userInfos.length() - 2);
-			this.certificateErrorMessage = this.getMessages().get("already-used-certificate") + userInfos;
-		} else {
-			logger.debug("No user is using the same certificate.");
-			this.certificateSuccessMessage = this.getMessages().get("not-used-certificate");
-		}
-
 	}
 
 
@@ -301,8 +232,6 @@ public class Create extends AbstractPage {
 				return null;
 			}
 
-			this.checkCertificate();
-
 			// set this boolean to true so we don't initiate AgentProfile again
 			// and loose informations
 			this.activateOnce = Boolean.TRUE;
@@ -312,22 +241,6 @@ public class Create extends AbstractPage {
 			return this;
 		} else {
 			try {
-
-				//cas enregistrer si il y a un certificat présent on force la vérification avant l'update
-				if(this.agentProfile.getUser().getCertificate() != null ){
-					this.checkCertificate();
-					if (this.checkCertificate.equals(Boolean.TRUE)) {
-						logger.debug("Certificate already used !");
-						// set this boolean to true so we don't initiate AgentProfile again
-						// and loose informations
-						this.activateOnce = Boolean.TRUE;
-						this.oldAgentProfile = this.agentProfile;
-						// reset so we don't loop in this function
-						this.certificateValid = Boolean.FALSE;
-						return this;
-					}
-				}
-
 				this.agentProfile.setName(
 						this.agentProfile.getUser().getLastname() + " " + this.agentProfile.getUser().getFirstname());
 				this.agentProfile.setLabel(this.agentProfile.getName());
@@ -357,7 +270,7 @@ public class Create extends AbstractPage {
 
 				this.synchronizationService.notifyCreation(this.agentProfile);
 				// message mail
-				if (this.emailService.authorizedToSendMail(this.agentProfile.getOrganismDepartment().getOrganism())) {
+				if (BooleanUtils.isTrue(this.emailService.authorizedToSendMail(this.agentProfile.getOrganismDepartment().getOrganism()))) {
 					this.sendMail(password);
 				}
 
@@ -381,7 +294,7 @@ public class Create extends AbstractPage {
 	 */
 	public void sendMail(String password) {
 		// message mail
-		StringBuffer message = new StringBuffer();
+		StringBuilder message = new StringBuilder();
 		message.append(this.getMessages().get("login-message"));
 		message.append(this.agentProfile.getEmail());
 		message.append("\n");
