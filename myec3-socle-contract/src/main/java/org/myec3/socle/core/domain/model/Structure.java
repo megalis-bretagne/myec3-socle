@@ -33,6 +33,7 @@ import javax.persistence.*;
 import javax.validation.Valid;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlTransient;
@@ -172,6 +173,7 @@ public abstract class Structure extends Resource {
 	 * @return the Structure acronym
 	 */
 
+	@Size(max = 3)
 	@NotNull
 	@Column(nullable = false)
 	@XmlElement(required = true)

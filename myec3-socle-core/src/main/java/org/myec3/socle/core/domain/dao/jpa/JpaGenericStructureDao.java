@@ -17,15 +17,14 @@
  */
 package org.myec3.socle.core.domain.dao.jpa;
 
-import java.util.ArrayList;
-import java.util.List;
+import org.myec3.socle.core.domain.dao.GenericStructureDao;
+import org.myec3.socle.core.domain.model.Structure;
 
 import javax.persistence.NoResultException;
 import javax.persistence.NonUniqueResultException;
 import javax.persistence.Query;
-
-import org.myec3.socle.core.domain.dao.GenericStructureDao;
-import org.myec3.socle.core.domain.model.Structure;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * This class implements methods to perform queries on {@link Structure} objects
@@ -128,7 +127,8 @@ public abstract class JpaGenericStructureDao<T extends Structure> extends JpaRes
 		} catch (NoResultException re) {
 			// No result found, we return null instead of errors
 			getLog().warn("findBySiren returned no result.");
-			return null;}
+			return null;
+		}
 		catch (NonUniqueResultException e){
 			getLog().warn("findBySiren returned NonUniqueResultException.");
 			return null;
