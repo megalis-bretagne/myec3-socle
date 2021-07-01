@@ -15,7 +15,12 @@ VALUES
 -- CUSTOMER 1
 INSERT INTO Customer VALUES (1, 1, 'Mégalis Bretagne', 'MB', NULL, 1, NULL, NULL, NULL, NULL, 'https://www.megalisbretagne.org/jcms/pmw_9305/megalis-mon-compte-colonne-mes-services ');
 
+INSERT INTO Customer_Application VALUES (1,1);
+
 -- StructureType
 INSERT INTO StructureType VALUES (2, 'COMPANY');
 INSERT INTO StructureType VALUES (1, 'ORGANISM');
+
+
+INSERT INTO SviProfile VALUES (1);
 
