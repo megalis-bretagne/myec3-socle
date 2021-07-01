@@ -17,11 +17,6 @@
  */
 package org.myec3.socle.webapp.pages.company.establishment;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.inject.Named;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.tapestry5.EventConstants;
@@ -34,17 +29,17 @@ import org.apache.tapestry5.beaneditor.BeanModel;
 import org.apache.tapestry5.ioc.annotations.Inject;
 import org.apache.tapestry5.services.BeanModelSource;
 import org.apache.tapestry5.services.PropertyConduitSource;
-import org.myec3.socle.core.domain.model.Company;
-import org.myec3.socle.core.domain.model.CompanyDepartment;
-import org.myec3.socle.core.domain.model.EmployeeProfile;
-import org.myec3.socle.core.domain.model.Establishment;
-import org.myec3.socle.core.domain.model.Resource;
+import org.myec3.socle.core.domain.model.*;
 import org.myec3.socle.core.service.CompanyService;
 import org.myec3.socle.core.service.EmployeeProfileService;
 import org.myec3.socle.core.service.EstablishmentService;
 import org.myec3.socle.synchro.api.SynchronizationNotificationService;
 import org.myec3.socle.webapp.pages.AbstractPage;
 import org.myec3.socle.webapp.pages.Index;
+
+import javax.inject.Named;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Page used to list all employees {@link EmployeeProfile} of a establishment
@@ -264,4 +259,14 @@ public class ListEmployees extends AbstractPage {
 		}
 	}
 
+	/**
+	 * Check if current employee is enabled
+	 * @return
+	 */
+	public Boolean getIsEnabled() {
+		if (employeeProfileRow.getUser() == null) {
+			return Boolean.FALSE;
+		}
+		return employeeProfileRow.getUser().isEnabled();
+	}
 }

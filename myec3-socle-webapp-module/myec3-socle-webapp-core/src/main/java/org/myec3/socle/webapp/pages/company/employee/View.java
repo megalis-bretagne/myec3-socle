@@ -17,10 +17,6 @@
  */
 package org.myec3.socle.webapp.pages.company.employee;
 
-import java.text.SimpleDateFormat;
-
-import javax.inject.Named;
-
 import org.apache.tapestry5.EventConstants;
 import org.apache.tapestry5.PersistenceConstants;
 import org.apache.tapestry5.annotations.InjectPage;
@@ -28,11 +24,7 @@ import org.apache.tapestry5.annotations.OnEvent;
 import org.apache.tapestry5.annotations.Persist;
 import org.apache.tapestry5.annotations.Property;
 import org.apache.tapestry5.ioc.annotations.Inject;
-import org.myec3.socle.core.domain.model.Address;
-import org.myec3.socle.core.domain.model.EmployeeProfile;
-import org.myec3.socle.core.domain.model.Profile;
-import org.myec3.socle.core.domain.model.Resource;
-import org.myec3.socle.core.domain.model.User;
+import org.myec3.socle.core.domain.model.*;
 import org.myec3.socle.core.service.EmployeeProfileService;
 import org.myec3.socle.core.service.UserService;
 import org.myec3.socle.core.tools.EbDate;
@@ -40,6 +32,9 @@ import org.myec3.socle.synchro.api.SynchronizationNotificationService;
 import org.myec3.socle.webapp.constants.GuWebAppConstants;
 import org.myec3.socle.webapp.pages.AbstractPage;
 import org.myec3.socle.webapp.pages.Index;
+
+import javax.inject.Named;
+import java.text.SimpleDateFormat;
 
 /**
  * Page used to display employee details {@link EmployeeProfile}<br />
@@ -204,5 +199,16 @@ public class View extends AbstractPage {
 		} else {
 			return Boolean.FALSE;
 		}
+	}
+
+	/**
+	 * Check if current employee is enabled
+	 * @return
+	 */
+	public Boolean getIsEnabled() {
+		if (employeeProfile.getUser() == null) {
+			return Boolean.FALSE;
+		}
+		return employeeProfile.getUser().isEnabled();
 	}
 }

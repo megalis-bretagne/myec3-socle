@@ -304,4 +304,15 @@ public class ListEmployees extends AbstractPage {
 		return Boolean.FALSE;
 	}
 
+	/**
+	 * Check if current employee is enabled
+	 * @return
+	 */
+	public Boolean getIsEnabled() {
+		if (employeeProfileRow.getUser() == null) {
+			return Boolean.FALSE;
+		}
+		return employeeProfileRow.getUser().isEnabled();
+	}
+
 }

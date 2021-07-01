@@ -321,4 +321,15 @@ public class View extends AbstractPage {
 		}
 		return Boolean.FALSE;
 	}
+
+	/**
+	 * Check if current agent is enabled
+	 * @return
+	 */
+	public Boolean getIsEnabled() {
+		if (agentProfile.getUser() == null) {
+			return Boolean.FALSE;
+		}
+		return agentProfile.getUser().isEnabled();
+	}
 }

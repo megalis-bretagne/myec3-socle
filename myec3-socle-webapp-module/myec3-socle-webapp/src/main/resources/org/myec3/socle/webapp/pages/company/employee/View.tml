@@ -32,7 +32,7 @@
 				<t:if test="modifyDisplay">
 					<div class="actions-bar">
 						<ul>
-						<t:if test="employeeProfile.user.enabled">
+						<t:if test="isEnabled">
 							<t:if test="isAdmin">
 								<li>
 									<t:actionlink t:id="regeneratePassword" t:mixins="confirm" t:message="message:confirm-regenerate-password-label">
@@ -46,20 +46,19 @@
 									<img src="${context:static/images/agent_modifier.png}" alt="${message:modify-label}" title="${message:modify-label}" />  ${message:modify-label}
 								</t:pagelink>
 							</li>
-
-							</t:if>
-							<t:if test="!employeeProfile.user.enabled">
+							<p:else>
 								<li>
 									<a class="disable" >
-											<img src="${context:static/images/regenerate_password.png}" alt="${message:regenerate-password-label}" title="${message:modify-user-label-disable}" /> <span title="${message:modify-user-label-disable}">${message:regenerate-password-label}</span>
+										<img src="${context:static/images/regenerate_password.png}" alt="${message:regenerate-password-label}" title="${message:modify-user-label-disable}" /> <span title="${message:modify-user-label-disable}">${message:regenerate-password-label}</span>
 									</a>
 								</li>
 								<li>
-									 <a class="disable" >
-											<img src="${context:static/images/agent_modifier.png}" alt="${message:modify-user-label}" title="${message:modify-user-label-disable}"  />  <span title="${message:modify-user-label-disable}">${message:modify-user-label}</span>
-									  </a>
-								 </li>
-							</t:if>
+									<a class="disable" >
+										<img src="${context:static/images/agent_modifier.png}" alt="${message:modify-user-label}" title="${message:modify-user-label-disable}"  />  <span title="${message:modify-user-label-disable}">${message:modify-user-label}</span>
+									</a>
+								</li>
+							</p:else>
+						</t:if>
 						</ul>
 					</div>
 				</t:if>

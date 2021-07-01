@@ -1,5 +1,5 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"> 
-<html t:type="layout" xmlns:t="http://tapestry.apache.org/schema/tapestry_5_1_0.xsd">
+<html t:type="layout" xmlns:t="http://tapestry.apache.org/schema/tapestry_5_1_0.xsd" xmlns:p="tapestry:parameter">
 	<div id="main-content">
 	    <h2>${employeeProfile?.user?.firstname} ${employeeProfile?.user?.lastname}</h2>
 	    <div class="tabbed-data"> 
@@ -22,19 +22,19 @@
 					<t:if test="modifyDisplay">
 						<div class="actions-bar">
 							<ul>
-							<t:if test="employeeProfile.user.enabled">
+							<t:if test="isEnabled">
 								<li><t:pagelink page="company/employee/modifyroles" context="employeeProfile.id">
 								<img src="${context:static/images/organisme_modifier.png}"
 											alt="${message:modify-label}" title="${message:modify-roles-label}" /> ${message:modify-roles-label}
 											</t:pagelink>
 								</li>
-							</t:if>
-							<t:if test="!employeeProfile.user.enabled">	
-								   <li>
-					                      <a class="disable" >
-					                      	<img src="${context:static/images/organisme_modifier.png}" alt="${message:modify-roles-label}" title="${message:modify-role-label-disable}" />&nbsp;<span title="${message:modify-role-label-disable}">${message:modify-roles-label}</span>
-					                      </a>
-		                           </li>
+								<p:else>
+									<li>
+										<a class="disable" >
+											<img src="${context:static/images/organisme_modifier.png}" alt="${message:modify-roles-label}" title="${message:modify-role-label-disable}" />&nbsp;<span title="${message:modify-role-label-disable}">${message:modify-roles-label}</span>
+										</a>
+									</li>
+								</p:else>
 							</t:if>
 							</ul>
 						</div>

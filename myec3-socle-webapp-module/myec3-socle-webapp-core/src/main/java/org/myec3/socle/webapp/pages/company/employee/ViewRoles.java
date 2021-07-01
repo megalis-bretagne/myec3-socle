@@ -17,10 +17,6 @@
  */
 package org.myec3.socle.webapp.pages.company.employee;
 
-import java.util.List;
-
-import javax.inject.Named;
-
 import org.apache.tapestry5.EventConstants;
 import org.apache.tapestry5.PersistenceConstants;
 import org.apache.tapestry5.annotations.OnEvent;
@@ -34,6 +30,9 @@ import org.myec3.socle.core.service.ApplicationService;
 import org.myec3.socle.core.service.EmployeeProfileService;
 import org.myec3.socle.webapp.pages.AbstractPage;
 import org.myec3.socle.webapp.pages.Index;
+
+import javax.inject.Named;
+import java.util.List;
 
 /**
  * Page used to display employee's{@link EmployeeProfile}
@@ -164,6 +163,17 @@ public class ViewRoles extends AbstractPage {
 		} else {
 			return Boolean.FALSE;
 		}
+	}
+
+	/**
+	 * Check if current employee is enabled
+	 * @return
+	 */
+	public Boolean getIsEnabled() {
+		if (employeeProfile.getUser() == null) {
+			return Boolean.FALSE;
+		}
+		return employeeProfile.getUser().isEnabled();
 	}
 
 }
