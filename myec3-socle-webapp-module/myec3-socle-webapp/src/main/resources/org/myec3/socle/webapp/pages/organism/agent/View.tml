@@ -40,7 +40,7 @@
                 </p>
                 <div class="actions-bar">
                     <ul>
-                    	<t:if test="agentProfile.user.enabled">
+                    	<t:if test="isEnabled">
 	                        <t:if test="hasRightsOnOrganism">
 	                            <li>
 	                                <t:actionlink t:id="regeneratePassword" t:mixins="confirm" t:message="message:confirm-regenerate-password-label">
@@ -53,21 +53,19 @@
 			                                <img src="${context:static/images/agent_modifier.png}" alt="${message:modify-user-label}" title="${message:modify-user-label}"  /> <t:if test="!isHimselfAndNotAdmin">${message:modify-user-label}</t:if>
 		                            </t:pagelink>
 	                            </li>
-                            </t:if>
-                        <t:if test="!agentProfile.user.enabled">
-                        		<li>
-	                        		<a class="disable" >
-	                        			<img src="${context:static/images/regenerate_password.png}" alt="${message:regenerate-password-label}" title="${message:modify-user-label-disable}" /> <span title="${message:modify-user-label-disable}">${message:regenerate-password-label}</span>
-			                        </a>
-		                        </li>
-		                        <li>
-			                         <a class="disable" >
-				                        <img src="${context:static/images/agent_modifier.png}" alt="${message:modify-user-label}" title="${message:modify-user-label-disable}"  />  <span title="${message:modify-user-label-disable}">${message:modify-user-label}</span>
-			                         </a>
-	                            </li>
+                            <p:else>
+                                <li>
+                                    <a class="disable" >
+                                        <img src="${context:static/images/regenerate_password.png}" alt="${message:regenerate-password-label}" title="${message:modify-user-label-disable}" /> <span title="${message:modify-user-label-disable}">${message:regenerate-password-label}</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="disable" >
+                                        <img src="${context:static/images/agent_modifier.png}" alt="${message:modify-user-label}" title="${message:modify-user-label-disable}"  />  <span title="${message:modify-user-label-disable}">${message:modify-user-label}</span>
+                                    </a>
+                                </li>
+                            </p:else>
                         </t:if>
-
-
                     </ul>
                 </div>
                 <fieldset>

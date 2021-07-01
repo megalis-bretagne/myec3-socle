@@ -82,7 +82,7 @@
 
 					
 							<t:if test="belongsToEstablishment">
-								<t:if test="employeeProfileRow.user.enabled">
+								<t:if test="isEnabled">
 									<t:pagelink page="company/employee/modify"
 									context="employeeProfileRow.id">
 									<img src="${context:static/images/agent_modifier.png}"
@@ -93,14 +93,16 @@
 											t:message="message:confirm-disabled-label"><img src="${context:static/images/agent_disable.png}"
 											alt="${message:disable-user-label}" title="${message:disable-user-label}"/></t:actionlink>&nbsp;
 									</t:if>
-								</t:if>
-								<t:if test="!employeeProfileRow.user.enabled">
+									<p:else>
 										<img src="${context:static/images/agent_modifier_disable.png}"
-											alt="${message:modify-user-label-disable}" title="${message:modify-user-label-disable}"/>&nbsp;					
-									<t:actionlink t:id="enable"
-											context="employeeProfileRow.id" t:mixins="confirm"
-											t:message="message:confirm-enabled-label"><img src="${context:static/images/agent_enable.png}"
-												alt="${message:enable-user-label}" title="${message:enable-user-label}"/></t:actionlink>&nbsp;
+											 alt="${message:modify-user-label-disable}" title="${message:modify-user-label-disable}"/>&nbsp;
+										<t:actionlink t:id="enable"
+													  context="employeeProfileRow.id" t:mixins="confirm"
+													  t:message="message:confirm-enabled-label">
+											<img src="${context:static/images/agent_enable.png}"
+												 alt="${message:enable-user-label}" title="${message:enable-user-label}"/>
+										</t:actionlink>&nbsp;
+									</p:else>
 								</t:if>
 								<t:if test="isEmployeeRowLogged" negate="true">
 									<t:actionlink t:id="delete"
