@@ -304,6 +304,7 @@ public class Create extends AbstractPage {
 				if (this.establishment.getLastUpdate() == null) {
 					this.establishment.setLastUpdate(date);
 				}
+				this.establishment.setCreatedUserId(this.getUserIdLogged());
 
 				logger.debug("ApeCode : " + this.establishment.getApeCode());
 

@@ -486,15 +486,21 @@ public class Create {
 		if (this.company.getSiretHeadOffice() != null) {
 			this.company.setNic(this.company.getSiretHeadOffice().substring(9, 14));
 		}
+		if (this.loggedProfile.getUser() != null) {
+			this.company.setCreatedUserId(this.loggedProfile.getUser().getId());
+		}
+
 		logger.debug("COMPANY : " + this.company);
 		if (this.company.getForeignIdentifier() == Boolean.TRUE &&
-				this.company.getEstablishments().size() == 0) {
+				this.company.getEstablishments().isEmpty()) {
 			establishment.setIsHeadOffice(Boolean.TRUE);
 			establishment.setDiffusableInformations(Boolean.FALSE);
 			establishment.setApeCode(this.company.getApeCode());
 			establishment.setApeNafLabel(this.company.getApeNafLabel());
 			establishment.setForeignIdentifier(Boolean.TRUE);
 			establishment.setNationalID(this.company.getNationalID());
+			establishment.setCreatedDate(new Date());
+			establishment.setCreatedUserId(company.getCreatedUserId());
 			Address establishmentAddress = establishment.getAddress();
 			establishmentAddress.setCountry(this.company.getRegistrationCountry());
 			establishment.setAddress(establishmentAddress);
@@ -543,10 +549,6 @@ public class Create {
 				&& this.establishment.getForeignIdentifier() == Boolean.FALSE) {
 
 			this.company.setInsee(this.establishment.getAddress().getInsee());
-		}
-
-		if (this.loggedProfile.getUser() != null) {
-			this.company.setCreatedUserId(this.loggedProfile.getUser().getId());
 		}
 
 		this.companyService.create(this.company);
