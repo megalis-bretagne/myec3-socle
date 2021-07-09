@@ -17,40 +17,19 @@
  */
 package org.myec3.socle.webapp.pages.user;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
-import java.util.Set;
-
-import javax.inject.Named;
-import javax.mail.MessagingException;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.tapestry5.ComponentResources;
 import org.apache.tapestry5.EventConstants;
 import org.apache.tapestry5.PersistenceConstants;
-import org.apache.tapestry5.annotations.Component;
-import org.apache.tapestry5.annotations.OnEvent;
-import org.apache.tapestry5.annotations.Persist;
-import org.apache.tapestry5.annotations.Property;
-import org.apache.tapestry5.annotations.SetupRender;
+import org.apache.tapestry5.annotations.*;
 import org.apache.tapestry5.corelib.components.Form;
 import org.apache.tapestry5.internal.services.URLEncoderImpl;
 import org.apache.tapestry5.ioc.annotations.Inject;
 import org.apache.tapestry5.services.URLEncoder;
 import org.myec3.socle.core.constants.MyEc3Constants;
 import org.myec3.socle.core.constants.MyEc3EmailConstants;
-import org.myec3.socle.core.domain.model.AgentProfile;
-import org.myec3.socle.core.domain.model.Customer;
-import org.myec3.socle.core.domain.model.EmployeeProfile;
-import org.myec3.socle.core.domain.model.Profile;
-import org.myec3.socle.core.domain.model.ProjectAccount;
-import org.myec3.socle.core.domain.model.Resource;
-import org.myec3.socle.core.domain.model.User;
+import org.myec3.socle.core.domain.model.*;
 import org.myec3.socle.core.domain.model.enums.ProfileTypeValue;
 import org.myec3.socle.core.service.EmailService;
 import org.myec3.socle.core.service.ProfileService;
@@ -61,6 +40,10 @@ import org.myec3.socle.webapp.constants.GuWebAppConstants;
 import org.myec3.socle.webapp.encoder.GenericListEncoder;
 import org.myec3.socle.webapp.entities.MessageEmail;
 import org.myec3.socle.webapp.pages.AbstractPage;
+
+import javax.inject.Named;
+import javax.mail.MessagingException;
+import java.util.*;
 
 /**
  * Page used to regenerate user's password{@link User} or
@@ -507,6 +490,29 @@ public class RegeneratePassword extends AbstractPage {
 			Set<ProjectAccount> selectedProjectAccounts) {
 		this.selectedProjectAccounts = selectedProjectAccounts;
 	}
+
+	/**
+	 * Check if current agent is enabled
+	 * @return
+	 */
+	public Boolean getIsProfileEnabled() {
+		if (profileLoop.getUser() == null) {
+			return Boolean.FALSE;
+		}
+		return profileLoop.getUser().isEnabled();
+	}
+
+	/**
+	 * Check if current agent is enabled
+	 * @return
+	 */
+	public Boolean getIsProjectEnabled() {
+		if (projectAccountLoop.getUser() == null) {
+			return Boolean.FALSE;
+		}
+		return projectAccountLoop.getUser().isEnabled();
+	}
+
 
 	public Set<Profile> getSelectedProfiles() {
 		return selectedProfiles;
