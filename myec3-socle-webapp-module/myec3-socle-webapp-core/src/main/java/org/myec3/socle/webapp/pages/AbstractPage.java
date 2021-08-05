@@ -482,7 +482,7 @@ public class AbstractPage {
 
 	public void removeEmployeeManagerRole(EmployeeProfile employeeProfile) {
 		List<Application> applications;
-		List<Role> listRole = new ArrayList<Role>();
+		List<Role> listRole = new ArrayList<>();
 
 		applications = this.applicationService
 				.findAllApplicationByStructure(
@@ -495,7 +495,7 @@ public class AbstractPage {
 				listRole = application.getRoles();
 
 				for (Role role : listRole) {
-					if (role.getName().equals("ROLE_MANAGER_EMPLOYEE")) {
+					if (role.getName().equals("ROLE_MANAGER_EMPLOYEE") && employeeProfile.getRoles().contains(role)) {
 						employeeProfile.removeRole(role);
 						employeeProfile.addRoles(
 								roleService.findAllByCriteria(null, "ROLE_DEFAULT", application));
