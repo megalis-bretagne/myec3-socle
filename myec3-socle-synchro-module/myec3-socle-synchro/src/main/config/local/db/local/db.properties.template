@@ -9,3 +9,4 @@ bdd.keycloak.schema=keycloak
 
 ## MEGALIS-192 : APPLICATION MONOTENANT
 myec3.synchro.applications.monotenant.ids=7,10
+myec3.synchro.sdm.token.uri=true

@@ -3,6 +3,7 @@ package org.myec3.socle.ws.client.impl;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.apache.commons.lang3.BooleanUtils;
 import org.glassfish.jersey.client.ClientProperties;
 import org.myec3.socle.core.domain.model.Resource;
 import org.myec3.socle.core.domain.sdm.model.SdmResource;
@@ -16,6 +17,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
@@ -45,6 +47,9 @@ public class SdmWsClientImpl implements ResourceWsClient {
     @Qualifier("traiterReponseSDMService")
     private TraiterReponseSDMService traiterReponseSDMService;
 
+    @Value("${myec3.synchro.sdm.token.uri:false}")
+    private Boolean loadTokenInUri;
+
     /**
      * Creates and returns JerseyClient
      *
@@ -64,16 +69,35 @@ public class SdmWsClientImpl implements ResourceWsClient {
      * @param builder : the builder used to create the request
      */
     private void prepareHeaderAtexo(Invocation.Builder builder) {
+        if (BooleanUtils.isFalse(loadTokenInUri)) {
+            builder.header("Authorization", "Bearer " + getTokenSdm());
+        }
+    }
+
+    /**
+     * Get Token for SDM
+     * @return  the token
+     */
+    private String getTokenSdm() {
         WebTarget webResource = getClientWs().target(WsConstants.SDM_TOKEN_URL);
         Invocation.Builder builderToken = webResource.request().accept(MediaType.APPLICATION_JSON);
         try {
             Response response = builderToken.get();
             String responseToString = response.readEntity(String.class);
             String[] tab = StringUtils.split(responseToString, "<ticket>");
-            String[] tab2 = StringUtils.split(tab[1], "</ticket>");
-            builder.header("Authorization", "Bearer " + tab2[0]);
+            String[] token = StringUtils.split(tab != null ? tab[1] : null, "</ticket>");
+            return token != null ? token[0] : null;
         } catch (Exception e) {
             logger.error("[TOKEN] Failed retrieving SDM token", e);
+            return null;
+        }
+    }
+
+    private String getUri(String uri) {
+        if (BooleanUtils.isTrue(loadTokenInUri)) {
+            return uri+"?ticket="+getTokenSdm();
+        } else {
+            return uri;
         }
     }
 
@@ -180,7 +204,7 @@ public class SdmWsClientImpl implements ResourceWsClient {
     }
 
     public ResponseMessage post(Resource resource, SdmResource resourceSDM, SynchronizationSubscription synchronizationSubscription) {
-        WebTarget webResource = getClientWs().target(synchronizationSubscription.getUri());
+        WebTarget webResource = getClientWs().target(getUri(synchronizationSubscription.getUri()));
 
         Invocation.Builder builder = webResource.request().accept(MediaType.APPLICATION_JSON);
         prepareHeaderAtexo(builder);
@@ -216,7 +240,7 @@ public class SdmWsClientImpl implements ResourceWsClient {
     }
 
     public ResponseMessage put(Resource resource, SdmResource resourceSDM, SynchronizationSubscription synchronizationSubscription) {
-        WebTarget webResource = getClientWs().target(synchronizationSubscription.getUri());
+        WebTarget webResource = getClientWs().target(getUri(synchronizationSubscription.getUri()));
 
         Invocation.Builder builder = webResource.request().accept(MediaType.APPLICATION_JSON);
         prepareHeaderAtexo(builder);
@@ -298,7 +322,7 @@ public class SdmWsClientImpl implements ResourceWsClient {
     }
 
     public ResponseMessage delete(Resource resource, SdmResource resourceSDM, SynchronizationSubscription synchronizationSubscription) {
-        WebTarget webResource = getClientWs().target(synchronizationSubscription.getUri());
+        WebTarget webResource = getClientWs().target(getUri(synchronizationSubscription.getUri()));
 
         Invocation.Builder builder = webResource.request().accept(MediaType.APPLICATION_JSON);
         prepareHeaderAtexo(builder);
