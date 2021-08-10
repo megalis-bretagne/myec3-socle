@@ -204,11 +204,12 @@ public class SdmWsClientImpl implements ResourceWsClient {
     }
 
     public ResponseMessage post(Resource resource, SdmResource resourceSDM, SynchronizationSubscription synchronizationSubscription) {
-        WebTarget webResource = getClientWs().target(getUri(synchronizationSubscription.getUri()));
+        String uri = getUri(synchronizationSubscription.getUri());
+        WebTarget webResource = getClientWs().target(uri);
 
         Invocation.Builder builder = webResource.request().accept(MediaType.APPLICATION_JSON);
         prepareHeaderAtexo(builder);
-        logger.info("[POST] on URI: {}", synchronizationSubscription.getUri());
+        logger.info("[POST] on URI: {}", uri);
         try {
             ObjectMapper mapper = new ObjectMapper();
             String json = mapper.writeValueAsString(resourceSDM);
@@ -240,12 +241,13 @@ public class SdmWsClientImpl implements ResourceWsClient {
     }
 
     public ResponseMessage put(Resource resource, SdmResource resourceSDM, SynchronizationSubscription synchronizationSubscription) {
-        WebTarget webResource = getClientWs().target(getUri(synchronizationSubscription.getUri()));
+        String uri = getUri(synchronizationSubscription.getUri());
+        WebTarget webResource = getClientWs().target(uri);
 
         Invocation.Builder builder = webResource.request().accept(MediaType.APPLICATION_JSON);
         prepareHeaderAtexo(builder);
 
-        logger.info("[PUT] on URI: {}", synchronizationSubscription.getUri());
+        logger.info("[PUT] on URI: {}", uri);
         try {
             ObjectMapper mapper = new ObjectMapper();
             String json = mapper.writeValueAsString(resourceSDM);
@@ -322,12 +324,13 @@ public class SdmWsClientImpl implements ResourceWsClient {
     }
 
     public ResponseMessage delete(Resource resource, SdmResource resourceSDM, SynchronizationSubscription synchronizationSubscription) {
-        WebTarget webResource = getClientWs().target(getUri(synchronizationSubscription.getUri()));
+        String uri = getUri(synchronizationSubscription.getUri());
+        WebTarget webResource = getClientWs().target(uri);
 
         Invocation.Builder builder = webResource.request().accept(MediaType.APPLICATION_JSON);
         prepareHeaderAtexo(builder);
 
-        logger.info("[DELETE] on URI: {}", synchronizationSubscription.getUri());
+        logger.info("[DELETE] on URI: {}", uri);
         try {
             ObjectMapper mapper = new ObjectMapper();
             String json = mapper.writeValueAsString(resourceSDM);
