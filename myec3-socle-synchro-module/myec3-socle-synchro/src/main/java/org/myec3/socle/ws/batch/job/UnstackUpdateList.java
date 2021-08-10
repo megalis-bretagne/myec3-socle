@@ -240,8 +240,6 @@ public class UnstackUpdateList {
                             }
                         } else {
                             logger.debug("No update for the Company :" + companyToUpdate.toString());
-                            this.mpsUpdateJobService.deleteById(resourceToUnstack.getId());
-                            logger.debug("mpsUpdateJobService deleted !");
                             // necessaire ?
                             Date dateCompany = new Date();
                             companyToUpdate.setLastUpdate(dateCompany);
