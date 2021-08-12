@@ -17,6 +17,7 @@
  */
 package org.myec3.socle.webapp.components;
 
+import org.apache.commons.lang3.BooleanUtils;
 import org.apache.tapestry5.ComponentResources;
 import org.apache.tapestry5.EventConstants;
 import org.apache.tapestry5.PersistenceConstants;
@@ -195,13 +196,11 @@ public class AgentForm extends AbstractPage {
 			}
 
 			// if username is set
-			if (this.agentProfile.getUser().getUsername() != null) {
-				// check if the new id already exist or not
-				if (this.profileService.usernameAlreadyExists(this.agentProfile.getUser().getUsername(),
-						this.agentProfile)) {
-					this.form.recordError(this.getMessages().get("recording-error-message-usernameCheck"));
-					this.setCheckEmail(this.agentProfile.getEmail());
-				}
+			// check if the new id already exist or not
+			if (this.agentProfile.getUser().getUsername() != null && (BooleanUtils.isTrue(this.profileService.usernameAlreadyExists(this.agentProfile.getUser().getUsername(),
+					this.agentProfile))) ) {
+				this.form.recordError(this.getMessages().get("recording-error-message-usernameCheck"));
+				this.setCheckEmail(this.agentProfile.getEmail());
 			}
 		} else if (this.agentProfile.getUsername() != null
 				&& this.profileService.usernameAlreadyExists(this.agentProfile.getUsername(), this.agentProfile)) {
@@ -247,7 +246,7 @@ public class AgentForm extends AbstractPage {
 	 * 
 	 * @return a map containing the parent department and it's label
 	 */
-private Map<OrganismDepartment, String> constructDepartementMap(Map<OrganismDepartment, String> map,
+	private Map<OrganismDepartment, String> constructDepartementMap(Map<OrganismDepartment, String> map,
 			OrganismDepartment parent, int depth) {
 
 		StringBuilder indent = new StringBuilder("");
@@ -301,11 +300,10 @@ private Map<OrganismDepartment, String> constructDepartementMap(Map<OrganismDepa
 				.findAllRepresentativesByOrganism(this.agentProfile
 						.getOrganismDepartment().getOrganism());
 
-		if (listOfRepresentativesOfOrganism != null) {
-			if (listOfRepresentativesOfOrganism.isEmpty()
-					|| (listOfRepresentativesOfOrganism.contains(this.agentProfile))) {
+		if (listOfRepresentativesOfOrganism != null &&
+				(listOfRepresentativesOfOrganism.isEmpty()
+				|| (listOfRepresentativesOfOrganism.contains(this.agentProfile))) ) {
 				return Boolean.FALSE;
-			}
 		}
 		return Boolean.TRUE;
 	}
@@ -318,10 +316,9 @@ private Map<OrganismDepartment, String> constructDepartementMap(Map<OrganismDepa
 				.findAllSubstitutesByOrganism(this.agentProfile.getOrganismDepartment()
 						.getOrganism());
 
-		if (listOfSubstitutesOfOrganism != null) {
-			if (listOfSubstitutesOfOrganism.isEmpty() || (listOfSubstitutesOfOrganism.contains(this.agentProfile))) {
-				return Boolean.FALSE;
-			}
+		if (listOfSubstitutesOfOrganism != null &&
+				(listOfSubstitutesOfOrganism.isEmpty() || (listOfSubstitutesOfOrganism.contains(this.agentProfile))) ) {
+			return Boolean.FALSE;
 		}
 		return Boolean.TRUE;
 	}

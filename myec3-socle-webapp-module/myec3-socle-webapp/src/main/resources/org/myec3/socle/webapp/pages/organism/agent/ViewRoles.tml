@@ -25,19 +25,19 @@
                     </p>
                     <div class="actions-bar">
                     <ul>
-	                    <t:if test="agentProfile.user.enabled">
-	                           <li>
-	                                <t:pagelink page="organism/agent/modifyroles" context="agentProfile.id">
-	                                    <img src="${context:static/images/organisme_modifier.png}" alt="${message:modify-roles-label}" title="${message:modify-roles-label}" />&nbsp;${message:modify-roles-label}
-	                                </t:pagelink>
-	                           </li>
-	                      </t:if>
-	                      <t:if test="!agentProfile.user.enabled">
-	                            <li>
-				                      <a class="disable" >
-				                      	<img src="${context:static/images/organisme_modifier.png}" alt="${message:modify-roles-label}" title="${message:modify-role-label-disable}" />&nbsp;<span title="${message:modify-role-label-disable}">${message:modify-roles-label}</span>
-				                      </a>
-	                           </li>                       
+	                    <t:if test="isEnabled">
+                            <li>
+	                           <t:pagelink page="organism/agent/modifyroles" context="agentProfile.id">
+	                               <img src="${context:static/images/organisme_modifier.png}" alt="${message:modify-roles-label}" title="${message:modify-roles-label}" />&nbsp;${message:modify-roles-label}
+	                           </t:pagelink>
+	                        </li>
+                            <p:else>
+                                <li>
+                                    <a class="disable">
+                                        <img src="${context:static/images/organisme_modifier.png}" alt="${message:modify-roles-label}" title="${message:modify-role-label-disable}" />&nbsp;<span title="${message:modify-role-label-disable}">${message:modify-roles-label}</span>
+                                    </a>
+                                </li>
+                            </p:else>
 	                      </t:if>
                       </ul>
                     </div>

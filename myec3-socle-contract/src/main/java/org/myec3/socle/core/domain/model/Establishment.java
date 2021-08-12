@@ -17,29 +17,23 @@
  */
 package org.myec3.socle.core.domain.model;
 
-import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonSetter;
+import lombok.Getter;
+import lombok.Setter;
+import org.hibernate.envers.Audited;
 
-import javax.persistence.Column;
-import javax.persistence.Embedded;
-import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.Transient;
+import javax.persistence.*;
 import javax.validation.Valid;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
-
-import org.hibernate.envers.Audited;
-
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonSetter;
+import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 /**
  * This class represents an Establishment of {@link Company}.<br>
@@ -86,11 +80,25 @@ public class Establishment extends Resource {
 	@Transient
 	private PaysImplantation pays;
 
+	@Getter(onMethod=@__(@XmlTransient))
+	@Setter
+	@Column(nullable = false)
+	private Date createdDate;
+
+	/**
+	 * Id du user
+	 */
+	@Getter(onMethod=@__(@XmlTransient))
+	@Setter
+	@Column()
+	private Long createdUserId;
+
 	/**
 	 * Default constructor
 	 */
 	public Establishment() {
 		super();
+		this.createdDate = new Date(System.currentTimeMillis());
 	}
 
 	/**
@@ -101,6 +109,7 @@ public class Establishment extends Resource {
 	 */
 	public Establishment(String name, String label) {
 		super(name, label);
+		this.createdDate = new Date(System.currentTimeMillis());
 	}
 
 	/**

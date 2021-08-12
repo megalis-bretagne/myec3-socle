@@ -17,17 +17,17 @@
  */
 package org.myec3.socle.core.domain.model;
 
-import javax.persistence.Column;
-import javax.persistence.Embedded;
-import javax.persistence.Entity;
-import javax.persistence.Inheritance;
-import javax.persistence.InheritanceType;
+import lombok.Getter;
+import lombok.Setter;
+import org.hibernate.envers.Audited;
+
+import javax.persistence.*;
 import javax.validation.Valid;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.XmlElement;
-
-import org.hibernate.envers.Audited;
+import javax.xml.bind.annotation.XmlTransient;
+import java.util.Date;
 
 /**
  * This class represents a department of an organism ({@link OrganismDepartment}
@@ -56,11 +56,25 @@ public class Department extends Resource {
 	private String siren;
 	private Address address;
 
+	@Getter(onMethod=@__(@XmlTransient))
+	@Setter
+	@Column(nullable = false)
+	private Date createdDate;
+
+	/**
+	 * Id du user
+	 */
+	@Getter(onMethod=@__(@XmlTransient))
+	@Setter
+	@Column()
+	private Long createdUserId;
+
 	/**
 	 * Default constructor. Do nothing.
 	 */
 	public Department() {
 		super();
+		this.createdDate = new Date(System.currentTimeMillis());
 	}
 
 	/**
@@ -71,6 +85,7 @@ public class Department extends Resource {
 	 */
 	public Department(String name, String label) {
 		super(name, label);
+		this.createdDate = new Date(System.currentTimeMillis());
 	}
 
 	/**

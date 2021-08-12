@@ -11,7 +11,6 @@ import org.myec3.socle.synchro.core.AbstractDbUnitTest;
 import org.myec3.socle.synchro.core.domain.model.SynchronizationLog;
 import org.myec3.socle.synchro.core.domain.model.SynchronizationSubscription;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.SqlGroup;
 
@@ -27,7 +26,6 @@ import java.util.Random;
         @Sql(value = {"classpath:/db/test/company/company_2.sql"}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD),
         @Sql(value = {"classpath:/db/test/synchroLog/initSynchro.sql"}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD),
 })
-@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 public class SynchronizationLogServiceTest extends AbstractDbUnitTest {
 
     @Autowired

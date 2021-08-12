@@ -17,60 +17,30 @@
  */
 package org.myec3.socle.webapp.pages.company;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
-import javax.inject.Named;
-import javax.mail.MessagingException;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.tapestry5.ComponentResources;
 import org.apache.tapestry5.EventConstants;
 import org.apache.tapestry5.PersistenceConstants;
-import org.apache.tapestry5.annotations.Component;
-import org.apache.tapestry5.annotations.InjectPage;
-import org.apache.tapestry5.annotations.OnEvent;
-import org.apache.tapestry5.annotations.Persist;
-import org.apache.tapestry5.annotations.Property;
+import org.apache.tapestry5.annotations.*;
 import org.apache.tapestry5.corelib.components.Form;
 import org.apache.tapestry5.ioc.Messages;
 import org.apache.tapestry5.ioc.annotations.Inject;
 import org.myec3.socle.core.constants.MyEc3Constants;
 import org.myec3.socle.core.constants.MyEc3EmailConstants;
-import org.myec3.socle.core.domain.model.Address;
-import org.myec3.socle.core.domain.model.AdministrativeState;
-import org.myec3.socle.core.domain.model.Application;
-import org.myec3.socle.core.domain.model.Company;
-import org.myec3.socle.core.domain.model.CompanyDepartment;
-import org.myec3.socle.core.domain.model.EmployeeProfile;
-import org.myec3.socle.core.domain.model.Establishment;
-import org.myec3.socle.core.domain.model.Profile;
-import org.myec3.socle.core.domain.model.Resource;
-import org.myec3.socle.core.domain.model.Role;
-import org.myec3.socle.core.domain.model.User;
-import org.myec3.socle.core.domain.model.enums.AdministrativeStateValue;
-import org.myec3.socle.core.domain.model.enums.CompanyINSEECat;
-import org.myec3.socle.core.domain.model.enums.Country;
-import org.myec3.socle.core.domain.model.enums.PrefComMedia;
-import org.myec3.socle.core.domain.model.enums.ProfileTypeValue;
-import org.myec3.socle.core.domain.model.enums.StructureTypeValue;
+import org.myec3.socle.core.domain.model.*;
+import org.myec3.socle.core.domain.model.enums.*;
 import org.myec3.socle.core.domain.model.meta.ProfileType;
 import org.myec3.socle.core.domain.model.meta.StructureType;
-import org.myec3.socle.core.service.ApplicationService;
-import org.myec3.socle.core.service.CompanyDepartmentService;
-import org.myec3.socle.core.service.CompanyService;
-import org.myec3.socle.core.service.EmailService;
-import org.myec3.socle.core.service.EmployeeProfileService;
-import org.myec3.socle.core.service.EstablishmentService;
-import org.myec3.socle.core.service.ProfileService;
-import org.myec3.socle.core.service.ProfileTypeService;
-import org.myec3.socle.core.service.RoleService;
-import org.myec3.socle.core.service.StructureTypeService;
-import org.myec3.socle.core.service.UserService;
+import org.myec3.socle.core.service.*;
 import org.myec3.socle.synchro.api.SynchronizationNotificationService;
 import org.myec3.socle.webapp.entities.MessageEmail;
+
+import javax.inject.Named;
+import javax.mail.MessagingException;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 /**
  * Page used during creation company process {@link Company}<br />
@@ -237,8 +207,11 @@ public class Create {
 	@InjectPage
 	private View view;
 
+	@SessionState
+	private Profile loggedProfile;
+
 	@OnEvent(EventConstants.ACTIVATE)
-	public Object Activation() {
+	public Object activation() {
 		if (this.company != null) {
 			this.user = new User();
 			return Boolean.TRUE;
@@ -302,6 +275,9 @@ public class Create {
 					companyDepartment.setNic(company.getNic());
 					companyDepartment.setAcronym(company.getAcronym());
 					companyDepartment.setCompany(company);
+					if (this.loggedProfile.getUser() != null) {
+						companyDepartment.setCreatedUserId(this.loggedProfile.getUser().getId());
+					}
 					this.companyDepartmentService.create(companyDepartment);
 				}
 			}
@@ -510,15 +486,21 @@ public class Create {
 		if (this.company.getSiretHeadOffice() != null) {
 			this.company.setNic(this.company.getSiretHeadOffice().substring(9, 14));
 		}
+		if (this.loggedProfile.getUser() != null) {
+			this.company.setCreatedUserId(this.loggedProfile.getUser().getId());
+		}
+
 		logger.debug("COMPANY : " + this.company);
 		if (this.company.getForeignIdentifier() == Boolean.TRUE &&
-				this.company.getEstablishments().size() == 0) {
+				this.company.getEstablishments().isEmpty()) {
 			establishment.setIsHeadOffice(Boolean.TRUE);
 			establishment.setDiffusableInformations(Boolean.FALSE);
 			establishment.setApeCode(this.company.getApeCode());
 			establishment.setApeNafLabel(this.company.getApeNafLabel());
 			establishment.setForeignIdentifier(Boolean.TRUE);
 			establishment.setNationalID(this.company.getNationalID());
+			establishment.setCreatedDate(new Date());
+			establishment.setCreatedUserId(company.getCreatedUserId());
 			Address establishmentAddress = establishment.getAddress();
 			establishmentAddress.setCountry(this.company.getRegistrationCountry());
 			establishment.setAddress(establishmentAddress);
@@ -568,6 +550,7 @@ public class Create {
 
 			this.company.setInsee(this.establishment.getAddress().getInsee());
 		}
+
 		this.companyService.create(this.company);
 		this.synchronizationService.notifyCreation(this.company);
 		this.synchronizationService.notifyCreation(this.establishment);

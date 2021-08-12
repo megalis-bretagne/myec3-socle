@@ -17,11 +17,6 @@
  */
 package org.myec3.socle.webapp.pages.organism.agent;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.inject.Named;
-
 import org.apache.tapestry5.EventConstants;
 import org.apache.tapestry5.PersistenceConstants;
 import org.apache.tapestry5.PropertyConduit;
@@ -46,6 +41,10 @@ import org.myec3.socle.core.service.OrganismService;
 import org.myec3.socle.synchro.api.SynchronizationNotificationService;
 import org.myec3.socle.webapp.pages.AbstractPage;
 import org.myec3.socle.webapp.pages.Index;
+
+import javax.inject.Named;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Page used to display the organism's{@link Organism} agents list
@@ -326,5 +325,17 @@ public class ListAgents extends AbstractPage {
 			}
 		}
 		return Boolean.FALSE;
+	}
+
+
+	/**
+	 * Check if current Agent is enabled
+	 * @return
+	 */
+	public Boolean getIsEnabled() {
+		if (agentProfileRow.getUser() == null) {
+			return Boolean.FALSE;
+		}
+		return agentProfileRow.getUser().isEnabled();
 	}
 }

@@ -17,19 +17,13 @@
  */
 package org.myec3.socle.core.domain.model;
 
-import java.io.Serializable;
-
-import javax.persistence.Column;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.MappedSuperclass;
-import javax.validation.constraints.NotNull;
-import javax.xml.bind.annotation.XmlElement;
-
+import com.fasterxml.jackson.annotation.JsonProperty;
 import org.hibernate.envers.Audited;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import javax.persistence.*;
+import javax.validation.constraints.NotNull;
+import javax.xml.bind.annotation.XmlElement;
+import java.io.Serializable;
 
 /**
  * This class is the global abstract and root class defining any other object.
@@ -51,6 +45,7 @@ public class Resource implements Serializable, Cloneable, PE {
 	private Long externalId;
 	private String name;
 	private String label;
+
 
 	// /**
 	// * Allows to force an resource update on many to many relations

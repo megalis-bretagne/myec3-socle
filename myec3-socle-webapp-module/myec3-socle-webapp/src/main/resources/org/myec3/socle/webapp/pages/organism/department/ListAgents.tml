@@ -1,5 +1,5 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html t:type="layout" xmlns:t="http://tapestry.apache.org/schema/tapestry_5_1_0.xsd">
+<html t:type="layout" xmlns:t="http://tapestry.apache.org/schema/tapestry_5_1_0.xsd" xmlns:p="tapestry:parameter">
 	<div id="main-content">
 		<h2>${message:page-title}</h2>
 		<t:if test="successMessage">
@@ -53,7 +53,7 @@
 							<img src="${context:static/images/agent_voir.png}"
 								alt="${message:view-label}" title="${message:view-label}"/></t:pagelink>&nbsp;
 						<t:if test="isAgentRowLogged" negate="true">
-							<t:if test="agentProfileRow.user.enabled">
+							<t:if test="isEnabled">
 								<t:pagelink page="organism/agent/modify"
 								context="agentProfileRow.id"><img src="${context:static/images/agent_modifier.png}"
 									alt="${message:modify-user-label}" title="${message:modify-user-label}"/></t:pagelink>&nbsp;
@@ -62,16 +62,18 @@
 									context="agentProfileRow.id" t:mixins="confirm"
 									t:message="message:confirm-disabled-label"><img src="${context:static/images/agent_disable.png}"
 										alt="${message:disable-user-label}" title="${message:disable-user-label}"/></t:actionlink>&nbsp;
+								<p:else>
+									<img src="${context:static/images/agent_modifier_disable.png}"
+										 alt="${message:modify-user-label-disable}" title="${message:modify-user-label-disable}"/>&nbsp;
+
+									<t:actionlink t:id="enable"
+												  context="agentProfileRow.id" t:mixins="confirm"
+												  t:message="message:confirm-enabled-label">
+										<img src="${context:static/images/agent_enable.png}"
+											 alt="${message:enable-user-label}" title="${message:enable-user-label}"/>
+									</t:actionlink>&nbsp;
+								</p:else>
 							</t:if>
-							<t:if test="!agentProfileRow.user.enabled">
-								<img src="${context:static/images/agent_modifier_disable.png}"
-									alt="${message:modify-user-label-disable}" title="${message:modify-user-label-disable}"/>&nbsp;
-									
-								<t:actionlink t:id="enable"
-									context="agentProfileRow.id" t:mixins="confirm"
-									t:message="message:confirm-enabled-label"><img src="${context:static/images/agent_enable.png}"
-										alt="${message:enable-user-label}" title="${message:enable-user-label}"/></t:actionlink>&nbsp;
-							</t:if>		
 							<t:actionlink t:id="delete"
 								context="agentProfileRow.id" t:mixins="confirm"
 								t:message="message:confirm-delete-label"><img src="${context:static/images/agent_supprimer.png}"

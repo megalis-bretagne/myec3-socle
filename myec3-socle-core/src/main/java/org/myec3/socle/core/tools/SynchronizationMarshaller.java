@@ -17,35 +17,18 @@
  */
 package org.myec3.socle.core.tools;
 
-import java.io.ByteArrayOutputStream;
-import java.io.InputStream;
-import java.io.OutputStream;
+import org.apache.activemq.util.ByteArrayInputStream;
+import org.myec3.socle.core.domain.model.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
-
-import org.apache.activemq.util.ByteArrayInputStream;
-import org.myec3.socle.core.domain.model.AdminProfile;
-import org.myec3.socle.core.domain.model.AgentProfile;
-import org.myec3.socle.core.domain.model.Application;
-import org.myec3.socle.core.domain.model.Company;
-import org.myec3.socle.core.domain.model.CompanyDepartment;
-import org.myec3.socle.core.domain.model.Customer;
-import org.myec3.socle.core.domain.model.EmployeeProfile;
-import org.myec3.socle.core.domain.model.Establishment;
-import org.myec3.socle.core.domain.model.Organism;
-import org.myec3.socle.core.domain.model.OrganismDepartment;
-import org.myec3.socle.core.domain.model.Person;
-import org.myec3.socle.core.domain.model.ProjectAccount;
-import org.myec3.socle.core.domain.model.Resource;
-import org.myec3.socle.core.domain.model.Role;
-import org.myec3.socle.core.domain.model.Structure;
-import org.myec3.socle.core.domain.model.StructureRelations;
-import org.myec3.socle.core.domain.model.User;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
 
 public abstract class SynchronizationMarshaller {
 

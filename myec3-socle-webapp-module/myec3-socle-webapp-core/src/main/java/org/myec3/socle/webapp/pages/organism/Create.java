@@ -205,6 +205,7 @@ public class Create extends AbstractPage {
   public Object onSuccess() {
     this.organism.setName(organism.getLabel());
     this.organism.setMember(Boolean.TRUE);
+    this.organism.setCreatedUserId(this.getUserIdLogged());
 
     // In case of user connected hasn't SUPER_ADMIN role
     if (this.selectedCustomer == null) {

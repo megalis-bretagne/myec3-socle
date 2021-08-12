@@ -84,7 +84,10 @@ public class Search extends AbstractPage {
 				.atZone(ZoneId.systemDefault())
 				.toInstant());
 		// init end date to now
-		this.searchEndDate = new Date();
+		LocalDate dateTomorrow = LocalDate.now().plusDays(1L);
+		this.searchEndDate = Date.from(dateTomorrow.atStartOfDay()
+				.atZone(ZoneId.systemDefault())
+				.toInstant());
 	}
 
 	// Form

@@ -17,30 +17,6 @@
  */
 package org.myec3.socle.core.domain.model;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-import javax.persistence.Transient;
-import javax.validation.constraints.NotNull;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlElementWrapper;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
-import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
@@ -52,6 +28,12 @@ import org.myec3.socle.core.domain.model.enums.OrganismINSEECat;
 import org.myec3.socle.core.domain.model.enums.OrganismNafCode;
 import org.myec3.socle.core.domain.model.enums.StructureINSEECat;
 import org.springframework.util.Assert;
+
+import javax.persistence.*;
+import javax.validation.constraints.NotNull;
+import javax.xml.bind.annotation.*;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
+import java.util.*;
 
 /**
  * This class represents a public organism, i.e. a public structure, city,

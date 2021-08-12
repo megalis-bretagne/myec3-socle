@@ -1,19 +1,5 @@
 package org.myec3.socle.webapp.pages.organism.agent.export;
 
-import java.io.File;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import javax.inject.Named;
-
 import org.apache.tapestry5.Block;
 import org.apache.tapestry5.EventConstants;
 import org.apache.tapestry5.annotations.OnEvent;
@@ -35,6 +21,14 @@ import org.myec3.socle.webapp.pages.Index;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.Assert;
+
+import javax.inject.Named;
+import java.io.File;
+import java.text.SimpleDateFormat;
+import java.util.*;
+import java.util.Map.Entry;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Page used to display the report of the file uploaded.<br />
@@ -434,7 +428,7 @@ public class Report extends AbstractImport {
 	 * @return a list of agent profiles
 	 */
 	public List<AgentProfile> convertImportToListOfAgents() {
-		List<AgentProfile> listOfAgentProfileInImport = new ArrayList<AgentProfile>(this.mappedCsvData.size());
+		List<AgentProfile> listOfAgentProfileInImport = new ArrayList<>(this.mappedCsvData.size());
 
 		for (Map<String, String> mapLine : this.mappedCsvData) {
 			AgentProfile agent = new AgentProfile();
@@ -496,6 +490,7 @@ public class Report extends AbstractImport {
 			agent.setUser(userAgent);
 			// SET ADDRESS TO AGENT
 			agent.setAddress(address);
+			agent.setCreatedUserId(this.getUserIdLogged());
 
 			// ADD AGENTPROFILE INTO LIST
 			listOfAgentProfileInImport.add(agent);
