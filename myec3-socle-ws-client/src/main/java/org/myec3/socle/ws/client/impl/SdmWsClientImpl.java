@@ -69,8 +69,10 @@ public class SdmWsClientImpl implements ResourceWsClient {
      * @param builder : the builder used to create the request
      */
     private void prepareHeaderAtexo(Invocation.Builder builder) {
-        if (BooleanUtils.isFalse(loadTokenInUri)) {
-            builder.header("Authorization", "Bearer " + getTokenSdm());
+        if (BooleanUtils.isNotTrue(loadTokenInUri)) {
+            String token = getTokenSdm();
+            logger.info("[SDM] Add token in header: {}", token);
+            builder.header("Authorization", "Bearer " + token);
         }
     }
 
