@@ -35,6 +35,7 @@ import org.myec3.socle.core.domain.model.meta.StructureType;
 import org.myec3.socle.core.service.*;
 import org.myec3.socle.synchro.api.SynchronizationNotificationService;
 import org.myec3.socle.webapp.entities.MessageEmail;
+import org.myec3.socle.webapp.pages.AbstractPage;
 
 import javax.inject.Named;
 import javax.mail.MessagingException;
@@ -57,7 +58,7 @@ import java.util.List;
  * 
  * @author Anthony Colas <anthony.j.colas@atosorigin.com>
  */
-public class Create {
+public class Create extends AbstractPage {
 
 	private static Log logger = LogFactory.getLog(Create.class);
 
@@ -207,8 +208,6 @@ public class Create {
 	@InjectPage
 	private View view;
 
-	@SessionState
-	private Profile loggedProfile;
 
 	@OnEvent(EventConstants.ACTIVATE)
 	public Object activation() {
@@ -275,9 +274,7 @@ public class Create {
 					companyDepartment.setNic(company.getNic());
 					companyDepartment.setAcronym(company.getAcronym());
 					companyDepartment.setCompany(company);
-					if (this.loggedProfile.getUser() != null) {
-						companyDepartment.setCreatedUserId(this.loggedProfile.getUser().getId());
-					}
+					companyDepartment.setCreatedUserId(this.getUserIdLogged());
 					this.companyDepartmentService.create(companyDepartment);
 				}
 			}
@@ -486,9 +483,7 @@ public class Create {
 		if (this.company.getSiretHeadOffice() != null) {
 			this.company.setNic(this.company.getSiretHeadOffice().substring(9, 14));
 		}
-		if (this.loggedProfile.getUser() != null) {
-			this.company.setCreatedUserId(this.loggedProfile.getUser().getId());
-		}
+		this.company.setCreatedUserId(this.getUserIdLogged());
 
 		logger.debug("COMPANY : " + this.company);
 		if (this.company.getForeignIdentifier() == Boolean.TRUE &&
