@@ -53,7 +53,6 @@ import java.util.ResourceBundle;
 public class AbstractPage {
 
 	private static final Log logger = LogFactory.getLog(AbstractPage.class);
-	private static final String PROJECT_USER = "PROJECT";
 
 	public static final ResourceBundle BUNDLE = ResourceBundle
 			.getBundle("webapp");
@@ -94,15 +93,11 @@ public class AbstractPage {
 
 		if (logger.isDebugEnabled()){
 			logger.debug("Liste des headers recus");
-			request.getHeaderNames().stream().forEach(p -> logger.debug(p + " " + request.getHeader(p)));
+			request.getHeaderNames().forEach(p -> logger.debug(p + " " + request.getHeader(p)));
 		}
 
 		session = this.request.getSession(true);
-//		String userType = request.getHeader("userType");
 
-		// If user is a project user, he doesn't have access to socle
-		// so we do well.... nothing !
-//		if (userType != null && !PROJECT_USER.equals(userType)) {
 			if (null != session) {
 				context = (SecurityContext) session.getAttribute("SPRING_SECURITY_CONTEXT");
 			} else {
@@ -118,7 +113,6 @@ public class AbstractPage {
 			} else {
 				logger.debug("No profile found");
 			}
-//		}
 	}
 
 	/**
@@ -133,6 +127,10 @@ public class AbstractPage {
 	 * @return	Long id
 	 */
 	public Long getUserIdLogged() {
+		// Si non connecté (a ajouté pour évite les exceptions sur les pages non protégé comme la création d'entreprise)
+		if (!this.loggedProfileExists) {
+			return null;
+		}
 		if (this.loggedProfile == null || this.getLoggedProfile().getUser() == null) {
 			return null;
 		}
@@ -285,25 +283,21 @@ public class AbstractPage {
 	}
 
 	public Boolean isLoggedProfileAllowedToManageCompanies(Profile profile) {
-		if (loggedProfileExists) {
-			if (profile.isAdmin()) {
-				if (this.getIsTechnicalAdmin()) {
-					return Boolean.TRUE;
-				} else {
-					return ((AdminProfile) profile).getCustomer().isAuthorizedToManageCompanies();
-				}
+		if (loggedProfileExists && profile.isAdmin()) {
+			if (this.getIsTechnicalAdmin()) {
+				return Boolean.TRUE;
+			} else {
+				return ((AdminProfile) profile).getCustomer().isAuthorizedToManageCompanies();
 			}
 		}
 		return Boolean.FALSE;
 	}
 
 	public Object hasRightsToManageCompanies() {
-		if (loggedProfileExists) {
-			if (loggedProfile.isAdmin()) {
-				AdminProfile adminProfile = (AdminProfile) this.loggedProfile;
-				if ((this.getIsTechnicalAdmin()) || (adminProfile.getCustomer().isAuthorizedToManageCompanies())) {
-					return Boolean.TRUE;
-				}
+		if (loggedProfileExists && loggedProfile.isAdmin()) {
+			AdminProfile adminProfile = (AdminProfile) this.loggedProfile;
+			if ((this.getIsTechnicalAdmin()) || (adminProfile.getCustomer().isAuthorizedToManageCompanies())) {
+				return Boolean.TRUE;
 			}
 		}
 		return Index.class;
@@ -373,7 +367,7 @@ public class AbstractPage {
 					// Check if the organism of the admin is member of platform
 					if (this.getIsMember(admin)) {
 						logger.debug("profile " + admin.getUsername() + " is member of platform");
-						if (admin.getOrganismDepartment().getOrganism().equals((Organism) structure)) {
+						if (admin.getOrganismDepartment().getOrganism().equals(structure)) {
 							logger.debug("profile " + loggedProfile.getUsername()
 									+ " has rights to modify this structure : " + structure.getId());
 							return Boolean.TRUE;
@@ -381,7 +375,7 @@ public class AbstractPage {
 					}
 				} else if (loggedProfile instanceof EmployeeProfile) {
 					EmployeeProfile admin = (EmployeeProfile) this.loggedProfile;
-					if (admin.getCompanyDepartment().getCompany().equals((Company) structure)) {
+					if (admin.getCompanyDepartment().getCompany().equals(structure)) {
 						logger.debug("profile " + loggedProfile.getUsername()
 								+ " has rights to modify this structure : " + structure.getId());
 						return Boolean.TRUE;
@@ -435,20 +429,15 @@ public class AbstractPage {
 	}
 
 	public Boolean hasRightsOnOrganism(Organism organism) {
-		if (this.loggedProfileExists) {
-			if (!loggedProfile.isAdmin()) {
-				if (loggedProfile instanceof AgentProfile) {
-					AgentProfile admin = (AgentProfile) this.loggedProfile;
-					if (admin.getOrganismDepartment().getOrganism()
-							.equals(organism)
-							&& this.getIsGlobalManagerAgent()) {
-
-						logger.info("profile " + loggedProfile.getUsername()
-								+ " has rights to modify this organism : "
-								+ organism.getId());
-						return Boolean.TRUE;
-					}
-				}
+		if (this.loggedProfileExists && !loggedProfile.isAdmin() && loggedProfile instanceof AgentProfile) {
+			AgentProfile admin = (AgentProfile) this.loggedProfile;
+			if (admin.getOrganismDepartment().getOrganism()
+					.equals(organism)
+					&& this.getIsGlobalManagerAgent()) {
+				logger.info("profile " + loggedProfile.getUsername()
+						+ " has rights to modify this organism : "
+						+ organism.getId());
+				return Boolean.TRUE;
 			}
 		}
 		logger.info("profile " + loggedProfile.getUsername()
@@ -458,20 +447,16 @@ public class AbstractPage {
 	}
 
 	public Boolean hasRightsToManageOrganismApplications(Organism organism) {
-		if (this.loggedProfileExists) {
-			if (!loggedProfile.isAdmin()) {
-				if (loggedProfile instanceof AgentProfile) {
-					AgentProfile admin = (AgentProfile) this.loggedProfile;
-					if (admin.getOrganismDepartment().getOrganism()
-							.equals(organism)
-							&& this.getIsApplicationManagerAgent()) {
+		if (this.loggedProfileExists && !loggedProfile.isAdmin() && loggedProfile instanceof AgentProfile) {
 
-						logger.info("profile " + loggedProfile.getUsername()
-								+ " has rights to manage applications for this organism : "
-								+ organism.getId());
-						return Boolean.TRUE;
-					}
-				}
+			AgentProfile admin = (AgentProfile) this.loggedProfile;
+			if (admin.getOrganismDepartment().getOrganism()
+					.equals(organism)
+					&& this.getIsApplicationManagerAgent()) {
+				logger.info("profile " + loggedProfile.getUsername()
+						+ " has rights to manage applications for this organism : "
+						+ organism.getId());
+				return Boolean.TRUE;
 			}
 		}
 		logger.info("profile " + loggedProfile.getUsername()
