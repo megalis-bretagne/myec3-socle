@@ -1,0 +1,13 @@
+<html t:type="layout" xmlns:t="http://tapestry.apache.org/schema/tapestry_5_1_0.xsd">
+    <div id="main-content">
+        <div class="section">
+            <h3>${message:manage-synchroman-label}</h3>
+            <ul class="links">
+                <li><t:pagelink page="synchroman/application/search">${message:application-search-link-label}</t:pagelink></li>
+                <li><t:pagelink page="synchroman/role/search">${message:role-search-link-label}</t:pagelink></li>
+                <li><t:pagelink page="synchroman/subscription/search">${message:subscription-search-link-label}</t:pagelink></li>
+                <li><t:pagelink page="synchroman/synchronization/search">${message:synchronization-search-link-label}</t:pagelink></li>
+            </ul>
+        </div>
+    </div>
+</html>
