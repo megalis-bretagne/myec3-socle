@@ -28,7 +28,12 @@
 					<t:label for="url"> ${message:application-url-label} *:</t:label> :
 					<t:textfield t:id="url" t:value="application.url" t:validate="required"/>
 				</p>
-					
+
+                <p>
+                    <t:label for="nbMaxLicense"> ${message:application-nbMaxLicense-label} :</t:label> :
+                	<t:textfield t:id="nbMaxLicense" t:value="application.nbMaxLicense"/>
+                </p>
+
 <!-- 
 				<p>
 	                <t:label for="structureTypeValue">${message:structureType-subscription-label} :</t:label>

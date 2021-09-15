@@ -39,7 +39,12 @@
 					
 					<p><label for="url"> ${message:application-url-label}</label> :
 						${application.url}
-					</p>			
+					</p>
+					<t:if test="application.nbMaxLicense">
+                        <p><label for="nbMaxLicense"> ${message:application-nbMaxLicense-label}</label> :
+                            ${application.nbMaxLicense}
+                        </p>
+                    </t:if>
 				</fieldset>
 
 				<ul class="links">

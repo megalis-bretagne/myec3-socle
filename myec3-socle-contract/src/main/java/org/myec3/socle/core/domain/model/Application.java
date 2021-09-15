@@ -71,6 +71,7 @@ public class Application extends Resource {
 	private String url;
 	private String pictoUrl;
 	private String description;
+	private Long nbMaxLicense;
 
 	/**
 	 * Default constructor. Do nothing.
@@ -140,7 +141,7 @@ public class Application extends Resource {
 	@JsonIgnore
 	public List<Role> getRoles() {
 		if (this.roles == null) {
-			this.roles = new ArrayList<Role>();
+			this.roles = new ArrayList<>();
 		}
 		return roles;
 	}
@@ -188,7 +189,7 @@ public class Application extends Resource {
 	 * 
 	 * @return the modified application
 	 */
-	public Application clearRoles(List<Role> role) {
+	public Application clearRoles() {
 		this.roles.clear();
 		return this;
 	}
@@ -207,7 +208,7 @@ public class Application extends Resource {
 	@JsonIgnore
 	public List<Structure> getStructures() {
 		if (this.structures == null) {
-			this.structures = new ArrayList<Structure>();
+			this.structures = new ArrayList<>();
 		}
 		return structures;
 	}
@@ -257,7 +258,7 @@ public class Application extends Resource {
 	 * 
 	 * @return the modified application
 	 */
-	public Application clearStructures(List<Structure> structures) {
+	public Application clearStructures() {
 		this.structures.clear();
 		return this;
 	}
@@ -306,7 +307,7 @@ public class Application extends Resource {
 	@JsonIgnore
 	public List<StructureTypeApplication> getStructureTypes() {
 		if (this.structureTypes == null) {
-			this.structureTypes = new ArrayList<StructureTypeApplication>();
+			this.structureTypes = new ArrayList<>();
 		}
 		return this.structureTypes;
 	}
@@ -359,17 +360,14 @@ public class Application extends Resource {
 		}
 		Application other = (Application) obj;
 		if (this.getId() == null) {
-			if (other.getId() != null) {
-				return false;
-			}
-		} else if (!this.getId().equals(other.getId())) {
-			return false;
+			return other.getId() == null;
+		} else {
+			return this.getId().equals(other.getId());
 		}
-		return true;
 	}
 
 	/**
-	 * Descroption of the application. i.e. what the goal of the application is
+	 * Description of the application. i.e. what the goal of the application is
 	 *
 	 * @return the url of the application
 	 */
@@ -380,6 +378,19 @@ public class Application extends Resource {
 
 	public void setDescription(String description) {
 		this.description = description;
+	}
+
+	/**
+	 * Max number of licenses for users for an application. If equals to 0 or null then unlimited license number
+	 *
+	 * @return Max number of licenses for users for an application
+	 */
+	public Long getNbMaxLicense() {
+		return nbMaxLicense;
+	}
+
+	public void setNbMaxLicense(Long nbMaxLicense) {
+		this.nbMaxLicense = nbMaxLicense;
 	}
 
 	/**
