@@ -117,7 +117,7 @@ public class AgentProfileServiceImpl extends GenericProfileServiceImpl<AgentProf
 	@Autowired
 	@Qualifier("competenceService")
 	private CompetenceService competenceService;
-	
+
 	/**
 	 * Business service providing methods and specifics operations on {@link Organism}
 	 * objects. The concrete service implementation is injected by Spring container
@@ -125,7 +125,7 @@ public class AgentProfileServiceImpl extends GenericProfileServiceImpl<AgentProf
 	@Autowired
 	@Qualifier("organismService")
 	private OrganismService organismService;
-	
+
 	/**
 	 * {@inheritDoc}
 	 */
@@ -143,6 +143,16 @@ public class AgentProfileServiceImpl extends GenericProfileServiceImpl<AgentProf
 	public List<AgentProfile> findAllAgentProfilesByOrganism(Organism organism) {
 		Assert.notNull(organism, "organism is mandatory. null value is forbidden");
 		return this.dao.findAllAgentProfilesByOrganism(organism);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public List<AgentProfile> findAllAgentProfilesByOrganismAndApplication(Organism organism, Application application) {
+		Assert.notNull(organism, "organism is mandatory. null value is forbidden");
+		Assert.notNull(application, "application is mandatory. null value is forbidden");
+		return this.dao.findAllAgentProfilesByOrganismAndApplication(organism,application);
 	}
 
 	/**
@@ -166,7 +176,7 @@ public class AgentProfileServiceImpl extends GenericProfileServiceImpl<AgentProf
 
 			if (agentProfile.getRoles().isEmpty()) {
 				// Set at least basics roles for the agent
-				List<Role> basicRoles = new ArrayList<Role>();
+				List<Role> basicRoles = new ArrayList<>();
 				List<Application> systemApplications = this.applicationService
 						.findAllDefaultApplicationsByStructureTypeAndCustomer(
 								agentProfile.getOrganismDepartment().getOrganism().getStructureType(),
@@ -215,8 +225,6 @@ public class AgentProfileServiceImpl extends GenericProfileServiceImpl<AgentProf
 					.findRootOrganismDepartment(agentProfile.getOrganismDepartment().getOrganism());
 			agentProfile.setOrganismDepartment(departmentRoot);
 
-			List<AgentManagedApplication> agentManagedApplications = this.agentManagedApplicationService
-					.findAgentManagedApplicationsByAgent(agentProfile);
 
 			this.agentManagedApplicationService.deleteAllByAgentProfile(agentProfile);
 
@@ -238,7 +246,7 @@ public class AgentProfileServiceImpl extends GenericProfileServiceImpl<AgentProf
 		Assert.notNull(agentProfile, "Cannot update agentProfile: agent cannot be null");
 
 		try {
-			
+
 			// validate bean. If this is not performed here, exception is thrown
 			// and ignored !
 			validateResource(agentProfile);
@@ -255,9 +263,9 @@ public class AgentProfileServiceImpl extends GenericProfileServiceImpl<AgentProf
 			// agentProfile.getUser().setSyncDelayed(agentProfile.isSyncDelayed());
 			foundUser.reattach(agentProfile.getUser());
 			agentProfile.setUser(foundUser);
-			
+
 			competenceService.update(agentProfile);
-			
+
 			return super.update(agentProfile);
 		} catch (RuntimeException re) {
 			throw new ProfileUpdateException("Cannot update Agent " + agentProfile, re);
@@ -292,7 +300,7 @@ public class AgentProfileServiceImpl extends GenericProfileServiceImpl<AgentProf
 
 		userService.cleanCollections(agentProfile.getUser());
 		organismDepartmentService.cleanCollections(agentProfile.getOrganismDepartment());
-		agentProfile.setRoles(new ArrayList<Role>());
+		agentProfile.setRoles(new ArrayList<>());
 	}
 
 	/**
@@ -380,7 +388,7 @@ public class AgentProfileServiceImpl extends GenericProfileServiceImpl<AgentProf
 	 */
 	@Override
 	public List<AgentProfile> getAnnuaire(int page, String filter, String sortBy, String sortDir, int size,
-										  String competences, Boolean enableFilter) throws Exception {
+										  String competences, Boolean enableFilter) {
 		if (page < 1) {
 			throw new InvalidParameterException("Page must be greater or equal than 0");
 		}
@@ -394,7 +402,7 @@ public class AgentProfileServiceImpl extends GenericProfileServiceImpl<AgentProf
 	public Long getAnnuaireCount(String filter, String competences, Boolean enableFilter) {
 		return this.dao.findAnnuaireCount(filter, competences, enableFilter);
 	}
-	
+
 	/**
 	 * {@inheritDoc}
 	 */
