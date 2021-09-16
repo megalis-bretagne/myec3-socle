@@ -30,8 +30,8 @@
 				</p>
 
                 <p>
-                    <t:label for="nbMaxLicense"> ${message:application-nbMaxLicense-label} :</t:label> :
-                	<t:textfield t:id="nbMaxLicense" t:value="application.nbMaxLicense"/>
+                    <t:label for="nbMaxLicenses"> ${message:application-nbMaxLicenses-label} :</t:label> :
+                	<t:textfield t:id="nbMaxLicenses" t:value="application.nbMaxLicenses"/>
                 </p>
 
 <!-- 
