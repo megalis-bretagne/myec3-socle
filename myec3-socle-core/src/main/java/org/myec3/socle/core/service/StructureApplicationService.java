@@ -11,4 +11,6 @@ public interface StructureApplicationService {
     List<StructureApplication> findAllByApplication(Application application);
 
     List<StructureApplication> findAllByStructure(Structure structure);
+
+    StructureApplication findByStructureAndApplication(Structure structure, Application application);
 }

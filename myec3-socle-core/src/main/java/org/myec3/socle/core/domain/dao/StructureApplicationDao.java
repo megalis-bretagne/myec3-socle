@@ -11,4 +11,6 @@ public interface StructureApplicationDao extends NoResourceGenericDao<StructureA
 
 	List<StructureApplication> findAllByStructure(Structure structure);
 
+	StructureApplication findByStructureAndApplication(Structure structure, Application application);
+
 }

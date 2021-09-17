@@ -20,4 +20,9 @@ public class StructureApplicationServiceImpl extends AbstractGenericServiceImpl<
     public List<StructureApplication> findAllByStructure(Structure structure) {
         return this.dao.findAllByStructure(structure);
     }
+
+    @Override
+    public StructureApplication findByStructureAndApplication(Structure structure, Application application) {
+        return this.dao.findByStructureAndApplication(structure,application);
+    }
 }
