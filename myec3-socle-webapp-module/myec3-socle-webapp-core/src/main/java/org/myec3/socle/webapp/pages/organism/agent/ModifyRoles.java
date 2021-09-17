@@ -17,23 +17,11 @@
  */
 package org.myec3.socle.webapp.pages.organism.agent;
 
-import java.util.ArrayDeque;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.inject.Named;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.tapestry5.EventConstants;
 import org.apache.tapestry5.PersistenceConstants;
-import org.apache.tapestry5.annotations.Component;
-import org.apache.tapestry5.annotations.InjectPage;
-import org.apache.tapestry5.annotations.OnEvent;
-import org.apache.tapestry5.annotations.Persist;
-import org.apache.tapestry5.annotations.Property;
+import org.apache.tapestry5.annotations.*;
 import org.apache.tapestry5.corelib.components.Form;
 import org.apache.tapestry5.ioc.annotations.Inject;
 import org.myec3.socle.core.constants.MyEc3ApplicationConstants;
@@ -44,13 +32,16 @@ import org.myec3.socle.core.domain.model.Role;
 import org.myec3.socle.core.domain.model.enums.StructureTypeValue;
 import org.myec3.socle.core.service.AgentManagedApplicationService;
 import org.myec3.socle.core.service.AgentProfileService;
-import org.myec3.socle.core.service.ApplicationService;
 import org.myec3.socle.core.service.RoleService;
+import org.myec3.socle.core.service.StructureApplicationService;
 import org.myec3.socle.synchro.api.SynchronizationNotificationService;
 import org.myec3.socle.synchro.api.constants.SynchronizationRelationsName;
 import org.myec3.socle.webapp.encoder.GenericListEncoder;
 import org.myec3.socle.webapp.pages.AbstractPage;
 import org.myec3.socle.webapp.pages.Index;
+
+import javax.inject.Named;
+import java.util.*;
 
 /**
  * Page used to modify roles{@link Role} of an agent
@@ -95,13 +86,9 @@ public class ModifyRoles extends AbstractPage {
 	@Named("roleService")
 	private RoleService roleService;
 
-	/**
-	 * Business Service providing methods and specifics operations on
-	 * {@link Application} objects
-	 */
 	@Inject
-	@Named("applicationService")
-	private ApplicationService applicationService;
+	@Named("structureApplicationService")
+	private StructureApplicationService structureApplicationService;
 
 	@Inject
 	@Named("agentManagedApplicationService")
@@ -173,8 +160,8 @@ public class ModifyRoles extends AbstractPage {
 	public Object onActivate(Long profileId) {
 		super.initUser();
 
-		this.selectedRoles = new ArrayList<Role>();
-		this.applicationsSelected = new ArrayList<Application>();
+		this.selectedRoles = new ArrayList<>();
+		this.applicationsSelected = new ArrayList<>();
 
 		this.agentProfile = this.agentProfileService.findOne(profileId);
 		if (null == this.agentProfile) {
@@ -216,7 +203,7 @@ public class ModifyRoles extends AbstractPage {
 			// BEWARE - FIX because before, reference deletion happened so that deletion on
 			// subscribedApplications leads to delete objects on agent's structures organism
 			// (update cascade)
-			this.subscribedApplications = new ArrayList<Application>(
+			this.subscribedApplications = new ArrayList<>(
 					this.agentProfile.getOrganismDepartment().getOrganism().getApplications());
 		} else if (this.getIsApplicationManagerAgent()) {
 			this.subscribedApplications = this.agentManagedApplicationService
@@ -264,17 +251,21 @@ public class ModifyRoles extends AbstractPage {
 
 			// We check that there is no the same role 2 times in the
 			// selectRoles list
-			List<Role> checkedRoles = new ArrayList<Role>();
+			List<Role> checkedRoles = new ArrayList<>();
 			for (Role role : this.selectedRoles) {
 				if (!checkedRoles.contains(role)) {
+					if (isTooMuchSubscription(role)) {
+						this.modificationRolesForm.recordError(String.format(this.getMessages().get("toomuchsubscription-error-message"), role.getApplication().getLabel()));
+						return null;
+					}
 					checkedRoles.add(role);
 				}
 			}
 
 			List<Role> agentCurrentRoles = this.agentProfile.getRoles();
 			List<Role> agentCurrentNotHiddenRoles = this.agentProfile.getRolesWithoutHidden();
-			List<Resource> rolesRemoved = new ArrayList<Resource>();
-			List<Resource> rolesAdded = new ArrayList<Resource>();
+			List<Resource> rolesRemoved = new ArrayList<>();
+			List<Resource> rolesAdded = new ArrayList<>();
 
 			// Removing roles (if they were displayed)
 			for (Role role : new ArrayDeque<Role>(agentCurrentNotHiddenRoles)) {
@@ -317,6 +308,17 @@ public class ModifyRoles extends AbstractPage {
 		}
 	}
 
+	private boolean isTooMuchSubscription(Role role) {
+		Long nbMaxLicenses = this.structureApplicationService.findByStructureAndApplication(this.agentProfile.getOrganismDepartment().getOrganism(), role.getApplication()).getnbMaxLicenses();
+		if(nbMaxLicenses == null || nbMaxLicenses == 0){
+			return false;
+		}
+		List<AgentProfile> agentProfiles = this.agentProfileService.findAllAgentProfilesByOrganismAndApplication(this.agentProfile.getOrganismDepartment().getOrganism(), role.getApplication());
+		long nbSubscription = agentProfiles.size();
+		return nbSubscription >= nbMaxLicenses;
+
+	}
+
 	@OnEvent(EventConstants.CANCELED)
 	public Object onFormCancel() {
 		this.viewAgentPage.setAgentProfile(this.agentProfile);
@@ -343,15 +345,14 @@ public class ModifyRoles extends AbstractPage {
 	public GenericListEncoder<Role> getRoleEncoder() {
 		List<Role> availableRoles = this.roleService.findAllRoleByProfileTypeAndApplicationWithoutHidden(
 				this.agentProfile.getProfileType(), this.applicationLoop);
-		GenericListEncoder<Role> encoder = new GenericListEncoder<Role>(availableRoles);
-		return encoder;
+		return new GenericListEncoder<>(availableRoles);
 	}
 
 	public Map<Role, String> getRolesModel() {
 		List<Role> availableRoles = this.roleService.findAllRoleByProfileTypeAndApplicationWithoutHidden(
 				this.agentProfile.getProfileType(), this.applicationLoop);
 
-		Map<Role, String> roles = new LinkedHashMap<Role, String>();
+		Map<Role, String> roles = new LinkedHashMap<>();
 		for (Role role : availableRoles) {
 			roles.put(role, role.getLabel());
 		}
@@ -360,15 +361,13 @@ public class ModifyRoles extends AbstractPage {
 	}
 
 	public List<Role> getMultipleRolesModel() {
-		List<Role> availableMultipleRoles = this.roleService.findAllRoleByProfileTypeAndApplicationWithoutHidden(
-				this.agentProfile.getProfileType(), this.applicationLoop);
 
-		return availableMultipleRoles;
+		return  this.roleService.findAllRoleByProfileTypeAndApplicationWithoutHidden(
+				this.agentProfile.getProfileType(), this.applicationLoop);
 	}
 
 	public GenericListEncoder<Application> getSubscribedApplicationEncoder() {
-		GenericListEncoder<Application> encoder = new GenericListEncoder<Application>(this.subscribedApplications);
-		return encoder;
+		return new GenericListEncoder<>(this.subscribedApplications);
 	}
 
 	public Application getApplicationLoop() {
@@ -477,10 +476,8 @@ public class ModifyRoles extends AbstractPage {
 	}
 
 	public Boolean getIsApplicationAllowingMultipleRoles() {
-		if (this.applicationsAllowingMultipleRoles != null) {
-			if (this.applicationsAllowingMultipleRoles.contains(this.applicationLoop)) {
-				return Boolean.TRUE;
-			}
+		if (this.applicationsAllowingMultipleRoles != null && this.applicationsAllowingMultipleRoles.contains(this.applicationLoop)) {
+			return Boolean.TRUE;
 		}
 		return Boolean.FALSE;
 	}

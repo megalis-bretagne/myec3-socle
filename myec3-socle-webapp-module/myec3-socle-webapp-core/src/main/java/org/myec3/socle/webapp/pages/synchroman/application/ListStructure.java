@@ -36,7 +36,6 @@ public class ListStructure extends AbstractPage {
     @Named("structureApplicationService")
     private StructureApplicationService structureApplicationService;
 
-
     @Inject
     @Named("agentProfileService")
     private AgentProfileService agentProfileService;
