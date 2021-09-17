@@ -6,7 +6,7 @@ import org.myec3.socle.core.domain.model.StructureApplication;
 
 import java.util.List;
 
-public interface StructureApplicationService {
+public interface StructureApplicationService extends IGenericService<StructureApplication> {
 
     List<StructureApplication> findAllByApplication(Application application);
 

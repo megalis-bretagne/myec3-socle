@@ -385,11 +385,11 @@ public class Application extends Resource {
 	 *
 	 * @return Max number of licenses for users for an application
 	 */
-	public Long getnbMaxLicenses() {
+	public Long getNbMaxLicenses() {
 		return nbMaxLicenses;
 	}
 
-	public void setnbMaxLicenses(Long nbMaxLicenses) {
+	public void setNbMaxLicenses(Long nbMaxLicenses) {
 		this.nbMaxLicenses = nbMaxLicenses;
 	}
 

@@ -21,11 +21,11 @@ public class StructureApplication implements PE {
         this.structureApplicationId = structureApplicationId;
     }
 
-    public Long getnbMaxLicenses() {
+    public Long getNbMaxLicenses() {
         return nbMaxLicenses;
     }
 
-    public void setnbMaxLicenses(Long nbMaxLicenses) {
+    public void setNbMaxLicenses(Long nbMaxLicenses) {
         this.nbMaxLicenses = nbMaxLicenses;
     }
 }

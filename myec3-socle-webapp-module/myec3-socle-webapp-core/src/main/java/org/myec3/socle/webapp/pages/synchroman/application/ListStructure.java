@@ -87,7 +87,7 @@ public class ListStructure extends AbstractPage {
                 RowTable rowTable = new RowTable(
                         structure.getId(),
                         structure.getLabel(),
-                        structureApplication.getnbMaxLicenses(),
+                        structureApplication.getNbMaxLicenses(),
                         structure.getStructureType().getValue());
 
                 if (structure.getStructureType().getValue().equals(StructureTypeValue.ORGANISM)) {

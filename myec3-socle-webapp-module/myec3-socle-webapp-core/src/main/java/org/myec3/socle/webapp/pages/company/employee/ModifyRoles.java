@@ -231,7 +231,7 @@ public class ModifyRoles extends AbstractPage {
 	}
 
     private boolean isTooMuchSubscription(Role role) {
-		Long nbMaxLicenses = this.structureApplicationService.findByStructureAndApplication(this.employeeProfile.getCompanyDepartment().getCompany(), role.getApplication()).getnbMaxLicenses();
+		Long nbMaxLicenses = this.structureApplicationService.findByStructureAndApplication(this.employeeProfile.getCompanyDepartment().getCompany(), role.getApplication()).getNbMaxLicenses();
 		if(nbMaxLicenses == null){
 			return false;
 		}

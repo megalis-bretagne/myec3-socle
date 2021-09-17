@@ -93,6 +93,11 @@ public class Modify extends AbstractPage {
     @Component(id = "modification_form")
     private Form form;
 
+    private List<Structure> structureList;
+
+    private List<StructureApplication> structureApplicationList;
+
+
     // Page Activation n Passivation
     @OnEvent(EventConstants.ACTIVATE)
     public void activation() {
@@ -117,6 +122,9 @@ public class Modify extends AbstractPage {
             return Boolean.FALSE;
         }
 
+        this.structureList = this.structureService.findAllStructureByApplication(this.application);
+        this.structureApplicationList = this.structureApplicationService.findAllByApplication(this.application);
+
         return Boolean.TRUE;
     }
 
@@ -128,6 +136,13 @@ public class Modify extends AbstractPage {
     @OnEvent(EventConstants.SUCCESS)
     public Object onSuccess() {
         logger.debug("Enterring into method OnSuccess");
+        // if add a nbMaxLicenses on the application then we set nbMaxLicenses on its structures
+        if(this.application.getNbMaxLicenses() != null && this.application.getNbMaxLicenses() > 0L){
+            this.updateNbMaxLicensesStructure();
+        } else {
+            this.clearNbMaxLicensesStructure();
+        }
+
         try {
             this.applicationService.update(this.application);
         } catch (Exception e) {
@@ -160,12 +175,11 @@ public class Modify extends AbstractPage {
     }
 
     private boolean isNbMaxLicensesInferiorToSubscription() {
-        if (this.application.getnbMaxLicenses() != null && this.application.getnbMaxLicenses() != 0L) {
+        if (this.application.getNbMaxLicenses() != null && this.application.getNbMaxLicenses() > 0L) {
             long licensesSubscribed = 0;
-            List<Structure> structureList = this.structureService.findAllStructureByApplication(this.application);
-            List<StructureApplication> structureApplicationList = this.structureApplicationService.findAllByApplication(this.application);
-            for (StructureApplication structureApplication : structureApplicationList) {
-                Structure structure = structureList.stream().filter(
+
+            for (StructureApplication structureApplication : this.structureApplicationList) {
+                Structure structure = this.structureList.stream().filter(
                         s -> s.getId().equals(structureApplication.getStructureApplicationId().getStructuresId())).findAny().orElse(null);
                 if (structure != null) {
 
@@ -177,9 +191,34 @@ public class Modify extends AbstractPage {
 
                 }
             }
-            return licensesSubscribed > this.application.getnbMaxLicenses();
+            return licensesSubscribed > this.application.getNbMaxLicenses();
         }
         return false;
+    }
+
+    private void updateNbMaxLicensesStructure(){
+        for (StructureApplication structureApplication :this. structureApplicationList) {
+            Structure structure = this.structureList.stream().filter(
+                    s -> s.getId().equals(structureApplication.getStructureApplicationId().getStructuresId())).findAny().orElse(null);
+            if (structure != null && structureApplication.getNbMaxLicenses() == null) {
+                if (structure.getStructureType().getValue().equals(StructureTypeValue.ORGANISM)) {
+                    structureApplication.setNbMaxLicenses((long) this.agentProfileService.findAllAgentProfilesByOrganismAndApplication((Organism) structure, this.application).size());
+                } else {
+                    structureApplication.setNbMaxLicenses((long) this.employeeProfileService.findAllEmployeeProfilesByCompanyAndApplication((Company) structure, this.application).size());
+                }
+
+            }
+            this.structureApplicationService.update(structureApplication);
+        }
+    }
+
+    private void clearNbMaxLicensesStructure(){
+        for (StructureApplication structureApplication : this.structureApplicationList) {
+            this.structureList.stream().filter(
+                    s -> s.getId().equals(structureApplication.getStructureApplicationId().getStructuresId())).findAny().ifPresent(structure -> structureApplication.setNbMaxLicenses(null));
+            this.structureApplicationService.update(structureApplication);
+        }
+
     }
 
 }
