@@ -68,13 +68,13 @@ public class TraiterReponseSDMServiceImpl implements TraiterReponseSDMService {
                         synchro.setTypeRessource(ResourceType.AGENT_PROFILE);
                         synchro.setIdSocle(agentResource.getUser().getId());
                         if (agentHM.get("id") !=null){
-                            synchro.setIdAppliExterne(Long.valueOf((Integer)agentHM.get("id")));
+                            synchro.setIdAppliExterne(Long.valueOf(String.valueOf(agentHM.get("id"))));
                         }
                         synchroIdentifiantExterneService.create(synchro);
                     }else {
                         s.setIdSocle(agentResource.getUser().getId());
                         if (agentHM.get("id") !=null){
-                            s.setIdAppliExterne(Long.valueOf((Integer)agentHM.get("id")));
+                            s.setIdAppliExterne(Long.valueOf(String.valueOf(agentHM.get("id"))));
                         }
                         synchroIdentifiantExterneService.update(s);
 
@@ -97,13 +97,13 @@ public class TraiterReponseSDMServiceImpl implements TraiterReponseSDMService {
                         synchro.setTypeRessource(ResourceType.EMPLOYEE_PROFILE);
                         synchro.setIdSocle(employeeResource.getUser().getId());
                         if (inscritHM.get("id") !=null){
-                            synchro.setIdAppliExterne(Long.valueOf((Integer)inscritHM.get("id")));
+                            synchro.setIdAppliExterne(Long.valueOf(String.valueOf(inscritHM.get("id"))));
                         }
                         synchroIdentifiantExterneService.create(synchro);
                     }else {
                         s.get(0).setIdSocle(employeeResource.getUser().getId());
                         if (inscritHM.get("id") !=null){
-                            s.get(0).setIdAppliExterne(Long.valueOf((Integer)inscritHM.get("id")));
+                            s.get(0).setIdAppliExterne(Long.valueOf(String.valueOf(inscritHM.get("id"))));
                         }
                         synchroIdentifiantExterneService.update(s.get(0));
 
@@ -126,7 +126,7 @@ public class TraiterReponseSDMServiceImpl implements TraiterReponseSDMService {
                             synchro.setTypeRessource(ResourceType.ORGANISM);
                             synchro.setIdSocle(resource.getId());
                             if (orga.get("id") !=null){
-                                synchro.setIdAppliExterne(Long.valueOf(orga.get("id")));
+                                synchro.setIdAppliExterne(Long.valueOf(String.valueOf(orga.get("id"))));
                             }
                             if (orga.get("acronyme") !=null){
                                 synchro.setAcronyme(String.valueOf(orga.get("acronyme")));
@@ -159,13 +159,13 @@ public class TraiterReponseSDMServiceImpl implements TraiterReponseSDMService {
                         synchro.setTypeRessource(ResourceType.COMPANY);
                         synchro.setIdSocle(resource.getId());
                         if (ent.get("id") !=null){
-                            synchro.setIdAppliExterne(Long.valueOf((Integer)ent.get("id")));
+                            synchro.setIdAppliExterne(Long.valueOf(String.valueOf(ent.get("id"))));
                         }
                         synchroIdentifiantExterneService.create(synchro);
                     }else {
                         s.get(0).setIdSocle(resource.getId());
                         if (ent.get("id") !=null){
-                            s.get(0).setIdAppliExterne(Long.valueOf((Integer)ent.get("id")));
+                            s.get(0).setIdAppliExterne(Long.valueOf(String.valueOf(ent.get("id"))));
                         }
                         synchroIdentifiantExterneService.update(s.get(0));
 
@@ -187,13 +187,13 @@ public class TraiterReponseSDMServiceImpl implements TraiterReponseSDMService {
                         synchro.setTypeRessource(ResourceType.ORGANISM_DEPARTMENT);
                         synchro.setIdSocle(resource.getId());
                         if (serv.get("id") !=null){
-                            synchro.setIdAppliExterne(Long.valueOf((Integer)serv.get("id")));
+                            synchro.setIdAppliExterne(Long.valueOf(String.valueOf(serv.get("id"))));
                         }
                         synchroIdentifiantExterneService.create(synchro);
                     }else {
                         s.setIdSocle(resource.getId());
                         if (serv.get("id") !=null){
-                            s.setIdAppliExterne(Long.valueOf((Integer)serv.get("id")));
+                            s.setIdAppliExterne(Long.valueOf(String.valueOf(serv.get("id"))));
                         }
                         synchroIdentifiantExterneService.update(s);
 
@@ -215,13 +215,13 @@ public class TraiterReponseSDMServiceImpl implements TraiterReponseSDMService {
                         synchro.setTypeRessource(ResourceType.ESTABLISHMENT);
                         synchro.setIdSocle(resource.getId());
                         if (etab.get("id") !=null){
-                            synchro.setIdAppliExterne(Long.valueOf((Integer)etab.get("id")));
+                            synchro.setIdAppliExterne(Long.valueOf(String.valueOf(etab.get("id"))));
                         }
                         synchroIdentifiantExterneService.create(synchro);
                     }else {
                         s.get(0).setIdSocle(resource.getId());
                         if (etab.get("id") !=null){
-                            s.get(0).setIdAppliExterne(Long.valueOf((Integer)etab.get("id")));
+                            s.get(0).setIdAppliExterne(Long.valueOf(String.valueOf(etab.get("id"))));
                         }
                         synchroIdentifiantExterneService.update(s.get(0));
 
