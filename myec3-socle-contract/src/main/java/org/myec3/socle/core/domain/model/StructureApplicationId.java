@@ -14,6 +14,14 @@ public class StructureApplicationId implements Serializable {
     @Column(name="applications_id")
     private Long applicationsId;
 
+    public StructureApplicationId() {
+    }
+
+    public StructureApplicationId(Long structuresId, Long applicationsId) {
+        this.structuresId = structuresId;
+        this.applicationsId = applicationsId;
+    }
+
     public Long getStructuresId() {
         return structuresId;
     }

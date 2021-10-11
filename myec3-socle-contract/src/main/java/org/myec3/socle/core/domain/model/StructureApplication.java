@@ -13,6 +13,19 @@ public class StructureApplication implements PE {
 
     private Long nbMaxLicenses;
 
+    public StructureApplication() {
+    }
+
+    public StructureApplication(StructureApplicationId structureApplicationId, Long nbMaxLicenses) {
+        this.structureApplicationId = structureApplicationId;
+        this.nbMaxLicenses = nbMaxLicenses;
+    }
+
+    public StructureApplication(Long structuresId, Long applicationsId, Long nbMaxLicenses) {
+        this.structureApplicationId = new StructureApplicationId(structuresId, applicationsId);
+        this.nbMaxLicenses = nbMaxLicenses;
+    }
+
     public StructureApplicationId getStructureApplicationId() {
         return structureApplicationId;
     }
