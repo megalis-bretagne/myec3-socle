@@ -1,50 +1,35 @@
 /**
  * Copyright (c) 2011 Atos Bourgogne
- * 
+ *
  * This file is part of MyEc3.
- * 
+ *
  * MyEc3 is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License version 3 as published by
  * the Free Software Foundation.
- * 
+ *
  * MyEc3 is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public License
  * along with MyEc3. If not, see <http://www.gnu.org/licenses/>.
  */
 package org.myec3.socle.webapp.pages.organism;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import javax.inject.Named;
 
 import org.apache.tapestry5.EventConstants;
-import org.apache.tapestry5.annotations.Environmental;
-import org.apache.tapestry5.annotations.Import;
-import org.apache.tapestry5.annotations.InjectPage;
-import org.apache.tapestry5.annotations.OnEvent;
-import org.apache.tapestry5.annotations.Persist;
-import org.apache.tapestry5.annotations.Property;
+import org.apache.tapestry5.annotations.*;
+import org.apache.tapestry5.corelib.components.Form;
+import org.apache.tapestry5.ioc.Messages;
 import org.apache.tapestry5.ioc.annotations.Inject;
 import org.apache.tapestry5.ioc.services.PropertyAccess;
 import org.apache.tapestry5.services.javascript.JavaScriptSupport;
-import org.myec3.socle.core.domain.model.Address;
-import org.myec3.socle.core.domain.model.AgentProfile;
-import org.myec3.socle.core.domain.model.Application;
-import org.myec3.socle.core.domain.model.Organism;
-import org.myec3.socle.core.domain.model.OrganismDepartment;
-import org.myec3.socle.core.domain.model.Resource;
-import org.myec3.socle.core.domain.model.Role;
-import org.myec3.socle.core.service.AgentProfileService;
-import org.myec3.socle.core.service.ApplicationService;
-import org.myec3.socle.core.service.OrganismService;
-import org.myec3.socle.core.service.RoleService;
+import org.myec3.socle.core.domain.model.*;
+import org.myec3.socle.core.service.*;
 import org.myec3.socle.synchro.api.SynchronizationNotificationService;
 import org.myec3.socle.synchro.api.constants.SynchronizationRelationsName;
 import org.myec3.socle.webapp.encoder.GenericListEncoder;
@@ -53,14 +38,14 @@ import org.myec3.socle.webapp.pages.AbstractPage;
 /**
  * Page used to mangage the applications{@link Application} subscribed by the
  * organism{@link Organism}<br />
- * 
+ *
  * Corresponding tapestry template file is :
  * src/main/resources/org/myec3/socle/webapp
  * /pages/organism/ManageSubscriptions.tml<br />
- * 
+ *
  * @see securityMyEc3Context.xml to know profiles authorized to display this
  *      page<br />
- * 
+ *
  * @author Anthony Colas <anthony.j.colas@atosorigin.com>
  * @author Denis Cucchietti <denis.cucchietti@atosorigin.com>
  * @author Maxime Capelle <maxime.capelle@atosorigin.com>
@@ -73,6 +58,9 @@ public class ManageSubscriptions extends AbstractPage {
 
 	@Property
 	private String errorMessage;
+
+	@Inject
+	private Messages messages;
 
 	/**
 	 * Business Service providing methods and specifics operations to synchronize
@@ -106,13 +94,9 @@ public class ManageSubscriptions extends AbstractPage {
 	@Named("agentProfileService")
 	private AgentProfileService agentProfileService;
 
-	/**
-	 * Business Service providing methods and specifics operations on
-	 * {@link Application} objects
-	 */
 	@Inject
-	@Named("applicationService")
-	private ApplicationService applicationService;
+	@Named("structureApplicationService")
+	private StructureApplicationService structureApplicationService;
 
 	@InjectPage
 	private View viewPage;
@@ -132,9 +116,14 @@ public class ManageSubscriptions extends AbstractPage {
 	@Inject
 	private PropertyAccess propertyAccess;
 
+	@Component(id = "modification_form")
+	private Form form;
+
 	private Application applicationLoop;
 
 	private List<Application> choosenApplications;
+
+    private List<StructureApplication> choosenStructureApplication;
 
 	private GenericListEncoder<Application> applicationEncoder;
 
@@ -143,17 +132,15 @@ public class ManageSubscriptions extends AbstractPage {
 	public boolean beginRender() {
 		List<Application> subscribableApplications = this.applicationService
 				.findAllApplicationByStructure(this.organism);
-		selectedApplications = new HashSet<Application>();
-		for (Application application : subscribableApplications) {
-			selectedApplications.add(application);
-		}
+		selectedApplications = new HashSet<>();
+		selectedApplications.addAll(subscribableApplications);
 		setSelectedApplications(selectedApplications);
 
 		return true;
 	}
 
 	@OnEvent(EventConstants.ACTIVATE)
-	public void Activation() {
+	public void activation() {
 		super.initUser();
 	}
 
@@ -179,10 +166,11 @@ public class ManageSubscriptions extends AbstractPage {
 		this.availableApplications = applicationService.findAllApplicationSubscribableByStructureTypeAndCustomer(
 				this.organism.getStructureType(), this.organism.getCustomer());
 
-		this.applicationEncoder = new GenericListEncoder<Application>(this.availableApplications);
+		this.applicationEncoder = new GenericListEncoder<>(this.availableApplications);
 
-		this.choosenApplications = new ArrayList<Application>();
+		this.choosenApplications = new ArrayList<>();
 
+		this.choosenStructureApplication = new ArrayList<>();
 		// Check if loggedUser can access to this organism
 		return this.hasRights(this.organism);
 	}
@@ -205,16 +193,38 @@ public class ManageSubscriptions extends AbstractPage {
 		this.availableApplications = applicationService.findAllApplicationSubscribableByStructureTypeAndCustomer(
 				this.organism.getStructureType(), this.organism.getCustomer());
 
-		this.applicationEncoder = new GenericListEncoder<Application>(this.availableApplications);
+		this.applicationEncoder = new GenericListEncoder<>(this.availableApplications);
 		this.idDouble = idDouble;
-		this.choosenApplications = new ArrayList<Application>();
-
+		this.choosenApplications = new ArrayList<>();
+		this.choosenStructureApplication = new ArrayList<>();
 		return Boolean.TRUE;
 	}
 
 	@OnEvent(EventConstants.PASSIVATE)
 	public Long onPassivate() {
 		return (this.organism != null) ? this.organism.getId() : null;
+	}
+
+
+	@OnEvent(value = EventConstants.VALIDATE, component = "modification_form")
+	public void onValidate() {
+
+		for (StructureApplication structureApplication : this.choosenStructureApplication) {
+			Optional<Application> application = this.choosenApplications.stream().filter(a ->
+					a.getId().equals(structureApplication.getStructureApplicationId().getApplicationsId()))
+					.findFirst();
+
+			if(!application.isPresent()) {
+				continue;
+			}
+			if (structureApplication.getNbMaxLicenses() == null) {
+				this.form.recordError(this.messages.get("empty-nbMaxLicenses-error"));
+			} else {
+				this.checkTooMuchSubscription(structureApplication.getNbMaxLicenses(), application.get());
+				this.checkExceededNbMaxLicenses(structureApplication.getNbMaxLicenses(), application.get());
+			}
+		}
+
 	}
 
 	@OnEvent(EventConstants.SUCCESS)
@@ -225,13 +235,11 @@ public class ManageSubscriptions extends AbstractPage {
 			List<Application> defaultApplications = this.applicationService
 					.findAllDefaultApplicationsByStructureTypeAndCustomer(this.organism.getStructureType(),
 							this.organism.getCustomer());
-			for (Application application : defaultApplications) {
-				this.choosenApplications.add(application);
-			}
+			this.choosenApplications.addAll(defaultApplications);
 
 			// Remove agents roles if applications have been removed
 			List<Application> oldApplications = this.applicationService.findAllApplicationByStructure(this.organism);
-			List<AgentProfile> agentList = new ArrayList<AgentProfile>();
+			List<AgentProfile> agentList = new ArrayList<>();
 			for (OrganismDepartment organismDepartment : this.organism.getDepartments()) {
 				agentList.addAll(organismDepartment.getAgents());
 			}
@@ -240,7 +248,7 @@ public class ManageSubscriptions extends AbstractPage {
 				if (!this.choosenApplications.contains(application)) {
 					for (AgentProfile agent : agentList) {
 						List<Role> aRoleList = this.roleService.findAllRoleByProfileAndApplication(agent, application);
-						List<Resource> rolesRemoved = new ArrayList<Resource>();
+						List<Resource> rolesRemoved = new ArrayList<>();
 
 						for (Role role : aRoleList) {
 							agent.removeRole(role);
@@ -276,6 +284,16 @@ public class ManageSubscriptions extends AbstractPage {
 
 			this.organism.setApplications(this.choosenApplications);
 			this.organismService.update(this.organism);
+
+			// Update nb max licenses on relation Structure <-> Application
+			for (StructureApplication structureApplication : this.choosenStructureApplication) {
+				Optional<Application> application = this.choosenApplications.stream().filter(a ->
+						a.getId().equals(structureApplication.getStructureApplicationId().getApplicationsId()))
+						.findFirst();
+				if (application.isPresent()) {
+					this.structureApplicationService.update(structureApplication);
+				}
+			}
 
 			// If the list of organism's applications has changed we send a
 			// notification to external applications
@@ -362,6 +380,63 @@ public class ManageSubscriptions extends AbstractPage {
 	public boolean isSelected() {
 		return getSelectedApplications().contains(getApplicationLoop());
 	}
+
+	public boolean isVisibleNbMaxLicenses(){
+		return getApplicationLoop().getNbMaxLicenses() != null && getApplicationLoop().getNbMaxLicenses() >= 0L;
+	}
+
+	public void setNbMaxLicenses(Long nbMaxLicenses) {
+		StructureApplication structureApplication = this.structureApplicationService.findByStructureAndApplication(this.organism, this.getApplicationLoop());
+		if (structureApplication != null) {
+			structureApplication.setNbMaxLicenses(nbMaxLicenses);
+			this.choosenStructureApplication.add(structureApplication);
+		} else {
+			this.choosenStructureApplication.add(new StructureApplication(this.organism.getId(), this.applicationLoop.getId(), nbMaxLicenses));
+		}
+	}
+
+	/**
+	 * Check if the new nbMaxLicenses Exceeded NbMaxLicenses on the application
+	 * @param nbMaxLicenses new nb max licenses
+	 * @param application application
+	 */
+	private void checkExceededNbMaxLicenses(Long nbMaxLicenses, Application application) {
+		Long sumNbMaxLicenses = 0L;
+		List<StructureApplication> structureApplicationList = this.structureApplicationService.findAllByApplication(application);
+		for (StructureApplication structureApplication : structureApplicationList) {
+			if(!structureApplication.getStructureApplicationId().getStructuresId().equals(this.organism.getId())){
+				sumNbMaxLicenses += structureApplication.getNbMaxLicenses();
+			}
+		}
+		if(application.getNbMaxLicenses() < (sumNbMaxLicenses + nbMaxLicenses)) {
+			this.form.recordError(String.format(this.messages.get("application-nbMaxLicenses-error"),(sumNbMaxLicenses + nbMaxLicenses) - application.getNbMaxLicenses() ,application.getLabel(),application.getNbMaxLicenses()));
+		}
+	}
+
+	/**
+	 * Check if the new nbMaxLicenses is under of the current nbSubscription
+	 * @param nbMaxLicenses new nb max licenses
+	 * @param application application
+	 */
+	private void checkTooMuchSubscription(Long nbMaxLicenses, Application application) {
+
+		List<AgentProfile> agentProfiles = this.agentProfileService.findAllAgentProfilesByOrganismAndApplication(this.organism, application);
+		long nbSubscription = agentProfiles.size();
+		if(nbSubscription > nbMaxLicenses) {
+			this.form.recordError(String.format(this.messages.get("structure-nbMaxLicenses-error"),nbSubscription - nbMaxLicenses,application.getLabel()));
+		}
+
+	}
+
+
+    public Long getNbMaxLicenses() {
+        StructureApplication structureApplication = this.structureApplicationService.findByStructureAndApplication(this.organism, this.getApplicationLoop());
+        if (structureApplication != null) {
+            return structureApplication.getNbMaxLicenses();
+        }
+        return null;
+    }
+
 
 	/**
 	 * Add application to the selected set if selected.
