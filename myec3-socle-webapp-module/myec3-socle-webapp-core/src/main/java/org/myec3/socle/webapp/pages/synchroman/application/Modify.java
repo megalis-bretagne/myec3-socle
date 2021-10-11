@@ -1,22 +1,19 @@
 /**
- *
  * This file is part of MyEc3.
- *
+ * <p>
  * MyEc3 is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License version 3 as published by
  * the Free Software Foundation.
- *
+ * <p>
  * MyEc3 is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
+ * <p>
  * You should have received a copy of the GNU Lesser General Public License
  * along with MyEc3. If not, see <http://www.gnu.org/licenses/>.
  */
 package org.myec3.socle.webapp.pages.synchroman.application;
-
-import javax.inject.Named;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -28,11 +25,7 @@ import org.apache.tapestry5.annotations.Property;
 import org.apache.tapestry5.corelib.components.Form;
 import org.apache.tapestry5.ioc.Messages;
 import org.apache.tapestry5.ioc.annotations.Inject;
-import org.myec3.socle.core.domain.model.Application;
-import org.myec3.socle.core.domain.model.Structure;
-import org.myec3.socle.core.domain.model.StructureApplication;
-import org.myec3.socle.core.domain.model.Company;
-import org.myec3.socle.core.domain.model.Organism;
+import org.myec3.socle.core.domain.model.*;
 import org.myec3.socle.core.domain.model.enums.StructureTypeValue;
 import org.myec3.socle.core.service.AgentProfileService;
 import org.myec3.socle.core.service.EmployeeProfileService;
@@ -40,18 +33,18 @@ import org.myec3.socle.core.service.StructureApplicationService;
 import org.myec3.socle.core.service.StructureService;
 import org.myec3.socle.webapp.pages.AbstractPage;
 
+import javax.inject.Named;
 import java.util.List;
 
 /**
  * Page used to modify the application{@link Application}<br />
- *
+ * <p>
  * Corresponding tapestry template file is :
  * src/main/resources/org/myec3/socle/webapp/pages/synchroman/application/Modify.tml<br
  * />
  *
  * @see securityMyEc3Context.xml to know profiles authorized to display this
- *      page<br />
- *
+ * page<br />
  */
 
 @SuppressWarnings("unused")
@@ -137,7 +130,7 @@ public class Modify extends AbstractPage {
     public Object onSuccess() {
         logger.debug("Enterring into method OnSuccess");
         // if add a nbMaxLicenses on the application then we set nbMaxLicenses on its structures
-        if(this.application.getNbMaxLicenses() != null && this.application.getNbMaxLicenses() > 0L){
+        if (this.application.getNbMaxLicenses() != null && this.application.getNbMaxLicenses() > 0L) {
             this.updateNbMaxLicensesStructure();
         } else {
             this.clearNbMaxLicensesStructure();
@@ -167,37 +160,35 @@ public class Modify extends AbstractPage {
         if (foundApplication != null && !foundApplication.getId().equals(this.application.getId())) {
             this.form.recordError(this.messages.get("application-exists-error"));
         }
-        // Check if nbMaxLicence is inferior at the number total of subscription.
-        if (isNbMaxLicensesInferiorToSubscription()) {
-            this.form.recordError(this.messages.get("application-nbMaxLicenses-error"));
-        }
+
+        this.checkNbMaxLicensesInferiorToSumStructure();
 
     }
 
-    private boolean isNbMaxLicensesInferiorToSubscription() {
+    /**
+     * check if the new value is less than the total of NbLicensesMax on each structure
+     */
+    private void checkNbMaxLicensesInferiorToSumStructure() {
         if (this.application.getNbMaxLicenses() != null && this.application.getNbMaxLicenses() > 0L) {
-            long licensesSubscribed = 0;
+            long sumNbMaxlicenses = 0;
 
             for (StructureApplication structureApplication : this.structureApplicationList) {
-                Structure structure = this.structureList.stream().filter(
-                        s -> s.getId().equals(structureApplication.getStructureApplicationId().getStructuresId())).findAny().orElse(null);
-                if (structure != null) {
-
-                    if (structure.getStructureType().getValue().equals(StructureTypeValue.ORGANISM)) {
-                        licensesSubscribed += this.agentProfileService.findAllAgentProfilesByOrganismAndApplication((Organism) structure, this.application).size();
-                    } else {
-                        licensesSubscribed += this.employeeProfileService.findAllEmployeeProfilesByCompanyAndApplication((Company) structure, this.application).size();
-                    }
-
+                if (structureApplication.getNbMaxLicenses() != null) {
+                    sumNbMaxlicenses += structureApplication.getNbMaxLicenses();
                 }
             }
-            return licensesSubscribed > this.application.getNbMaxLicenses();
+
+            if (sumNbMaxlicenses > this.application.getNbMaxLicenses()) {
+                this.form.recordError(String.format(this.messages.get("application-nbMaxLicenses-error"), sumNbMaxlicenses));
+            }
         }
-        return false;
     }
 
-    private void updateNbMaxLicensesStructure(){
-        for (StructureApplication structureApplication :this. structureApplicationList) {
+    /**
+     * The NbMaxLicenses on each structures is determined in relation to its already subscribed profiles
+     */
+    private void updateNbMaxLicensesStructure() {
+        for (StructureApplication structureApplication : this.structureApplicationList) {
             Structure structure = this.structureList.stream().filter(
                     s -> s.getId().equals(structureApplication.getStructureApplicationId().getStructuresId())).findAny().orElse(null);
             if (structure != null && structureApplication.getNbMaxLicenses() == null) {
@@ -212,7 +203,10 @@ public class Modify extends AbstractPage {
         }
     }
 
-    private void clearNbMaxLicensesStructure(){
+    /**
+     * Clear all NbMaxLicenses on its Structures
+     */
+    private void clearNbMaxLicensesStructure() {
         for (StructureApplication structureApplication : this.structureApplicationList) {
             this.structureList.stream().filter(
                     s -> s.getId().equals(structureApplication.getStructureApplicationId().getStructuresId())).findAny().ifPresent(structure -> structureApplication.setNbMaxLicenses(null));
