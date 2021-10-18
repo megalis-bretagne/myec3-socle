@@ -218,7 +218,7 @@ public class ManageSubscriptions extends AbstractPage {
 				continue;
 			}
 			if (structureApplication.getNbMaxLicenses() == null) {
-				this.form.recordError(this.messages.get("empty-nbMaxLicenses-error"));
+				this.form.recordError(String.format(this.messages.get("empty-nbMaxLicenses-error"),application.get().getLabel()));
 			} else {
 				this.checkTooMuchSubscription(structureApplication.getNbMaxLicenses(), application.get());
 				this.checkExceededNbMaxLicenses(structureApplication.getNbMaxLicenses(), application.get());

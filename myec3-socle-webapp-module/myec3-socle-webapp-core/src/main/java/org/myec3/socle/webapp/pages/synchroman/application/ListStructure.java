@@ -44,8 +44,10 @@ public class ListStructure extends AbstractPage {
     @Named("employeeProfileService")
     private EmployeeProfileService employeeProfileService;
 
+    @Persist
     private Application application;
 
+    @Persist
     private List<RowTable> rowTables;
 
     @Property
@@ -72,41 +74,45 @@ public class ListStructure extends AbstractPage {
 
     @OnEvent(EventConstants.ACTIVATE)
     public Object onActivate(Long id) {
-        this.rowTables = new ArrayList<>();
-        this.application = this.applicationService.findOne(id);
 
-        if (null == this.application) {
-            return Index.class;
-        }
-        List<Structure> structureList = this.structureService.findAllStructureByApplication(this.application);
-        List<StructureApplication> structureApplicationList = this.structureApplicationService.findAllByApplication(this.application);
-        for (StructureApplication structureApplication : structureApplicationList) {
-            Structure structure = structureList.stream().filter(
-                    s -> s.getId().equals(structureApplication.getStructureApplicationId().getStructuresId())).findAny().orElse(null);
-            if (structure != null) {
-                RowTable rowTable = new RowTable(
-                        structure.getId(),
-                        structure.getLabel(),
-                        structureApplication.getNbMaxLicenses(),
-                        structure.getStructureType().getValue());
-
-                if (structure.getStructureType().getValue().equals(StructureTypeValue.ORGANISM)) {
-                    rowTable.setnbLicensesUsed(this.getnbLicensesByOrganism((Organism) structure));
-                } else {
-                    rowTable.setnbLicensesUsed(this.getnbLicensesByCompany((Company) structure));
-                }
-                this.rowTables.add(rowTable);
+        // get Data if scope changed
+        if (this.application == null || !id.equals(this.application.getId())) {
+            this.application = this.applicationService.findOne(id);
+            if (null == this.application) {
+                return Index.class;
             }
+            this.rowTables = new ArrayList<>();
 
+            List<Structure> structureList = this.structureService.findAllStructureByApplication(this.application);
+            List<StructureApplication> structureApplicationList = this.structureApplicationService.findAllByApplication(this.application);
+            for (StructureApplication structureApplication : structureApplicationList) {
+                Structure structure = structureList.stream().filter(
+                        s -> s.getId().equals(structureApplication.getStructureApplicationId().getStructuresId())).findAny().orElse(null);
+                if (structure != null) {
+                    RowTable rowTable = new RowTable(
+                            structure.getId(),
+                            structure.getLabel(),
+                            structureApplication.getNbMaxLicenses(),
+                            structure.getStructureType().getValue());
+
+                    if (structure.getStructureType().getValue().equals(StructureTypeValue.ORGANISM)) {
+                        rowTable.setnbLicensesUsed(this.getnbLicensesByOrganism((Organism) structure));
+                    } else {
+                        rowTable.setnbLicensesUsed(this.getnbLicensesByCompany((Company) structure));
+                    }
+                    this.rowTables.add(rowTable);
+                }
+
+            }
         }
-
         return true;
     }
 
     @SetupRender
     public void setupGrid() {
         rowTableGrid.getSortModel().clear();
-        rowTableGrid.getSortModel().updateSort("label");
+        rowTableGrid.getSortModel().updateSort("nbLicensesUsed");
+        rowTableGrid.getSortModel().updateSort("nbLicensesUsed");
     }
 
     public BeanModel<RowTable> getGridModel() {
