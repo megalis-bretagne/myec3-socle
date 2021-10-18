@@ -37,7 +37,7 @@ import org.myec3.socle.webapp.constants.GuWebAppConstants;
 import org.myec3.socle.webapp.entities.MenuItem;
 import org.myec3.socle.webapp.pages.AbstractPage;
 import org.myec3.socle.webapp.pages.Index;
-import org.myec3.socle.webapp.pages.synchroman.synchronization.Search;
+import org.myec3.socle.webapp.pages.synchroman.SynchromanSearch;
 
 import javax.inject.Named;
 import java.util.ArrayList;
@@ -151,7 +151,7 @@ public class Layout extends AbstractPage {
 			// MEGALIS-132 : add menu Synchro pour Super Admin
 			if (BooleanUtils.isTrue(this.getIsAdmin())) {
 				mainMenuList.add(new MenuItem(this.getMessages().get("sycnhro-label"),
-						Search.class, true));
+						SynchromanSearch.class, true));
 			}
 		} else
 			mainMenuList.add(new MenuItem(this.getMessages().get("login-label"), Index.class, true));
