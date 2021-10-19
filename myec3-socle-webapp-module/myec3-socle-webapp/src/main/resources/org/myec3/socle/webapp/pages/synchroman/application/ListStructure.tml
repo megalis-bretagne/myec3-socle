@@ -42,7 +42,7 @@
                             ${row.nbLicensesUsed}
                     </t:parameter>
                 </table>
-                <br>
+                <br/>
                 <ul class="links">
                     <li class="back"><t:pagelink page="synchroman/application/Searchresult">${message:back-searchresult-label}</t:pagelink></li>
                 </ul>

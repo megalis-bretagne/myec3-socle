@@ -105,10 +105,8 @@ public class JpaEmployeeProfileDao extends JpaGenericProfileDao<EmployeeProfile>
 			Query query = this.getEm()
 					.createQuery("SELECT ep FROM " + this.getDomainClass().getSimpleName() + " ep "
 							+ "INNER JOIN ep.companyDepartment cd "
-							+ "INNER JOIN cd.company c "
 							+ "INNER JOIN ep.roles role "
-							+ "WHERE cd.company = :company AND ep.enabled is true AND :application MEMBER OF c.applications "
-							+ "AND role in (select r from Role r where r.application = :application)"
+							+ "WHERE cd.company = :company AND ep.enabled is true AND role.application = :application"
 					);
 			query.setParameter("company", company);
 			query.setParameter("application", application);

@@ -101,10 +101,8 @@ public class JpaAgentProfileDao extends JpaGenericProfileDao<AgentProfile> imple
 			Query query = this.getEm()
 					.createQuery("SELECT ap FROM " + this.getDomainClass().getSimpleName() + " ap "
 							+ "INNER JOIN ap.organismDepartment od "
-							+ "INNER JOIN od.organism o "
 							+ "INNER JOIN ap.roles role "
-							+ "WHERE od.organism = :organism AND ap.enabled is true AND :application MEMBER OF o.applications "
-							+ "AND role in (select r from Role r where r.application = :application)"
+							+ "WHERE od.organism = :organism AND ap.enabled is true AND role.application = :application"
 					);
 			query.setParameter("organism", organism);
 			query.setParameter("application", application);
