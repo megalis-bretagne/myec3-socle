@@ -7,6 +7,7 @@ import org.apache.tapestry5.beaneditor.BeanModel;
 import org.apache.tapestry5.corelib.components.Grid;
 import org.apache.tapestry5.ioc.annotations.Inject;
 import org.apache.tapestry5.services.BeanModelSource;
+import org.apache.tapestry5.services.Request;
 import org.myec3.socle.core.domain.model.*;
 import org.myec3.socle.core.domain.model.enums.StructureTypeValue;
 import org.myec3.socle.core.service.AgentProfileService;
@@ -62,6 +63,9 @@ public class ListStructure extends AbstractPage {
     @Component
     private Grid rowTableGrid;
 
+    @Inject
+    private Request request;
+
     @OnEvent(EventConstants.ACTIVATE)
     public void activation() {
         super.initUser();
@@ -75,8 +79,11 @@ public class ListStructure extends AbstractPage {
     @OnEvent(EventConstants.ACTIVATE)
     public Object onActivate(Long id) {
 
+        // if listParameter is not empty then the user navigates between pagination
+        List<String> listParameter = this.request.getParameterNames();
+
         // get Data if scope changed
-        if (this.application == null || !id.equals(this.application.getId())) {
+        if (this.application == null || !id.equals(this.application.getId()) || listParameter.isEmpty()) {
             this.application = this.applicationService.findOne(id);
             if (null == this.application) {
                 return Index.class;
