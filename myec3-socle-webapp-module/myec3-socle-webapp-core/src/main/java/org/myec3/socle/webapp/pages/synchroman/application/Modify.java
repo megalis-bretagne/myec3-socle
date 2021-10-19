@@ -1,22 +1,19 @@
 /**
- * 
  * This file is part of MyEc3.
- * 
+ * <p>
  * MyEc3 is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License version 3 as published by
  * the Free Software Foundation.
- * 
+ * <p>
  * MyEc3 is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- * 
+ * <p>
  * You should have received a copy of the GNU Lesser General Public License
  * along with MyEc3. If not, see <http://www.gnu.org/licenses/>.
  */
 package org.myec3.socle.webapp.pages.synchroman.application;
-
-import javax.inject.Named;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -25,122 +22,199 @@ import org.apache.tapestry5.annotations.Component;
 import org.apache.tapestry5.annotations.InjectPage;
 import org.apache.tapestry5.annotations.OnEvent;
 import org.apache.tapestry5.annotations.Property;
-import org.apache.tapestry5.annotations.Service;
 import org.apache.tapestry5.corelib.components.Form;
 import org.apache.tapestry5.ioc.Messages;
 import org.apache.tapestry5.ioc.annotations.Inject;
-import org.myec3.socle.core.domain.model.Application;
+import org.myec3.socle.core.domain.model.*;
 import org.myec3.socle.core.domain.model.enums.StructureTypeValue;
-import org.myec3.socle.core.service.ApplicationService;
-import org.myec3.socle.core.service.StructureTypeApplicationService;
+import org.myec3.socle.core.service.AgentProfileService;
+import org.myec3.socle.core.service.EmployeeProfileService;
+import org.myec3.socle.core.service.StructureApplicationService;
+import org.myec3.socle.core.service.StructureService;
 import org.myec3.socle.webapp.pages.AbstractPage;
+
+import javax.inject.Named;
+import java.util.List;
 
 /**
  * Page used to modify the application{@link Application}<br />
- * 
+ * <p>
  * Corresponding tapestry template file is :
  * src/main/resources/org/myec3/socle/webapp/pages/synchroman/application/Modify.tml<br
  * />
- * 
- * @see securityMyEc3Context.xml to know profiles authorized to display this
- *      page<br />
  *
+ * @see securityMyEc3Context.xml to know profiles authorized to display this
+ * page<br />
  */
 
 @SuppressWarnings("unused")
 public class Modify extends AbstractPage {
 
-	private static final Logger logger = LogManager.getLogger(Modify.class);
+    private static final Logger logger = LogManager.getLogger(Modify.class);
 
-	/**
-	 * Business Service providing methods and specifics operations on
-	 * {@link Application} objects
-	 */
-	@Inject
-	@Named("applicationService")
-	private ApplicationService applicationService;
+    @InjectPage
+    private DetailApplication detailsApplicationPage;
 
-	@InjectPage
-	private DetailApplication detailsApplicationPage;
+    @Inject
+    @Named("structureService")
+    private StructureService structureService;
 
-	@Inject
-	@Service("structureTypeApplicationService")
-	private StructureTypeApplicationService structureTypeApplicationService;
+    @Inject
+    @Named("structureApplicationService")
+    private StructureApplicationService structureApplicationService;
 
-	@Property
-	private Application application;
-	@Property
-	private StructureTypeValue structureTypeValueSelected;
+    @Inject
+    @Named("agentProfileService")
+    private AgentProfileService agentProfileService;
 
-	// Services n pages
-	@Inject
-	private Messages messages;
+    @Inject
+    @Named("employeeProfileService")
+    private EmployeeProfileService employeeProfileService;
 
-	@Property
-	private String errorMessage;
+    @Property
+    private Application application;
+    @Property
+    private StructureTypeValue structureTypeValueSelected;
 
-	@Component(id = "modification_form")
-	private Form form;
+    // Services n pages
+    @Inject
+    private Messages messages;
 
-	// Page Activation n Passivation
-	@OnEvent(EventConstants.ACTIVATE)
-	public void Activation() {
-		super.initUser();
-	}
+    @Property
+    private String errorMessage;
 
-	/**
-	 * event activate
-	 */
+    @Component(id = "modification_form")
+    private Form form;
 
-	@OnEvent(EventConstants.ACTIVATE)
-	public Object onActivate() {
-		return this.detailsApplicationPage;
-	}
+    private List<Structure> structureList;
 
-	@OnEvent(EventConstants.ACTIVATE)
+    private List<StructureApplication> structureApplicationList;
 
-	public Object onActivate(Long id) {
-		this.application = this.applicationService.findOne(id);
-		if (null == this.application) {
-			logger.error("[OnActivate] no application was found with with id : " + id);
-			return Boolean.FALSE;
-		}
 
-		return Boolean.TRUE;
-	}
+    // Page Activation n Passivation
+    @OnEvent(EventConstants.ACTIVATE)
+    public void activation() {
+        super.initUser();
+    }
 
-	@OnEvent(EventConstants.PASSIVATE)
-	public Long onPassivate() {
-		return (this.application != null) ? this.application.getId() : null;
-	}
+    /**
+     * event activate
+     */
 
-	@OnEvent(EventConstants.SUCCESS)
-	public Object onSuccess() {
-		logger.debug("Enterring into method OnSuccess");
-		try {
-			this.applicationService.update(this.application);
-		} catch (Exception e) {
-			this.errorMessage = this.getMessages().get("recording-error-message");
-			return null;
-		}
-		this.detailsApplicationPage.setSuccessMessage(this.messages.get("recording-success-message"));
-		this.detailsApplicationPage.setApplication(this.application);
-		return this.detailsApplicationPage;
-	}
+    @OnEvent(EventConstants.ACTIVATE)
+    public Object onActivate() {
+        return this.detailsApplicationPage;
+    }
 
-	@OnEvent(EventConstants.CANCELED)
-	public Object onFormCancel() {
-		this.detailsApplicationPage.setApplication(this.application);
-		return View.class;
-	}
+    @OnEvent(EventConstants.ACTIVATE)
 
-	@OnEvent(value = EventConstants.VALIDATE, component = "modification_form")
-	public void onValidate() {
-		// Check if an application with the same name already exists
-		Application foundApplication = this.applicationService.findByName(application.getName());
-		if (foundApplication != null && foundApplication.getId() != this.application.getId()) {
-			this.form.recordError(this.messages.get("application-exists-error"));
-		}
-	}
+    public Object onActivate(Long id) {
+        this.application = this.applicationService.findOne(id);
+        if (null == this.application) {
+            logger.error("[OnActivate] no application was found with with id : {}", id);
+            return Boolean.FALSE;
+        }
+
+        this.structureList = this.structureService.findAllStructureByApplication(this.application);
+        this.structureApplicationList = this.structureApplicationService.findAllByApplication(this.application);
+
+        return Boolean.TRUE;
+    }
+
+    @OnEvent(EventConstants.PASSIVATE)
+    public Long onPassivate() {
+        return (this.application != null) ? this.application.getId() : null;
+    }
+
+    @OnEvent(EventConstants.SUCCESS)
+    public Object onSuccess() {
+        logger.debug("Enterring into method OnSuccess");
+        // if add a nbMaxLicenses on the application then we set nbMaxLicenses on its structures
+        if (this.application.getNbMaxLicenses() != null && this.application.getNbMaxLicenses() > 0L) {
+            this.updateNbMaxLicensesStructure();
+        } else {
+            this.clearNbMaxLicensesStructure();
+        }
+
+        try {
+            this.applicationService.update(this.application);
+        } catch (Exception e) {
+            this.errorMessage = this.getMessages().get("recording-error-message");
+            return null;
+        }
+        this.detailsApplicationPage.setSuccessMessage(this.messages.get("recording-success-message"));
+        this.detailsApplicationPage.setApplication(this.application);
+        return this.detailsApplicationPage;
+    }
+
+    @OnEvent(EventConstants.CANCELED)
+    public Object onFormCancel() {
+        this.detailsApplicationPage.setApplication(this.application);
+        return View.class;
+    }
+
+    @OnEvent(value = EventConstants.VALIDATE, component = "modification_form")
+    public void onValidate() {
+        // Check if an application with the same name already exists
+        Application foundApplication = this.applicationService.findByName(application.getName());
+        if (foundApplication != null && !foundApplication.getId().equals(this.application.getId())) {
+            this.form.recordError(this.messages.get("application-exists-error"));
+        }
+
+        this.checkNbMaxLicensesInferiorToSumStructure();
+
+    }
+
+    /**
+     * check if the new value is less than the total of NbLicensesMax on each structure
+     */
+    private void checkNbMaxLicensesInferiorToSumStructure() {
+        if (this.application.getNbMaxLicenses() != null && this.application.getNbMaxLicenses() > 0L) {
+            long sumNbMaxlicenses = 0;
+
+            for (StructureApplication structureApplication : this.structureApplicationList) {
+                if (structureApplication.getNbMaxLicenses() != null) {
+                    sumNbMaxlicenses += structureApplication.getNbMaxLicenses();
+                }
+            }
+
+            if (sumNbMaxlicenses > this.application.getNbMaxLicenses()) {
+                this.form.recordError(String.format(this.messages.get("application-nbMaxLicenses-error"), sumNbMaxlicenses));
+            }
+        }
+    }
+
+    /**
+     * The NbMaxLicenses on each structures is determined in relation to its already subscribed profiles
+     */
+    private void updateNbMaxLicensesStructure() {
+        for (StructureApplication structureApplication : this.structureApplicationList) {
+            Structure structure = this.structureList.stream().filter(
+                    s -> s.getId().equals(structureApplication.getStructureApplicationId().getStructuresId())).findAny().orElse(null);
+            if (structure != null && structureApplication.getNbMaxLicenses() == null) {
+                if (structure.getStructureType().getValue().equals(StructureTypeValue.ORGANISM)) {
+                    structureApplication.setNbMaxLicenses((long) this.agentProfileService.findAllAgentProfilesByOrganismAndApplication((Organism) structure, this.application).size());
+                } else {
+                    structureApplication.setNbMaxLicenses((long) this.employeeProfileService.findAllEmployeeProfilesByCompanyAndApplication((Company) structure, this.application).size());
+                }
+
+            }
+            this.structureApplicationService.update(structureApplication);
+        }
+    }
+
+    /**
+     * Clear all NbMaxLicenses on its Structures
+     */
+    private void clearNbMaxLicensesStructure() {
+        for (StructureApplication structureApplication : this.structureApplicationList) {
+            this.structureList.stream().filter(
+                    s -> s.getId().equals(structureApplication.getStructureApplicationId().getStructuresId())).findAny().ifPresent(structure -> structureApplication.setNbMaxLicenses(null));
+            this.structureApplicationService.update(structureApplication);
+        }
+
+    }
 
 }
+
+

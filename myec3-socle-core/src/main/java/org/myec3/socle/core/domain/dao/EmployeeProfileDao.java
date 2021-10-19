@@ -55,6 +55,16 @@ public interface EmployeeProfileDao extends GenericProfileDao<EmployeeProfile> {
 	List<EmployeeProfile> findAllByEstablishment(Establishment establishment);
 
 	/**
+	 * Find all subscribed employees associated directly to an {@link Company} and an {@link Application}. Only
+	 * enabled profiles will be returned
+	 * @param company EmployeeProfile's company
+	 * @param application Subscriber application
+	 * @return List of subscribed EmployeeProfiles associated to this Company and application
+	 */
+	List<EmployeeProfile> findAllEmployeeProfilesByCompanyAndApplication(Company company, Application application);
+
+
+	/**
 	 * Find {@link EmployeeProfile} which have administrator rights on GU
 	 * application
 	 * 

@@ -17,6 +17,7 @@
 	</t:if>
 
 	<t:form t:id="modification_form">
+	    <p t:banner="message:form-error"  t:type="errors" t:clientClass="errorDialogue"></p>
 		<fieldset>
 			<legend>${message:subscriptions-label}</legend>
 			<p>
@@ -34,21 +35,33 @@
 					title="${message:subscription-application-label}"><img
 					src="${context:static//images/pic_help.png}" class="picHelp"
 					alt="${message:help-label}" />
-				</a> <br /> <br />
-
-				<t:loop source="availableApplications" encoder="applicationEncoder"
-					value="applicationLoop" empty="block:empty">
-					<p>
-						<label class="service">${applicationLoop.label}</label>
-						<t:checkbox t:id="selected" t:value="selected" />
-					</p>
-				</t:loop>
+				</a>
+			</p>
+			<br /> <br />
+                <div style="display: grid;grid-template-columns: 350px 1fr;">
+                    <t:loop source="availableApplications" encoder="applicationEncoder"
+                        value="applicationLoop" empty="block:empty">
+                                       <div style="grid-column: 1 / 2;margin-left: auto;margin-bottom: 10px;">
+                                           <p style="width: auto;">
+                                                <label style="width:auto;" >${applicationLoop.label}</label>
+                                               <t:checkbox t:id="selected" t:value="selected"/>
+                                           </p>
+                                       </div>
+                                       <t:if test="visibleNbMaxLicenses">
+                                           <div style="grid-column: 2 / 3;margin-left: 50px;">
+                                              <p style="width: auto;">
+                                                   <label style="width:auto;padding-top: 5px;">Nombre de licences accordées</label>
+                                                   <t:textfield t:id="nbMaxLicenses" t:value="nbMaxLicenses" t:type="number"/>
+                                              </p>
+                                           </div>
+                                       </t:if>
+                    </t:loop>
+				</div>
 				<t:block t:id="empty">
 	                 <p class="empty">
 	        			${message:empty-message}
 	        		</p>
 	    		</t:block>
-			</p>
 			<t:if test="idDouble">
 				<t:hidden t:id="idDouble" t:value="idDouble" />
 			</t:if>

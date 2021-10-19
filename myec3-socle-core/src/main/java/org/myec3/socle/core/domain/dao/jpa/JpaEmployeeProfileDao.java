@@ -28,6 +28,7 @@ import org.myec3.socle.core.domain.model.Company;
 import org.myec3.socle.core.domain.model.CompanyDepartment;
 import org.myec3.socle.core.domain.model.EmployeeProfile;
 import org.myec3.socle.core.domain.model.Establishment;
+import org.myec3.socle.core.domain.model.Application;
 import org.myec3.socle.core.domain.model.enums.ResourceType;
 import org.myec3.socle.core.domain.model.enums.RoleProfile;
 import org.springframework.stereotype.Repository;
@@ -50,7 +51,7 @@ public class JpaEmployeeProfileDao extends JpaGenericProfileDao<EmployeeProfile>
 	@Override
 	@SuppressWarnings("unchecked")
 	public List<EmployeeProfile> findAllEmployeeByCompanyDepartment(CompanyDepartment companyDepartment) {
-		getLog().debug("Finding all EmployeeProfile by CompanyDepartment " + companyDepartment);
+		getLog().debug("Finding all EmployeeProfile by CompanyDepartment {}", companyDepartment);
 		try {
 			Query query = getEm().createQuery("select e from " + this.getDomainClass().getSimpleName() + " e "
 					+ "inner join e.companyDepartment c where c = :companyDepartment and e.enabled = :enabled");
@@ -62,7 +63,7 @@ public class JpaEmployeeProfileDao extends JpaGenericProfileDao<EmployeeProfile>
 		} catch (NoResultException re) {
 			// No result found, we return empty list instead of errors
 			getLog().warn("findAllEmployeeByCompanyDepartment returned no result.");
-			return new ArrayList<EmployeeProfile>();
+			return new ArrayList<>();
 		} catch (RuntimeException re) {
 			getLog().error("findAllEmployeeByCompanyDepartment failed.", re);
 			return null;
@@ -75,7 +76,7 @@ public class JpaEmployeeProfileDao extends JpaGenericProfileDao<EmployeeProfile>
 	@Override
 	@SuppressWarnings("unchecked")
 	public List<EmployeeProfile> findAllByEstablishment(Establishment establishment) {
-		getLog().debug("Finding all EmployeeProfile by Establishment " + establishment);
+		getLog().debug("Finding all EmployeeProfile by Establishment {}", establishment);
 		try {
 			Query query = getEm().createQuery("select e from " + this.getDomainClass().getSimpleName() + " e "
 					+ "inner join e.establishment es where es = :establishment and e.enabled = :enabled");
@@ -87,7 +88,7 @@ public class JpaEmployeeProfileDao extends JpaGenericProfileDao<EmployeeProfile>
 		} catch (NoResultException re) {
 			// No result found, we return empty list instead of errors
 			getLog().warn("findAllByEstablishment returned no result.");
-			return new ArrayList<EmployeeProfile>();
+			return new ArrayList<>();
 		} catch (RuntimeException re) {
 			getLog().error("findAllByEstablishment failed.", re);
 			return null;
@@ -98,9 +99,37 @@ public class JpaEmployeeProfileDao extends JpaGenericProfileDao<EmployeeProfile>
 	 * {@inheritDoc}
 	 */
 	@Override
+	public List<EmployeeProfile> findAllEmployeeProfilesByCompanyAndApplication(Company company, Application application) {
+		this.getLog().debug("Finding all subscribed Employee in company: {} and application : {}", company.getLabel(), application.getLabel());
+		try {
+			Query query = this.getEm()
+					.createQuery("SELECT ep FROM " + this.getDomainClass().getSimpleName() + " ep "
+							+ "INNER JOIN ep.companyDepartment cd "
+							+ "INNER JOIN ep.roles role "
+							+ "WHERE cd.company = :company AND ep.enabled is true AND role.application = :application"
+					);
+			query.setParameter("company", company);
+			query.setParameter("application", application);
+			List<EmployeeProfile> resourceList = query.getResultList();
+			this.getLog().debug("findAllEmployeeProfilesByCompanyAndApplication successfull.");
+			return resourceList;
+		} catch (NoResultException re) {
+			// No result found, we return null instead of errors
+			getLog().warn("findAllEmployeeProfilesByCompanyAndApplication returned no result.");
+			return new ArrayList<>();
+		} catch (RuntimeException re) {
+			this.getLog().error("findAllEmployeeProfilesByCompanyAndApplication failed.", re);
+			return null;
+		}
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	@SuppressWarnings("unchecked")
 	public List<EmployeeProfile> findAllGuAdministratorByCompanyId(Long companyId) {
-		this.getLog().debug("Finding GU administrators for the Company with UID: " + companyId);
+		this.getLog().debug("Finding GU administrators for the Company with UID: {}", companyId);
 		try {
 			Query query = getEm().createQuery("SELECT ep FROM " + this.getDomainClass().getSimpleName() + " ep "
 					+ "LEFT JOIN ep.roles r WHERE r.name = '" + RoleProfile.ROLE_MANAGER_EMPLOYEE
@@ -114,7 +143,7 @@ public class JpaEmployeeProfileDao extends JpaGenericProfileDao<EmployeeProfile>
 		} catch (NoResultException re) {
 			// No result found, we return null instead of errors
 			this.getLog().warn("findAllGuAdministratorByCompanyId returned no result.");
-			return new ArrayList<EmployeeProfile>();
+			return new ArrayList<>();
 		} catch (RuntimeException re) {
 			this.getLog().error("findAllGuAdministratorByCompanyId failed.", re);
 			return null;
@@ -127,7 +156,7 @@ public class JpaEmployeeProfileDao extends JpaGenericProfileDao<EmployeeProfile>
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<EmployeeProfile> findAllGuAdministratorEnabledByCompanyId(Long companyId) {
-		this.getLog().debug("Finding GU administrators enabled for the Company with UID: " + companyId);
+		this.getLog().debug("Finding GU administrators enabled for the Company with UID: {}", companyId);
 		try {
 			Query query = getEm().createQuery("SELECT ep FROM " + this.getDomainClass().getSimpleName() + " ep "
 					+ "LEFT JOIN ep.roles r WHERE r.name = '" + RoleProfile.ROLE_MANAGER_EMPLOYEE + "' AND ep.enabled="
@@ -141,7 +170,7 @@ public class JpaEmployeeProfileDao extends JpaGenericProfileDao<EmployeeProfile>
 		} catch (NoResultException re) {
 			// No result found, we return null instead of errors
 			this.getLog().warn("findAllGuAdministratorEnabledByCompanyId returned no result.");
-			return new ArrayList<EmployeeProfile>();
+			return new ArrayList<>();
 		} catch (RuntimeException re) {
 			this.getLog().error("findAllGuAdministratorEnabledByCompanyId failed.", re);
 			return null;

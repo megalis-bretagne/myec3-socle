@@ -1,17 +1,17 @@
 /**
  * Copyright (c) 2011 Atos Bourgogne
- * 
+ *
  * This file is part of MyEc3.
- * 
+ *
  * MyEc3 is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License version 3 as published by
  * the Free Software Foundation.
- * 
+ *
  * MyEc3 is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public License
  * along with MyEc3. If not, see <http://www.gnu.org/licenses/>.
  */
@@ -71,6 +71,7 @@ public class Application extends Resource {
 	private String url;
 	private String pictoUrl;
 	private String description;
+	private Long nbMaxLicenses;
 
 	/**
 	 * Default constructor. Do nothing.
@@ -140,7 +141,7 @@ public class Application extends Resource {
 	@JsonIgnore
 	public List<Role> getRoles() {
 		if (this.roles == null) {
-			this.roles = new ArrayList<Role>();
+			this.roles = new ArrayList<>();
 		}
 		return roles;
 	}
@@ -188,7 +189,7 @@ public class Application extends Resource {
 	 * 
 	 * @return the modified application
 	 */
-	public Application clearRoles(List<Role> role) {
+	public Application clearRoles() {
 		this.roles.clear();
 		return this;
 	}
@@ -207,7 +208,7 @@ public class Application extends Resource {
 	@JsonIgnore
 	public List<Structure> getStructures() {
 		if (this.structures == null) {
-			this.structures = new ArrayList<Structure>();
+			this.structures = new ArrayList<>();
 		}
 		return structures;
 	}
@@ -257,7 +258,7 @@ public class Application extends Resource {
 	 * 
 	 * @return the modified application
 	 */
-	public Application clearStructures(List<Structure> structures) {
+	public Application clearStructures() {
 		this.structures.clear();
 		return this;
 	}
@@ -306,7 +307,7 @@ public class Application extends Resource {
 	@JsonIgnore
 	public List<StructureTypeApplication> getStructureTypes() {
 		if (this.structureTypes == null) {
-			this.structureTypes = new ArrayList<StructureTypeApplication>();
+			this.structureTypes = new ArrayList<>();
 		}
 		return this.structureTypes;
 	}
@@ -359,17 +360,14 @@ public class Application extends Resource {
 		}
 		Application other = (Application) obj;
 		if (this.getId() == null) {
-			if (other.getId() != null) {
-				return false;
-			}
-		} else if (!this.getId().equals(other.getId())) {
-			return false;
+			return other.getId() == null;
+		} else {
+			return this.getId().equals(other.getId());
 		}
-		return true;
 	}
 
 	/**
-	 * Descroption of the application. i.e. what the goal of the application is
+	 * Description of the application. i.e. what the goal of the application is
 	 *
 	 * @return the url of the application
 	 */
@@ -380,6 +378,19 @@ public class Application extends Resource {
 
 	public void setDescription(String description) {
 		this.description = description;
+	}
+
+	/**
+	 * Max number of licenses for users for an application. If equals to 0 or null then unlimited license number
+	 *
+	 * @return Max number of licenses for users for an application
+	 */
+	public Long getNbMaxLicenses() {
+		return nbMaxLicenses;
+	}
+
+	public void setNbMaxLicenses(Long nbMaxLicenses) {
+		this.nbMaxLicenses = nbMaxLicenses;
 	}
 
 	/**

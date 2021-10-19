@@ -1,17 +1,17 @@
 /**
  * Copyright (c) 2011 Atos Bourgogne
- * 
+ *
  * This file is part of MyEc3.
- * 
+ *
  * MyEc3 is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License version 3 as published by
  * the Free Software Foundation.
- * 
+ *
  * MyEc3 is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public License
  * along with MyEc3. If not, see <http://www.gnu.org/licenses/>.
  */
@@ -36,9 +36,9 @@ import org.myec3.socle.core.domain.model.Company;
 import org.myec3.socle.core.domain.model.EmployeeProfile;
 import org.myec3.socle.core.domain.model.Resource;
 import org.myec3.socle.core.domain.model.Role;
-import org.myec3.socle.core.service.ApplicationService;
 import org.myec3.socle.core.service.EmployeeProfileService;
 import org.myec3.socle.core.service.RoleService;
+import org.myec3.socle.core.service.StructureApplicationService;
 import org.myec3.socle.synchro.api.SynchronizationNotificationService;
 import org.myec3.socle.synchro.api.constants.SynchronizationRelationsName;
 import org.myec3.socle.webapp.encoder.GenericListEncoder;
@@ -48,15 +48,15 @@ import org.myec3.socle.webapp.pages.Index;
 /**
  * Page used to modify roles{@link Role} of an employee{@link EmployeeProfile}
  * of a company {@link Company}<br />
- * 
+ *
  * Corresponding tapestry template file is :<br />
  * src/main/resources/org/myec3/socle/webapp/pages/company/employee/ModifyRoles.
  * tml<br />
- * 
+ *
  * @see securityMyEc3Context.xml to know profiles authorized to display this
  *      page<br />
- * 
- * 
+ *
+ *
  * @author Maxime Capelle <maxime.capelle@atosorigin.com>
  * @author Denis Cucchietti <denis.cucchietti@atosorigin.com>
  */
@@ -87,13 +87,10 @@ public class ModifyRoles extends AbstractPage {
 	@Named("roleService")
 	private RoleService roleService;
 
-	/**
-	 * Business Service providing methods and specifics operations on
-	 * {@link Application} objects
-	 */
-	@Inject
-	@Named("applicationService")
-	private ApplicationService applicationService;
+    @Inject
+    @Named("structureApplicationService")
+    private StructureApplicationService structureApplicationService;
+
 
 	@Persist(PersistenceConstants.FLASH)
 	private String successMessage;
@@ -135,7 +132,7 @@ public class ModifyRoles extends AbstractPage {
 	}
 
 	/**
-	 * @param id : profile id
+	 * @param profileId : profile id
 	 * @return : current page if logged user is allowed to display this page else
 	 *         return Index page
 	 */
@@ -143,7 +140,7 @@ public class ModifyRoles extends AbstractPage {
 	public Object onActivate(Long profileId) {
 		super.initUser();
 
-		this.selectedRoles = new ArrayList<Role>();
+		this.selectedRoles = new ArrayList<>();
 
 		this.employeeProfile = this.employeeProfileService.findOne(profileId);
 		if (null == this.employeeProfile) {
@@ -168,7 +165,7 @@ public class ModifyRoles extends AbstractPage {
 		// Manage roles of the employee
 		this.employeeRoles = this.employeeProfile.getRoles();
 		if ((null == this.employeeRoles) || (this.employeeRoles.isEmpty())) {
-			this.employeeRoles = new ArrayList<Role>();
+			this.employeeRoles = new ArrayList<>();
 			List<Application> applications = this.employeeProfile.getCompanyDepartment().getCompany().getApplications();
 			for (Application application : applications) {
 				Role role = this.roleService
@@ -181,7 +178,7 @@ public class ModifyRoles extends AbstractPage {
 		// Check if loggedUser can access to this user
 		return this.hasRights(this.employeeProfile);
 
-	}
+    }
 
 	public Object onPassivate() {
 		return (this.employeeProfile != null) ? this.employeeProfile.getId() : null;
@@ -193,8 +190,8 @@ public class ModifyRoles extends AbstractPage {
 		try {
 			// Retrieve added and removed roles
 			List<Role> employeeCurrentRoles = this.employeeProfile.getRoles();
-			List<Resource> rolesRemoved = new ArrayList<Resource>();
-			List<Resource> rolesAdded = new ArrayList<Resource>();
+			List<Resource> rolesRemoved = new ArrayList<>();
+			List<Resource> rolesAdded = new ArrayList<>();
 
 			// Roles removed
 			for (Role role : employeeCurrentRoles) {
@@ -203,12 +200,16 @@ public class ModifyRoles extends AbstractPage {
 				}
 			}
 
-			// Roles added
-			for (Role role : this.selectedRoles) {
-				if (!employeeCurrentRoles.contains(role)) {
-					rolesAdded.add(role);
-				}
-			}
+            // Roles added
+            for (Role role : this.selectedRoles) {
+                if (!employeeCurrentRoles.contains(role)) {
+                    if (isTooMuchSubscription(role)) {
+                        this.errorMessage = String.format(this.getMessages().get("toomuchsubscription-error-message"), role.getApplication().getLabel());
+                        return null;
+                    }
+                    rolesAdded.add(role);
+                }
+            }
 
 			this.employeeProfile.setRoles(this.selectedRoles);
 			this.employeeProfileService.update(this.employeeProfile);
@@ -229,11 +230,22 @@ public class ModifyRoles extends AbstractPage {
 		}
 	}
 
-	@OnEvent(EventConstants.CANCELED)
-	public Object onFormCancel() {
-		this.viewPage.setEmployeeProfile(this.employeeProfile);
-		return View.class;
-	}
+    private boolean isTooMuchSubscription(Role role) {
+		Long nbMaxLicenses = this.structureApplicationService.findByStructureAndApplication(this.employeeProfile.getCompanyDepartment().getCompany(), role.getApplication()).getNbMaxLicenses();
+		if(nbMaxLicenses == null){
+			return false;
+		}
+        List<EmployeeProfile> employeeProfiles = this.employeeProfileService.findAllEmployeeProfilesByCompanyAndApplication(this.employeeProfile.getCompanyDepartment().getCompany(), role.getApplication());
+        long nbSubscription = employeeProfiles.size();
+        return nbSubscription >= nbMaxLicenses;
+
+    }
+
+    @OnEvent(EventConstants.CANCELED)
+    public Object onFormCancel() {
+        this.viewPage.setEmployeeProfile(this.employeeProfile);
+        return View.class;
+    }
 
 	// Getters n Setters
 
@@ -256,15 +268,14 @@ public class ModifyRoles extends AbstractPage {
 	public GenericListEncoder<Role> getRoleEncoder() {
 		List<Role> availableRoles = this.roleService.findAllRoleByProfileTypeAndApplication(
 				this.employeeProfile.getProfileType(), this.roleLoop.getApplication());
-		GenericListEncoder<Role> encoder = new GenericListEncoder<Role>(availableRoles);
-		return encoder;
+		return new GenericListEncoder<>(availableRoles);
 	}
 
 	public Map<Role, String> getRolesModel() {
 		List<Role> availableRoles = this.roleService.findAllRoleByProfileTypeAndApplication(
 				this.employeeProfile.getProfileType(), this.roleLoop.getApplication());
 
-		Map<Role, String> roles = new LinkedHashMap<Role, String>();
+		Map<Role, String> roles = new LinkedHashMap<>();
 		for (Role role : availableRoles) {
 			roles.put(role, role.getLabel());
 		}
@@ -273,8 +284,7 @@ public class ModifyRoles extends AbstractPage {
 	}
 
 	public GenericListEncoder<Role> getEmployeeRolesEncoder() {
-		GenericListEncoder<Role> encoder = new GenericListEncoder<Role>(this.employeeRoles);
-		return encoder;
+		return new GenericListEncoder<>(this.employeeRoles);
 	}
 
 	public Role getRoleLoop() {
@@ -296,7 +306,7 @@ public class ModifyRoles extends AbstractPage {
 	/**
 	 * Returns TRUE if the current application can be displayed to the user (for
 	 * role management);
-	 * 
+	 *
 	 * @return
 	 */
 	public Boolean getDisplayedApplication() {
