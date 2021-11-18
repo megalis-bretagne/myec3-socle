@@ -90,6 +90,7 @@ public abstract class Structure extends Resource {
 	private Long createdUserId;
 
 	private List<Application> applications = new ArrayList<>();
+	private List<StructureApplicationInfo> structureApplicationInfos = new ArrayList<>();
 	private List<Structure> parentStructures = new ArrayList<>();
 	private List<Structure> childStructures = new ArrayList<>();
 
@@ -195,6 +196,25 @@ public abstract class Structure extends Resource {
 	@XmlElement(name = "application", required = false)
 	public List<Application> getApplications() {
 		return applications;
+	}
+
+
+
+	/**
+	 * Information about the link between Structure & application.
+	 *
+	 * @return the list of structureApplicationInfo for this structure
+	 */
+	@OneToMany(mappedBy = "application")
+	@LazyCollection(LazyCollectionOption.TRUE)
+	@XmlTransient
+	@JsonIgnore
+	public List<StructureApplicationInfo> getStructureApplicationInfos() {
+		return structureApplicationInfos;
+	}
+
+	public void setStructureApplicationInfos(List<StructureApplicationInfo> structureApplicationInfos) {
+		this.structureApplicationInfos = structureApplicationInfos;
 	}
 
 	/**

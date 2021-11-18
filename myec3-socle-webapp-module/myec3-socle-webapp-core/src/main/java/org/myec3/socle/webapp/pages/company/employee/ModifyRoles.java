@@ -31,14 +31,10 @@ import org.apache.tapestry5.annotations.OnEvent;
 import org.apache.tapestry5.annotations.Persist;
 import org.apache.tapestry5.annotations.Property;
 import org.apache.tapestry5.ioc.annotations.Inject;
-import org.myec3.socle.core.domain.model.Application;
-import org.myec3.socle.core.domain.model.Company;
-import org.myec3.socle.core.domain.model.EmployeeProfile;
-import org.myec3.socle.core.domain.model.Resource;
-import org.myec3.socle.core.domain.model.Role;
+import org.myec3.socle.core.domain.model.*;
 import org.myec3.socle.core.service.EmployeeProfileService;
 import org.myec3.socle.core.service.RoleService;
-import org.myec3.socle.core.service.StructureApplicationService;
+import org.myec3.socle.core.service.StructureApplicationInfoService;
 import org.myec3.socle.synchro.api.SynchronizationNotificationService;
 import org.myec3.socle.synchro.api.constants.SynchronizationRelationsName;
 import org.myec3.socle.webapp.encoder.GenericListEncoder;
@@ -88,8 +84,8 @@ public class ModifyRoles extends AbstractPage {
 	private RoleService roleService;
 
     @Inject
-    @Named("structureApplicationService")
-    private StructureApplicationService structureApplicationService;
+    @Named("structureApplicationInfoService")
+    private StructureApplicationInfoService structureApplicationInfoService;
 
 
 	@Persist(PersistenceConstants.FLASH)
@@ -231,13 +227,16 @@ public class ModifyRoles extends AbstractPage {
 	}
 
     private boolean isTooMuchSubscription(Role role) {
-		Long nbMaxLicenses = this.structureApplicationService.findByStructureAndApplication(this.employeeProfile.getCompanyDepartment().getCompany(), role.getApplication()).getNbMaxLicenses();
-		if(nbMaxLicenses == null){
+		if (role.getApplication().getNbMaxLicenses() == null){
+			return false;
+		}
+		StructureApplicationInfo structureApplicationInfo = this.structureApplicationInfoService.findByStructureAndApplication(this.employeeProfile.getCompanyDepartment().getCompany(), role.getApplication());
+		if (structureApplicationInfo == null || structureApplicationInfo.getNbMaxLicenses() == null) {
 			return false;
 		}
         List<EmployeeProfile> employeeProfiles = this.employeeProfileService.findAllEmployeeProfilesByCompanyAndApplication(this.employeeProfile.getCompanyDepartment().getCompany(), role.getApplication());
         long nbSubscription = employeeProfiles.size();
-        return nbSubscription >= nbMaxLicenses;
+        return nbSubscription >= structureApplicationInfo.getNbMaxLicenses();
 
     }
 

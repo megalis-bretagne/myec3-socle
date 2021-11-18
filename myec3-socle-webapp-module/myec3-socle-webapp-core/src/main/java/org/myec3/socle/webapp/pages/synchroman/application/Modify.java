@@ -29,7 +29,7 @@ import org.myec3.socle.core.domain.model.*;
 import org.myec3.socle.core.domain.model.enums.StructureTypeValue;
 import org.myec3.socle.core.service.AgentProfileService;
 import org.myec3.socle.core.service.EmployeeProfileService;
-import org.myec3.socle.core.service.StructureApplicationService;
+import org.myec3.socle.core.service.StructureApplicationInfoService;
 import org.myec3.socle.core.service.StructureService;
 import org.myec3.socle.webapp.pages.AbstractPage;
 
@@ -60,8 +60,8 @@ public class Modify extends AbstractPage {
     private StructureService structureService;
 
     @Inject
-    @Named("structureApplicationService")
-    private StructureApplicationService structureApplicationService;
+    @Named("structureApplicationInfoService")
+    private StructureApplicationInfoService structureApplicationInfoService;
 
     @Inject
     @Named("agentProfileService")
@@ -88,7 +88,7 @@ public class Modify extends AbstractPage {
 
     private List<Structure> structureList;
 
-    private List<StructureApplication> structureApplicationList;
+    private List<StructureApplicationInfo> structureApplicationInfoList;
 
 
     // Page Activation n Passivation
@@ -116,7 +116,7 @@ public class Modify extends AbstractPage {
         }
 
         this.structureList = this.structureService.findAllStructureByApplication(this.application);
-        this.structureApplicationList = this.structureApplicationService.findAllByApplication(this.application);
+        this.structureApplicationInfoList = this.structureApplicationInfoService.findAllByApplication(this.application);
 
         return Boolean.TRUE;
     }
@@ -172,9 +172,9 @@ public class Modify extends AbstractPage {
         if (this.application.getNbMaxLicenses() != null && this.application.getNbMaxLicenses() > 0L) {
             long sumNbMaxlicenses = 0;
 
-            for (StructureApplication structureApplication : this.structureApplicationList) {
-                if (structureApplication.getNbMaxLicenses() != null) {
-                    sumNbMaxlicenses += structureApplication.getNbMaxLicenses();
+            for (StructureApplicationInfo structureApplicationInfo : this.structureApplicationInfoList) {
+                if (structureApplicationInfo.getNbMaxLicenses() != null) {
+                    sumNbMaxlicenses += structureApplicationInfo.getNbMaxLicenses();
                 }
             }
 
@@ -188,18 +188,18 @@ public class Modify extends AbstractPage {
      * The NbMaxLicenses on each structures is determined in relation to its already subscribed profiles
      */
     private void updateNbMaxLicensesStructure() {
-        for (StructureApplication structureApplication : this.structureApplicationList) {
+        for (StructureApplicationInfo structureApplicationInfo : this.structureApplicationInfoList) {
             Structure structure = this.structureList.stream().filter(
-                    s -> s.getId().equals(structureApplication.getStructureApplicationId().getStructuresId())).findAny().orElse(null);
-            if (structure != null && structureApplication.getNbMaxLicenses() == null) {
+                    s -> s.getId().equals(structureApplicationInfo.getStructureApplicationInfoId().getStructuresId())).findAny().orElse(null);
+            if (structure != null && structureApplicationInfo.getNbMaxLicenses() == null) {
                 if (structure.getStructureType().getValue().equals(StructureTypeValue.ORGANISM)) {
-                    structureApplication.setNbMaxLicenses((long) this.agentProfileService.findAllAgentProfilesByOrganismAndApplication((Organism) structure, this.application).size());
+                    structureApplicationInfo.setNbMaxLicenses((long) this.agentProfileService.findAllAgentProfilesByOrganismAndApplication((Organism) structure, this.application).size());
                 } else {
-                    structureApplication.setNbMaxLicenses((long) this.employeeProfileService.findAllEmployeeProfilesByCompanyAndApplication((Company) structure, this.application).size());
+                    structureApplicationInfo.setNbMaxLicenses((long) this.employeeProfileService.findAllEmployeeProfilesByCompanyAndApplication((Company) structure, this.application).size());
                 }
 
             }
-            this.structureApplicationService.update(structureApplication);
+            this.structureApplicationInfoService.update(structureApplicationInfo);
         }
     }
 
@@ -207,10 +207,10 @@ public class Modify extends AbstractPage {
      * Clear all NbMaxLicenses on its Structures
      */
     private void clearNbMaxLicensesStructure() {
-        for (StructureApplication structureApplication : this.structureApplicationList) {
+        for (StructureApplicationInfo structureApplicationInfo : this.structureApplicationInfoList) {
             this.structureList.stream().filter(
-                    s -> s.getId().equals(structureApplication.getStructureApplicationId().getStructuresId())).findAny().ifPresent(structure -> structureApplication.setNbMaxLicenses(null));
-            this.structureApplicationService.update(structureApplication);
+                    s -> s.getId().equals(structureApplicationInfo.getStructureApplicationInfoId().getStructuresId())).findAny().ifPresent(structure -> structureApplicationInfo.setNbMaxLicenses(null));
+            this.structureApplicationInfoService.update(structureApplicationInfo);
         }
 
     }
