@@ -1,17 +1,17 @@
 /**
  * Copyright (c) 2011 Atos Bourgogne
- * 
+ *
  * This file is part of MyEc3.
- * 
+ *
  * MyEc3 is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License version 3 as published by
  * the Free Software Foundation.
- * 
+ *
  * MyEc3 is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public License
  * along with MyEc3. If not, see <http://www.gnu.org/licenses/>.
  */
@@ -42,19 +42,20 @@ import org.myec3.socle.webapp.pages.Index;
 
 import javax.inject.Named;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Page used to modify roles{@link Role} of an agent
  * profile{@link AgentProfile}<br />
- * 
+ *
  * Corresponding tapestry template file is :<br />
  * src/main/resources/org/myec3/socle/webapp/pages/organism/agent/ModifyRoles.
  * tml<br />
- * 
+ *
  * @see securityMyEc3Context.xml to know profiles authorized to display this
  *      page<br />
- * 
- * 
+ *
+ *
  * @author Maxime Capelle <maxime.capelle@atosorigin.com>
  * @author Denis Cucchietti <denis.cucchietti@atosorigin.com>
  */
@@ -310,7 +311,12 @@ public class ModifyRoles extends AbstractPage {
 
 	private boolean isTooMuchSubscription(Role role) {
 		Long nbMaxLicenses = this.structureApplicationService.findByStructureAndApplication(this.agentProfile.getOrganismDepartment().getOrganism(), role.getApplication()).getNbMaxLicenses();
-		if(nbMaxLicenses == null){
+		if (nbMaxLicenses == null) {
+			return false;
+		}
+		// The agents has already a role on this application
+		List<Application> agentSubscribedApplications = this.agentProfile.getRoles().stream().map(Role::getApplication).collect(Collectors.toList());
+		if (agentSubscribedApplications.contains(role.getApplication())) {
 			return false;
 		}
 		List<AgentProfile> agentProfiles = this.agentProfileService.findAllAgentProfilesByOrganismAndApplication(this.agentProfile.getOrganismDepartment().getOrganism(), role.getApplication());
@@ -400,7 +406,7 @@ public class ModifyRoles extends AbstractPage {
 		// If there is only application GU in the list
 		if ((this.activeRole == null)
 				&& (MyEc3ApplicationConstants.GU.equals(roleSelected.getApplication().getName())
-						|| MyEc3ApplicationConstants.GED_SERVICE.equals(roleSelected.getApplication().getName()))) {
+				|| MyEc3ApplicationConstants.GED_SERVICE.equals(roleSelected.getApplication().getName()))) {
 			this.selectedRoles.add(roleSelected);
 		} else if ((this.activeRole)
 				|| (MyEc3ApplicationConstants.GU.equals(roleSelected.getApplication().getName()))) {
