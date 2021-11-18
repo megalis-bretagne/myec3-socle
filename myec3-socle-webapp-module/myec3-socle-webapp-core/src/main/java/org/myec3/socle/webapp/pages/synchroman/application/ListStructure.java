@@ -92,25 +92,22 @@ public class ListStructure extends AbstractPage {
             }
             this.rowTables = new ArrayList<>();
 
-            List<Structure> structureList = this.structureService.findAllStructureByApplication(this.application);
             List<StructureApplicationInfo> structureApplicationInfoList = this.structureApplicationInfoService.findAllByApplication(this.application);
             for (StructureApplicationInfo structureApplicationInfo : structureApplicationInfoList) {
-                Structure structure = structureList.stream().filter(
-                        s -> s.getId().equals(structureApplicationInfo.getStructureApplicationInfoId().getStructuresId())).findAny().orElse(null);
-                if (structure != null) {
-                    RowTable rowTable = new RowTable(
-                            structure.getId(),
-                            structure.getLabel(),
-                            structureApplicationInfo.getNbMaxLicenses(),
-                            structure.getStructureType().getValue());
+                Structure structure = structureApplicationInfo.getStructure();
 
-                    if (structure.getStructureType().getValue().equals(StructureTypeValue.ORGANISM)) {
-                        rowTable.setnbLicensesUsed(this.getnbLicensesByOrganism((Organism) structure));
-                    } else {
-                        rowTable.setnbLicensesUsed(this.getnbLicensesByCompany((Company) structure));
-                    }
-                    this.rowTables.add(rowTable);
+                RowTable rowTable = new RowTable(
+                        structure.getId(),
+                        structure.getLabel(),
+                        structureApplicationInfo.getNbMaxLicenses(),
+                        structure.getStructureType().getValue());
+
+                if (structure.getStructureType().getValue().equals(StructureTypeValue.ORGANISM)) {
+                    rowTable.setnbLicensesUsed(this.getnbLicensesByOrganism((Organism) structure));
+                } else {
+                    rowTable.setnbLicensesUsed(this.getnbLicensesByCompany((Company) structure));
                 }
+                this.rowTables.add(rowTable);
 
             }
         }

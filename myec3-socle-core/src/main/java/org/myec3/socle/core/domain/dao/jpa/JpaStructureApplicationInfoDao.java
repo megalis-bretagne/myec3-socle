@@ -25,9 +25,9 @@ public class JpaStructureApplicationInfoDao extends JpaNoResourceGenericDao<Stru
         getLog().debug("Finding all StructureApplicationInfo by Application");
         try {
             Query query = getEm().createQuery(BEGIN_JPQL + this.getDomainClass().getSimpleName()
-                    + " s where s.structureApplicationInfoId.applicationsId = :id");
+                    + " s where s.application = :application");
 
-            query.setParameter("id", application.getId());
+            query.setParameter("application", application);
 
             List<StructureApplicationInfo> structureApplicationInfos = query.getResultList();
             getLog().debug("findAllByApplication successfull.");
@@ -47,9 +47,9 @@ public class JpaStructureApplicationInfoDao extends JpaNoResourceGenericDao<Stru
         getLog().debug("Finding all StructureApplicationInfo by Structure");
         try {
             Query query = getEm().createQuery(BEGIN_JPQL + this.getDomainClass().getSimpleName()
-                    + " s where s.structureApplicationInfoId.structuresId = :id");
+                    + " s where s.structure = :structure");
 
-            query.setParameter("id", structure.getId());
+            query.setParameter("structure", structure);
 
             List<StructureApplicationInfo> structureApplicationInfos = query.getResultList();
             getLog().debug("findAllByStructure successfull.");
@@ -69,10 +69,10 @@ public class JpaStructureApplicationInfoDao extends JpaNoResourceGenericDao<Stru
         getLog().debug("Finding StructureApplication");
         try {
             Query query = getEm().createQuery(BEGIN_JPQL + this.getDomainClass().getSimpleName()
-                    + " s where s.structureApplicationInfoId.structuresId = :idStructure and s.structureApplicationInfoId.applicationsId = :idApplication");
+                    + " s where s.structure = :structure and s.application = :application");
 
-            query.setParameter("idStructure", structure.getId());
-            query.setParameter("idApplication", application.getId());
+            query.setParameter("structure", structure);
+            query.setParameter("application", application);
             StructureApplicationInfo structureApplicationInfo = (StructureApplicationInfo) query.getSingleResult();
             getLog().debug("findByStructureAndApplication successfull.");
             return structureApplicationInfo;
