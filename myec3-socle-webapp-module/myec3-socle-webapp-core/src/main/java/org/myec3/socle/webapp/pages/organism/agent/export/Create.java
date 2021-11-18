@@ -13,7 +13,6 @@ import org.myec3.socle.core.domain.model.enums.ProfileTypeValue;
 import org.myec3.socle.core.domain.model.enums.StructureTypeValue;
 import org.myec3.socle.core.service.*;
 import org.myec3.socle.synchro.api.SynchronizationNotificationService;
-import org.myec3.socle.webapp.components.MultipleSelect;
 import org.myec3.socle.webapp.encoder.GenericListEncoder;
 import org.myec3.socle.webapp.encoder.MultipleValueEncoder;
 import org.myec3.socle.webapp.entities.MessageEmail;
@@ -28,12 +27,12 @@ import java.util.*;
 /**
  * Page used to create the {@link AgentProfile} selected from the list of agents
  * to create.<br />
- * 
+ *
  * Corresponding tapestry template file is :
  * src/main/resources/org/myec3/socle/webapp
  * /pages/organism/agent/export/Create.tml
  *
- * 
+ *
  * @author Denis Cucchietti <denis.cucchietti@atosorigin.com>
  */
 public class Create extends AbstractImport {
@@ -42,9 +41,6 @@ public class Create extends AbstractImport {
 
 	@Component(id = "agent_create_form")
 	private Form form;
-	
-	@Component
-    private MultipleSelect multipleSelect;
 
 	/**
 	 * Business Service providing methods and specifics operations to synchronize
@@ -65,10 +61,6 @@ public class Create extends AbstractImport {
 	@Inject
 	@Named("organismDepartmentService")
 	private OrganismDepartmentService organismDepartmentService;
-
-	@Inject
-	@Named("applicationService")
-	private ApplicationService applicationService;
 
 	@Inject
 	@Named("roleService")
@@ -142,11 +134,11 @@ public class Create extends AbstractImport {
 		}
 
 		if (this.selectedRoles == null) {
-			this.selectedRoles = new ArrayList<Role>();
+			this.selectedRoles = new ArrayList<>();
 		}
 
 		if (this.multipleRoleSelected == null) {
-			this.multipleRoleSelected = new ArrayList<Role>();
+			this.multipleRoleSelected = new ArrayList<>();
 		}
 
 		if (this.agentToCreate.getProfileType() == null) {
@@ -158,7 +150,7 @@ public class Create extends AbstractImport {
 		this.applicationsAllowingMultipleRoles = this.applicationService
 				.findAllApplicationsAllowingMultipleRolesByStructureTypeValue(StructureTypeValue.ORGANISM);
 
-		this.applicationEncoder = new GenericListEncoder<Application>(this.availableApplications);
+		this.applicationEncoder = new GenericListEncoder<>(this.availableApplications);
 
 		// Check if loggedUser can access at this page
 		return this.hasRights(this.organism);
@@ -233,11 +225,11 @@ public class Create extends AbstractImport {
 
 	/**
 	 * This methods allows to send login and password for the new user
-	 * 
+	 *
 	 * @param password : the password generated for the new user
 	 * @throws MessagingException
 	 */
-	public void sendMail(String password) throws MessagingException {
+	public void sendMail(String password) {
 		// message mail
 		StringBuffer message = new StringBuffer();
 		message.append(this.getMessages().get("login-message"));
@@ -303,7 +295,7 @@ public class Create extends AbstractImport {
 	 * @return the list of roles selected by the user
 	 */
 	public List<Role> retrieveRolesOfAgent() {
-		List<Role> listRoles = new ArrayList<Role>();
+		List<Role> listRoles = new ArrayList<>();
 
 		// Retrieve roles of default applications
 		for (Application application : this.defaultApplications) {
@@ -330,6 +322,8 @@ public class Create extends AbstractImport {
 			}
 		}
 
+        listRoles.removeIf(r -> r.getId() == null);
+
 		return listRoles;
 	}
 
@@ -339,7 +333,7 @@ public class Create extends AbstractImport {
 	 * of the department selected is also empty we use organism's address. We are
 	 * sure that the organism address is not empty because we check values in the
 	 * import page (import.java)
-	 * 
+	 *
 	 */
 	public void setAddressOfAgentToCreate() {
 
@@ -400,7 +394,7 @@ public class Create extends AbstractImport {
 
 	/* ORGANISM DEPARTMENT */
 	public ValueEncoder<OrganismDepartment> getDepartmentEncoder() {
-		return new GenericListEncoder<OrganismDepartment>(this.organismDepartmentService
+		return new GenericListEncoder<>(this.organismDepartmentService
 				.findAllDepartmentByOrganism(this.agentToCreate.getOrganismDepartment().getOrganism()));
 	}
 
@@ -408,7 +402,7 @@ public class Create extends AbstractImport {
 		OrganismDepartment rootDepartment = this.organismDepartmentService
 				.findRootOrganismDepartment(this.agentToCreate.getOrganismDepartment().getOrganism());
 
-		Map<OrganismDepartment, String> departments = new LinkedHashMap<OrganismDepartment, String>();
+		Map<OrganismDepartment, String> departments = new LinkedHashMap<>();
 		departments = constructDepartementMap(departments, rootDepartment, 0);
 
 		return departments;
@@ -447,7 +441,7 @@ public class Create extends AbstractImport {
 			public List<Role> toValue(String[] values) {
 				List<Role> availableRoles = roleService
 						.findAllRoleByProfileTypeAndApplication(agentToCreate.getProfileType(), applicationLoop);
-				List<Role> objects = new ArrayList<Role>();
+				List<Role> objects = new ArrayList<>();
 				for (String value : values) {
 					for (Role myObject : availableRoles)
 						if (myObject.getId().equals(Long.valueOf(value))) {
@@ -463,19 +457,19 @@ public class Create extends AbstractImport {
 	public GenericListEncoder<Role> getRoleEncoder() {
 		List<Role> availableRoles = this.roleService
 				.findAllRoleByProfileTypeAndApplication(this.agentToCreate.getProfileType(), this.applicationLoop);
-		GenericListEncoder<Role> encoder = new GenericListEncoder<Role>(availableRoles);
-		return encoder;
+		availableRoles.add(new Role(null,null));
+		return new GenericListEncoder<>(availableRoles);
 	}
 
 	public Map<Role, String> getRolesModel() {
 		List<Role> availableRoles = this.roleService
 				.findAllRoleByProfileTypeAndApplication(this.agentToCreate.getProfileType(), this.applicationLoop);
 
-		Map<Role, String> roles = new LinkedHashMap<Role, String>();
+		Map<Role, String> roles = new LinkedHashMap<>();
 
 		if (!this.defaultApplications.contains(this.applicationLoop)
 				&& (!this.applicationsAllowingMultipleRoles.contains(this.applicationLoop))) {
-			roles.put(null, this.getMessages().get("select-role-application"));
+			roles.put(new Role(null,null), this.getMessages().get("select-role-application"));
 		}
 
 		for (Role role : availableRoles) {
