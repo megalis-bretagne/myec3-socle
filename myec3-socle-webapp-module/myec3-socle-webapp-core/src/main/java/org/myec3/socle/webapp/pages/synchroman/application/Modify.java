@@ -188,18 +188,14 @@ public class Modify extends AbstractPage {
      * The NbMaxLicenses on each structures is determined in relation to its already subscribed profiles
      */
     private void updateNbMaxLicensesStructure() {
-        for (StructureApplicationInfo structureApplicationInfo : this.structureApplicationInfoList) {
-            Structure structure = this.structureList.stream().filter(
-                    s -> s.getId().equals(structureApplicationInfo.getStructureApplicationInfoId().getStructuresId())).findAny().orElse(null);
-            if (structure != null && structureApplicationInfo.getNbMaxLicenses() == null) {
-                if (structure.getStructureType().getValue().equals(StructureTypeValue.ORGANISM)) {
-                    structureApplicationInfo.setNbMaxLicenses((long) this.agentProfileService.findAllAgentProfilesByOrganismAndApplication((Organism) structure, this.application).size());
-                } else {
-                    structureApplicationInfo.setNbMaxLicenses((long) this.employeeProfileService.findAllEmployeeProfilesByCompanyAndApplication((Company) structure, this.application).size());
-                }
-
+        for (Structure structure : this.structureList) {
+            long nbLicense;
+            if (structure.getStructureType().getValue().equals(StructureTypeValue.ORGANISM)) {
+                nbLicense = this.agentProfileService.findAllAgentProfilesByOrganismAndApplication((Organism) structure, this.application).size();
+            } else {
+                nbLicense = this.employeeProfileService.findAllEmployeeProfilesByCompanyAndApplication((Company) structure, this.application).size();
             }
-            this.structureApplicationInfoService.update(structureApplicationInfo);
+            this.structureApplicationInfoService.create(new StructureApplicationInfo(structure, this.application, nbLicense));
         }
     }
 
@@ -210,7 +206,7 @@ public class Modify extends AbstractPage {
         for (StructureApplicationInfo structureApplicationInfo : this.structureApplicationInfoList) {
             this.structureList.stream().filter(
                     s -> s.getId().equals(structureApplicationInfo.getStructureApplicationInfoId().getStructuresId())).findAny().ifPresent(structure -> structureApplicationInfo.setNbMaxLicenses(null));
-            this.structureApplicationInfoService.update(structureApplicationInfo);
+            this.structureApplicationInfoService.delete(structureApplicationInfo);
         }
 
     }
