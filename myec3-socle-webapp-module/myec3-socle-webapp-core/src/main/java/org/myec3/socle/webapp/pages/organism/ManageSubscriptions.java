@@ -95,8 +95,8 @@ public class ManageSubscriptions extends AbstractPage {
 	private AgentProfileService agentProfileService;
 
 	@Inject
-	@Named("structureApplicationService")
-	private StructureApplicationService structureApplicationService;
+	@Named("structureApplicationInfoService")
+	private StructureApplicationInfoService structureApplicationInfoService;
 
 	@InjectPage
 	private View viewPage;
@@ -123,7 +123,7 @@ public class ManageSubscriptions extends AbstractPage {
 
 	private List<Application> choosenApplications;
 
-    private List<StructureApplication> choosenStructureApplication;
+    private List<StructureApplicationInfo> choosenStructureApplicationInfo;
 
 	private GenericListEncoder<Application> applicationEncoder;
 
@@ -170,7 +170,7 @@ public class ManageSubscriptions extends AbstractPage {
 
 		this.choosenApplications = new ArrayList<>();
 
-		this.choosenStructureApplication = new ArrayList<>();
+		this.choosenStructureApplicationInfo = new ArrayList<>();
 		// Check if loggedUser can access to this organism
 		return this.hasRights(this.organism);
 	}
@@ -196,7 +196,7 @@ public class ManageSubscriptions extends AbstractPage {
 		this.applicationEncoder = new GenericListEncoder<>(this.availableApplications);
 		this.idDouble = idDouble;
 		this.choosenApplications = new ArrayList<>();
-		this.choosenStructureApplication = new ArrayList<>();
+		this.choosenStructureApplicationInfo = new ArrayList<>();
 		return Boolean.TRUE;
 	}
 
@@ -209,19 +209,19 @@ public class ManageSubscriptions extends AbstractPage {
 	@OnEvent(value = EventConstants.VALIDATE, component = "modification_form")
 	public void onValidate() {
 
-		for (StructureApplication structureApplication : this.choosenStructureApplication) {
+		for (StructureApplicationInfo structureApplicationInfo : this.choosenStructureApplicationInfo) {
 			Optional<Application> application = this.choosenApplications.stream().filter(a ->
-					a.getId().equals(structureApplication.getStructureApplicationId().getApplicationsId()))
+					a.getId().equals(structureApplicationInfo.getStructureApplicationInfoId().getApplicationsId()))
 					.findFirst();
 
 			if(!application.isPresent()) {
 				continue;
 			}
-			if (structureApplication.getNbMaxLicenses() == null) {
+			if (structureApplicationInfo.getNbMaxLicenses() == null) {
 				this.form.recordError(String.format(this.messages.get("empty-nbMaxLicenses-error"),application.get().getLabel()));
 			} else {
-				this.checkTooMuchSubscription(structureApplication.getNbMaxLicenses(), application.get());
-				this.checkExceededNbMaxLicenses(structureApplication.getNbMaxLicenses(), application.get());
+				this.checkTooMuchSubscription(structureApplicationInfo.getNbMaxLicenses(), application.get());
+				this.checkExceededNbMaxLicenses(structureApplicationInfo.getNbMaxLicenses(), application.get());
 			}
 		}
 
@@ -285,13 +285,15 @@ public class ManageSubscriptions extends AbstractPage {
 			this.organism.setApplications(this.choosenApplications);
 			this.organismService.update(this.organism);
 
-			// Update nb max licenses on relation Structure <-> Application
-			for (StructureApplication structureApplication : this.choosenStructureApplication) {
+			// Update Structure application info
+			for (StructureApplicationInfo structureApplicationInfo : this.choosenStructureApplicationInfo) {
 				Optional<Application> application = this.choosenApplications.stream().filter(a ->
-						a.getId().equals(structureApplication.getStructureApplicationId().getApplicationsId()))
+						a.getId().equals(structureApplicationInfo.getStructureApplicationInfoId().getApplicationsId()))
 						.findFirst();
 				if (application.isPresent()) {
-					this.structureApplicationService.update(structureApplication);
+					this.structureApplicationInfoService.update(structureApplicationInfo);
+				} else {
+					this.structureApplicationInfoService.delete(structureApplicationInfo);
 				}
 			}
 
@@ -386,12 +388,12 @@ public class ManageSubscriptions extends AbstractPage {
 	}
 
 	public void setNbMaxLicenses(Long nbMaxLicenses) {
-		StructureApplication structureApplication = this.structureApplicationService.findByStructureAndApplication(this.organism, this.getApplicationLoop());
-		if (structureApplication != null) {
-			structureApplication.setNbMaxLicenses(nbMaxLicenses);
-			this.choosenStructureApplication.add(structureApplication);
+		StructureApplicationInfo structureApplicationInfo = this.structureApplicationInfoService.findByStructureAndApplication(this.organism, this.getApplicationLoop());
+		if (structureApplicationInfo != null) {
+			structureApplicationInfo.setNbMaxLicenses(nbMaxLicenses);
+			this.choosenStructureApplicationInfo.add(structureApplicationInfo);
 		} else {
-			this.choosenStructureApplication.add(new StructureApplication(this.organism.getId(), this.applicationLoop.getId(), nbMaxLicenses));
+			this.choosenStructureApplicationInfo.add(new StructureApplicationInfo(this.organism, this.applicationLoop, nbMaxLicenses));
 		}
 	}
 
@@ -402,10 +404,10 @@ public class ManageSubscriptions extends AbstractPage {
 	 */
 	private void checkExceededNbMaxLicenses(Long nbMaxLicenses, Application application) {
 		Long sumNbMaxLicenses = 0L;
-		List<StructureApplication> structureApplicationList = this.structureApplicationService.findAllByApplication(application);
-		for (StructureApplication structureApplication : structureApplicationList) {
-			if(!structureApplication.getStructureApplicationId().getStructuresId().equals(this.organism.getId())){
-				sumNbMaxLicenses += structureApplication.getNbMaxLicenses();
+		List<StructureApplicationInfo> structureApplicationInfoList = this.structureApplicationInfoService.findAllByApplication(application);
+		for (StructureApplicationInfo structureApplicationInfo : structureApplicationInfoList) {
+			if(!structureApplicationInfo.getStructureApplicationInfoId().getStructuresId().equals(this.organism.getId())){
+				sumNbMaxLicenses += structureApplicationInfo.getNbMaxLicenses();
 			}
 		}
 		if(application.getNbMaxLicenses() < (sumNbMaxLicenses + nbMaxLicenses)) {
@@ -430,9 +432,9 @@ public class ManageSubscriptions extends AbstractPage {
 
 
     public Long getNbMaxLicenses() {
-        StructureApplication structureApplication = this.structureApplicationService.findByStructureAndApplication(this.organism, this.getApplicationLoop());
-        if (structureApplication != null) {
-            return structureApplication.getNbMaxLicenses();
+        StructureApplicationInfo structureApplicationInfo = this.structureApplicationInfoService.findByStructureAndApplication(this.organism, this.getApplicationLoop());
+        if (structureApplicationInfo != null) {
+            return structureApplicationInfo.getNbMaxLicenses();
         }
         return null;
     }

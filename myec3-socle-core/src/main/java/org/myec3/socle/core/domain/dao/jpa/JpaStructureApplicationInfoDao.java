@@ -1,9 +1,9 @@
 package org.myec3.socle.core.domain.dao.jpa;
 
-import org.myec3.socle.core.domain.dao.StructureApplicationDao;
+import org.myec3.socle.core.domain.dao.StructureApplicationInfoDao;
 import org.myec3.socle.core.domain.model.Application;
 import org.myec3.socle.core.domain.model.Structure;
-import org.myec3.socle.core.domain.model.StructureApplication;
+import org.myec3.socle.core.domain.model.StructureApplicationInfo;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.NoResultException;
@@ -13,25 +13,25 @@ import java.util.List;
 
 /**
  * This implementation provides methods to perform specific queries on
- * {@link StructureApplication} objects.
+ * {@link StructureApplicationInfo} objects.
  */
-@Repository("structureApplicationDao")
-public class JpaStructureApplicationDao extends JpaNoResourceGenericDao<StructureApplication> implements StructureApplicationDao {
+@Repository("structureApplicationInfoDao")
+public class JpaStructureApplicationInfoDao extends JpaNoResourceGenericDao<StructureApplicationInfo> implements StructureApplicationInfoDao {
 
     private static final String BEGIN_JPQL = "select s from ";
 
     @Override
-    public List<StructureApplication> findAllByApplication(Application application) {
-        getLog().debug("Finding all StructureApplication by Application");
+    public List<StructureApplicationInfo> findAllByApplication(Application application) {
+        getLog().debug("Finding all StructureApplicationInfo by Application");
         try {
             Query query = getEm().createQuery(BEGIN_JPQL + this.getDomainClass().getSimpleName()
-                    + " s where s.structureApplicationId.applicationsId = :id");
+                    + " s where s.application = :application");
 
-            query.setParameter("id", application.getId());
+            query.setParameter("application", application);
 
-            List<StructureApplication> structureApplications = query.getResultList();
+            List<StructureApplicationInfo> structureApplicationInfos = query.getResultList();
             getLog().debug("findAllByApplication successfull.");
-            return structureApplications;
+            return structureApplicationInfos;
         } catch (NoResultException re) {
             // No result found, we return null instead of errors
             getLog().warn("findAllByApplication returned no result.");
@@ -43,17 +43,17 @@ public class JpaStructureApplicationDao extends JpaNoResourceGenericDao<Structur
     }
 
     @Override
-    public List<StructureApplication> findAllByStructure(Structure structure) {
-        getLog().debug("Finding all StructureApplication by Structure");
+    public List<StructureApplicationInfo> findAllByStructure(Structure structure) {
+        getLog().debug("Finding all StructureApplicationInfo by Structure");
         try {
             Query query = getEm().createQuery(BEGIN_JPQL + this.getDomainClass().getSimpleName()
-                    + " s where s.structureApplicationId.structuresId = :id");
+                    + " s where s.structure = :structure");
 
-            query.setParameter("id", structure.getId());
+            query.setParameter("structure", structure);
 
-            List<StructureApplication> structureApplications = query.getResultList();
+            List<StructureApplicationInfo> structureApplicationInfos = query.getResultList();
             getLog().debug("findAllByStructure successfull.");
-            return structureApplications;
+            return structureApplicationInfos;
         } catch (NoResultException re) {
             // No result found, we return null instead of errors
             getLog().warn("findAllByStructure returned no result.");
@@ -65,17 +65,17 @@ public class JpaStructureApplicationDao extends JpaNoResourceGenericDao<Structur
     }
 
     @Override
-    public StructureApplication findByStructureAndApplication(Structure structure, Application application) {
+    public StructureApplicationInfo findByStructureAndApplication(Structure structure, Application application) {
         getLog().debug("Finding StructureApplication");
         try {
             Query query = getEm().createQuery(BEGIN_JPQL + this.getDomainClass().getSimpleName()
-                    + " s where s.structureApplicationId.structuresId = :idStructure and s.structureApplicationId.applicationsId = :idApplication");
+                    + " s where s.structure = :structure and s.application = :application");
 
-            query.setParameter("idStructure", structure.getId());
-            query.setParameter("idApplication", application.getId());
-            StructureApplication structureApplication = (StructureApplication) query.getSingleResult();
+            query.setParameter("structure", structure);
+            query.setParameter("application", application);
+            StructureApplicationInfo structureApplicationInfo = (StructureApplicationInfo) query.getSingleResult();
             getLog().debug("findByStructureAndApplication successfull.");
-            return structureApplication;
+            return structureApplicationInfo;
         } catch (NoResultException re) {
             // No result found, we return null instead of errors
             getLog().warn("findByStructureAndApplication returned no result.");
@@ -87,7 +87,7 @@ public class JpaStructureApplicationDao extends JpaNoResourceGenericDao<Structur
     }
 
     @Override
-    public Class<StructureApplication> getType() {
-        return StructureApplication.class;
+    public Class<StructureApplicationInfo> getType() {
+        return StructureApplicationInfo.class;
     }
 }

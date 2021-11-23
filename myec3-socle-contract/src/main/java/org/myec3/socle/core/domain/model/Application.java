@@ -30,6 +30,8 @@ import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 import org.hibernate.envers.Audited;
 import org.hibernate.envers.RelationTargetAuditMode;
 import org.myec3.socle.core.domain.model.meta.StructureTypeApplication;
@@ -68,6 +70,7 @@ public class Application extends Resource {
 	private List<Structure> structures;
 	private List<StructureTypeApplication> structureTypes;
 	private List<Customer> customers;
+	private List<StructureApplicationInfo> structureApplicationInfos;
 	private String url;
 	private String pictoUrl;
 	private String description;
@@ -391,6 +394,24 @@ public class Application extends Resource {
 
 	public void setNbMaxLicenses(Long nbMaxLicenses) {
 		this.nbMaxLicenses = nbMaxLicenses;
+	}
+
+
+	/**
+	 * Information about the link between Structure & application.
+	 *
+	 * @return the list of structureApplicationInfo for this application
+	 */
+	@OneToMany(mappedBy = "structure")
+	@LazyCollection(LazyCollectionOption.TRUE)
+	@XmlTransient
+	@JsonIgnore
+	public List<StructureApplicationInfo> getStructureApplicationInfos() {
+		return structureApplicationInfos;
+	}
+
+	public void setStructureApplicationInfos(List<StructureApplicationInfo> structureApplicationInfos) {
+		this.structureApplicationInfos = structureApplicationInfos;
 	}
 
 	/**

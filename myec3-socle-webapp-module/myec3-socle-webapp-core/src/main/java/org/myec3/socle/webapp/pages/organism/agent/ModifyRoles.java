@@ -25,15 +25,12 @@ import org.apache.tapestry5.annotations.*;
 import org.apache.tapestry5.corelib.components.Form;
 import org.apache.tapestry5.ioc.annotations.Inject;
 import org.myec3.socle.core.constants.MyEc3ApplicationConstants;
-import org.myec3.socle.core.domain.model.AgentProfile;
-import org.myec3.socle.core.domain.model.Application;
-import org.myec3.socle.core.domain.model.Resource;
-import org.myec3.socle.core.domain.model.Role;
+import org.myec3.socle.core.domain.model.*;
 import org.myec3.socle.core.domain.model.enums.StructureTypeValue;
 import org.myec3.socle.core.service.AgentManagedApplicationService;
 import org.myec3.socle.core.service.AgentProfileService;
 import org.myec3.socle.core.service.RoleService;
-import org.myec3.socle.core.service.StructureApplicationService;
+import org.myec3.socle.core.service.StructureApplicationInfoService;
 import org.myec3.socle.synchro.api.SynchronizationNotificationService;
 import org.myec3.socle.synchro.api.constants.SynchronizationRelationsName;
 import org.myec3.socle.webapp.encoder.GenericListEncoder;
@@ -88,8 +85,8 @@ public class ModifyRoles extends AbstractPage {
 	private RoleService roleService;
 
 	@Inject
-	@Named("structureApplicationService")
-	private StructureApplicationService structureApplicationService;
+	@Named("structureApplicationInfoService")
+	private StructureApplicationInfoService structureApplicationInfoService;
 
 	@Inject
 	@Named("agentManagedApplicationService")
@@ -310,8 +307,11 @@ public class ModifyRoles extends AbstractPage {
 	}
 
 	private boolean isTooMuchSubscription(Role role) {
-		Long nbMaxLicenses = this.structureApplicationService.findByStructureAndApplication(this.agentProfile.getOrganismDepartment().getOrganism(), role.getApplication()).getNbMaxLicenses();
-		if (nbMaxLicenses == null) {
+		if (role.getApplication().getNbMaxLicenses() == null){
+			return false;
+		}
+		StructureApplicationInfo structureApplicationInfo = this.structureApplicationInfoService.findByStructureAndApplication(this.agentProfile.getOrganismDepartment().getOrganism(), role.getApplication());
+		if (structureApplicationInfo == null || structureApplicationInfo.getNbMaxLicenses() == null) {
 			return false;
 		}
 		// The agents has already a role on this application
@@ -321,7 +321,7 @@ public class ModifyRoles extends AbstractPage {
 		}
 		List<AgentProfile> agentProfiles = this.agentProfileService.findAllAgentProfilesByOrganismAndApplication(this.agentProfile.getOrganismDepartment().getOrganism(), role.getApplication());
 		long nbSubscription = agentProfiles.size();
-		return nbSubscription >= nbMaxLicenses;
+		return nbSubscription >= structureApplicationInfo.getNbMaxLicenses();
 
 	}
 

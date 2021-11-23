@@ -5,23 +5,27 @@ import javax.persistence.Embeddable;
 import java.io.Serializable;
 import java.util.Objects;
 
+/**
+ * Composite Key of {@link StructureApplicationInfo}
+ */
 @Embeddable
-public class StructureApplicationId implements Serializable {
+public class StructureApplicationInfoId implements Serializable {
 
-    @Column(name="structures_id")
+
     private Long structuresId;
 
-    @Column(name="applications_id")
+
     private Long applicationsId;
 
-    public StructureApplicationId() {
+    public StructureApplicationInfoId() {
     }
 
-    public StructureApplicationId(Long structuresId, Long applicationsId) {
+    public StructureApplicationInfoId(Long structuresId, Long applicationsId) {
         this.structuresId = structuresId;
         this.applicationsId = applicationsId;
     }
 
+    @Column(name = "structures_id", insertable = false, updatable = false)
     public Long getStructuresId() {
         return structuresId;
     }
@@ -30,6 +34,7 @@ public class StructureApplicationId implements Serializable {
         this.structuresId = structuresId;
     }
 
+    @Column(name = "applications_id", insertable = false, updatable = false)
     public Long getApplicationsId() {
         return applicationsId;
     }
@@ -43,10 +48,10 @@ public class StructureApplicationId implements Serializable {
         if (this == o) {
             return true;
         }
-        if (!(o instanceof StructureApplicationId)) {
+        if (!(o instanceof StructureApplicationInfoId)) {
             return false;
         }
-        StructureApplicationId that = (StructureApplicationId) o;
+        StructureApplicationInfoId that = (StructureApplicationInfoId) o;
         return structuresId.equals(that.structuresId) && applicationsId.equals(that.applicationsId);
     }
 

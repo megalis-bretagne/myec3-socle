@@ -12,7 +12,7 @@ import org.myec3.socle.core.domain.model.*;
 import org.myec3.socle.core.domain.model.enums.StructureTypeValue;
 import org.myec3.socle.core.service.AgentProfileService;
 import org.myec3.socle.core.service.EmployeeProfileService;
-import org.myec3.socle.core.service.StructureApplicationService;
+import org.myec3.socle.core.service.StructureApplicationInfoService;
 import org.myec3.socle.core.service.StructureService;
 import org.myec3.socle.webapp.pages.AbstractPage;
 import org.myec3.socle.webapp.pages.Index;
@@ -34,8 +34,8 @@ public class ListStructure extends AbstractPage {
     private StructureService structureService;
 
     @Inject
-    @Named("structureApplicationService")
-    private StructureApplicationService structureApplicationService;
+    @Named("structureApplicationInfoService")
+    private StructureApplicationInfoService structureApplicationInfoService;
 
     @Inject
     @Named("agentProfileService")
@@ -66,6 +66,8 @@ public class ListStructure extends AbstractPage {
     @Inject
     private Request request;
 
+    private static final String[] HEADER = {"label", "nbMaxLicenses", "nbLicensesUsed"};
+
     @OnEvent(EventConstants.ACTIVATE)
     public void activation() {
         super.initUser();
@@ -90,25 +92,22 @@ public class ListStructure extends AbstractPage {
             }
             this.rowTables = new ArrayList<>();
 
-            List<Structure> structureList = this.structureService.findAllStructureByApplication(this.application);
-            List<StructureApplication> structureApplicationList = this.structureApplicationService.findAllByApplication(this.application);
-            for (StructureApplication structureApplication : structureApplicationList) {
-                Structure structure = structureList.stream().filter(
-                        s -> s.getId().equals(structureApplication.getStructureApplicationId().getStructuresId())).findAny().orElse(null);
-                if (structure != null) {
-                    RowTable rowTable = new RowTable(
-                            structure.getId(),
-                            structure.getLabel(),
-                            structureApplication.getNbMaxLicenses(),
-                            structure.getStructureType().getValue());
+            List<StructureApplicationInfo> structureApplicationInfoList = this.structureApplicationInfoService.findAllByApplication(this.application);
+            for (StructureApplicationInfo structureApplicationInfo : structureApplicationInfoList) {
+                Structure structure = structureApplicationInfo.getStructure();
 
-                    if (structure.getStructureType().getValue().equals(StructureTypeValue.ORGANISM)) {
-                        rowTable.setnbLicensesUsed(this.getnbLicensesByOrganism((Organism) structure));
-                    } else {
-                        rowTable.setnbLicensesUsed(this.getnbLicensesByCompany((Company) structure));
-                    }
-                    this.rowTables.add(rowTable);
+                RowTable rowTable = new RowTable(
+                        structure.getId(),
+                        structure.getLabel(),
+                        structureApplicationInfo.getNbMaxLicenses(),
+                        structure.getStructureType().getValue());
+
+                if (structure.getStructureType().getValue().equals(StructureTypeValue.ORGANISM)) {
+                    rowTable.setnbLicensesUsed(this.getnbLicensesByOrganism((Organism) structure));
+                } else {
+                    rowTable.setnbLicensesUsed(this.getnbLicensesByCompany((Company) structure));
                 }
+                this.rowTables.add(rowTable);
 
             }
         }
@@ -118,14 +117,14 @@ public class ListStructure extends AbstractPage {
     @SetupRender
     public void setupGrid() {
         rowTableGrid.getSortModel().clear();
-        rowTableGrid.getSortModel().updateSort("nbLicensesUsed");
-        rowTableGrid.getSortModel().updateSort("nbLicensesUsed");
+        rowTableGrid.getSortModel().updateSort(HEADER[2]);
+        rowTableGrid.getSortModel().updateSort(HEADER[2]);
     }
 
     public BeanModel<RowTable> getGridModel() {
         BeanModel<RowTable> model = this.beanModelSource.createDisplayModel(
                 RowTable.class, this.getMessages());
-        model.include("label", "nbMaxLicenses", "nbLicensesUsed");
+        model.include(HEADER);
         return model;
     }
 
