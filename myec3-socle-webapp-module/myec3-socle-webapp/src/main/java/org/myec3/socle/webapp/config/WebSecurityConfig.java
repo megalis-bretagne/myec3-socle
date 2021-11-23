@@ -62,6 +62,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/Init").hasAuthority("ROLE_SUPER_ADMIN")
 
                 .antMatchers("/sdmInit/**").hasAuthority("ROLE_SUPER_ADMIN")
+                .antMatchers("/pydioInit/**").hasAuthority("ROLE_SUPER_ADMIN")
 
                 .antMatchers("/customer/**").hasAuthority("ROLE_SUPER_ADMIN")
 
