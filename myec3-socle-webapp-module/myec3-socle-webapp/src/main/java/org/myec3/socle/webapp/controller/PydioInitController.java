@@ -79,7 +79,7 @@ public class PydioInitController {
             try (CSVReader reader = new CSVReader(new FileReader("/root/import.csv"))) {
                 String[] lineInArray;
                 while ((lineInArray = reader.readNext()) != null) {
-                    Profile profile = create(lineInArray[0], lineInArray[1], lineInArray[2], new Long(lineInArray[3]));
+                    Profile profile = create(lineInArray[0], lineInArray[1], lineInArray[2],lineInArray[3], new Long(lineInArray[4]));
                     if (profile != null) {
                         data.add(new String[]{String.valueOf(profile.getId()), lineInArray[2]});
                     } else {
@@ -92,7 +92,7 @@ public class PydioInitController {
 
     }
 
-    private Profile create(String firstName, String lastName, String email, Long idOrganisme) {
+    private Profile create(String firstName, String lastName, String email,String civ, Long idOrganisme) {
         AgentProfile agentToCreate = new AgentProfile();
         User userToCreate = new User();
         Address addressToCreate = new Address();
@@ -110,7 +110,7 @@ public class PydioInitController {
         OrganismDepartment rootDepartment = this.organismDepartmentService.findRootOrganismDepartment(organism);
         userToCreate.setFirstname(firstName);
         userToCreate.setLastname(lastName);
-        userToCreate.setCivility(Civility.MR);
+        userToCreate.setCivility(Civility.valueOf(civ));
         agentToCreate.setEmail(email);
         agentToCreate.setOrganismDepartment(rootDepartment);
 
