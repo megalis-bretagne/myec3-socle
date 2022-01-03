@@ -19,7 +19,7 @@ package org.myec3.socle.core.domain.dao.jpa;
 
 import org.myec3.socle.core.domain.dao.AgentProfileDao;
 import org.myec3.socle.core.domain.model.AgentProfile;
-import org.myec3.socle.core.domain.model.Company;
+import org.myec3.socle.core.domain.model.Application;
 import org.myec3.socle.core.domain.model.Organism;
 import org.myec3.socle.core.domain.model.OrganismDepartment;
 import org.myec3.socle.core.domain.model.enums.ResourceType;
@@ -49,7 +49,7 @@ public class JpaAgentProfileDao extends JpaGenericProfileDao<AgentProfile> imple
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<AgentProfile> findAllAgentProfilestByOrganismDepartment(OrganismDepartment organismDepartment) {
-		this.getLog().debug("Finding all Resource instances with OrganismDepartment: " + organismDepartment);
+		this.getLog().debug("Finding all Resource instances with OrganismDepartment: {}", organismDepartment);
 		try {
 			Query query = this.getEm().createQuery("select r from " + this.getDomainClass().getSimpleName()
 					+ " r where r.organismDepartment like :organismDepartment and r.enabled = :enabled");
@@ -61,7 +61,7 @@ public class JpaAgentProfileDao extends JpaGenericProfileDao<AgentProfile> imple
 		} catch (NoResultException re) {
 			// No result found, we return null instead of errors
 			getLog().warn("findAllAgentProfilestByOrganismDepartment returned no result.");
-			return new ArrayList<AgentProfile>();
+			return new ArrayList<>();
 		} catch (RuntimeException re) {
 			this.getLog().error("findAllAgentProfilestByOrganismDepartment failed.", re);
 			return null;
@@ -71,7 +71,7 @@ public class JpaAgentProfileDao extends JpaGenericProfileDao<AgentProfile> imple
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<AgentProfile> findAllAgentProfilesByOrganism(Organism organism) {
-		this.getLog().debug("Finding all agents in organism: " + organism.getLabel());
+		this.getLog().debug("Finding all agents in organism: {}", organism.getLabel());
 		try {
 			Query query = this.getEm()
 					.createQuery("SELECT ap FROM " + this.getDomainClass().getSimpleName()
@@ -84,7 +84,7 @@ public class JpaAgentProfileDao extends JpaGenericProfileDao<AgentProfile> imple
 		} catch (NoResultException re) {
 			// No result found, we return null instead of errors
 			getLog().warn("findAllAgentProfilesByOrganism returned no result.");
-			return new ArrayList<AgentProfile>();
+			return new ArrayList<>();
 		} catch (RuntimeException re) {
 			this.getLog().error("findAllAgentProfilesByOrganism failed.", re);
 			return null;
@@ -95,9 +95,37 @@ public class JpaAgentProfileDao extends JpaGenericProfileDao<AgentProfile> imple
 	 * {@inheritDoc}
 	 */
 	@Override
+	public List<AgentProfile> findAllAgentProfilesByOrganismAndApplication(Organism organism, Application application) {
+		this.getLog().debug("Finding all subscribed agents in organism: {} and application : {}", organism.getLabel(), application.getLabel());
+		try {
+			Query query = this.getEm()
+					.createQuery("SELECT ap FROM " + this.getDomainClass().getSimpleName() + " ap "
+							+ "INNER JOIN ap.organismDepartment od "
+							+ "INNER JOIN ap.roles role "
+							+ "WHERE od.organism = :organism AND ap.enabled is true AND role.application = :application"
+					);
+			query.setParameter("organism", organism);
+			query.setParameter("application", application);
+			List<AgentProfile> resourceList = query.getResultList();
+			this.getLog().debug("findAllAgentProfilesByOrganismAndApplication successfull.");
+			return resourceList;
+		} catch (NoResultException re) {
+			// No result found, we return null instead of errors
+			getLog().warn("findAllAgentProfilesByOrganismAndApplication returned no result.");
+			return new ArrayList<>();
+		} catch (RuntimeException re) {
+			this.getLog().error("findAllAgentProfilesByOrganismAndApplication failed.", re);
+			return null;
+		}
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	@SuppressWarnings("unchecked")
 	public List<AgentProfile> findAllGuAdministratorByOrganismId(Long organismId) {
-		this.getLog().debug("Finding GU administrators for the Organism with id: " + organismId);
+		this.getLog().debug("Finding GU administrators for the Organism with id: {}", organismId);
 		try {
 			Query query = this.getEm()
 					.createQuery("SELECT ap FROM " + this.getDomainClass().getSimpleName() + " ap "
@@ -112,7 +140,7 @@ public class JpaAgentProfileDao extends JpaGenericProfileDao<AgentProfile> imple
 		} catch (NoResultException re) {
 			// No result found, we return empty arrayList instead of errors
 			this.getLog().warn("findAllGuAdministratorByOrganismId returned no result.");
-			return new ArrayList<AgentProfile>();
+			return new ArrayList<>();
 		} catch (RuntimeException re) {
 			this.getLog().error("findAllGuAdministratorByOrganismId failed.", re);
 			return null;
@@ -125,7 +153,7 @@ public class JpaAgentProfileDao extends JpaGenericProfileDao<AgentProfile> imple
 	@Override
 	@SuppressWarnings("unchecked")
 	public List<AgentProfile> findAllRepresentativesByOrganism(Organism organism) {
-		this.getLog().debug("Finding representatives agent for the organism with id: " + organism.getId());
+		this.getLog().debug("Finding representatives agent for the organism with id: {}", organism.getId());
 		try {
 			Query query = this.getEm()
 					.createQuery("SELECT ap FROM " + this.getDomainClass().getSimpleName()
@@ -138,7 +166,7 @@ public class JpaAgentProfileDao extends JpaGenericProfileDao<AgentProfile> imple
 		} catch (NoResultException re) {
 			// No result found, we return empty arrayList instead of errors
 			this.getLog().warn("findAllRepresentativesByOrganism returned no result.");
-			return new ArrayList<AgentProfile>();
+			return new ArrayList<>();
 		} catch (RuntimeException re) {
 			this.getLog().error("findAllRepresentativesByOrganism failed.", re);
 			return null;
@@ -151,7 +179,7 @@ public class JpaAgentProfileDao extends JpaGenericProfileDao<AgentProfile> imple
 	@Override
 	@SuppressWarnings("unchecked")
 	public List<AgentProfile> findAllSubstitutesByOrganism(Organism organism) {
-		this.getLog().debug("Finding substitutes agent for the organism with id: " + organism.getId());
+		this.getLog().debug("Finding substitutes agent for the organism with id: {}", organism.getId());
 		try {
 			Query query = this.getEm()
 					.createQuery("SELECT ap FROM " + this.getDomainClass().getSimpleName()
@@ -164,7 +192,7 @@ public class JpaAgentProfileDao extends JpaGenericProfileDao<AgentProfile> imple
 		} catch (NoResultException re) {
 			// No result found, we return empty arrayList instead of errors
 			this.getLog().warn("findAllSubstitutesByOrganism returned no result.");
-			return new ArrayList<AgentProfile>();
+			return new ArrayList<>();
 		} catch (RuntimeException re) {
 			this.getLog().error("findAllSubstitutesByOrganism failed.", re);
 			return null;
@@ -191,7 +219,7 @@ public class JpaAgentProfileDao extends JpaGenericProfileDao<AgentProfile> imple
 		} catch (NoResultException re) {
 			// No results, we return an empty list
 			this.getLog().error("findAllByListOfEmailsAndOrganism returned no result.", re);
-			return new ArrayList<AgentProfile>();
+			return new ArrayList<>();
 		} catch (RuntimeException re) {
 			// error occured, we throw the exception
 			this.getLog().error("findAllByListOfEmailsAndOrganism failed.", re);

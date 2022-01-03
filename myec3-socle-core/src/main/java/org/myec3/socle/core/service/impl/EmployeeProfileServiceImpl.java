@@ -111,6 +111,13 @@ public class EmployeeProfileServiceImpl extends GenericProfileServiceImpl<Employ
 		return this.dao.findAllByEstablishment(establishment);
 	}
 
+	@Override
+	public List<EmployeeProfile> findAllEmployeeProfilesByCompanyAndApplication(Company company, Application application) {
+		Assert.notNull(company, "company is mandatory. null value is forbidden");
+		Assert.notNull(application, "application is mandatory. null value is forbidden");
+		return this.dao.findAllEmployeeProfilesByCompanyAndApplication(company,application);
+	}
+
 	/**
 	 * {@inheritDoc}
 	 */
@@ -130,7 +137,7 @@ public class EmployeeProfileServiceImpl extends GenericProfileServiceImpl<Employ
 		ProfileType profileType = this.profileTypeService.findByValue(ProfileTypeValue.EMPLOYEE);
 		employeeProfile.setProfileType(profileType);
 
-		List<Role> employeeRoles = new ArrayList<Role>();
+		List<Role> employeeRoles = new ArrayList<>();
 
 		// If employee has no roles we set at least basic roles
 		if (employeeProfile.getRoles().isEmpty()) {
@@ -152,7 +159,7 @@ public class EmployeeProfileServiceImpl extends GenericProfileServiceImpl<Employ
 			if (employeeProfile.getAlfUserName() == null) {
 				employeeProfile.setAlfUserName(employeeProfile.getId() + "@"
 						+ employeeProfile.getCompanyDepartment().getCompany().getTenantIdentifier());
-				employeeProfile = super.update(employeeProfile);
+				super.update(employeeProfile);
 			}
 		} catch (RuntimeException re) {
 			throw new ProfileCreationException("Cannot create Employee " + employeeProfile, re);
@@ -246,7 +253,7 @@ public class EmployeeProfileServiceImpl extends GenericProfileServiceImpl<Employ
 		logger.info("cleaning collections of employeeProfile");
 
 		userService.cleanCollections(employeeProfile.getUser());
-		employeeProfile.setRoles(new ArrayList<Role>());
+		employeeProfile.setRoles(new ArrayList<>());
 		companyService.cleanCollections(employeeProfile.getCompanyDepartment().getCompany());
 	}
 

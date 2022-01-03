@@ -89,6 +89,7 @@ public class AppModule {
 			final Configuration<String> configuration) {
 		configuration.add("/oauth/.*");
 		configuration.add("/sdmInit/.*");
+		configuration.add("/pydioInit/.*");
 		configuration.add("/health");
 		configuration.add("/externe/.*");
 	}

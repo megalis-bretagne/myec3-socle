@@ -181,9 +181,9 @@ public class Modify extends AbstractPage {
 	// Form events
 	@OnEvent(value = EventConstants.VALIDATE, component = "modification_form")
 	public void onValidate() {
-		if (BooleanUtils.isFalse(this.companyService.isSiretValid(this.company.getSiren(), this.company.getNic()))) {
+		if (BooleanUtils.isFalse(this.company.getForeignIdentifier()) && BooleanUtils.isFalse(this.companyService.isSiretValid(this.company.getSiren(), this.company.getNic()))) {
 			this.form.recordError(this.getMessages().get("invalid-siren-nic-error"));
-		} else if (!mpsWS.companyExist(this.company)) {
+		} else if (BooleanUtils.isFalse(this.company.getForeignIdentifier()) && !mpsWS.companyExist(this.company)) {
 			this.form.recordError(this.getMessages().get("invalid-company-error"));
 		}
 	}

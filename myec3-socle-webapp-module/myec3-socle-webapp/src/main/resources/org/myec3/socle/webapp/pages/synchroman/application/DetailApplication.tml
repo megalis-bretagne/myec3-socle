@@ -7,46 +7,61 @@
     <div id="main-content">
   		<h2></h2>	
 		
-  		<div class="tabbed-data"> 
-			<div class="tabs-content">
-				<p class="mandatory">&nbsp;</p>	
-				
-				<div class="actions-bar">
-						<ul>
-							<li>								
-								<t:pagelink page="synchroman/application/Modify" context="application.id">
-								<img src="${context:static/images/modifier.png}"
-										alt="${message:modify-label}" title="${message:modify-application-label}" /> ${message:modify-application-label}
-								</t:pagelink>
-							</li>
-						</ul>
-				</div>
-				
-				<fieldset>
+  		<div class="tabbed-data">
+  		    <t:if test="application.nbMaxLicenses">
+                 <ul class="tabs">
+                    <li class="active"><strong>${message:info-label}</strong></li>
+                    <li>
+                      <t:pagelink page="synchroman/application/ListStructure"
+                                  context="application.id">${message:list-structure-label}</t:pagelink>
+                    </li>
+                 </ul>
+             </t:if>
+            <div class="tabs-content">
 
-					<legend>${message:application-info-label}</legend>
-					<p><label for="id"> ${message:application-id-label}</label> :
-						${application.id}
-					</p>
+                <p class="mandatory">&nbsp;</p>
 
-					<p><label for="name"> ${message:application-name-label}</label> :
-						${application.name}
-					</p>
-					
-					<p><label for="label"> ${message:application-label-label}</label> : 
-						${application.label}
-					</p>	
-					
-					<p><label for="url"> ${message:application-url-label}</label> :
-						${application.url}
-					</p>			
-				</fieldset>
+                <div class="actions-bar">
+                        <ul>
+                            <li>
+                                <t:pagelink page="synchroman/application/Modify" context="application.id">
+                                <img src="${context:static/images/modifier.png}"
+                                        alt="${message:modify-label}" title="${message:modify-application-label}" /> ${message:modify-application-label}
+                                </t:pagelink>
+                            </li>
+                        </ul>
+                </div>
 
-				<ul class="links">
-					<li class="back"><t:pagelink page="synchroman/application/Searchresult">${message:back-searchresult-label}</t:pagelink></li>
-				</ul>
+                <fieldset>
 
-			</div>
-		</div>
+                    <legend>${message:application-info-label}</legend>
+                    <p><label for="id"> ${message:application-id-label}</label> :
+                        ${application.id}
+                    </p>
+
+                    <p><label for="name"> ${message:application-name-label}</label> :
+                        ${application.name}
+                    </p>
+
+                    <p><label for="label"> ${message:application-label-label}</label> :
+                        ${application.label}
+                    </p>
+
+                    <p><label for="url"> ${message:application-url-label}</label> :
+                        ${application.url}
+                    </p>
+                    <t:if test="application.nbMaxLicenses">
+                        <p><label for="nbMaxLicenses"> ${message:application-nbMaxLicenses-label}</label> :
+                            ${application.nbMaxLicenses}
+                        </p>
+                    </t:if>
+                </fieldset>
+
+                <ul class="links">
+                    <li class="back"><t:pagelink page="synchroman/application/Searchresult">${message:back-searchresult-label}</t:pagelink></li>
+                </ul>
+
+            </div>
+        </div>
 	</div>
 </html>

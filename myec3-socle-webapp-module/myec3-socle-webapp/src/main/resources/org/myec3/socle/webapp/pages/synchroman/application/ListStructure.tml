@@ -1,0 +1,53 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"> 
+<html t:type="layout" xmlns:t="http://tapestry.apache.org/schema/tapestry_5_1_0.xsd" xmlns:p="tapestry:parameter">
+    <t:if test="successMessage">
+		<p class="success">${successMessage}</p>
+	</t:if>
+    
+    <div id="main-content">
+  		<h2></h2>	
+		
+  		<div class="tabbed-data">
+  		    <t:if test="isAdmin">
+                 <ul class="tabs">
+                    <li>
+                      <t:pagelink page="synchroman/application/DetailApplication"
+                                  context="application.id">${message:info-label}</t:pagelink>
+                    </li>
+                    <li class="active"><strong>${message:list-structure-label}</strong></li>
+                 </ul>
+             </t:if>
+            <div class="tabs-content">
+            
+                <p class="mandatory">&nbsp;</p>
+
+                <table t:id="rowTableGrid" t:empty="block:empty" pagerPosition="bottom" model="gridModel" t:type="grid" t:row="row" t:rowIndex="rowIndex" t:source="rowTables" t:rowsPerPage="${message:rowsPerPage}" t:inplace="true">
+
+                    <t:parameter name="labelCell">
+                        <t:if test="organisme">
+                            <t:pagelink page="organism/detailOrganism" context="row.id">
+                                ${row.label}
+                            </t:pagelink>
+                            <p:else>
+                                <t:pagelink page="company/detailCompany" context="row.id">
+                                    ${row.label}
+                                </t:pagelink>
+                            </p:else>
+                        </t:if>
+                    </t:parameter>
+                    <t:parameter name="nbMaxLicensesCell">
+                            ${row.nbMaxLicenses}
+                    </t:parameter>
+                    <t:parameter name="nbLicensesUsedCell">
+                            ${row.nbLicensesUsed}
+                    </t:parameter>
+                </table>
+                <br/>
+                <ul class="links">
+                    <li class="back"><t:pagelink page="synchroman/application/Searchresult">${message:back-searchresult-label}</t:pagelink></li>
+                </ul>
+
+            </div>
+        </div>
+	</div>
+</html>

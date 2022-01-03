@@ -18,7 +18,7 @@
 package org.myec3.socle.core.service;
 
 import org.myec3.socle.core.domain.model.AgentProfile;
-import org.myec3.socle.core.domain.model.Company;
+import org.myec3.socle.core.domain.model.Application;
 import org.myec3.socle.core.domain.model.Organism;
 import org.myec3.socle.core.domain.model.OrganismDepartment;
 
@@ -53,6 +53,15 @@ public interface AgentProfileService extends GenericProfileService<AgentProfile>
 	 * list if no result or null in case of error.
 	 */
 	List<AgentProfile> findAllAgentProfilesByOrganism(Organism organism);
+
+	/**
+	 * Find all subscribed agent profiles associated directly to an {@link Organism} and an {@link Application}. Only
+	 * enabled profiles will be returned
+	 * @param organism agentProfile's organism
+	 * @param application Subscriber application
+	 * @return List of subscribed AgentProfiles associated to this organism and application
+	 */
+	List<AgentProfile> findAllAgentProfilesByOrganismAndApplication(Organism organism, Application application);
 
 	/**
 	 * This method allows to populate agentProfile's collections
@@ -138,7 +147,7 @@ public interface AgentProfileService extends GenericProfileService<AgentProfile>
 	 * @return
 	 */
 	List<AgentProfile> getAnnuaire(int page, String filter, String sortBy, String sortDir, int size, String competences,
-								   Boolean enableFilter) throws Exception;
+								   Boolean enableFilter);
 
 	/**
 	 * Return number of results without pagination
