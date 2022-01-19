@@ -461,4 +461,14 @@ public class Establishment extends Resource {
 	public void setPays(PaysImplantation pays) {
 		this.pays = pays;
 	}
+
+    @NotNull
+    @Column(nullable = false)
+    @XmlElement(required = true)
+    @JsonProperty("enseigne")
+    @Override
+    public String getName() {
+        return super.getName();
+    }
+
 }

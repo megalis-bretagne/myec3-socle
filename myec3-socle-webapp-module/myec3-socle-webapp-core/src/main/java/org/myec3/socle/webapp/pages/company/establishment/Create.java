@@ -591,6 +591,10 @@ public class Create extends AbstractPage {
 						this.establishment.getAddress().setCanton("Aucun");
 					}
 
+					if (this.establishment.getName() == null) {
+						this.establishment.setName(this.company.getName());
+					}
+
 					if (this.establishment.getAddress().getInsee() != null) {
 						// Find InseeGeoCode in database
 						InseeGeoCode inseeGeoCode = this.inseeGeoCodeService
