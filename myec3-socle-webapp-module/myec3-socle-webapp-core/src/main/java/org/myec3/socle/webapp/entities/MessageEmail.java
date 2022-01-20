@@ -460,7 +460,7 @@ public class MessageEmail {
 
 			content.append(getMessage(messages, "content-regenerate-password-url-info3"));
 			content.append("<br/><br/><br/>");
-			content.append(password);
+			content.append("<a href=\"").append(password).append("\">").append(password).append("</a>");
 			content.append("<br/><br/><br/>");
 
 			content.append(getMessage(messages, "content-regenerate-password-url-info4"));
@@ -515,8 +515,8 @@ public class MessageEmail {
 
 			content.append("<br/><br/>");
 
-			content.append(getMessage(messages,
-					"content-email-password-expired-info1"));
+			content.append(String.format(getMessage(messages,
+					"content-email-password-expired-info1"), GuWebAppConstants.MYEC3_BASE_URL));
 			content.append("<br/><br/>");
 
 			content.append(getMessage(messages,
