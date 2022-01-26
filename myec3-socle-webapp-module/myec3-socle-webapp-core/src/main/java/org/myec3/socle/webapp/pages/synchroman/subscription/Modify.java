@@ -1,9 +1,6 @@
 package org.myec3.socle.webapp.pages.synchroman.subscription;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import javax.inject.Named;
 
@@ -20,8 +17,9 @@ import org.apache.tapestry5.ioc.Messages;
 import org.apache.tapestry5.ioc.annotations.Inject;
 import org.myec3.socle.core.domain.model.Application;
 import org.myec3.socle.core.domain.model.enums.ResourceType;
-import org.myec3.socle.core.service.ApplicationService;
+import org.myec3.socle.synchro.core.domain.model.SynchronizationFilter;
 import org.myec3.socle.synchro.core.domain.model.SynchronizationSubscription;
+import org.myec3.socle.synchro.core.service.SynchronizationFilterService;
 import org.myec3.socle.synchro.core.service.SynchronizationSubscriptionService;
 import org.myec3.socle.webapp.encoder.GenericListEncoder;
 import org.myec3.socle.webapp.pages.AbstractPage;
@@ -42,8 +40,8 @@ public class Modify extends AbstractPage {
 	private SynchronizationSubscriptionService synchronizationSubscriptionService;
 
 	@Inject
-	@Named("applicationService")
-	private ApplicationService applicationService;
+	@Named("synchronizationFilterService")
+	private SynchronizationFilterService synchronizationFilterService;
 
 	@InjectPage
 	private DetailsSubscription detailsSubscriptionPage;
@@ -54,6 +52,12 @@ public class Modify extends AbstractPage {
 
 	@Property
 	private SynchronizationSubscription synchronizationSubscription;
+
+	@Property
+	private boolean applicationsDisplayed;
+
+	@Property
+	private boolean rolesDisplayed;
 
 	@Component(id = "modification_form")
 	private Form form;
@@ -75,7 +79,7 @@ public class Modify extends AbstractPage {
 	 */
 	@OnEvent(EventConstants.ACTIVATE)
 	public Boolean onActivate(Long id) {
-		logger.debug("Enterring into method onActivate with id : " + id);
+		logger.debug("Enterring into method onActivate with id : {}", id);
 		this.synchronizationSubscription = this.synchronizationSubscriptionService.findOne(id);
 
 		if (null == this.synchronizationSubscription) {
@@ -83,6 +87,10 @@ public class Modify extends AbstractPage {
 		}
 
 		this.applicationSelected = this.synchronizationSubscription.getApplication();
+
+		this.rolesDisplayed = this.synchronizationSubscription.getSynchronizationFilter().isAllRolesDisplayed();
+
+		this.applicationsDisplayed = this.synchronizationSubscription.getSynchronizationFilter().isAllApplicationsDisplayed();
 
 		return Boolean.TRUE;
 	}
@@ -98,9 +106,11 @@ public class Modify extends AbstractPage {
 		logger.debug("Enterring into method OnSuccess");
 		try {
 			this.synchronizationSubscription.setApplication(this.applicationSelected);
+			SynchronizationFilter synchronizationFilter = synchronizationFilterService.findByApplicationsDisplayedAndByRolesDisplayed(this.applicationsDisplayed,this.rolesDisplayed);
+			this.synchronizationSubscription.setSynchronizationFilter(synchronizationFilter);
 			this.synchronizationSubscriptionService.update(this.synchronizationSubscription);
 		} catch (Exception e) {
-			logger.error("error onSuccess" + e);
+			logger.error("error onSuccess {}", e.getMessage());
 			this.errorMessage = this.messages.get("recording-error-message");
 			return null;
 		}
@@ -119,9 +129,8 @@ public class Modify extends AbstractPage {
 
 	// Getters n Setters
 	public Map<Application, String> getApplicationsList() {
-		List<Application> applicationList = new ArrayList<Application>();
-		applicationList = this.applicationService.findAll();
-		Map<Application, String> mapApplication = new HashMap<Application, String>();
+		List<Application> applicationList = this.applicationService.findAll();
+		Map<Application, String> mapApplication = new HashMap<>();
 
 		for (Application applicationItem : applicationList) {
 			mapApplication.put(applicationItem, applicationItem.getName());
@@ -131,14 +140,13 @@ public class Modify extends AbstractPage {
 
 	public GenericListEncoder<Application> getApplicationEncoder() {
 		List<Application> availableApplications = this.applicationService.findAll();
-		GenericListEncoder<Application> encoder = new GenericListEncoder<Application>(availableApplications);
-		return encoder;
+		return new GenericListEncoder<>(availableApplications);
 	}
 
 	public Map<ResourceType, String> getResourceTypeModel() {
 		ResourceType[] availableResourceType = ResourceType.values();
 
-		Map<ResourceType, String> mapResourceType = new HashMap<ResourceType, String>();
+		EnumMap<ResourceType, String> mapResourceType = new EnumMap<>(ResourceType.class);
 		for (ResourceType resourceType : availableResourceType) {
 			mapResourceType.put(resourceType, resourceType.toString());
 		}
@@ -147,12 +155,8 @@ public class Modify extends AbstractPage {
 
 	public GenericListEncoder<ResourceType> getResourceTypeEncoder() {
 		ResourceType[] availableResourceType = ResourceType.values();
-		List<ResourceType> listResourceType = new ArrayList<ResourceType>();
-		for (ResourceType resourceType : availableResourceType) {
-			listResourceType.add(resourceType);
-		}
-		GenericListEncoder<ResourceType> encoder = new GenericListEncoder<ResourceType>(listResourceType);
-		return encoder;
+		List<ResourceType> listResourceType = new ArrayList<>(Arrays.asList(availableResourceType));
+		return new GenericListEncoder<>(listResourceType);
 	}
 
 	public Application getApplicationSelected() {

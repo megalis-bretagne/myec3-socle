@@ -38,6 +38,22 @@
 	        			<img src="${context:static/images/pic_help.png}" class="picHelp" alt="${message:help-label}"/>
 	        		</a>
 	            </p>
+
+                <p>
+                    <t:label for="applicationsDisplayed">${message:applicationsDisplayed-label} :</t:label>
+                    <t:checkbox t:id="applicationsDisplayed" t:value="applicationsDisplayed"/>
+                    <a href="#" title="${message:applicationsDisplayed-help}">
+                        <img src="${context:static/images/pic_help.png}" class="picHelp" alt="${message:help-label}"/>
+                    </a>
+                </p>
+
+                <p>
+                    <t:label for="rolesDisplayed">${message:rolesDisplayed-label} :</t:label>
+                    <t:checkbox t:id="rolesDisplayed" t:value="rolesDisplayed"/>
+                    <a href="#" title="${message:rolesDisplayed-help}">
+                        <img src="${context:static/images/pic_help.png}" class="picHelp" alt="${message:help-label}"/>
+                    </a>
+                </p>
 	           
 	            <div class="form-actions">
 						<p>

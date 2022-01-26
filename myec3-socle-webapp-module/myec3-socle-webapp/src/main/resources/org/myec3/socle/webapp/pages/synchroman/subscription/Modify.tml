@@ -28,6 +28,16 @@
 	                <t:label for="uri">${message:uri-label} *: </t:label>
 	                <t:textfield t:id="uri" t:value="synchronizationSubscription.uri" t:validate="required"/>
 	            </p>
+
+	            <p>
+                    <t:label for="applicationsDisplayed">${message:applicationsDisplayed-label} :</t:label>
+                    <t:checkbox t:id="applicationsDisplayed" t:value="applicationsDisplayed"/>
+                </p>
+
+                <p>
+                    <t:label for="rolesDisplayed">${message:rolesDisplayed-label} :</t:label>
+                    <t:checkbox t:id="rolesDisplayed" t:value="rolesDisplayed"/>
+                </p>
 	           
 	            <div class="form-actions">
 						<p>
