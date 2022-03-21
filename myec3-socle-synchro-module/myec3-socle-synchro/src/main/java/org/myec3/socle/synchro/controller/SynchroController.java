@@ -305,7 +305,7 @@ public class SynchroController {
             AtomicInteger index = new AtomicInteger(0);
             organisms.forEach(organismLightDTO -> {
                 ResponseEntreprises entreprises = mpsWsClient.getInfoEntreprises(organismLightDTO.getSiren());
-                if (entreprises.getEntreprise() == null) {
+                if (entreprises ==null || entreprises.getEntreprise() == null) {
                     logger.info("[RESYNC] [" + organismLightDTO.getId() + "] [" + organismLightDTO.getSiren() + "] Pas de reponse de API INSEE");
                 } else {
                     String labelInsee = entreprises.getEntreprise().getLabel();

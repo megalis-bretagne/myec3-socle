@@ -73,6 +73,8 @@ public class MpsWsClient implements CompanyWSinfo {
                 conn.disconnect();
             } catch (IOException e) {
 				logger.error("Unable to connect to : " + url, e);
+                return null;
+
 			} finally {
 				// close connection properly if not closed yet
 				conn.disconnect();
@@ -145,11 +147,14 @@ public class MpsWsClient implements CompanyWSinfo {
 
         // Call MPS to get the Company informations
         ResponseEntreprises responseEntreprises = this.getInfoEntreprises(company.getSiren());
-        company = responseEntreprises.getEntreprise();
+        if (responseEntreprises !=null) {
+            company = responseEntreprises.getEntreprise();
 
-        this.setCompanyMissingFields(responseEntreprises, company, inseeLegalCategoryService);
+            this.setCompanyMissingFields(responseEntreprises, company, inseeLegalCategoryService);
 
-        return company;
+            return company;
+        }
+        else return null;
     }
 
     @Override

@@ -117,7 +117,7 @@ public class UnstackUpdateList {
 
                             // We need the need to update Company with HeadOffice informations
                             // Get the headOffice data from MPS
-                            if (tmpCompany.getNic() != null && tmpCompany.getNic().length() == 5
+                            if (tmpCompany !=null && tmpCompany.getNic() != null && tmpCompany.getNic().length() == 5
                                     && this.companyService.isSiretValid(companyToUpdate.getSiren(),
                                     tmpCompany.getNic())) {
                                 tmpEstablishment = this.mpsWS

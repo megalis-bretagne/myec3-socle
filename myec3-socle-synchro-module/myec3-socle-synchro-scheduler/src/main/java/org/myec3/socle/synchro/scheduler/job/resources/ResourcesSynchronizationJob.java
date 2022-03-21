@@ -1412,8 +1412,10 @@ public abstract class ResourcesSynchronizationJob<T extends Resource> extends Qu
 		SynchronizationLog synchronizationLog = new SynchronizationLog();
 		synchronizationLog.setResourceId(resource.getId());
 		synchronizationLog.setResourceType(this.getResourceType(resource));
-		synchronizationLog.setHttpCode(responseMessage.getHttpStatus().getValue());
-		synchronizationLog.setHttpStatus(responseMessage.getHttpStatus());
+		if(responseMessage.getHttpStatus()!= null){
+			synchronizationLog.setHttpStatus(responseMessage.getHttpStatus());
+			synchronizationLog.setHttpCode(responseMessage.getHttpStatus().getValue());
+		}
 		synchronizationLog.setMethodType(this.convertSynchronizationJobTypeToMethodType(this.synchronizationJobType));
 		synchronizationLog.setSynchronizationDate(new Date());
 		synchronizationLog.setSynchronizationSubscription(synchronizationSubscription);

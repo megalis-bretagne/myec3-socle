@@ -47,6 +47,7 @@ import java.util.List;
  * <p>
  * This class use a REST client to send the resource.
  *
+ *x
  * @author Matthieu Proboeuf <matthieu.proboeuf@atosorigin.com>
  * @author Denis Cucchietti <denis.cucchietti@atosorigin.com>
  * @see ResourcesSynchronizationJob<AgentProfile>
@@ -179,8 +180,10 @@ public class AgentSynchronizationJob extends
 
 
         //On réalise une requete sur SynchroIdentifiantExterne pour récupérer l'acronyme retourné par la SDM
-        SynchroIdentifiantExterne synchroIdentifiantExterneOrganisme = synchroIdentifiantExterneService.findByIdSocle(resource.getOrganismDepartment().getOrganism().getId(), ResourceType.ORGANISM);
-        agentSDM.setAcronymeOrganisme(synchroIdentifiantExterneOrganisme.getAcronyme());
+        if (resource.getOrganismDepartment() != null && resource.getOrganismDepartment().getOrganism() != null){
+            SynchroIdentifiantExterne synchroIdentifiantExterneOrganisme = synchroIdentifiantExterneService.findByIdSocle(resource.getOrganismDepartment().getOrganism().getId(), ResourceType.ORGANISM);
+            agentSDM.setAcronymeOrganisme(synchroIdentifiantExterneOrganisme.getAcronyme());
+        }
 
         agentSDM.setAdresse(convertToSdmAdresse(resource.getAddress()));
         // on ne renseigne pas le service dans le cas d'un service root

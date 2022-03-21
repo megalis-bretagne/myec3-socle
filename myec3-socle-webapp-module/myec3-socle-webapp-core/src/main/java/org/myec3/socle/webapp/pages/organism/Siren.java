@@ -88,23 +88,27 @@ public class Siren {
     private void completeOrganismInfo() {
         try {
             ResponseEntreprises infos = mpsWsClient.getInfoEntreprises(organism.getSiren());
-            this.organism.setLabel(infos.getEntreprise().getLabel());
-            Address address = infos.getEtablissement_siege().getAddress();
+            if ( infos != null && infos.getEntreprise() !=null){
+                this.organism.setLabel(infos.getEntreprise().getLabel());
+                Address address = infos.getEtablissement_siege().getAddress();
 
-            // complete postalAddress with streetNumber/Street type and streetName
-            address.setPostalAddress(address.getStreetNumber()+" "+address.getStreetType()+" "+address.getStreetName());
-            // complete with forme_juridique
-            OrganismNafCode naf = OrganismNafCode.fromApeCode(infos.getEtablissement_siege().getApeCode());
-            this.organism.setApeCode(naf);
+                // complete postalAddress with streetNumber/Street type and streetName
+                address.setPostalAddress(address.getStreetNumber()+" "+address.getStreetType()+" "+address.getStreetName());
+                // complete with forme_juridique
+                OrganismNafCode naf = OrganismNafCode.fromApeCode(infos.getEtablissement_siege().getApeCode());
+                this.organism.setApeCode(naf);
 
-            String formeJuridique = infos.getEntreprise().getApeCode();
-            // La forme juridique est sur 4 caractère (refentiel INSEE). Il faut le code ABCD en A.B.CD pour obtenir le bon enum
-            if (formeJuridique.length() == 4) {
-                String id = formeJuridique.charAt(0) + "."+formeJuridique.charAt(1)+"."+formeJuridique.substring(2);
-                OrganismINSEECat categogry = OrganismINSEECat.fromId(id);
-                this.organism.setLegalCategory(categogry);
+                String formeJuridique = infos.getEntreprise().getApeCode();
+                // La forme juridique est sur 4 caractère (refentiel INSEE). Il faut le code ABCD en A.B.CD pour obtenir le bon enum
+                if (formeJuridique.length() == 4) {
+                    String id = formeJuridique.charAt(0) + "."+formeJuridique.charAt(1)+"."+formeJuridique.substring(2);
+                    OrganismINSEECat categogry = OrganismINSEECat.fromId(id);
+                    this.organism.setLegalCategory(categogry);
+                }
+                this.organism.setAddress(address);
+            }else{
+                this.errorMessage = this.messages.get("mps-error-message");
             }
-            this.organism.setAddress(address);
         } catch (Exception e) {
             this.errorMessage = this.messages.get("mps-error-message");
         }
