@@ -13,10 +13,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
-
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.*;
+
 
 @Component
 public class UnstackUpdateList {
@@ -63,29 +63,33 @@ public class UnstackUpdateList {
 
     private int updateErrors;
 
+    private int cptEncours=0;
+
     private static final String MPS_UPDATE_BUNDLE_NAME = "mpsUpdate";
     private static final ResourceBundle MPSUPDATE_BUNDLE = ResourceBundle.getBundle(MPS_UPDATE_BUNDLE_NAME);
     public static final String UPDATE_LIMIT_MPS = MPSUPDATE_BUNDLE.getString("mpsUpdate.limit");
 
-    public void unstackUpdateResource() {
-
-        updateErrors = 0;
+    public void unstackUpdateResource() throws InterruptedException {
 
         Map<Long, String> updateErrorId = new HashMap();
 
         logger.debug("Unstack CRON !");
 
-        // We get all the MpsUpdateJob from BDD, with limit
-        List<MpsUpdateJob> listToUnstack = this.mpsUpdateJobService.findLimit(Integer.valueOf(UPDATE_LIMIT_MPS));
+        if (cptEncours ==0 ||cptEncours > 10) {
 
-        if (listToUnstack.isEmpty()) {
-            logger.info("No resources to update !");
-        }
+            updateErrors = 0;
+            cptEncours=1;
+            // We get all the MpsUpdateJob from BDD, with limit
+            List<MpsUpdateJob> listToUnstack = this.mpsUpdateJobService.findLimit(Integer.valueOf(UPDATE_LIMIT_MPS));
 
-        // go threw each of the resource to update
-        for (MpsUpdateJob resourceToUnstack : listToUnstack) {
+            if (listToUnstack.isEmpty()) {
+                logger.info("No resources to update !");
+            }
 
-            // check if the hostname matches the db entry
+            // go threw each of the resource to update
+            for (MpsUpdateJob resourceToUnstack : listToUnstack) {
+
+                // check if the hostname matches the db entry
                 logger.debug("Processing resource : " + resourceToUnstack.toString());
 
                 // if it's a Company
@@ -117,7 +121,7 @@ public class UnstackUpdateList {
 
                             // We need the need to update Company with HeadOffice informations
                             // Get the headOffice data from MPS
-                            if (tmpCompany !=null && tmpCompany.getNic() != null && tmpCompany.getNic().length() == 5
+                            if (tmpCompany != null && tmpCompany.getNic() != null && tmpCompany.getNic().length() == 5
                                     && this.companyService.isSiretValid(companyToUpdate.getSiren(),
                                     tmpCompany.getNic())) {
                                 tmpEstablishment = this.mpsWS
@@ -180,9 +184,9 @@ public class UnstackUpdateList {
                             companyToUpdate.setNic(tmpCompany.getNic());
                             companyToUpdate.setLabel(tmpCompany.getLabel());
 
-                            if(tmpCompany.getLegalCategory() != null){
+                            if (tmpCompany.getLegalCategory() != null) {
                                 companyToUpdate.setLegalCategory(tmpCompany.getLegalCategory());
-                            }else{
+                            } else {
                                 logger.info("Company InseeLegalCategory is null. Setting it to 'Autre'");
                                 CompanyINSEECat companyINSEECat = CompanyINSEECat.getByValue("AUTRE");
                                 companyToUpdate.setLegalCategory(companyINSEECat);
@@ -295,12 +299,12 @@ public class UnstackUpdateList {
                             continue;
 
                         } catch (IOException e) {
-                            logger.error("MPS is not responding : " + resourceToUnstack.toString(),e);
+                            logger.error("MPS is not responding : " + resourceToUnstack.toString(), e);
                             this.establishmentUpdateError(establishmentToUpdate, updateErrorId, resourceToUnstack);
                             continue;
 
                         } catch (Exception e) {
-                            logger.error("Error while requesting MPS : " + resourceToUnstack.toString(),e);
+                            logger.error("Error while requesting MPS : " + resourceToUnstack.toString(), e);
                             this.establishmentUpdateError(establishmentToUpdate, updateErrorId, resourceToUnstack);
                             continue;
                         }
@@ -413,13 +417,21 @@ public class UnstackUpdateList {
                     }
 
                 }
-        }
-        logger.info("Unstack mpsUpdate done. Number of errors : " + this.updateErrors);
+            }
+            cptEncours =0;
+            logger.info("Unstack mpsUpdate done. Number of errors : " + this.updateErrors);
 
-        // in case of errors, display the id of resources
-        if (this.updateErrors > 0) {
-            logger.info("Ressources update failed :" + updateErrorId.toString());
+            // in case of errors, display the id of resources
+            if (this.updateErrors > 0) {
+                logger.info("Ressources update failed :" + updateErrorId.toString());
+            }
+
+        }else
+        {
+            cptEncours++;
+            logger.info("Unstack CRON DEJA EN COURS !!! ");
         }
+
     }
 
     public void companyUpdateError(Company companyToUpdate, Map<Long, String> updateErrorId,
