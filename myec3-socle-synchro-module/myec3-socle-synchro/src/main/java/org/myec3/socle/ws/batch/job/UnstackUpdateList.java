@@ -68,6 +68,7 @@ public class UnstackUpdateList {
     private static final String MPS_UPDATE_BUNDLE_NAME = "mpsUpdate";
     private static final ResourceBundle MPSUPDATE_BUNDLE = ResourceBundle.getBundle(MPS_UPDATE_BUNDLE_NAME);
     public static final String UPDATE_LIMIT_MPS = MPSUPDATE_BUNDLE.getString("mpsUpdate.limit");
+    private static final String TEST_SIRET_ENTREPRISE = "25351449100047";
 
     public void unstackUpdateResource() throws InterruptedException {
 
@@ -75,8 +76,12 @@ public class UnstackUpdateList {
 
         logger.debug("Unstack CRON !");
 
-        if (cptEncours ==0 ||cptEncours > 10) {
+        if (cptEncours == 0 || cptEncours > 10) {
 
+            if (!this.healthCheckEntreprise()) {
+                logger.info("HealthCheck Api entreprise KO");
+                return;
+            }
             updateErrors = 0;
             cptEncours=1;
             // We get all the MpsUpdateJob from BDD, with limit
@@ -134,16 +139,16 @@ public class UnstackUpdateList {
                                 continue;
                             }
                         } catch (FileNotFoundException e) {
-                            logger.warn("Contacting MPS with invalid siret : " + e);
+                            logger.warn("Contacting MPS with invalid siret : ", e);
                             this.companyUpdateError(companyToUpdate, updateErrorId, resourceToUnstack);
                             continue;
 
                         } catch (IOException e) {
-                            logger.warn("MPS is not responding : " + e);
+                            logger.warn("MPS is not responding : ", e);
                             this.companyUpdateError(companyToUpdate, updateErrorId, resourceToUnstack);
                             continue;
                         } catch (Exception e) {
-                            logger.warn("Error occured while requesting MPS : " + e);
+                            logger.warn("Error occured while requesting MPS", e);
                             this.companyUpdateError(companyToUpdate, updateErrorId, resourceToUnstack);
                             continue;
                         }
@@ -160,8 +165,7 @@ public class UnstackUpdateList {
                             companyToUpdate.setLastUpdate(date);
                             companyToUpdate.setCreationDate(tmpCompany.getCreationDate());
 
-                            if (tmpEstablishment.getAddress().getInsee() != null
-                                    && tmpEstablishment.getAddress().getInsee() != null) {
+                            if (tmpEstablishment.getAddress().getInsee() != null) {
                                 InseeGeoCode insee = this.inseeGeoCodeService
                                         .findByInseeCode(tmpEstablishment.getAddress().getInsee());
                                 if (insee != null) {
@@ -238,7 +242,7 @@ public class UnstackUpdateList {
 
 
                             } catch (Exception e) {
-                                logger.error("Error while updating Company : " + e);
+                                logger.error("Error while updating Company : ", e);
                                 this.companyUpdateError(companyToUpdate, updateErrorId, resourceToUnstack);
                                 continue;
                             }
@@ -470,9 +474,29 @@ public class UnstackUpdateList {
 
         establishmentToUpdate.setAdministrativeState(administrativeState);
         this.mpsUpdateJobService.deleteById(resourceToUnstack.getId());
-        this.establishmentService.update(establishmentToUpdate);
+        try {
+            this.establishmentService.update(establishmentToUpdate);
+        } catch (Exception e) {
+            logger.error("Erreur update establishment error", e);
+        }
+
         logger.debug("Update Establishment " + establishmentToUpdate.getId() + " completed.");
 
         logger.debug("mpsUpdateJobService deleted !");
+    }
+
+    /**
+     * check si l'api entreprise est up avant de lancer le script
+     * @return
+     */
+    private boolean healthCheckEntreprise() {
+        try {
+            Establishment testMegalis = this.mpsWS
+                    .getEstablishment( TEST_SIRET_ENTREPRISE);
+
+            return testMegalis != null;
+        } catch (IOException e) {
+            return false;
+        }
     }
 }
