@@ -24,6 +24,10 @@ import org.myec3.socle.core.domain.model.Role;
 import org.myec3.socle.core.domain.model.enums.ResourceType;
 import org.myec3.socle.core.domain.sdm.model.SdmAgent;
 import org.myec3.socle.core.domain.sdm.model.SdmService;
+import org.myec3.socle.core.sync.api.Error;
+import org.myec3.socle.core.sync.api.ErrorCodeType;
+import org.myec3.socle.core.sync.api.HttpStatus;
+import org.myec3.socle.core.sync.api.MethodType;
 import org.myec3.socle.core.sync.api.ResponseMessage;
 import org.myec3.socle.synchro.core.domain.model.SynchroIdentifiantExterne;
 import org.myec3.socle.synchro.core.domain.model.SynchronizationSubscription;
@@ -105,7 +109,8 @@ public class AgentSynchronizationJob extends
                 return sdmWsClient.delete(resource, valuedEmptyFieldForDelete(agentSDM), synchronizationSubscription);
             } else {
                 logger.warn("AgentProfile.User id: {} n'a pas d'idAppliExterne (SDM) dans la table synchroIdentifiantExterneService", resource.getUser().getId());
-                return null;
+                return new ResponseMessage(HttpStatus.BAD_REQUEST, new Error(ErrorCodeType.INTERNAL_CLIENT_ERROR, "Id Externe null",
+                        "L'agent n'a pas d'idApplicationExterne (SDM)", resource.getId(), MethodType.DELETE));
             }
         } else {
             if (isMonotenant(synchronizationSubscription.getApplication())) {

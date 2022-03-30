@@ -20,7 +20,8 @@ package org.myec3.socle.synchro.scheduler.job.resources;
 import org.myec3.socle.core.domain.model.Organism;
 import org.myec3.socle.core.domain.model.enums.ResourceType;
 import org.myec3.socle.core.domain.sdm.model.SdmOrganisme;
-import org.myec3.socle.core.sync.api.ResponseMessage;
+import org.myec3.socle.core.sync.api.*;
+import org.myec3.socle.core.sync.api.Error;
 import org.myec3.socle.synchro.core.domain.model.SynchroIdentifiantExterne;
 import org.myec3.socle.synchro.core.domain.model.SynchronizationSubscription;
 import org.myec3.socle.synchro.core.service.SynchroIdentifiantExterneService;
@@ -90,10 +91,10 @@ public class OrganismSynchronizationJob extends
                 //organismeSDM.setActif(false);
                 organismeSDM.setId(synchroIdentifiantExterne.getIdAppliExterne());
                 return sdmWsClient.put(resource, organismeSDM, synchronizationSubscription);
-            }else{
+            } else {
                 logger.warn("Organism id: {} n'a pas d'idApplicationExterne (SDM) dans la table synchroIdentifiantExterneService",resource.getId());
-                //todo return null à voir si ça fonctionne dans ce cas
-                return null;
+                return new ResponseMessage(HttpStatus.BAD_REQUEST, new Error(ErrorCodeType.INTERNAL_CLIENT_ERROR, "Id Externe null",
+                        "Organism n'a pas d'idApplicationExterne (SDM)", resource.getId(), MethodType.DELETE));
             }
         }
         return resourceWsClient.delete(resource, synchronizationSubscription);
