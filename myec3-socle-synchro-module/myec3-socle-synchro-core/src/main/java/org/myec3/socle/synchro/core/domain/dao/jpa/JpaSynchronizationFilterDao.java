@@ -21,6 +21,9 @@ import org.myec3.socle.synchro.core.domain.dao.SynchronizationFilterDao;
 import org.myec3.socle.synchro.core.domain.model.SynchronizationFilter;
 import org.springframework.stereotype.Repository;
 
+import javax.persistence.NoResultException;
+import javax.persistence.Query;
+
 /**
  * This implementation provide methods to perform specific queries on
  * {@link SynchronizationFilter} objects. It only provides new specific methods
@@ -35,5 +38,23 @@ public class JpaSynchronizationFilterDao extends JpaGenericSynchronizationDao<Sy
 	@Override
 	public Class<SynchronizationFilter> getType() {
 		return SynchronizationFilter.class;
+	}
+
+	@Override
+	public SynchronizationFilter findByApplicationsDisplayedAndByRolesDisplayed(boolean applicationsDisplayed, boolean rolesDisplayed) {
+		this.getLog().debug("Finding instance of SynchronizationFilter with applicationsDisplayed : {} and rolesDisplayed : {}", applicationsDisplayed, rolesDisplayed);
+
+		try {
+			Query query = getEm().createQuery("select s from " + this.getDomainClass().getSimpleName()
+					+ " s WHERE allRolesDisplayed = :rolesDisplayed AND allApplicationsDisplayed = :applicationsDisplayed");
+			query.setParameter("applicationsDisplayed", applicationsDisplayed);
+			query.setParameter("rolesDisplayed", rolesDisplayed);
+			SynchronizationFilter instance = (SynchronizationFilter) query.getSingleResult();
+			this.getLog().debug("findByApplicationsDisplayedAndByRolesDisplayed successfull.");
+			return instance;
+		} catch (NoResultException e) {
+			this.getLog().warn("findByApplicationsDisplayedAndByRolesDisplayed returned no result");
+			return null;
+		}
 	}
 }
