@@ -462,7 +462,7 @@ public class MessageEmail {
 
 			content.append(getMessage(messages, "content-regenerate-password-url-info3"));
 			content.append("<br/><br/><br/>");
-			content.append(password);
+			content.append("<a href=\"").append(password).append("\">").append(password).append("</a>");
 			content.append("<br/><br/><br/>");
 
 			content.append(getMessage(messages, "content-regenerate-password-url-info4"));
