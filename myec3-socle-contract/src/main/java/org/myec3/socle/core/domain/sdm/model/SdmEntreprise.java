@@ -10,7 +10,7 @@ import java.util.Objects;
 public class SdmEntreprise extends SdmResource  {
 
     @XmlElement(required = true)
-    private long id;
+    private Long id;
 
     @XmlElement(required = false)
     private String siren;
@@ -45,11 +45,11 @@ public class SdmEntreprise extends SdmResource  {
     @XmlElement(required = false)
     private List<SdmEtablissement> etablisssements;
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

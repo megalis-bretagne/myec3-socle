@@ -8,10 +8,10 @@ import java.util.Objects;
 public class SdmInscrit extends SdmResource {
 
     @XmlElement(required = false)
-    private long id;
+    private Long id;
 
     @XmlElement(required = true)
-    private long idEtablissement;
+    private Long idEtablissement;
 
     @XmlElement(required = true)
     private String login;
@@ -64,16 +64,20 @@ public class SdmInscrit extends SdmResource {
         this.motDePasse = Objects.toString(motDePasse,"");
     }
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
-    public long getIdEtablissement() {
+    public Long getIdEtablissement() {
         return idEtablissement;
+    }
+
+    public void setIdEtablissement(Long idEtablissement) {
+        this.idEtablissement = idEtablissement;
     }
 
     public long getProfil() {
@@ -84,9 +88,7 @@ public class SdmInscrit extends SdmResource {
         this.profil = profil;
     }
 
-    public void setIdEtablissement(long idEtablissement) {
-        this.idEtablissement = idEtablissement;
-    }
+
 
     public String getLogin() {
         return login;

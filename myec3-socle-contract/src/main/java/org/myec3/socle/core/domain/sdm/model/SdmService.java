@@ -11,9 +11,9 @@ import java.util.Objects;
 public class SdmService extends SdmResource  {
 
     @XmlElement(required = true)
-    private long id;
-    private long idParent;
-    private long idExterneParent;
+    private Long id;
+    private Long idParent;
+    private Long idExterneParent;
     private String libelle;
     private String acronymeOrganisme;
     private String sigle;
@@ -23,27 +23,27 @@ public class SdmService extends SdmResource  {
     private String formeJuridique;
     private String formeJuridiqueCode;
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
-    public long getIdParent() {
+    public Long getIdParent() {
         return idParent;
     }
 
-    public void setIdParent(long idParent) {
+    public void setIdParent(Long idParent) {
         this.idParent = idParent;
     }
 
-    public long getIdExterneParent() {
+    public Long getIdExterneParent() {
         return idExterneParent;
     }
 
-    public void setIdExterneParent(long idExterneParent) {
+    public void setIdExterneParent(Long idExterneParent) {
         this.idExterneParent = idExterneParent;
     }
 
