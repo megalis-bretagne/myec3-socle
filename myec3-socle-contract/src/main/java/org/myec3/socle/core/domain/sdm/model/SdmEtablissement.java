@@ -11,6 +11,7 @@ import java.util.Objects;
 public class SdmEtablissement extends SdmResource  {
 
     @XmlElement(required = true)
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private Long id;
 
     private String siege;

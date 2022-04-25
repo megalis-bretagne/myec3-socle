@@ -1,5 +1,7 @@
 package org.myec3.socle.core.domain.sdm.model;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.util.Objects;
@@ -8,6 +10,7 @@ import java.util.Objects;
 public class SdmInscrit extends SdmResource {
 
     @XmlElement(required = false)
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private Long id;
 
     @XmlElement(required = true)
