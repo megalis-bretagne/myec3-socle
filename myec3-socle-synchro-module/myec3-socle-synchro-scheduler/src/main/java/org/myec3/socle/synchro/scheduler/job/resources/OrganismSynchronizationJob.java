@@ -131,7 +131,7 @@ public class OrganismSynchronizationJob extends
         SdmOrganisme organismeSDM = new SdmOrganisme();
         organismeSDM.setIdExterne(String.valueOf(resource.getExternalId()));
 
-        organismeSDM.setId(0);
+        organismeSDM.setId(0l);
         organismeSDM.setAcronyme(resource.getAcronym());
         organismeSDM.setEmail(resource.getEmail());
         organismeSDM.setUrl(resource.getWebsite());
