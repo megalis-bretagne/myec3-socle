@@ -25,7 +25,7 @@ import org.myec3.socle.synchro.core.domain.model.SynchronizationSubscription;
 /**
  * Interface defining Business Services methods and providing
  * {@link SynchronizationFilter} specific operations. This interface extends the
- * common {@link GenericService} interface by adding new specific methods
+ * common {@link IGenericService} interface by adding new specific methods
  * 
  * @author Denis Cucchietti <denis.cucchietti@atosorigin.com>
  */
@@ -40,4 +40,12 @@ public interface SynchronizationFilterService extends IGenericService<Synchroniz
 	 * @param subscription : the subscription concerned by the filter
 	 */
 	void filter(Resource resource, SynchronizationSubscription subscription);
+
+	/**
+	 * Get the SynchronizationFilter from config
+	 * @param applicationsDisplayed If applications is displayed in xml
+	 * @param rolesDisplayed If roles is displayed in xml
+	 * @return SynchronizationFilter config
+	 */
+	SynchronizationFilter findByApplicationsDisplayedAndByRolesDisplayed(boolean applicationsDisplayed, boolean rolesDisplayed);
 }

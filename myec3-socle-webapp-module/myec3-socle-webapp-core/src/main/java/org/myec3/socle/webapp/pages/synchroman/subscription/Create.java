@@ -1,9 +1,6 @@
 package org.myec3.socle.webapp.pages.synchroman.subscription;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import javax.inject.Named;
 
@@ -21,7 +18,7 @@ import org.apache.tapestry5.ioc.Messages;
 import org.apache.tapestry5.ioc.annotations.Inject;
 import org.myec3.socle.core.domain.model.Application;
 import org.myec3.socle.core.domain.model.enums.ResourceType;
-import org.myec3.socle.core.service.ApplicationService;
+import org.myec3.socle.synchro.core.domain.model.SynchronizationFilter;
 import org.myec3.socle.synchro.core.domain.model.SynchronizationSubscription;
 import org.myec3.socle.synchro.core.service.SynchronizationFilterService;
 import org.myec3.socle.synchro.core.service.SynchronizationSubscriptionService;
@@ -53,9 +50,6 @@ public class Create extends AbstractPage {
 	@Named("synchronizationFilterService")
 	private SynchronizationFilterService synchronizationFilterService;
 
-	@Inject
-	@Named("applicationService")
-	private ApplicationService applicationService;
 
 	@Property
 	private SynchronizationSubscription synchronizationSubscription;
@@ -65,13 +59,19 @@ public class Create extends AbstractPage {
 	@Component(id = "creation_subscription_form")
 	private Form form;
 
+	@Property
+	private boolean applicationsDisplayed;
+
+	@Property
+	private boolean rolesDisplayed;
+
 	private Application applicationSelected;
 
 	@InjectPage
 	private View viewPage;
 
 	@OnEvent(EventConstants.ACTIVATE)
-	public void Activation() {
+	public void onActivate() {
 		synchronizationSubscription = new SynchronizationSubscription();
 	}
 
@@ -81,7 +81,7 @@ public class Create extends AbstractPage {
 		List<SynchronizationSubscription> foundSynchronizationSubscription = this.synchronizationSubscriptionService
 				.findByResourceTypeAndApplicationId(resourceTypeSelected, applicationSelected.getId());
 
-		if (foundSynchronizationSubscription != null) {
+		if (foundSynchronizationSubscription != null && !foundSynchronizationSubscription.isEmpty()) {
 			logger.info("An subscription with this application and this resource type already exists");
 			this.form.recordError(this.messages.get("subscription-already-exists-error"));
 		}
@@ -90,19 +90,24 @@ public class Create extends AbstractPage {
 	@OnEvent(EventConstants.SUCCESS)
 	public Object onSuccess() {
 		try {
-			// Set Values
-			synchronizationSubscription.setApplication(applicationSelected);
-			synchronizationSubscription.setResourceLabel(resourceTypeSelected);
 
-			// TODO faire ça mieux :o
-			synchronizationSubscription.setSynchronizationFilter(synchronizationFilterService.findOne(new Long(1)));
+			// Set Values
+			this.synchronizationSubscription.setApplication(this.applicationSelected);
+			this.synchronizationSubscription.setResourceLabel(this.resourceTypeSelected);
+
+			SynchronizationFilter synchronizationFilter = this.synchronizationFilterService.findByApplicationsDisplayedAndByRolesDisplayed(this.applicationsDisplayed,this.rolesDisplayed);
+			if(synchronizationFilter == null ){
+				this.synchronizationSubscription.setSynchronizationFilter(this.synchronizationFilterService.findOne(1L));
+			}
+			this.synchronizationSubscription.setSynchronizationFilter(synchronizationFilter);
+			this.synchronizationSubscription.setHttps(Boolean.FALSE);
 
 			// We create a new subscription into the database
-			this.synchronizationSubscriptionService.create(synchronizationSubscription);
+			this.synchronizationSubscriptionService.create(this.synchronizationSubscription);
 
 		} catch (Exception ex) {
 			logger.error(
-					"Error during create a new SynchronizationSubscription : " + ex.getMessage() + " " + ex.getCause());
+					"Error during create a new SynchronizationSubscription : {} {} ",ex.getMessage() ,ex.getCause());
 			this.form.recordError(this.messages.get("subscription-creation-error"));
 			return null;
 		}
@@ -118,10 +123,9 @@ public class Create extends AbstractPage {
 	}
 
 	public Map<Application, String> getApplicationsList() {
-		List<Application> applicationList = new ArrayList<Application>();
-		applicationList = this.applicationService.findAll();
+		List<Application> applicationList = this.applicationService.findAll();
 
-		Map<Application, String> mapApplication = new HashMap<Application, String>();
+		Map<Application, String> mapApplication = new HashMap<>();
 		for (Application applicationItem : applicationList) {
 			mapApplication.put(applicationItem, applicationItem.getName());
 		}
@@ -130,14 +134,13 @@ public class Create extends AbstractPage {
 
 	public GenericListEncoder<Application> getApplicationEncoder() {
 		List<Application> availableApplications = this.applicationService.findAll();
-		GenericListEncoder<Application> encoder = new GenericListEncoder<Application>(availableApplications);
-		return encoder;
+		return new GenericListEncoder<>(availableApplications);
 	}
 
 	public Map<ResourceType, String> getResourceTypeModel() {
 		ResourceType[] availableResourceType = ResourceType.values();
 
-		Map<ResourceType, String> mapResourceType = new HashMap<ResourceType, String>();
+		EnumMap<ResourceType, String> mapResourceType = new EnumMap<>(ResourceType.class);
 		for (ResourceType resourceType : availableResourceType) {
 			mapResourceType.put(resourceType, resourceType.toString());
 		}
@@ -146,12 +149,8 @@ public class Create extends AbstractPage {
 
 	public GenericListEncoder<ResourceType> getResourceTypeEncoder() {
 		ResourceType[] availableResourceType = ResourceType.values();
-		List<ResourceType> listResourceType = new ArrayList<ResourceType>();
-		for (ResourceType resourceType : availableResourceType) {
-			listResourceType.add(resourceType);
-		}
-		GenericListEncoder<ResourceType> encoder = new GenericListEncoder<ResourceType>(listResourceType);
-		return encoder;
+		List<ResourceType> listResourceType = new ArrayList<>(Arrays.asList(availableResourceType));
+		return new GenericListEncoder<>(listResourceType);
 	}
 
 	public Application getApplicationSelected() {

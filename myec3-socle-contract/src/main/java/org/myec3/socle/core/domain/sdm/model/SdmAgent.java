@@ -13,7 +13,7 @@ public class SdmAgent extends SdmResource {
 
 
       @XmlElement(required = false)
-      private long id;
+      private Long id;
 
       @XmlElement(required = false)
       private long idProfil;
@@ -56,11 +56,11 @@ public class SdmAgent extends SdmResource {
             this.adresse = adresse;
       }
 
-      public long getId() {
+      public Long getId() {
             return id;
       }
 
-      public void setId(long id) {
+      public void setId(Long id) {
             this.id = id;
       }
 

@@ -29,4 +29,12 @@ import org.myec3.socle.synchro.core.domain.model.SynchronizationFilter;
 public interface SynchronizationFilterDao extends
 		GenericSynchronizationDao<SynchronizationFilter> {
 
+	/**
+	 * Get the SynchronizationFilter from config
+	 * @param applicationsDisplayed If applications is displayed in xml
+	 * @param rolesDisplayed If roles is displayed in xml
+	 * @return SynchronizationFilter config
+	 */
+	SynchronizationFilter findByApplicationsDisplayedAndByRolesDisplayed(boolean applicationsDisplayed, boolean rolesDisplayed);
+
 }

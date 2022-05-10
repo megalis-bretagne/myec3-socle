@@ -60,7 +60,7 @@ public class JpaSynchroIdentifiantExterneDao extends JpaGenericSynchronizationDa
         this.getLog().debug("Finding initial SynchroIdentifiantExterneService with idSocle : " + idSocle);
         try {
             Query query = this.getEm().createQuery("select s from " + this.getDomainClass().getSimpleName()
-                    + " s WHERE idSocle =:idSocle and typeRessource =:typeRessource order by idAppliExterne ASC" );
+                    + " s WHERE idSocle =:idSocle and typeRessource =:typeRessource" );
             query.setParameter("idSocle", idSocle);
             query.setParameter("typeRessource", resourceType);
             List<SynchroIdentifiantExterne> result = (List<SynchroIdentifiantExterne>) query.getResultList();

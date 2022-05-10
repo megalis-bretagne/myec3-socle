@@ -1,17 +1,17 @@
 /**
  * Copyright (c) 2011 Atos Bourgogne
- * 
+ *
  * This file is part of MyEc3.
- * 
+ *
  * MyEc3 is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License version 3 as published by
  * the Free Software Foundation.
- * 
+ *
  * MyEc3 is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public License
  * along with MyEc3. If not, see <http://www.gnu.org/licenses/>.
  */
@@ -41,7 +41,7 @@ import org.myec3.socle.webapp.pages.user.RegeneratePassword;
  * of<br />
  * organim{@link Organism} or company{@link Company}<br />
  * and regenerate the new password{@link RegeneratePassword}.<br />
- * 
+ *
  * @author Anthony Colas<anthony.j.colas@atosorigin.com>
  */
 public class MessageEmail {
@@ -73,9 +73,9 @@ public class MessageEmail {
 	private Map<String, String> mapAttributes;
 
 	/**
-	 * 
+	 *
 	 * Enum used to know in which context the email must be sent
-	 * 
+	 *
 	 */
 	public enum EmailContext {
 		/**
@@ -135,7 +135,7 @@ public class MessageEmail {
 	 * Contructor. Initialize the profile type value{@link ProfileTypeValue}
 	 * (Agent,Employee or Admin), the email context, profile's username, profile's
 	 * password and structure name.
-	 * 
+	 *
 	 * @param profileTypeValue : the profile type which must receive the email
 	 * @param emailContext     : the context in which the mail is sent
 	 * @param username         : the username of the profile who should receive the
@@ -182,7 +182,7 @@ public class MessageEmail {
 	 * Contructor. Initialize the profile type value{@link ProfileTypeValue}
 	 * (Agent,Employee or Admin), the email context, profile's username, profile's
 	 * user and structure name.
-	 * 
+	 *
 	 * @param profileTypeValue : the profile type which must receive the email
 	 * @param emailContext     : the context in which the mail is sent
 	 * @param username         : the username of the profile who should receive the
@@ -228,7 +228,7 @@ public class MessageEmail {
 	 * Contructor. Initialize the profile type value{@link ProfileTypeValue}
 	 * (Agent,Employee or Admin), the email context, profile's username, profile's
 	 * user and structure name.
-	 * 
+	 *
 	 * @param profileTypeValue : the profile type which must receive the email
 	 * @param emailContext     : the context in which the mail is sent
 	 * @param username         : the username of the profile who should receive the
@@ -247,9 +247,9 @@ public class MessageEmail {
 	 * Generate the content of email which will be sent to the new admin or new user
 	 * when creating new admin of organisme(CreateFirstAgent), new user of organimse
 	 * or company and regenerate the new password
-	 * 
+	 *
 	 * @param messages : the text is defined in app.properties
-	 * 
+	 *
 	 * @return the content of the email to send
 	 */
 	public String generateContent(Messages messages, Customer customer) {
@@ -260,9 +260,9 @@ public class MessageEmail {
 	 * Generate the content of email which will be sent to the new admin or new user
 	 * when creating new admin of organisme(CreateFirstAgent), new user of organimse
 	 * or company and regenerate the new password
-	 * 
+	 *
 	 * @param messages : the text is defined in app.properties
-	 * 
+	 *
 	 * @return the content of the email to send
 	 */
 	public String generateContent(Properties messages, Customer customer) {
@@ -274,9 +274,9 @@ public class MessageEmail {
 	 * Generate the content of email which will be sent to the new admin or new user
 	 * when creating new admin of organisme(CreateFirstAgent), new user of organimse
 	 * or company and regenerate the new password
-	 * 
+	 *
 	 * @param messages : the text is defined in app.properties
-	 * 
+	 *
 	 * @return the content of the email to send
 	 */
 	private String generateContent(Object messages, Customer customer) {
@@ -333,9 +333,11 @@ public class MessageEmail {
 			content.append(getMessage(messages,
 					"info-login-email-admin-organism"));
 			content.append("<br/>");
-			content.append("<a href=" + "\""
-					+ getMessage(messages, "link-admin") + "\"" + ">"
-					+ getMessage(messages, "link-admin") + "</a>");
+			content.append("<a href=" + "\"").
+                    append(String.format(getMessage(messages, "link-admin"), GuWebAppConstants.MYEC3_BASE_URL)).
+                    append("\"").append(">").
+                    append(String.format(getMessage(messages, "link-admin"), GuWebAppConstants.MYEC3_BASE_URL)).
+                    append("</a>");
 			content.append("<br/><br/>");
 			break;
 
@@ -446,8 +448,8 @@ public class MessageEmail {
 			content.append(getMessage(messages,
 					"notification-content-email-info1"));
 			content.append("<br/>");
-			content.append(getMessage(messages,
-					"notification-content-email-info2"));
+			content.append(String.format(getMessage(messages,
+					"notification-content-email-info2"), GuWebAppConstants.MYEC3_BASE_URL));
 			content.append("<br/><br/>");
 			break;
 
@@ -460,7 +462,7 @@ public class MessageEmail {
 
 			content.append(getMessage(messages, "content-regenerate-password-url-info3"));
 			content.append("<br/><br/><br/>");
-			content.append(password);
+			content.append("<a href=\"").append(password).append("\">").append(password).append("</a>");
 			content.append("<br/><br/><br/>");
 
 			content.append(getMessage(messages, "content-regenerate-password-url-info4"));
@@ -515,8 +517,8 @@ public class MessageEmail {
 
 			content.append("<br/><br/>");
 
-			content.append(getMessage(messages,
-					"content-email-password-expired-info1"));
+			content.append(String.format(getMessage(messages,
+					"content-email-password-expired-info1"), GuWebAppConstants.MYEC3_BASE_URL));
 			content.append("<br/><br/>");
 
 			content.append(getMessage(messages,

@@ -11,7 +11,8 @@ import java.util.Objects;
 public class SdmEtablissement extends SdmResource  {
 
     @XmlElement(required = true)
-    private long id;
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    private Long id;
 
     private String siege;
 
@@ -35,11 +36,11 @@ public class SdmEtablissement extends SdmResource  {
         this.idEntreprise = idEntreprise;
     }
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

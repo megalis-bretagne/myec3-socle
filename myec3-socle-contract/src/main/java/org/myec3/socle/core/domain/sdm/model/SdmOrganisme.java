@@ -6,7 +6,7 @@ import java.util.Objects;
 
 public class SdmOrganisme extends SdmResource  {
 
-    private long id;
+    private Long id;
     private String acronyme;
     private String categorieInsee;
     private String sigle;
@@ -19,11 +19,11 @@ public class SdmOrganisme extends SdmResource  {
     private String email;
     private String tel;
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

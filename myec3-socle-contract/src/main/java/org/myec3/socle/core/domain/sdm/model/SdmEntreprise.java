@@ -1,5 +1,7 @@
 package org.myec3.socle.core.domain.sdm.model;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.util.Date;
@@ -10,7 +12,7 @@ import java.util.Objects;
 public class SdmEntreprise extends SdmResource  {
 
     @XmlElement(required = true)
-    private long id;
+    private Long id;
 
     @XmlElement(required = false)
     private String siren;
@@ -43,13 +45,14 @@ public class SdmEntreprise extends SdmResource  {
     private String email;
 
     @XmlElement(required = false)
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private List<SdmEtablissement> etablisssements;
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

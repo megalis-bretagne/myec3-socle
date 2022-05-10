@@ -72,6 +72,13 @@ public class SynchronizationFilterServiceImpl
 	/**
 	 * {@inheritDoc}
 	 */
+	public SynchronizationFilter findByApplicationsDisplayedAndByRolesDisplayed(boolean applicationsDisplayed, boolean rolesDisplayed){
+		return this.dao.findByApplicationsDisplayedAndByRolesDisplayed(applicationsDisplayed,rolesDisplayed);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public void filter(Resource resource, SynchronizationSubscription subscription) {
 		logger.debug("Enterring in method filter...");
@@ -107,10 +114,10 @@ public class SynchronizationFilterServiceImpl
 	}
 
 	/**
-	 * Filter used on {@link AgentProfile} objects in order to define the object's
+	 * Filter used on {@link AdminProfile} objects in order to define the object's
 	 * datas to send or not to the distants applications.
 	 * 
-	 * @param agentProfile : the agent profile to filter
+	 * @param adminProfile : the admin profile to filter
 	 * @param subscription : the subscription associated at the filter to use.
 	 */
 	public void adminProfileFilter(AdminProfile adminProfile, SynchronizationSubscription subscription) {
