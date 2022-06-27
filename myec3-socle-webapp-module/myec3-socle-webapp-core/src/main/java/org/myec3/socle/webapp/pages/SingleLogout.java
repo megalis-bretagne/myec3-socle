@@ -48,8 +48,8 @@ public class SingleLogout {
         this.listeUrlLogout = GuWebAppConstants.LISTE_URL_LOGOUT;
 //        this.portailLogoutUrl = GuWebAppConstants.PORTAIL_BASE_URL + "/front/logout.jsp";
         //nouvelle url : https://services.megalis.bretagne.bzh/wp-login.php?action=logout
-        this.portailLogoutUrl = GuWebAppConstants.PORTAIL_BASE_URL + "wp-login.php?action=logout";
-
+//        this.portailLogoutUrl = GuWebAppConstants.PORTAIL_BASE_URL + "wp-login.php?action=logout";
+        this.portailLogoutUrl = GuWebAppConstants.PORTAIL_BASE_URL;
         return Boolean.TRUE;
     }
 
