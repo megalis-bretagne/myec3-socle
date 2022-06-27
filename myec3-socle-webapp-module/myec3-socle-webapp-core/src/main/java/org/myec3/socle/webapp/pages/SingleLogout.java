@@ -46,7 +46,9 @@ public class SingleLogout {
             }
         }
         this.listeUrlLogout = GuWebAppConstants.LISTE_URL_LOGOUT;
-        this.portailLogoutUrl = GuWebAppConstants.PORTAIL_BASE_URL + "/front/logout.jsp";
+//        this.portailLogoutUrl = GuWebAppConstants.PORTAIL_BASE_URL + "/front/logout.jsp";
+        //nouvelle url : https://services.megalis.bretagne.bzh/wp-login.php?action=logout
+        this.portailLogoutUrl = GuWebAppConstants.PORTAIL_BASE_URL + "?action=logout&redirect_to=/";
         return Boolean.TRUE;
     }
 
