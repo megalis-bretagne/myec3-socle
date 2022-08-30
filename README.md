@@ -68,7 +68,7 @@ Dans l'onglet Startup/Connection ajouter les trois variables d'environnement ci-
 Exécuter le tomcat server depuis intelliJ et attendre le bon déploiement des wars
 ![DEPLOY_OK](doc/deployment_ok.PNG)
 Se rendre sur la page http://localhost:8080/myec3. Une redirection vers le Keycloak d'intégration est effectué.  
-Login/mdp : dlfr-megalis@atos.net / emegalis!BZH35
+Login/mdp : admin / password
 
 ![MYEC3](doc/localhost_myec3.PNG)
 
@@ -130,21 +130,3 @@ Eviter les commentaires "oups", "fix" etc...
 ### Présentation du CI
 
 [voir le PowerPoint](doc/GitFlowMyEC3.ppt)
-
-## Liens utiles
-
-### Applications
-
-|   Service\Domaine  | Intégration  | Pré-prod   | Prod  |
-| ------------------ | ------------ | ---------- | ----- |
-| Dashboard Exploitation | https://combrit-exploit.sib.fr/  | https://exploit-preprod.megalis.bretagne.bzh/ |   https://exploit.megalis.bretagne.bzh/ |
-| MyEC3                  | https://combrit-socle.sib.fr/    | https://socle-preprod.megalis.bretagne.bzh/   |   https://socle.megalis.bretagne.bzh/   |
-| Portainer              | https://combrit-exploit.sib.fr/portainer/# | https://exploit-preprod.megalis.bretagne.bzh/portainer/#/ | https://exploit.megalis.bretagne.bzh/portainer/#/ |
-
-
-### VM de DEV
-
-|  VM  | ip | login
-| ----- | ---- | ---- |
-| Combrit | 10.241.0.73 | root |
-| locronan | 10.241.0.30 | root |
