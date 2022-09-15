@@ -351,6 +351,13 @@ public class MessageEmail {
 			content.append("<br/><br/>");
 			content.append(getMessage(messages, "content-email-user-info"));
 			content.append("<br/></br>");
+			content.append(getMessage(messages, "content-email-site-service"));
+			content.append("<a href=\"")
+					.append(GuWebAppConstants.PORTAIL_BASE_URL)
+					.append("\">")
+					.append(GuWebAppConstants.PORTAIL_BASE_URL)
+					.append("</a>");
+			content.append("<br/></br>");
 			content.append(getMessage(messages, "identifiant-label"));
 			content.append(" " + username);
 			content.append("<br/>");
