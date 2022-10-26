@@ -334,9 +334,9 @@ public class MessageEmail {
 					"info-login-email-admin-organism"));
 			content.append("<br/>");
 			content.append("<a href=" + "\"").
-                    append(String.format(getMessage(messages, "link-admin"), GuWebAppConstants.MYEC3_BASE_URL)).
+                    append(MessageFormat.format(getMessage(messages, "link-admin"), GuWebAppConstants.MYEC3_BASE_URL)).
                     append("\"").append(">").
-                    append(String.format(getMessage(messages, "link-admin"), GuWebAppConstants.MYEC3_BASE_URL)).
+                    append(MessageFormat.format(getMessage(messages, "link-admin"), GuWebAppConstants.MYEC3_BASE_URL)).
                     append("</a>");
 			content.append("<br/><br/>");
 			break;
@@ -448,7 +448,7 @@ public class MessageEmail {
 			content.append(getMessage(messages,
 					"notification-content-email-info1"));
 			content.append("<br/>");
-			content.append(String.format(getMessage(messages,
+			content.append(MessageFormat.format(getMessage(messages,
 					"notification-content-email-info2"), GuWebAppConstants.MYEC3_BASE_URL));
 			content.append("<br/><br/>");
 			break;
@@ -517,7 +517,7 @@ public class MessageEmail {
 
 			content.append("<br/><br/>");
 
-			content.append(String.format(getMessage(messages,
+			content.append(MessageFormat.format(getMessage(messages,
 					"content-email-password-expired-info1"), GuWebAppConstants.MYEC3_BASE_URL));
 			content.append("<br/><br/>");
 
