@@ -67,7 +67,7 @@
 			</t:if>
 			<div class="form-actions">
 				<p>
-					<t:submit t:id="submit" id="submit" class="button btnOk"
+					<t:submit t:id="submit" id="submit" class="button btnOk" t:mixins="Confirm" t:Confirm.message="${message:subscription-application-label}"
 						value="message:save-label" />
 					<input type="reset" value="${message:reset-label}"
 						id="cancelButton" />
