@@ -21,11 +21,8 @@ import org.springframework.security.web.authentication.logout.SimpleUrlLogoutSuc
 import org.springframework.security.web.authentication.preauth.AbstractPreAuthenticatedProcessingFilter;
 import org.springframework.security.web.authentication.preauth.PreAuthenticatedAuthenticationProvider;
 import org.springframework.security.web.authentication.preauth.PreAuthenticatedAuthenticationToken;
-import org.springframework.security.web.authentication.preauth.RequestHeaderAuthenticationFilter;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
-import org.springframework.security.web.util.matcher.OrRequestMatcher;
-import org.springframework.security.web.util.matcher.RequestMatcher;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -73,7 +70,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/user/search/**").hasAnyAuthority("ROLE_SUPER_ADMIN", "ROLE_ADMIN", "ROLE_MANAGER_AGENT", "ROLE_MANAGER_EMPLOYEE")
                 .antMatchers("/user/regeneratepassword").hasAnyAuthority("ROLE_AUTH", "ROLE_ANONYMOUS")
 
-                .antMatchers("/synchroman/**").hasAuthority("ROLE_SUPER_ADMIN")
+                .antMatchers("/synchroman/**").hasAnyAuthority("ROLE_SUPER_ADMIN", "ROLE_ADMIN")
 
                 .antMatchers("/organism/create/**").hasAnyAuthority("ROLE_SUPER_ADMIN", "ROLE_ADMIN")
                 .antMatchers("/organism/search/**").hasAnyAuthority("ROLE_SUPER_ADMIN", "ROLE_ADMIN")
