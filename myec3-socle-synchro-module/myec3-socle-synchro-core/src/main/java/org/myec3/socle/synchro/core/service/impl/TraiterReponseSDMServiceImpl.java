@@ -267,7 +267,7 @@ public class TraiterReponseSDMServiceImpl implements TraiterReponseSDMService {
 
             //mapping des codes erreurs
             if (resource instanceof EmployeeProfile) {
-                if (StringUtils.equalsIgnoreCase("L'inscrit n'est attaché à aucun etablissement", erreurs)) {
+                if (StringUtils.equalsIgnoreCase("L'inscrit n'est attaché à aucun établissement", erreurs)) {
                     error.setClassType(ClassType.ESTABLISHMENT);
                     error.setErrorCode(ErrorCodeType.RELATION_MISSING);
                     error.setResourceId(((EmployeeProfile) resource).getEstablishment().getId());
