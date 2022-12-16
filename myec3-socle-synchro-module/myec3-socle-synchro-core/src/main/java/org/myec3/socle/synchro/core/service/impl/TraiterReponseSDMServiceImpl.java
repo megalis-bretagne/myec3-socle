@@ -266,20 +266,17 @@ public class TraiterReponseSDMServiceImpl implements TraiterReponseSDMService {
             error.setErrorCode(ErrorCodeType.FORMAT_ERROR);
 
             //mapping des codes erreurs
-            if (resource instanceof EmployeeProfile) {
-                if (StringUtils.equalsIgnoreCase("L'inscrit n'est attaché à aucun etablissement", erreurs)) {
-                    error.setClassType(ClassType.ESTABLISHMENT);
-                    error.setErrorCode(ErrorCodeType.RELATION_MISSING);
-                    error.setResourceId(((EmployeeProfile) resource).getEstablishment().getId());
-                }
+            if (StringUtils.equalsIgnoreCase("L'inscrit n'est attaché à aucun etablissement", erreurs)) {
+                error.setClassType(ClassType.ESTABLISHMENT);
+                error.setErrorCode(ErrorCodeType.RELATION_MISSING);
+                error.setResourceId(((EmployeeProfile) resource).getEstablishment().getId());
             }
-            if (resource instanceof Establishment) {
-                if (StringUtils.equalsIgnoreCase("Etablissement n'est attaché à aucune entreprise", erreurs)) {
-                    error.setClassType(ClassType.COMPANY);
-                    error.setErrorCode(ErrorCodeType.RELATION_MISSING);
-                    error.setResourceId(((Establishment) resource).getCompany().getId());
-                }
+            if (StringUtils.equalsIgnoreCase("Etablissement n'est attaché à aucune entreprise", erreurs)) {
+                error.setClassType(ClassType.COMPANY);
+                error.setErrorCode(ErrorCodeType.RELATION_MISSING);
+                error.setResourceId(((Establishment) resource).getCompany().getId());
             }
+
             return error;
         } else {
             Error error = new Error();
