@@ -1,0 +1,13 @@
+Changelog
+Tous changements importants seront journalisés dans ce fichier.
+Basé sur Keep a Changelog.
+
+[unreleased]
+
+Fixed
+
+Modification de la limite du nombre de caractères dans l'expression régulière utilisée pour vérifier la validité de l'adresse mail d'un compte en cours de création (ticket iTop R-164295).
+
+
+Changed
+
