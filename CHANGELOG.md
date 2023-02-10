@@ -4,6 +4,11 @@ Tous changements importants seront journalisés dans ce fichier.
 
 Basé sur [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+
+## [Unreleased]
+- Ajout script des scripts d'initialisation de la base de données
+- 
+
 ## [0.2.7] - 2023-02-07
 
 ### Fixed
