@@ -107,7 +107,7 @@ public class ExportAgentServiceImpl implements ExportAgentService {
         List<ExportCSV> exportCSVList =  exportCSVService.findExportCSVByEtat(EtatExport.AF);
 
         if ( exportCSVList !=null && exportCSVList.size()> 0){
-            logger.info("Il y a un export d'agent à faire");
+            logger.info("There is an agent export to be done");
 
             try {
                 StringWriter sw = new StringWriter();
@@ -240,8 +240,8 @@ public class ExportAgentServiceImpl implements ExportAgentService {
         if (ap != null) {
             if(ap.getCreatedDate() != null){
                 putElement(csvDataMap, "agent_profil_creation_date", ap.getCreatedDate());
+                logger.debug("Agent account creation date added for export : " + ap.getCreatedDate());
             }
-            logger.debug("agent creation date" + ap.getCreatedDate());
             putElement(csvDataMap, "agent_profil_elected", ap.getElected());
             putElement(csvDataMap, "agent_profil_executive", ap.getExecutive());
             putElement(csvDataMap, "agent_profil_representative", ap.getRepresentative());
