@@ -238,6 +238,10 @@ public class ExportAgentServiceImpl implements ExportAgentService {
      */
     private void setAgentProfilData(HashMap<String, String> csvDataMap, AgentProfile ap) {
         if (ap != null) {
+            if(ap.getCreatedDate() != null){
+                putElement(csvDataMap, "agent_profil_creation_date", ap.getCreatedDate());
+            }
+            logger.debug("agent creation date" + ap.getCreatedDate());
             putElement(csvDataMap, "agent_profil_elected", ap.getElected());
             putElement(csvDataMap, "agent_profil_executive", ap.getExecutive());
             putElement(csvDataMap, "agent_profil_representative", ap.getRepresentative());
@@ -245,6 +249,7 @@ public class ExportAgentServiceImpl implements ExportAgentService {
             putElement(csvDataMap, "organism_department_id", ap.getOrganismDepartment().getId());
             putElement(csvDataMap, "organism_department_label", ap.getOrganismDepartment().getLabel());
         } else {
+            csvDataMap.put("agent_profil_creation_date", "");
             csvDataMap.put("agent_profil_elected", "");
             csvDataMap.put("agent_profil_executive", "");
             csvDataMap.put("agent_profil_representative", "");
@@ -401,6 +406,7 @@ public class ExportAgentServiceImpl implements ExportAgentService {
         header.add("profil_function");
         header.add("profil_grade");
         header.add("profil_phone");
+        header.add("agent_profil_creation_date");
         header.add("agent_profil_elected");
         header.add("agent_profil_executive");
         header.add("agent_profil_representative");

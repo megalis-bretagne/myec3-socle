@@ -201,6 +201,10 @@
 							<td>Numéro de téléphone fixe de l’agent</td>
 						</tr>
 						<tr>
+                        	<td>agent_profil_creation_date</td>
+                        	<td>Date de création du profil de l'agent</td>
+                        </tr>
+						<tr>
 							<td>agent_profil_elected</td>
 							<td>Agent qui est un élu ?</td>
 						</tr>
