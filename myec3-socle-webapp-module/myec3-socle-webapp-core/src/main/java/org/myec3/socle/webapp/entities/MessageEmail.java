@@ -502,7 +502,12 @@ public class MessageEmail {
 			content.append("<br/><br/>");
 			content.append(getMessage(messages,
 					"content-email-password-about-to-expired-info1"));
-			content.append("<br/><br/>");
+			content.append("<a href=\"")
+					.append(GuWebAppConstants.REGENERATE_PASSWORD)
+					.append("\">")
+					.append("content-hypertext-regenerate-password-on-mail-expiration")
+					.append("</a>");
+			content.append("<br/></br>");
 
 			String imgModifPwdURL = GU_BUNDLE
 					.getString("filer.img.modif.pwd.mail.url");
