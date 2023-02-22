@@ -33,7 +33,7 @@ Sinon, le déploiement devra se faire manuellement (possibilité d'automatiser v
  * Editer le fichier pour renseigner l'adresse de la BDD
 
   ```
-  bdd.host=10.241.0.73 //adresse de l'intégration
+  bdd.host=10.241.0.73 #adresse de l'intégration
   bdd.port=60006
   bdd.user=MyEC3
   bdd.pwd=MyEC3 
@@ -50,8 +50,21 @@ Builder en locale
 ```
 mvn clean install -P dblocal
 ```  
+Sous Intellij Community
+* maven clean package
+* dans le target copier les fichiers war vers {chemin d'installation tomcat}/apache-tomcat-9.0.30/webapp 
+* créer le fichier setenv.bat dans le {chemin d'installation tomcat}/apache-tomcat-9.0.30/bin
+* Dans le fichier setenv.bat ci dessous, renseigner les variables d'environnement comme suit :  
+  `set JAVA_OPTS=-Dspring.profiles.active=dblocal -Xmx1g -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005
+  set BASE_URL_SSO=https://sso-preprod.megalis.bretagne.bzh
+  set SECRET_CLIENT_SOCLE=f39d1f33-6403-4887-a0d0-d569ecdfd188`
+* Ouvre la ligne de commande et fait cd {chemin d'installation tomcat}/bin
+* Demarrer tomcat sur windows : `.\catalina.bat run` ou sur Linux : `./catalina.sh`
+* Se rendre sur la page http://localhost:8080/{nom_de_fichier_war_dans_le_webapp_correspondant_à_MyEc3_socle_webbapp}
+* * par exemple http://localhost:8080/myec3
+
 Sous IntelliJ Ultimate éditer une nouvelle configuration
-![EDIT_CONFIG](doc/edit_config_tomcat.PNG)  
+  ![EDIT_CONFIG](doc/edit_config_tomcat.PNG)  
 
 Dans l'onglet deployment, sélectionner à minima les modules 
 * myec3-socle-esb:war exploded
