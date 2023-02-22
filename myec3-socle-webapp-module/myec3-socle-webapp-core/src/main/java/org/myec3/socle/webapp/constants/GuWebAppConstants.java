@@ -138,6 +138,8 @@ public final class GuWebAppConstants {
 
     public static final String SDM_TOKEN_URL = ENV_BUNDLE.getString("sdm.tokenUrl");
 
+    public static final String REGENERATE_PASSWORD = "https://socle.megalis.bretagne.bzh/user/regeneratepassword";
+
     public static final List<String> LISTE_URL_LOGOUT = getListeUrlLogout();
 
     private static List<String> getListeUrlLogout() {
