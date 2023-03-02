@@ -15,6 +15,7 @@ import org.myec3.socle.ws.client.impl.mps.response.ResponseEntreprises;
 import org.myec3.socle.ws.client.impl.mps.response.ResponseEtablissements;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpHeaders;
 
 import javax.ws.rs.core.Response.Status;
 import java.io.*;
@@ -98,6 +99,8 @@ public class MpsWsClient implements CompanyWSinfo {
             logger.info("Asking Etablissements Webservice on url : " + url);
             conn = (HttpURLConnection) urlTemp.openConnection();
             conn.setRequestMethod("GET");
+            conn.setRequestProperty(HttpHeaders.AUTHORIZATION, "Bearer " + MPS_TOKEN);
+            conn.setRequestProperty(HttpHeaders.CONTENT_TYPE, "application/json");
             conn.setConnectTimeout(8000); // set timeout to 5 seconds
 
             // Get the raw MPS response
@@ -294,7 +297,6 @@ public class MpsWsClient implements CompanyWSinfo {
 
         String baseUrl = MPS_URL_ENTREPRISES.replace("COMPANY_SIREN", companySiren);
         HashMap<String, String> paramsUrl = new HashMap<>();
-        paramsUrl.put("token", MPS_TOKEN);
         paramsUrl.put("context", MPS_CONTEXT);
         paramsUrl.put("recipient", companySiren);
         paramsUrl.put("object", MPS_OBJECT);
@@ -308,7 +310,6 @@ public class MpsWsClient implements CompanyWSinfo {
 
         String baseUrl = MPS_URL_ETABLISSEMENT.replace("SIEGE_SOCIAL_SIRET", siegeSocialSiret);
         HashMap<String, String> paramsUrl = new HashMap<>();
-        paramsUrl.put("token", MPS_TOKEN);
         paramsUrl.put("context", MPS_CONTEXT);
         paramsUrl.put("recipient", siegeSocialSiret);
 //		paramsUrl.put("siret_siege_social", siegeSocialSiret);
