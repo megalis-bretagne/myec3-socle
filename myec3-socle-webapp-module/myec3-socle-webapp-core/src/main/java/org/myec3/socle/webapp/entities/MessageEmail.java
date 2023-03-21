@@ -501,7 +501,7 @@ public class MessageEmail {
 
 			content.append("<br/><br/>");
 			content.append(getMessage(messages,
-					"content-email-password-about-to-expired-info1"));
+					"content-email-password-about-to-expired-info1"), GuWebAppConstants.MYEC3_BASE_URL);
 			content.append("<a href=\"")
 					.append(GuWebAppConstants.REGENERATE_PASSWORD)
 					.append("\">")
@@ -530,7 +530,7 @@ public class MessageEmail {
 			content.append("<br/><br/>");
 
 			content.append(MessageFormat.format(getMessage(messages,
-					"content-email-password-expired-info1"), GuWebAppConstants.MYEC3_BASE_URL));
+					"content-email-password-expired-info1"), GuWebAppConstants.MYEC3_BASE_URL);
 			content.append("<br/><br/>");
 
 			content.append(getMessage(messages,
