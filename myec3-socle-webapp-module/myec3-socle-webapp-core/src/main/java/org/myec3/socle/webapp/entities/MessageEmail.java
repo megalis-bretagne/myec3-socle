@@ -502,6 +502,7 @@ public class MessageEmail {
 			content.append("<br/><br/>");
 			content.append(MessageFormat.format(getMessage(messages,
 					"content-email-password-about-to-expired-info1"), GuWebAppConstants.MYEC3_BASE_URL));
+			content.append("<br/><br/>");
 
 			String imgModifPwdURL = GU_BUNDLE
 					.getString("filer.img.modif.pwd.mail.url");
