@@ -97,6 +97,9 @@
             </t:pagelink>
           </t:if>
         </t:parameter>
+          <t:parameter name="guRolesCell">
+              ${socleRolesAsString}
+          </t:parameter>
         <t:parameter name="actionsCell">
 
           <t:pagelink page="organism/agent/view"
