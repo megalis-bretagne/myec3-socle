@@ -89,9 +89,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
 			logger.debug("user with login: " + id + " found in database");
 
-			profile = this.profileService.addRoles(profile);
-
-			this.profileService.update(profile);
+			profile.setAuthorities(this.profileService.getAuthorities(profile));
 
 			logger.debug("user with login: " + id + " authenticated");
 
