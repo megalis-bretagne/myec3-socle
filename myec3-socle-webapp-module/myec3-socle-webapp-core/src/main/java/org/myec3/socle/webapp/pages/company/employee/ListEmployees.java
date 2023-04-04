@@ -220,18 +220,16 @@ public class ListEmployees extends AbstractPage {
 	public BeanModel<EmployeeProfile> getGridModel() {
 		BeanModel<EmployeeProfile> model = this.beanModelSource.createDisplayModel(EmployeeProfile.class,
 				this.getMessages());
-		model.add("actions", null);
 
 		PropertyConduit propCdtAttributeUser = this.propertyConduitSource.create(EmployeeProfile.class, "user");
-		PropertyConduit propCdtAttributeExpirationDatePassword = this.propertyConduitSource
-				.create(EmployeeProfile.class, "user.expirationDatePassword");
-		PropertyConduit proCdtAttribueEstablishement =
-				this.propertyConduitSource.create(EmployeeProfile.class, "establishment.label");
+		PropertyConduit propCdtAttributeExpirationDatePassword = this.propertyConduitSource.create(EmployeeProfile.class, "user.expirationDatePassword");
+		PropertyConduit proCdtAttribueEstablishement =  this.propertyConduitSource.create(EmployeeProfile.class, "establishment.label");
 
 		model.add("user", propCdtAttributeUser);
-		model.add("expirationDatePassword", propCdtAttributeExpirationDatePassword).sortable(true);
 		model.add("establishment", proCdtAttribueEstablishement).sortable(true);
-		model.include("user", "email", "establishment","expirationDatePassword", "actions");
+		model.add("expirationDatePassword", propCdtAttributeExpirationDatePassword).sortable(true);
+		model.add("actions", null);
+		model.include("user", "email", "username","establishment","expirationDatePassword", "actions");
 		return model;
 	}
 

@@ -195,17 +195,17 @@ public class ListAgents extends AbstractPage {
 	 */
 	public BeanModel<AgentProfile> getGridModel() {
 		BeanModel<AgentProfile> model = this.beanModelSource.createDisplayModel(AgentProfile.class, this.getMessages());
-		model.add("actions", null);
 
-		PropertyConduit propCdtAttributeLastName = this.propertyConduitSource.create(AgentProfile.class,
-				"user.lastname");
-		PropertyConduit propCdtAttributeExpirationDatePassword = this.propertyConduitSource.create(AgentProfile.class,
-				"user.expirationDatePassword");
+		PropertyConduit propCdtAttributeLastName = this.propertyConduitSource.create(AgentProfile.class, "user.lastname");
+		PropertyConduit propCdtAttributeExpirationDatePassword = this.propertyConduitSource.create(AgentProfile.class, "user.expirationDatePassword");
 
 		model.add("user", propCdtAttributeLastName).sortable(true);
 		model.add("expirationDatePassword", propCdtAttributeExpirationDatePassword).sortable(true);
-		model.include("user", "email", "expirationDatePassword", "actions");
+		model.add("actions", null);
+		model.include("user", "email", "username", "expirationDatePassword", "actions");
 		return model;
+
+
 	}
 
 	public OrganismDepartment getOrganismDepartment() {

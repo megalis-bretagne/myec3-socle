@@ -69,7 +69,7 @@ public class AbstractPage {
 
 	@Inject
 	@Named("roleService")
-	private RoleService roleService;
+	protected RoleService roleService;
 
 	@Inject
 	private Messages messages;
