@@ -202,6 +202,8 @@ public class AgentProfileServiceImpl extends GenericProfileServiceImpl<AgentProf
 				agentProfile = super.update(agentProfile);
 			}
 
+			saveProfileInKeycloak(agentProfile);
+
 		} catch (RuntimeException re) {
 			throw new ProfileCreationException("Cannot create Agent " + agentProfile, re);
 		}
@@ -266,7 +268,11 @@ public class AgentProfileServiceImpl extends GenericProfileServiceImpl<AgentProf
 
 			competenceService.update(agentProfile);
 
-			return super.update(agentProfile);
+			AgentProfile updatedProfile = super.update(agentProfile);
+
+			saveProfileInKeycloak(agentProfile);
+
+			return updatedProfile;
 		} catch (RuntimeException re) {
 			throw new ProfileUpdateException("Cannot update Agent " + agentProfile, re);
 		}

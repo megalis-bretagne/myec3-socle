@@ -25,11 +25,12 @@
 		<junit-version>4.12</junit-version>
 		<tapestry-version>5.8.2</tapestry-version>
 		<spring-version>5.1.3.RELEASE</spring-version>
-		<jackson-version>2.9.8</jackson-version>
+		<spring-boot-version>1.5.22.RELEASE</spring-boot-version>
+		<jackson-version>2.12.6</jackson-version>
 		<javax-validation-version>2.0.0.Final</javax-validation-version>
 		<javax-ws-version>2.1.1</javax-ws-version>
 		<spring-security-version>5.1.2.RELEASE</spring-security-version>
-		<keycloak-version>6.0.1</keycloak-version>
+		<keycloak-version>21.0.2</keycloak-version>
 		<hibernate-version>5.4.0.Final</hibernate-version>
 		<hibernate-validator-version>6.0.2.Final</hibernate-validator-version>
 		<glassfish-version>2.2.6</glassfish-version>
@@ -47,7 +48,7 @@
 		<jetty-test-version>8.2.0.v20160908</jetty-test-version>
 		<sysmm-version>1.0</sysmm-version>
 		<opencsv-version>2.0</opencsv-version>
-		<commons-io-version>1.3.2</commons-io-version>
+		<commons-io-version>2.5</commons-io-version>
 		<servlet-version>4.0.1</servlet-version>
 		<json-version>20140107</json-version>
 		<httpclient-version>4.5.8</httpclient-version>
@@ -119,6 +120,11 @@
 			    <groupId>org.springframework</groupId>
 			    <artifactId>spring-webmvc</artifactId>
 			    <version>${spring-version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-actuator</artifactId>
+				<version>${spring-boot-version}</version>
 			</dependency>
 			
 			<!-- Jackson -->
@@ -245,7 +251,6 @@
 				<groupId>org.keycloak</groupId>
 				<artifactId>keycloak-core</artifactId>
 				<version>${keycloak-version}</version>
-				<scope>provided</scope>
 			</dependency>
 
 			<!-- Hibernate cache-->
@@ -490,7 +495,7 @@
 
 			 <!--  Apache commons io -->
 	        <dependency>
-	            <groupId>org.apache.commons</groupId>
+	            <groupId>commons-io</groupId>
 	            <artifactId>commons-io</artifactId>
 	            <version>${commons-io-version}</version>
 	        </dependency>
@@ -527,6 +532,13 @@
 				<artifactId>lombok</artifactId>
 				<version>${lombok-version}</version>
 				<scope>provided</scope>
+			</dependency>
+
+			<!-- client d'admin Keycloak pour mettre à jour les comptes Keycloak depuis le socle -->
+			<dependency>
+				<groupId>org.keycloak</groupId>
+				<artifactId>keycloak-admin-client</artifactId>
+				<version>${keycloak-version}</version>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
