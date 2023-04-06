@@ -24,7 +24,7 @@ import org.apache.tapestry5.EventConstants;
 import org.apache.tapestry5.PersistenceConstants;
 import org.apache.tapestry5.annotations.*;
 import org.apache.tapestry5.corelib.components.Form;
-import org.apache.tapestry5.ioc.Messages;
+import org.apache.tapestry5.commons.Messages;
 import org.apache.tapestry5.ioc.annotations.Inject;
 import org.myec3.socle.core.constants.MyEc3Constants;
 import org.myec3.socle.core.constants.MyEc3EmailConstants;

@@ -20,16 +20,16 @@ package org.myec3.socle.webapp.pages.user;
 import java.util.HashMap;
 import java.util.List;
 
-import org.apache.tapestry5.PropertyConduit;
+import org.apache.tapestry5.beanmodel.PropertyConduit;
 import org.apache.tapestry5.annotations.Component;
 import org.apache.tapestry5.annotations.Persist;
 import org.apache.tapestry5.annotations.Property;
 import org.apache.tapestry5.annotations.SetupRender;
-import org.apache.tapestry5.beaneditor.BeanModel;
+import org.apache.tapestry5.beanmodel.BeanModel;
 import org.apache.tapestry5.corelib.components.Grid;
 import org.apache.tapestry5.ioc.annotations.Inject;
-import org.apache.tapestry5.services.BeanModelSource;
-import org.apache.tapestry5.services.PropertyConduitSource;
+import org.apache.tapestry5.beanmodel.services.BeanModelSource;
+import org.apache.tapestry5.beanmodel.services.PropertyConduitSource;
 import org.myec3.socle.core.domain.model.AgentProfile;
 import org.myec3.socle.core.domain.model.Profile;
 import org.myec3.socle.core.domain.model.ProfileSearch;
@@ -96,6 +96,8 @@ public class SearchResult extends AbstractPage {
 	
 	/**
 	 * @return : bean model, used for Megalis
+	 *
+	 * CODE MORT ?????
 	 */
 	public BeanModel<ProfileSearch> getMegalisProfileGridModel() {
 		BeanModel<ProfileSearch> model = this.beanModelSource.createDisplayModel(
