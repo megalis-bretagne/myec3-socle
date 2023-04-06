@@ -3,8 +3,8 @@ package org.myec3.socle.webapp.encoder;
 import java.util.List;
 
 import org.apache.tapestry5.ValueEncoder;
-import org.apache.tapestry5.ioc.internal.util.CollectionFactory;
-import org.apache.tapestry5.ioc.services.PropertyAccess;
+import org.apache.tapestry5.commons.services.PropertyAccess;
+import org.apache.tapestry5.commons.util.CollectionFactory;
 
 public class GenericListEncoder<T> implements ValueEncoder<T> {
 	private List<T> _objectList;

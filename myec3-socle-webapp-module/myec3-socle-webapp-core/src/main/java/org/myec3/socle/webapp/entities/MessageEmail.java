@@ -23,7 +23,7 @@ import java.util.Properties;
 import java.util.ResourceBundle;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.tapestry5.ioc.Messages;
+import org.apache.tapestry5.commons.Messages;
 import org.myec3.socle.core.domain.model.Company;
 import org.myec3.socle.core.domain.model.Customer;
 import org.myec3.socle.core.domain.model.Establishment;

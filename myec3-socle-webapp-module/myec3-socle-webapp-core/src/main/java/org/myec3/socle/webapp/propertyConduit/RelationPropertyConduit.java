@@ -20,7 +20,7 @@ package org.myec3.socle.webapp.propertyConduit;
 import java.lang.annotation.Annotation;
 import java.util.List;
 
-import org.apache.tapestry5.PropertyConduit;
+import org.apache.tapestry5.beanmodel.PropertyConduit;
 import org.myec3.socle.core.domain.model.Structure;
 
 /**
@@ -35,7 +35,7 @@ public class RelationPropertyConduit implements PropertyConduit {
 	private List<Structure> listOfParentStructures;
 
 	/**
-	 * @see org.apache.tapestry5.PropertyConduit#get(java.lang.Object)
+	 * @see org.apache.tapestry5.beanmodel.PropertyConduit#get(java.lang.Object)
 	 */
 	@Override
 	public Object get(Object instance) {
