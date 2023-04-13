@@ -24,9 +24,12 @@ import org.apache.tapestry5.annotations.OnEvent;
 import org.apache.tapestry5.annotations.Persist;
 import org.apache.tapestry5.annotations.Property;
 import org.apache.tapestry5.beanmodel.BeanModel;
+import org.apache.tapestry5.beanmodel.PropertyConduit;
+import org.apache.tapestry5.beanmodel.services.PropertyConduitSource;
 import org.apache.tapestry5.ioc.annotations.Inject;
 import org.apache.tapestry5.beanmodel.services.BeanModelSource;
 import org.myec3.socle.core.domain.model.Company;
+import org.myec3.socle.core.domain.model.Organism;
 import org.myec3.socle.core.tools.UnaccentLetter;
 import org.myec3.socle.webapp.pages.AbstractPage;
 import org.myec3.socle.webapp.pages.Index;
@@ -58,6 +61,9 @@ public class SearchResult extends AbstractPage {
 	@Property
 	private Company companyRow;
 
+	@Inject
+	private PropertyConduitSource propertyConduitSource;
+
 	@OnEvent(EventConstants.ACTIVATE)
 	public Object Activation() {
 		super.initUser();
@@ -73,8 +79,12 @@ public class SearchResult extends AbstractPage {
 	public BeanModel<Company> getGridModel() {
 		BeanModel<Company> model = this.beanModelSource.createDisplayModel(
 				Company.class, this.getMessages());
-		model.add("postalCode", null);
-		model.add("city", null);
+
+		PropertyConduit propCdtAttributeCode = this.propertyConduitSource.create(Company.class, "address.postalCode");
+		PropertyConduit propCdtAttributeCity = this.propertyConduitSource.create(Company.class, "address.city");
+
+		model.add("postalCode", propCdtAttributeCode).sortable(true);
+		model.add("city", propCdtAttributeCity).sortable(true);;
 		model.add("actions", null);
 		model.get("companyAcronym").label("Sigle");
 		model.include("label", "companyAcronym", "siren", "nic", "postalCode", "city",

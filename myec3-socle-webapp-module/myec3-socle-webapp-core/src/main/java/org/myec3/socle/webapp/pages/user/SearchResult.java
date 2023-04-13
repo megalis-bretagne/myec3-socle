@@ -82,13 +82,20 @@ public class SearchResult extends AbstractPage {
 	public BeanModel<ProfileSearch> getProfileGridModel() {
 		BeanModel<ProfileSearch> model = this.beanModelSource.createDisplayModel(
 			ProfileSearch.class, this.getMessages());
-	
-		model.add("sviProfile", null);
-		model.get("sviProfile").label("ID Tel");
-		model.add("user", null);
-		model.add("email", null);
-		model.add("login", null);
-		model.add("structure", null);
+
+		PropertyConduit propCdtAttributeSviProfile = this.propertyConduitSource.create(ProfileSearch.class, "searchProfile.user.sviProfile.id");
+		PropertyConduit propCdtAttributeUse = this.propertyConduitSource.create(ProfileSearch.class, "searchProfile.user.lastname");
+		PropertyConduit propCdtAttributeEmail = this.propertyConduitSource.create(ProfileSearch.class, "searchProfile.email");
+		PropertyConduit propCdtAttributeUserName = this.propertyConduitSource.create(ProfileSearch.class, "searchProfile.user.username");
+		PropertyConduit propCdtAttributeStructure = this.propertyConduitSource.create(ProfileSearch.class, "searchStructure.label");
+
+
+		model.add("sviProfile", propCdtAttributeSviProfile).sortable(true);
+		model.get("sviProfile").label("ID Tel").sortable(true);
+		model.add("user", propCdtAttributeUse).sortable(true);
+		model.add("email", propCdtAttributeEmail).sortable(true);
+		model.add("login", propCdtAttributeUserName).sortable(true);
+		model.add("structure", propCdtAttributeStructure).sortable(true);
 		model.add("actions", null);		
 		model.include("sviProfile", "user", "email", "login", "structure", "actions");
 		return model;
