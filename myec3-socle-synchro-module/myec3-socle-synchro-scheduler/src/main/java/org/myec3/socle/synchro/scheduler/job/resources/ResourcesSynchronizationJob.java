@@ -1626,27 +1626,5 @@ public abstract class ResourcesSynchronizationJob<T extends Resource> extends Qu
 	}
 
 
-	/**
-	 * Conversion d'une adresse socle dans une adresse pour la SDM
-	 * @param resourceAddress
-	 * @return
-	 */
-	protected SdmAdresse convertToSdmAdresse(Address resourceAddress) {
-		if (resourceAddress != null) {
-			SdmAdresse adresseSDM = new SdmAdresse();
-			adresseSDM.setCodePostal(resourceAddress.getPostalCode());
-			if (resourceAddress.getCountry() != null) {
-				adresseSDM.setPays(resourceAddress.getCountry().getLabel());
-			}
-			adresseSDM.setRue(resourceAddress.getPostalAddress());
-			adresseSDM.setVille(resourceAddress.getCity());
-			if (resourceAddress.getCountry() != null) {
-				adresseSDM.setAcronymePays(resourceAddress.getCountry().name());
-			}
-			return adresseSDM;
-		} else {
-			return null;
-		}
-	}
 
 }

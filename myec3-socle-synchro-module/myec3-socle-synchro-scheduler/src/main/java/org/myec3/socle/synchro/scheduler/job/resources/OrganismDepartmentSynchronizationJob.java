@@ -24,6 +24,7 @@ import org.myec3.socle.core.sync.api.*;
 import org.myec3.socle.core.sync.api.Error;
 import org.myec3.socle.synchro.core.domain.model.SynchroIdentifiantExterne;
 import org.myec3.socle.synchro.core.domain.model.SynchronizationSubscription;
+import org.myec3.socle.synchro.core.service.SdmConverterService;
 import org.myec3.socle.synchro.core.service.SynchroIdentifiantExterneService;
 import org.myec3.socle.ws.client.ResourceWsClient;
 import org.myec3.socle.ws.client.impl.SdmWsClientImpl;
@@ -58,6 +59,9 @@ public class OrganismDepartmentSynchronizationJob extends
     @Qualifier("synchroIdentifiantExterneService")
     private SynchroIdentifiantExterneService synchroIdentifiantExterneService;
 
+    @Autowired
+    @Qualifier("sdmConverterService")
+    private SdmConverterService sdmConverterService;
 
     /**
      * {@inheritDoc}
@@ -68,7 +72,7 @@ public class OrganismDepartmentSynchronizationJob extends
                                   ResourceWsClient resourceWsClient) {
 
         if ("SDM".equals(synchronizationSubscription.getApplication().getName())) {
-            SdmService SmdmService = convertToSdmService(resource);
+            SdmService SmdmService = sdmConverterService.convertToSdmService(resource);
             SdmWsClientImpl sdmWsClient = (SdmWsClientImpl) resourceWsClient;
             return sdmWsClient.post(resource, SmdmService, synchronizationSubscription);
         }
@@ -84,7 +88,7 @@ public class OrganismDepartmentSynchronizationJob extends
                                   ResourceWsClient resourceWsClient) {
 
         if ("SDM".equals(synchronizationSubscription.getApplication().getName())) {
-            SdmService sdmService = convertToSdmService(resource);
+            SdmService sdmService = sdmConverterService.convertToSdmService(resource);
             SynchroIdentifiantExterne synchroIdentifiantExterne = synchroIdentifiantExterneService.findByIdSocle(resource.getId(), ResourceType.ORGANISM_DEPARTMENT);
             SdmWsClientImpl sdmWsClient = (SdmWsClientImpl) resourceWsClient;
             if (synchroIdentifiantExterne != null) {
@@ -108,7 +112,7 @@ public class OrganismDepartmentSynchronizationJob extends
                                   SynchronizationSubscription synchronizationSubscription,
                                   ResourceWsClient resourceWsClient) {
         if ("SDM".equals(synchronizationSubscription.getApplication().getName())) {
-            SdmService sdmService = convertToSdmService(resource);
+            SdmService sdmService = sdmConverterService.convertToSdmService(resource);
             SynchroIdentifiantExterne synchroIdentifiantExterne = synchroIdentifiantExterneService.findByIdSocle(resource.getId(), ResourceType.ORGANISM_DEPARTMENT);
             SdmWsClientImpl sdmWsClient = (SdmWsClientImpl) resourceWsClient;
             if (synchroIdentifiantExterne !=null){
@@ -119,40 +123,6 @@ public class OrganismDepartmentSynchronizationJob extends
             }
         }
         return resourceWsClient.put(resource, synchronizationSubscription);
-    }
-
-    private SdmService convertToSdmService(OrganismDepartment resource) {
-        SdmService serviceSDM = new SdmService();
-        serviceSDM.setIdExterne(String.valueOf(resource.getExternalId()));
-        serviceSDM.setLibelle(resource.getLabel());
-        if (StringUtils.isEmpty(resource.getAbbreviation())){
-            serviceSDM.setSigle("/");
-        }else{
-            serviceSDM.setSigle(resource.getAbbreviation());
-        }
-
-        if (resource.getOrganism() !=null){
-            serviceSDM.setSiren(resource.getOrganism().getSiren());
-            serviceSDM.setComplement(resource.getOrganism().getNic());
-            serviceSDM.setFormeJuridique(resource.getOrganism().getStrutureLegalCategory().toString());
-            serviceSDM.setFormeJuridiqueCode(resource.getOrganism().getLegalCategory().toString());
-            SynchroIdentifiantExterne synchroOrganism = synchroIdentifiantExterneService.findByIdSocle(resource.getOrganism().getId(),ResourceType.ORGANISM);
-            if (synchroOrganism!=null){
-                serviceSDM.setAcronymeOrganisme(synchroOrganism.getAcronyme());
-            }else{
-                serviceSDM.setAcronymeOrganisme(resource.getOrganism().getAcronym());
-            }
-        }
-        serviceSDM.setEmail(resource.getEmail());
-
-        if (!resource.isRootDepartment() && resource.getParentDepartment() !=null){
-            SynchroIdentifiantExterne synchroIdentifiantExterne = synchroIdentifiantExterneService.findByIdSocle(resource.getParentDepartment().getId(), ResourceType.ORGANISM_DEPARTMENT);
-            if(synchroIdentifiantExterne !=null){
-                serviceSDM.setIdExterneParent(resource.getParentDepartment().getId());
-                serviceSDM.setIdParent(synchroIdentifiantExterne.getIdAppliExterne());
-            }
-        }
-        return serviceSDM;
     }
 
 

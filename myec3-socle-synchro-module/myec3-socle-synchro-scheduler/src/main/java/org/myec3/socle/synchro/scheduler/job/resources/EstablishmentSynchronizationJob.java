@@ -24,6 +24,7 @@ import org.myec3.socle.core.sync.api.*;
 import org.myec3.socle.core.sync.api.Error;
 import org.myec3.socle.synchro.core.domain.model.SynchroIdentifiantExterne;
 import org.myec3.socle.synchro.core.domain.model.SynchronizationSubscription;
+import org.myec3.socle.synchro.core.service.SdmConverterService;
 import org.myec3.socle.synchro.core.service.SynchroIdentifiantExterneService;
 import org.myec3.socle.ws.client.ResourceWsClient;
 import org.myec3.socle.ws.client.impl.SdmWsClientImpl;
@@ -58,6 +59,10 @@ public class EstablishmentSynchronizationJob extends
     @Qualifier("synchroIdentifiantExterneService")
     private SynchroIdentifiantExterneService synchroIdentifiantExterneService;
 
+    @Autowired
+    @Qualifier("sdmConverterService")
+    private SdmConverterService sdmConverterService;
+
     /**
      * {@inheritDoc}
      */
@@ -66,7 +71,7 @@ public class EstablishmentSynchronizationJob extends
                                   SynchronizationSubscription synchronizationSubscription,
                                   ResourceWsClient resourceWsClient) {
         if ("SDM".equals(synchronizationSubscription.getApplication().getName())) {
-            SdmEtablissement etablissementSDM = convertSdmEtablissement(resource);
+            SdmEtablissement etablissementSDM = sdmConverterService.convertSdmEtablissement(resource);
             SdmWsClientImpl sdmWsClient = (SdmWsClientImpl) resourceWsClient;
             return sdmWsClient.post(resource, etablissementSDM, synchronizationSubscription);
         }
@@ -82,7 +87,7 @@ public class EstablishmentSynchronizationJob extends
                                   ResourceWsClient resourceWsClient) {
 
         if ("SDM".equals(synchronizationSubscription.getApplication().getName())) {
-            SdmEtablissement etablissementSDM = convertSdmEtablissement(resource);
+            SdmEtablissement etablissementSDM = sdmConverterService.convertSdmEtablissement(resource);
             List<SynchroIdentifiantExterne> synchroIdentifiantExterne = synchroIdentifiantExterneService.findListByIdSocle(resource.getId(), ResourceType.ESTABLISHMENT);
             SdmWsClientImpl sdmWsClient = (SdmWsClientImpl) resourceWsClient;
             if (synchroIdentifiantExterne !=null && !synchroIdentifiantExterne.isEmpty()){
@@ -113,7 +118,7 @@ public class EstablishmentSynchronizationJob extends
                                   ResourceWsClient resourceWsClient) {
 
         if ("SDM".equals(synchronizationSubscription.getApplication().getName())) {
-            SdmEtablissement etablissementSDM = convertSdmEtablissement(resource);
+            SdmEtablissement etablissementSDM = sdmConverterService.convertSdmEtablissement(resource);
             List<SynchroIdentifiantExterne> synchroIdentifiantExterne = synchroIdentifiantExterneService.findListByIdSocle(resource.getId(), ResourceType.ESTABLISHMENT);
             SdmWsClientImpl sdmWsClient = (SdmWsClientImpl) resourceWsClient;
             if (synchroIdentifiantExterne !=null && !synchroIdentifiantExterne.isEmpty()){
@@ -133,41 +138,5 @@ public class EstablishmentSynchronizationJob extends
         }
     }
 
-    /**
-     * Conversion d'un Establishment socle dans un Etablissement pour la SDM
-     * @param resource
-     * @return
-     */
-    private SdmEtablissement convertSdmEtablissement(Establishment resource) {
-
-        SdmEtablissement etablissementSDM = new SdmEtablissement();
-        etablissementSDM.setIdExterne(String.valueOf(resource.getExternalId()));
-        int siege = resource.getIsHeadOffice() ? 1 : 0;
-        etablissementSDM.setSiege(String.valueOf(siege));
-
-        etablissementSDM.setSiret(resource.getSiret());
-
-        if (resource.getCompany() !=null && resource.getCompany().getId() != null){
-            List<SynchroIdentifiantExterne> synchroIdentifiantExterne = synchroIdentifiantExterneService.findListByIdSocle(resource.getCompany().getId(), ResourceType.COMPANY);
-            if (resource.getCompany().getForeignIdentifier()){
-                etablissementSDM.setCodeEtablissement(resource.getCompany().getNationalID());
-            }
-
-            if (synchroIdentifiantExterne !=null && !synchroIdentifiantExterne.isEmpty() ){
-                etablissementSDM.setIdEntreprise(String.valueOf(synchroIdentifiantExterne.get(0).getIdAppliExterne()));
-
-                if (synchroIdentifiantExterne.size()>1){
-                    logger.warn("Company id: {} a plusieurs IdAppliExterne en bdd ",resource.getCompany().getId());
-                    for(SynchroIdentifiantExterne s:synchroIdentifiantExterne){
-                        logger.warn(" idSocle {} IdAppliExterne {} ",s.getIdSocle(),s.getIdAppliExterne());
-                    }
-                }
-            }else{
-                logger.warn("Establishment id: {} n'a pas de COMPANY SDM dans la table synchroIdentifiantExterneService pour l'idSocle ",resource.getId(),resource.getCompany().getId());
-            }
-        }
-        etablissementSDM.setAdresse(convertToSdmAdresse(resource.getAddress()));
-        return etablissementSDM;
-    }
 
 }
