@@ -1,18 +1,23 @@
 package org.myec3.socle.webapp.pages.synchroman.synchronization;
 
+import au.com.bytecode.opencsv.CSVWriter;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.tapestry5.StreamResponse;
 import org.apache.tapestry5.annotations.*;
 import org.apache.tapestry5.beanmodel.BeanModel;
-import org.apache.tapestry5.corelib.components.Grid;
-import org.apache.tapestry5.commons.Messages;
-import org.apache.tapestry5.ioc.annotations.Inject;
 import org.apache.tapestry5.beanmodel.services.BeanModelSource;
-import org.apache.tapestry5.services.PageRenderLinkSource;
 import org.apache.tapestry5.beanmodel.services.PropertyConduitSource;
+import org.apache.tapestry5.commons.Messages;
+import org.apache.tapestry5.corelib.components.Grid;
+import org.apache.tapestry5.http.services.Response;
+import org.apache.tapestry5.ioc.annotations.Inject;
+import org.apache.tapestry5.services.PageRenderLinkSource;
 import org.apache.tapestry5.services.javascript.JavaScriptSupport;
+import org.myec3.socle.core.domain.model.Application;
 import org.myec3.socle.core.domain.model.Resource;
 import org.myec3.socle.core.domain.model.enums.ResourceType;
 import org.myec3.socle.core.service.*;
@@ -30,7 +35,9 @@ import org.myec3.socle.webapp.pages.company.DetailCompany;
 import org.myec3.socle.webapp.pages.organism.DetailOrganism;
 import org.myec3.socle.webapp.pages.organism.agent.View;
 import org.myec3.socle.webapp.pages.organism.department.DetailDepartment;
+import org.myec3.socle.webapp.utils.CsvStreamResponse;
 
+import java.io.*;
 import java.text.SimpleDateFormat;
 import java.util.List;
 
@@ -142,9 +149,24 @@ public class SearchResult extends AbstractPage {
 
     /**
      * REdirect to view page given type resource and his id
-     * @param ressourceId   resource Identifier
-     * @param resourceType  resourceType
-     * @return  page
+     *
+     * @param applicationName sending Application
+     * @param ressourceId        resource Identifier
+     * @param resourceType       resourceType
+     * @return page
+     */
+    public StreamResponse onDownloadSynchroFile(String applicationName, String ressourceId, ResourceType resourceType) {
+
+        StreamResponse sr = null;
+        return sr;
+    }
+
+    /**
+     * REdirect to view page given type resource and his id
+     *
+     * @param ressourceId  resource Identifier
+     * @param resourceType resourceType
+     * @return page
      */
     public Object onSeeResource(String ressourceId, ResourceType resourceType) {
         switch (resourceType) {
@@ -218,6 +240,7 @@ public class SearchResult extends AbstractPage {
 
     /**
      * Get Label for resource Type column
+     *
      * @return resource Label
      */
     public String getResourceLabel() {
