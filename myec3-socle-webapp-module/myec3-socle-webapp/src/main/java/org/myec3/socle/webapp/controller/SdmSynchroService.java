@@ -3,6 +3,7 @@ package org.myec3.socle.webapp.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.myec3.socle.core.constants.MyEc3ApplicationConstants;
 import org.myec3.socle.core.domain.model.*;
 import org.myec3.socle.core.domain.model.enums.ResourceType;
 import org.myec3.socle.core.service.*;
@@ -69,7 +70,7 @@ public class SdmSynchroService {
     @Transactional
     @Async
     public Future<Boolean> traiterListeAgentsSdm(List<LinkedHashMap<String, Object>> agentsListe, int page) {
-        Application sdmApplication = applicationService.findByName("SDM");
+        Application sdmApplication = applicationService.findByName(MyEc3ApplicationConstants.SDM_APPLICATION);;
 
         for (LinkedHashMap<String, Object> sdmJsonAgent : agentsListe) {
 
@@ -127,7 +128,7 @@ public class SdmSynchroService {
     @Transactional
     @Async
     public Future<Boolean> traiterListeOrganismesListeSdm(List<LinkedHashMap<String, Object>> organismesListe, int page) {
-        Application sdmApplication = applicationService.findByName("SDM");
+        Application sdmApplication = applicationService.findByName(MyEc3ApplicationConstants.SDM_APPLICATION);;
 
         for (LinkedHashMap<String, Object> sdmJsonOrganisme : organismesListe) {
 
@@ -185,7 +186,7 @@ public class SdmSynchroService {
     @Transactional
     @Async
     public Future<Boolean> traiterListeServicesListeSdm(List<LinkedHashMap<String, Object>> servicesListe, int page) {
-        Application sdmApplication = applicationService.findByName("SDM");
+        Application sdmApplication = applicationService.findByName(MyEc3ApplicationConstants.SDM_APPLICATION);;
 
         for (LinkedHashMap<String, Object> sdmJsonService : servicesListe) {
 
@@ -243,7 +244,7 @@ public class SdmSynchroService {
     @Async
     public Future<Boolean> traiterListeEntreprisesListeSdm(List<LinkedHashMap<String, Object>> entreprisesListe,int numPage) {
 
-        Application sdmApplication = applicationService.findByName("SDM");
+        Application sdmApplication = applicationService.findByName(MyEc3ApplicationConstants.SDM_APPLICATION);;
 
         for (LinkedHashMap<String, Object> sdmJsonEntreprise : entreprisesListe) {
 
@@ -301,7 +302,7 @@ public class SdmSynchroService {
     @Transactional
     @Async
     public Future<Boolean> traiterListeEtablissementsListeSdm(List<LinkedHashMap<String, Object>> etablissementsListe, int numPage) {
-        Application sdmApplication = applicationService.findByName("SDM");
+        Application sdmApplication = applicationService.findByName(MyEc3ApplicationConstants.SDM_APPLICATION);;
 
         for (LinkedHashMap<String, Object> sdmJsonEtablissement : etablissementsListe) {
 
@@ -364,7 +365,7 @@ public class SdmSynchroService {
     @Async
     public Future<Boolean> traiterListeInscritsListeSdm(List<LinkedHashMap<String, Object>> inscritsListe, int page) {
 
-        Application sdmApplication = applicationService.findByName("SDM");
+        Application sdmApplication = applicationService.findByName(MyEc3ApplicationConstants.SDM_APPLICATION);;
 
         for (LinkedHashMap<String, Object> sdmJsonInscrit : inscritsListe) {
 

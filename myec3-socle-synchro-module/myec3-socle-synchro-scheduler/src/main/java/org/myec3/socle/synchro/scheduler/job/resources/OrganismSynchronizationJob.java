@@ -17,6 +17,7 @@
  */
 package org.myec3.socle.synchro.scheduler.job.resources;
 
+import org.myec3.socle.core.constants.MyEc3ApplicationConstants;
 import org.myec3.socle.core.domain.model.Organism;
 import org.myec3.socle.core.domain.model.enums.ResourceType;
 import org.myec3.socle.core.domain.sdm.model.SdmOrganisme;
@@ -71,7 +72,7 @@ public class OrganismSynchronizationJob extends
                                   SynchronizationSubscription synchronizationSubscription,
                                   ResourceWsClient resourceWsClient) {
 
-        if ("SDM".equals(synchronizationSubscription.getApplication().getName())) {
+        if (MyEc3ApplicationConstants.SDM_APPLICATION.equals(synchronizationSubscription.getApplication().getName())) {
             SdmOrganisme organismeSDM = sdmConverterService.convertSdmOrganisme(resource);
             //on met l'acronyme à vide car la salle des marchés va nous retourner l'acronyme
             organismeSDM.setAcronyme("");
@@ -88,7 +89,7 @@ public class OrganismSynchronizationJob extends
     public ResponseMessage delete(Organism resource,
                                   SynchronizationSubscription synchronizationSubscription,
                                   ResourceWsClient resourceWsClient) {
-        if ("SDM".equals(synchronizationSubscription.getApplication().getName())) {
+        if (MyEc3ApplicationConstants.SDM_APPLICATION.equals(synchronizationSubscription.getApplication().getName())) {
             SdmOrganisme organismeSDM = sdmConverterService.convertSdmOrganisme(resource);
             SynchroIdentifiantExterne synchroIdentifiantExterne = synchroIdentifiantExterneService.findByAcronyme(resource.getAcronym(), ResourceType.ORGANISM);
             SdmWsClientImpl sdmWsClient = (SdmWsClientImpl) resourceWsClient;
@@ -112,7 +113,7 @@ public class OrganismSynchronizationJob extends
     public ResponseMessage update(Organism resource,
                                   SynchronizationSubscription synchronizationSubscription,
                                   ResourceWsClient resourceWsClient) {
-        if ("SDM".equals(synchronizationSubscription.getApplication().getName())) {
+        if (MyEc3ApplicationConstants.SDM_APPLICATION.equals(synchronizationSubscription.getApplication().getName())) {
             SdmOrganisme organismeSDM = sdmConverterService.convertSdmOrganisme(resource);
 
             SynchroIdentifiantExterne synchroIdentifiantExterne=null;

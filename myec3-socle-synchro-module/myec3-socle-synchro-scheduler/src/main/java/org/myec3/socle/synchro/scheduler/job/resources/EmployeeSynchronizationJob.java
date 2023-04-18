@@ -17,6 +17,7 @@
  */
 package org.myec3.socle.synchro.scheduler.job.resources;
 
+import org.myec3.socle.core.constants.MyEc3ApplicationConstants;
 import org.myec3.socle.core.domain.model.EmployeeProfile;
 import org.myec3.socle.core.domain.model.Role;
 import org.myec3.socle.core.domain.model.enums.ResourceType;
@@ -72,7 +73,7 @@ public class EmployeeSynchronizationJob extends
     public ResponseMessage create(EmployeeProfile resource,
                                   SynchronizationSubscription synchronizationSubscription,
                                   ResourceWsClient resourceWsClient) {
-        if ("SDM".equals(synchronizationSubscription.getApplication().getName())) {
+        if (MyEc3ApplicationConstants.SDM_APPLICATION.equals(synchronizationSubscription.getApplication().getName())) {
             SdmInscrit inscritSDM = sdmConverterService.convertToSdmInscrit(resource);
             SdmWsClientImpl sdmWsClient = (SdmWsClientImpl) resourceWsClient;
             return sdmWsClient.post(resource, inscritSDM, synchronizationSubscription);
@@ -88,7 +89,7 @@ public class EmployeeSynchronizationJob extends
     public ResponseMessage delete(EmployeeProfile resource,
                                   SynchronizationSubscription synchronizationSubscription,
                                   ResourceWsClient resourceWsClient) {
-        if ("SDM".equals(synchronizationSubscription.getApplication().getName())) {
+        if (MyEc3ApplicationConstants.SDM_APPLICATION.equals(synchronizationSubscription.getApplication().getName())) {
             SdmResource sdmResourceToDelete = new SdmResource();
             sdmResourceToDelete.setIdExterne(resource.getExternalId().toString());
             SdmWsClientImpl sdmWsClient = (SdmWsClientImpl) resourceWsClient;
@@ -107,7 +108,7 @@ public class EmployeeSynchronizationJob extends
                                   SynchronizationSubscription synchronizationSubscription,
                                   ResourceWsClient resourceWsClient) {
 
-        if ("SDM".equals(synchronizationSubscription.getApplication().getName())) {
+        if (MyEc3ApplicationConstants.SDM_APPLICATION.equals(synchronizationSubscription.getApplication().getName())) {
             SdmInscrit inscritSDM = sdmConverterService.convertToSdmInscrit(resource);
             List<SynchroIdentifiantExterne> synchroIdentifiantExterne = synchroIdentifiantExterneService.findListByIdSocle(resource.getUser().getId(), ResourceType.EMPLOYEE_PROFILE);
             SdmWsClientImpl sdmWsClient = (SdmWsClientImpl) resourceWsClient;

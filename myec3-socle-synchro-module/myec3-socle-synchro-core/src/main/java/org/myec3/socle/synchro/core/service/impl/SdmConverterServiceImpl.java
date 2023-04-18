@@ -1,6 +1,7 @@
 package org.myec3.socle.synchro.core.service.impl;
 
 import org.apache.commons.lang3.BooleanUtils;
+import org.myec3.socle.core.constants.MyEc3ApplicationConstants;
 import org.myec3.socle.core.domain.model.*;
 import org.myec3.socle.core.domain.model.enums.ResourceType;
 import org.myec3.socle.core.domain.sdm.model.*;
@@ -26,12 +27,7 @@ public class SdmConverterServiceImpl implements SdmConverterService {
     @Qualifier("synchroIdentifiantExterneService")
     private SynchroIdentifiantExterneService synchroIdentifiantExterneService;
 
-    /**
-     * Conversion d'un AgentProfile socle dans un Agent pour la SDM
-     *
-     * @param resource
-     * @return
-     */
+
     @Override
     public SdmAgent convertToSdmAgent(AgentProfile resource) {
         SdmAgent agentSDM = new SdmAgent();
@@ -42,7 +38,7 @@ public class SdmConverterServiceImpl implements SdmConverterService {
         //mapping du role
         if (resource.getRoles() != null && !resource.getRoles().isEmpty()) {
             for (Role role : resource.getRoles()) {
-                if ("SDM".equals(role.getApplication().getName())) {
+                if (MyEc3ApplicationConstants.SDM_APPLICATION.equals(role.getApplication().getName())) {
                     agentSDM.setIdProfil(role.getExternalId());
                     break;
                 }
@@ -109,12 +105,6 @@ public class SdmConverterServiceImpl implements SdmConverterService {
         return entrepriseSDM;
     }
 
-    /**
-     * Conversion d'un EmployeeProfile socle dans un Inscrit  pour la SDM
-     *
-     * @param resource
-     * @return
-     */
     @Override
     public SdmInscrit convertToSdmInscrit(EmployeeProfile resource) {
 
@@ -124,7 +114,7 @@ public class SdmConverterServiceImpl implements SdmConverterService {
         //mapping du role
         if (resource.getRoles() != null && !resource.getRoles().isEmpty()) {
             for (Role role : resource.getRoles()) {
-                if ("SDM".equals(role.getApplication().getName())) {
+                if (MyEc3ApplicationConstants.SDM_APPLICATION.equals(role.getApplication().getName())) {
                     inscritSDM.setProfil(role.getExternalId());
                     break;
                 }
@@ -164,12 +154,6 @@ public class SdmConverterServiceImpl implements SdmConverterService {
         return inscritSDM;
     }
 
-    /**
-     * Conversion d'un Establishment socle dans un Etablissement pour la SDM
-     *
-     * @param resource
-     * @return
-     */
     @Override
     public SdmEtablissement convertSdmEtablissement(Establishment resource) {
 
@@ -258,11 +242,7 @@ public class SdmConverterServiceImpl implements SdmConverterService {
         return organismeSDM;
     }
 
-    /**
-     * Conversion d'une adresse socle dans une adresse pour la SDM
-     * @param resourceAddress
-     * @return
-     */
+
     @Override
     public SdmAdresse convertToSdmAdresse(Address resourceAddress) {
         if (resourceAddress != null) {

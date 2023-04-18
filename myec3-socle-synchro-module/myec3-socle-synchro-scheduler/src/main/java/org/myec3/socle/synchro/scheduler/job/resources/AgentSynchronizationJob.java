@@ -18,6 +18,7 @@
 package org.myec3.socle.synchro.scheduler.job.resources;
 
 import org.apache.commons.lang3.BooleanUtils;
+import org.myec3.socle.core.constants.MyEc3ApplicationConstants;
 import org.myec3.socle.core.domain.model.AgentProfile;
 import org.myec3.socle.core.domain.model.Application;
 import org.myec3.socle.core.domain.model.Role;
@@ -84,7 +85,7 @@ public class AgentSynchronizationJob extends
     public ResponseMessage create(AgentProfile resource,
                                   SynchronizationSubscription synchronizationSubscription,
                                   ResourceWsClient resourceWsClient) {
-        if ("SDM".equals(synchronizationSubscription.getApplication().getName())) {
+        if (MyEc3ApplicationConstants.SDM_APPLICATION.equals(synchronizationSubscription.getApplication().getName())) {
             SdmAgent agentSDM = sdmConverterService.convertToSdmAgent(resource);
             SdmWsClientImpl sdmWsClient = (SdmWsClientImpl) resourceWsClient;
             return sdmWsClient.post(resource, agentSDM, synchronizationSubscription);
@@ -103,7 +104,7 @@ public class AgentSynchronizationJob extends
     public ResponseMessage delete(AgentProfile resource,
                                   SynchronizationSubscription synchronizationSubscription,
                                   ResourceWsClient resourceWsClient) {
-        if ("SDM".equals(synchronizationSubscription.getApplication().getName())) {
+        if (MyEc3ApplicationConstants.SDM_APPLICATION.equals(synchronizationSubscription.getApplication().getName())) {
             SdmAgent agentSDM = sdmConverterService.convertToSdmAgent(resource);
             SynchroIdentifiantExterne synchroIdentifiantExterne = synchroIdentifiantExterneService.findByIdSocle(resource.getUser().getId(), ResourceType.AGENT_PROFILE);
             SdmWsClientImpl sdmWsClient = (SdmWsClientImpl) resourceWsClient;
@@ -131,7 +132,7 @@ public class AgentSynchronizationJob extends
     public ResponseMessage update(AgentProfile resource,
                                   SynchronizationSubscription synchronizationSubscription,
                                   ResourceWsClient resourceWsClient) {
-        if ("SDM".equals(synchronizationSubscription.getApplication().getName())) {
+        if (MyEc3ApplicationConstants.SDM_APPLICATION.equals(synchronizationSubscription.getApplication().getName())) {
             SdmAgent agentSDM = sdmConverterService.convertToSdmAgent(resource);
             SynchroIdentifiantExterne synchroIdentifiantExterne = synchroIdentifiantExterneService.findByIdSocle(resource.getUser().getId(), ResourceType.AGENT_PROFILE);
             SdmWsClientImpl sdmWsClient = (SdmWsClientImpl) resourceWsClient;

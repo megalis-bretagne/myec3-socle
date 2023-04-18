@@ -18,6 +18,7 @@
 package org.myec3.socle.synchro.scheduler.job.resources;
 
 import org.apache.commons.lang3.BooleanUtils;
+import org.myec3.socle.core.constants.MyEc3ApplicationConstants;
 import org.myec3.socle.core.domain.model.*;
 import org.myec3.socle.core.domain.model.enums.ResourceType;
 import org.myec3.socle.core.domain.sdm.model.SdmAdresse;
@@ -685,7 +686,7 @@ public abstract class ResourcesSynchronizationJob<T extends Resource> extends Qu
 	}
 
 	private ResourceWsClient getResourceWsClient(SynchronizationSubscription synchronizationSubscription) {
-		if ("SDM".equals(synchronizationSubscription.getApplication().getName())) {
+		if (MyEc3ApplicationConstants.SDM_APPLICATION.equals(synchronizationSubscription.getApplication().getName())) {
 			return sdmWsClientImpl;
 		}
 		if (BooleanUtils.isTrue(synchronizationSubscription.getHttps())) {

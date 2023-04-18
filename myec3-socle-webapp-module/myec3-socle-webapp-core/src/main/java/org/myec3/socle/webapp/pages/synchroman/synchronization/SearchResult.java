@@ -16,6 +16,7 @@ import org.apache.tapestry5.corelib.components.Grid;
 import org.apache.tapestry5.ioc.annotations.Inject;
 import org.apache.tapestry5.services.PageRenderLinkSource;
 import org.apache.tapestry5.services.javascript.JavaScriptSupport;
+import org.myec3.socle.core.constants.MyEc3ApplicationConstants;
 import org.myec3.socle.core.domain.model.*;
 import org.myec3.socle.core.domain.model.enums.ResourceType;
 import org.myec3.socle.core.domain.sdm.model.SdmResource;
@@ -158,19 +159,22 @@ public class SearchResult extends AbstractPage {
 
 
     /**
-     * REdirect to view page given type resource and his id
+     * Download XML or Json Export of the current version of resource synchronized
      *
      * @param applicationName sending Application
      * @param resourceId      resource Identifier
-     * @param resourceType    resourceType
+     * @param resourceType    resource Type
      * @return page
      */
     public StreamResponse onDownloadSynchroFile(String applicationName, String resourceId, ResourceType resourceType) {
 
         StreamResponse response = null;
+        //Check again that current user is SA
         if (super.getIsAdmin() || super.getIsGlobalManagerAgent()) {
+            //Build file name regarding synchro parameter
             final String filename = applicationName + "_" + resourceType + "_" + resourceId;
-                if ("SDM".equals(applicationName)) {
+                //Specific treatement for "Salle des marchés" that export json instead of XML
+                if (MyEc3ApplicationConstants.SDM_APPLICATION.equals(applicationName)) {
                     response = new JsonStreamResponse(filename,
                             getJsonSynchroFile(Long.parseLong(resourceId), resourceType)
                     );
@@ -183,6 +187,13 @@ public class SearchResult extends AbstractPage {
         return response;
     }
 
+    /**
+     * Generate XML export file
+     *
+     * @param resourceId   resource Identifier
+     * @param resourceType  resource Type
+     * @return XML file as input stream
+     */
     protected InputStream getXmlSynchroFile(Long resourceId, ResourceType resourceType) {
         ByteArrayOutputStream baOutputStream = null;
         Resource resource = null;
@@ -215,6 +226,13 @@ public class SearchResult extends AbstractPage {
         return new ByteArrayInputStream(baOutputStream.toByteArray());
     }
 
+    /**
+     * Generate JSON export file
+     *
+     * @param resourceId  resource Identifier
+     * @param resourceType  resource Type
+     * @return JSON file as input stream
+     */
     protected InputStream getJsonSynchroFile(Long resourceId, ResourceType resourceType) {
         InputStream inputStream = null;
         SdmResource sdmResource = null;
@@ -261,7 +279,7 @@ public class SearchResult extends AbstractPage {
 
 
     /**
-     * REdirect to view page given type resource and his id
+     * Redirect to view page given type resource and his id
      *
      * @param ressourceId  resource Identifier
      * @param resourceType resourceType

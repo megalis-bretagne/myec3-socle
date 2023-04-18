@@ -1,5 +1,6 @@
 package org.myec3.socle.synchro.controller;
 
+import org.myec3.socle.core.constants.MyEc3ApplicationConstants;
 import org.myec3.socle.core.domain.dto.OrganismLightDTO;
 import org.myec3.socle.core.domain.model.*;
 import org.myec3.socle.core.service.*;
@@ -161,7 +162,7 @@ public class SynchroController {
 
         AgentProfile agent = agentProfileService.findOne(id);
 
-        Application applicationASynchroniser = applicationService.findByName("SDM");
+        Application applicationASynchroniser = applicationService.findByName(MyEc3ApplicationConstants.SDM_APPLICATION);;
         List<Long> listApplicationIdToResynchronize = new ArrayList<>();
         listApplicationIdToResynchronize.add(applicationASynchroniser.getId());
 
@@ -178,7 +179,7 @@ public class SynchroController {
     public String organisme(@RequestParam long id) {
         Organism organism = organismService.findOne(id);
 
-        Application applicationASynchroniser = applicationService.findByName("SDM");
+        Application applicationASynchroniser = applicationService.findByName(MyEc3ApplicationConstants.SDM_APPLICATION);;
         List<Long> listApplicationIdToResynchronize = new ArrayList<>();
         listApplicationIdToResynchronize.add(applicationASynchroniser.getId());
         SynchronizationType synchronizationType = SynchronizationType.SYNCHRONIZATION;
@@ -193,7 +194,7 @@ public class SynchroController {
     public String organismDepartment(@RequestParam long id) {
         OrganismDepartment organismDepartment = organismDepartmentService.findOne(id);
 
-        Application applicationASynchroniser = applicationService.findByName("SDM");
+        Application applicationASynchroniser = applicationService.findByName(MyEc3ApplicationConstants.SDM_APPLICATION);;
         List<Long> listApplicationIdToResynchronize = new ArrayList<>();
         listApplicationIdToResynchronize.add(applicationASynchroniser.getId());
         SynchronizationType synchronizationType = SynchronizationType.SYNCHRONIZATION;
@@ -209,7 +210,7 @@ public class SynchroController {
     public String employee(@RequestParam long id) {
         EmployeeProfile employeeProfile = employeeProfileService.findOne(id);
 
-        Application applicationASynchroniser = applicationService.findByName("SDM");
+        Application applicationASynchroniser = applicationService.findByName(MyEc3ApplicationConstants.SDM_APPLICATION);;
         List<Long> listApplicationIdToResynchronize = new ArrayList<>();
         listApplicationIdToResynchronize.add(applicationASynchroniser.getId());
         SynchronizationType synchronizationType = SynchronizationType.SYNCHRONIZATION;
@@ -224,7 +225,7 @@ public class SynchroController {
     public String company(@RequestParam long id) {
         Company company = companyService.findOne(id);
 
-        Application applicationASynchroniser = applicationService.findByName("SDM");
+        Application applicationASynchroniser = applicationService.findByName(MyEc3ApplicationConstants.SDM_APPLICATION);;
         List<Long> listApplicationIdToResynchronize = new ArrayList<>();
         listApplicationIdToResynchronize.add(applicationASynchroniser.getId());
         SynchronizationType synchronizationType = SynchronizationType.SYNCHRONIZATION;
@@ -239,7 +240,7 @@ public class SynchroController {
     public String establishment(@RequestParam long id) {
         Establishment establishment = establishmentService.findOne(id);
 
-        Application applicationASynchroniser = applicationService.findByName("SDM");
+        Application applicationASynchroniser = applicationService.findByName(MyEc3ApplicationConstants.SDM_APPLICATION);;
         List<Long> listApplicationIdToResynchronize = new ArrayList<>();
         listApplicationIdToResynchronize.add(applicationASynchroniser.getId());
         SynchronizationType synchronizationType = SynchronizationType.SYNCHRONIZATION;

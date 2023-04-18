@@ -32,7 +32,7 @@ public final class MyEc3ApplicationConstants {
 	public static final String GRC_SERVICE = "Application - GRC";
 	public static final String PORTAIL_SERVICE = "Application - Portail";
 	public static final String GED_SERVICE = "GED";
-	public static final String SDM_SERVICE = "SDM";
+	public static final String SDM_APPLICATION = "SDM";
 	public static final String JEB_SERVICE = "jeb";
 	public static final String LOCHALLES_SERVICE = "Application - LocHalles";
 	public static final String PARAPHEUR_SERVICE = "i-parapheur";
