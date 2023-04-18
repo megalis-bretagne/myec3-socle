@@ -66,13 +66,13 @@ public class OrganismServiceTest extends AbstractDbSocleUnitTest {
 
 		Application newApplication1 = new Application();
 		newApplication1.setName(APP_NAME_1);
-		newApplication1.setExternalId(new Long(1245));
+		newApplication1.setExternalId(1245L);
 		newApplication1.setUrl("http://urlsdm");
 		applicationService.create(newApplication1);
 
 		Application newApplication2 = new Application();
 		newApplication2.setName(APP_NAME_2);
-		newApplication2.setExternalId(new Long(1246));
+		newApplication2.setExternalId(1246L);
 		newApplication2.setUrl("http://urlged");
 		 applicationService.create(newApplication2);
 
@@ -83,7 +83,7 @@ public class OrganismServiceTest extends AbstractDbSocleUnitTest {
 		newOrganism.setName(ORGANISM_NAME_2);
 		newOrganism.setLabel("OrganismLabel");
 		newOrganism.setDescription("OrganismDescription");
-		newOrganism.setExternalId(new Long(123));
+		newOrganism.setExternalId(123L);
 		newOrganism.setEmail("test-create-organism"
 				+ Calendar.getInstance().getTimeInMillis() + "@test.fr");
 		newOrganism.setPhone("0000000000");
@@ -131,14 +131,14 @@ public class OrganismServiceTest extends AbstractDbSocleUnitTest {
 
 		Application newApplication1 = new Application();
 		newApplication1.setName(APP_NAME_1);
-		newApplication1.setExternalId(new Long(1245));
+		newApplication1.setExternalId(1245L);
 		newApplication1.setUrl("http://urlsdm");
 
 		applicationService.create(newApplication1);
 
 		Application newApplication2 = new Application();
 		newApplication2.setName(APP_NAME_2);
-		newApplication2.setExternalId(new Long(1246));
+		newApplication2.setExternalId(1246L);
 		newApplication2.setUrl("http://urlged");
 
 		applicationService.create(newApplication2);
@@ -150,7 +150,7 @@ public class OrganismServiceTest extends AbstractDbSocleUnitTest {
 		newOrganism.setName(ORGANISM_NAME_2);
 		newOrganism.setLabel("OrganismLabel");
 		newOrganism.setDescription("OrganismDescription");
-		newOrganism.setExternalId(new Long(123));
+		newOrganism.setExternalId(123L);
 		newOrganism.setEmail("test-create-organism"
 				+ Calendar.getInstance().getTimeInMillis() + "@test.fr");
 		newOrganism.setPhone("0000000000");
@@ -255,7 +255,7 @@ public class OrganismServiceTest extends AbstractDbSocleUnitTest {
 		newOrganism.setLabel("OrganismLabel 2"
 				+ Calendar.getInstance().getTimeInMillis());
 		newOrganism.setDescription("OrganismDescription");
-		newOrganism.setExternalId(new Long(123));
+		newOrganism.setExternalId(123L);
 		newOrganism.setEmail("test-create-organism"
 				+ Calendar.getInstance().getTimeInMillis() + "@test.fr");
 		newOrganism.setPhone("0000000000");
@@ -348,7 +348,7 @@ public class OrganismServiceTest extends AbstractDbSocleUnitTest {
 				+ Calendar.getInstance().getTimeInMillis());
 		newOrganism.setLabel(ORGANISM_LABEL);
 		newOrganism.setDescription("OrganismDescription");
-		newOrganism.setExternalId(new Long(123));
+		newOrganism.setExternalId(123L);
 		newOrganism.setEmail("test-create-organism"
 				+ Calendar.getInstance().getTimeInMillis() + "@test.fr");
 		newOrganism.setPhone("0000000000");
@@ -393,7 +393,7 @@ public class OrganismServiceTest extends AbstractDbSocleUnitTest {
 				+ Calendar.getInstance().getTimeInMillis());
 		newOrganism.setLabel(ORGANISM_LABEL);
 		newOrganism.setDescription("OrganismDescription");
-		newOrganism.setExternalId(new Long(123));
+		newOrganism.setExternalId(123L);
 		newOrganism.setEmail("test-create-organism"
 				+ Calendar.getInstance().getTimeInMillis() + "@test.fr");
 		newOrganism.setPhone("0000000000");
@@ -439,7 +439,7 @@ public class OrganismServiceTest extends AbstractDbSocleUnitTest {
 				+ Calendar.getInstance().getTimeInMillis());
 		newOrganism.setLabel(ORGANISM_LABEL);
 		newOrganism.setDescription("OrganismDescription");
-		newOrganism.setExternalId(new Long(123));
+		newOrganism.setExternalId(123L);
 		newOrganism.setEmail("test-create-organism"
 				+ Calendar.getInstance().getTimeInMillis() + "@test.fr");
 		newOrganism.setPhone("0000000000");
@@ -484,7 +484,7 @@ public class OrganismServiceTest extends AbstractDbSocleUnitTest {
 				+ Calendar.getInstance().getTimeInMillis());
 		newOrganism.setLabel(ORGANISM_LABEL);
 		newOrganism.setDescription("OrganismDescription");
-		newOrganism.setExternalId(new Long(123));
+		newOrganism.setExternalId(123L);
 		newOrganism.setEmail("test-create-organism"
 				+ Calendar.getInstance().getTimeInMillis() + "@test.fr");
 		newOrganism.setPhone("0000000000");
@@ -529,7 +529,7 @@ public class OrganismServiceTest extends AbstractDbSocleUnitTest {
 				+ Calendar.getInstance().getTimeInMillis());
 		newOrganism.setLabel(ORGANISM_LABEL);
 		newOrganism.setDescription("OrganismDescription");
-		newOrganism.setExternalId(new Long(123));
+		newOrganism.setExternalId(123L);
 		newOrganism.setEmail("test-create-organism"
 				+ Calendar.getInstance().getTimeInMillis() + "@test.fr");
 		newOrganism.setPhone("0000000000");
@@ -575,7 +575,7 @@ public class OrganismServiceTest extends AbstractDbSocleUnitTest {
 				+ Calendar.getInstance().getTimeInMillis());
 		newOrganism.setLabel(ORGANISM_LABEL);
 		newOrganism.setDescription("OrganismDescription");
-		newOrganism.setExternalId(new Long(123));
+		newOrganism.setExternalId(123L);
 		newOrganism.setEmail("test-create-organism"
 				+ Calendar.getInstance().getTimeInMillis() + "@test.fr");
 		newOrganism.setPhone("0000000000");
@@ -621,7 +621,7 @@ public class OrganismServiceTest extends AbstractDbSocleUnitTest {
 				+ Calendar.getInstance().getTimeInMillis());
 		newOrganism.setLabel(ORGANISM_LABEL);
 		newOrganism.setDescription("OrganismDescription");
-		newOrganism.setExternalId(new Long(123));
+		newOrganism.setExternalId(123L);
 		newOrganism.setEmail("test-create-organism"
 				+ Calendar.getInstance().getTimeInMillis() + "@test.fr");
 		newOrganism.setPhone("0000000000");
@@ -665,7 +665,7 @@ public class OrganismServiceTest extends AbstractDbSocleUnitTest {
 				+ Calendar.getInstance().getTimeInMillis());
 		newOrganism.setLabel(ORGANISM_LABEL);
 		newOrganism.setDescription("OrganismDescription");
-		newOrganism.setExternalId(new Long(123));
+		newOrganism.setExternalId(123L);
 		newOrganism.setEmail("test-create-organism"
 				+ Calendar.getInstance().getTimeInMillis() + "@test.fr");
 		newOrganism.setPhone("0000000000");
@@ -710,7 +710,7 @@ public class OrganismServiceTest extends AbstractDbSocleUnitTest {
 				+ Calendar.getInstance().getTimeInMillis());
 		newOrganism.setLabel(ORGANISM_LABEL);
 		newOrganism.setDescription("OrganismDescription");
-		newOrganism.setExternalId(new Long(123));
+		newOrganism.setExternalId(123L);
 		newOrganism.setEmail("test-create-organism"
 				+ Calendar.getInstance().getTimeInMillis() + "@test.fr");
 		newOrganism.setPhone("0000000000");
@@ -756,7 +756,7 @@ public class OrganismServiceTest extends AbstractDbSocleUnitTest {
 				+ Calendar.getInstance().getTimeInMillis());
 		newOrganism.setLabel(ORGANISM_LABEL);
 		newOrganism.setDescription("OrganismDescription");
-		newOrganism.setExternalId(new Long(123));
+		newOrganism.setExternalId(123L);
 		newOrganism.setEmail("test-create-organism"
 				+ Calendar.getInstance().getTimeInMillis() + "@test.fr");
 		newOrganism.setPhone("0000000000");
@@ -802,7 +802,7 @@ public class OrganismServiceTest extends AbstractDbSocleUnitTest {
 				+ Calendar.getInstance().getTimeInMillis());
 		newOrganism.setLabel(ORGANISM_LABEL);
 		newOrganism.setDescription("OrganismDescription");
-		newOrganism.setExternalId(new Long(123));
+		newOrganism.setExternalId(123L);
 		newOrganism.setEmail("test-create-organism"
 				+ Calendar.getInstance().getTimeInMillis() + "@test.fr");
 		newOrganism.setPhone("0000000000");
@@ -898,14 +898,14 @@ public class OrganismServiceTest extends AbstractDbSocleUnitTest {
 
 		Application newApplication1 = new Application();
 		newApplication1.setName(APP_NAME_1);
-		newApplication1.setExternalId(new Long(1245));
+		newApplication1.setExternalId(1245L);
 		newApplication1.setUrl("http://urlsdm");
 
 		applicationService.create(newApplication1);
 
 		Application newApplication2 = new Application();
 		newApplication2.setName(APP_NAME_2);
-		newApplication2.setExternalId(new Long(1246));
+		newApplication2.setExternalId(1246L);
 		newApplication2.setUrl("http://urlged");
 
 		applicationService.create(newApplication2);
@@ -917,7 +917,7 @@ public class OrganismServiceTest extends AbstractDbSocleUnitTest {
 		newOrganism.setName(ORGANISM_NAME_2);
 		newOrganism.setLabel("OrganismLabel");
 		newOrganism.setDescription("OrganismDescription");
-		newOrganism.setExternalId(new Long(123));
+		newOrganism.setExternalId(123L);
 		newOrganism.setEmail("test-create-organism"
 				+ Calendar.getInstance().getTimeInMillis() + "@test.fr");
 		newOrganism.setPhone("0000000000");

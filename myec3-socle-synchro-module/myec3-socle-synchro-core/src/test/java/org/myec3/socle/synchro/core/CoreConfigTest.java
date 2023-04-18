@@ -16,7 +16,7 @@ public class CoreConfigTest extends AbstractDbUnitTest{
     public void testPropertiesParapheurMonotenant() {
         Assert.assertNotNull(idsApplicationMonotenant);
         Assert.assertEquals( 2,idsApplicationMonotenant.size(),2);
-        Assert.assertEquals(new Integer(7) , idsApplicationMonotenant.get(0));
-        Assert.assertEquals(new Integer(10) , idsApplicationMonotenant.get(1));
+        Assert.assertEquals(Integer.valueOf(7) , idsApplicationMonotenant.get(0));
+        Assert.assertEquals(Integer.valueOf(10) , idsApplicationMonotenant.get(1));
     }
 }

@@ -189,7 +189,7 @@ public class SchedulerServiceImpl implements SchedulerService {
 		SimpleTrigger trig = (SimpleTrigger) newTrigger()
 				.withIdentity(generateUniqueName(TRIGGER_LABEL + PROPAGATE_CC_JOB_NAME, resource),
 						QUARTZ_PROPAGATE_CC_GROUP)
-				.startAt(new Date(this.getFireTriggerStartTime(nbAttempts) + new Long(1000))).build();
+				.startAt(new Date(this.getFireTriggerStartTime(nbAttempts) + 1000L)).build();
 		trig.getJobDataMap().put(SynchronizationParametersType.RESOURCE.getValue(), resource);
 		trig.getJobDataMap().put(SynchronizationParametersType.RELATION_NAME.getValue(), relationName);
 		trig.getJobDataMap().put(SynchronizationParametersType.CREATED_RESOURCES.getValue(), createdResources);
@@ -222,7 +222,7 @@ public class SchedulerServiceImpl implements SchedulerService {
 		SimpleTrigger trig = (SimpleTrigger) newTrigger()
 				.withIdentity(generateUniqueName(TRIGGER_LABEL + PROPAGATE_CU_JOB_NAME, resource),
 						QUARTZ_PROPAGATE_CU_GROUP)
-				.startAt(new Date(this.getFireTriggerStartTime(nbAttempts) + new Long(1000))).build();
+				.startAt(new Date(this.getFireTriggerStartTime(nbAttempts) + 1000L)).build();
 		trig.getJobDataMap().put(SynchronizationParametersType.RESOURCE.getValue(), resource);
 		trig.getJobDataMap().put(SynchronizationParametersType.RELATION_NAME.getValue(), relationName);
 		trig.getJobDataMap().put(SynchronizationParametersType.UPDATED_RESOURCES.getValue(), updatedResources);

@@ -184,7 +184,7 @@ public class OrganismDepartmentServiceTest extends AbstractDbSocleUnitTest {
 		newOrganism.setLabel("OrganismLabel");
 		newOrganism.setAcronym(ACRONYM);
 		newOrganism.setDescription("OrganismDescription");
-		newOrganism.setExternalId(new Long(123));
+		newOrganism.setExternalId(123L);
 		newOrganism.setEmail("test-create-organism2"
 				+ Calendar.getInstance().getTimeInMillis() + "@test.fr");
 		newOrganism.setPhone("0000000000");

@@ -49,7 +49,7 @@ public class WebInternalServerErrorException extends WebApplicationException {
 		super(Response
 				.status(Response.Status.INTERNAL_SERVER_ERROR)
 				.entity(new Error(ErrorCodeType.INTERNAL_SERVER_ERROR,
-						"Internal server error", message, new Long(0),
+						"Internal server error", message, 0L,
 						methodType)).type(MediaType.APPLICATION_XML).build());
 	}
 

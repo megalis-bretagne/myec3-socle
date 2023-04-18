@@ -32,7 +32,7 @@ public class SynchronizationQueueTest extends AbstractDbUnitTest {
 	@Test
 	public void testCreate() throws Exception {
 		SynchronizationQueue newSynchronizationQueue = new SynchronizationQueue();
-		newSynchronizationQueue.setResourceId(new Long(200));
+		newSynchronizationQueue.setResourceId(200L);
 		newSynchronizationQueue.setResourceType(ResourceType.AGENT_PROFILE);
 		newSynchronizationQueue.setSendingApplication("GU");
 		newSynchronizationQueue

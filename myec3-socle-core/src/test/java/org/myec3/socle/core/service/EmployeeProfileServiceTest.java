@@ -388,7 +388,7 @@ public class EmployeeProfileServiceTest extends AbstractDbSocleUnitTest {
 	public void testInvalidSoftDelete() throws Exception {
 
 		EmployeeProfile employee = new EmployeeProfile();
-		employee.setExternalId(new Long(1234));
+		employee.setExternalId(1234L);
 		employee.setName(EMPLOYEE_NAME_1);
 		employee.setAddress(address1);
 		employee.setEmail(EMAIL_EMPLOYEE_1);
@@ -637,7 +637,7 @@ public class EmployeeProfileServiceTest extends AbstractDbSocleUnitTest {
 	@Test
 	public void testIdNullEmailAlreadyExistsProfile() {
 		EmployeeProfile newEmployee = new EmployeeProfile();
-		newEmployee.setExternalId(new Long(1234));
+		newEmployee.setExternalId(1234L);
 		newEmployee.setName("new" + EMPLOYEE_NAME_1);
 		newEmployee.setAddress(address1);
 		newEmployee.setEmail(EMAIL_EMPLOYEE_1);

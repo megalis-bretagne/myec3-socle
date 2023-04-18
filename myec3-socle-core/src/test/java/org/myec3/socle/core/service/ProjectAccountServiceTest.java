@@ -37,7 +37,7 @@ public class ProjectAccountServiceTest extends AbstractDbSocleUnitTest {
 	public void testInit() throws Exception {
 		// ProjectAccount
 		projectAccount = new ProjectAccount();
-		projectAccount.setExternalId(new Long(96));
+		projectAccount.setExternalId(96L);
 		projectAccount.setName(PROJECT_ACCOUNT_NAME);
 		projectAccount.setLabel(PROJECT_ACCOUNT_NAME);
 		projectAccount.setEmail("test-email"

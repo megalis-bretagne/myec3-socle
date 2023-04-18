@@ -32,25 +32,25 @@ public class ModelJaxbTest {
     @Before
     public void setUp() {
         application1 = new Application();
-        application1.setId(new Long(12));
+        application1.setId(12L);
         application1.setName("Salle des marchés");
-        application1.setExternalId(new Long(1245));
+        application1.setExternalId(1245L);
         application1.setUrl("http://urlsdm");
 
         application2 = new Application();
-        application2.setId(new Long(13));
+        application2.setId(13L);
         application2.setName("Gestion documentaire");
-        application2.setExternalId(new Long(1246));
+        application2.setExternalId(1246L);
         application2.setUrl("http://urlged");
 
         role1 = new Role();
-        role1.setId(new Long(10));
-        role1.setExternalId(new Long(1242));
+        role1.setId(10L);
+        role1.setExternalId(1242L);
         role1.setName("Administrateur");
         role1.setApplication(application1);
         role2 = new Role();
-        role2.setId(new Long(11));
-        role2.setExternalId(new Long(1243));
+        role2.setId(11L);
+        role2.setExternalId(1243L);
         role2.setName("Contributeur");
         role2.setApplication(application2);
 
@@ -76,7 +76,7 @@ public class ModelJaxbTest {
         address3.setCountry(Country.FR);
 
         user = new User();
-        user.setId(new Long(1));
+        user.setId(1L);
         user.setName("Bernard Dupond");
         user.setFirstname("Bernard");
         user.setLastname("Dupond");
@@ -86,8 +86,8 @@ public class ModelJaxbTest {
         user.setUsername("username");
 
         company = new Company();
-        company.setId(new Long(2));
-        company.setExternalId(new Long(1235));
+        company.setId(2L);
+        company.setExternalId(1235L);
         company.setName("company ");
         company.setAddress(address2);
         company.setDescription("Description d'company .");
@@ -108,7 +108,7 @@ public class ModelJaxbTest {
         company.setRegistrationCountry(Country.FR);
 
         companyDepartment1 = new CompanyDepartment();
-        companyDepartment1.setId(new Long(3));
+        companyDepartment1.setId(3L);
         companyDepartment1.setName("Business Unit");
         companyDepartment1.setAddress(address1);
         companyDepartment1.setEmail("bu@company.com");
@@ -119,7 +119,7 @@ public class ModelJaxbTest {
         companyDepartment1.setWebsite(null);
 
         companyDepartment2 = new CompanyDepartment();
-        companyDepartment2.setId(new Long(4));
+        companyDepartment2.setId(4L);
         companyDepartment2.setName("Département B de bu");
         companyDepartment2.setAddress(address1);
         companyDepartment2.setEmail("bu-b@company.com");
@@ -130,8 +130,8 @@ public class ModelJaxbTest {
         companyDepartment2.setWebsite(null);
 
         employee = new EmployeeProfile();
-        employee.setId(new Long(5));
-        employee.setExternalId(new Long(1234));
+        employee.setId(5L);
+        employee.setExternalId(1234L);
         employee.setName("Employé Bernard Dupond");
         employee.setAddress(address1);
         employee.setEmail("bernard.dupond@company.com");
@@ -143,8 +143,8 @@ public class ModelJaxbTest {
         employee.setUser(user);
 
         organism = new Organism();
-        organism.setId(new Long(6));
-        organism.setExternalId(new Long(1236));
+        organism.setId(6L);
+        organism.setExternalId(1236L);
         organism.setName("Conseil régional de test");
         organism.setAddress(address3);
         organism.setArticle(Article.LE);
@@ -161,8 +161,8 @@ public class ModelJaxbTest {
         organism.setSiren(null);
 
         organismDepartment0 = new OrganismDepartment();
-        organismDepartment0.setId(new Long(1));
-        organismDepartment0.setExternalId(new Long(1200));
+        organismDepartment0.setId(1L);
+        organismDepartment0.setExternalId(1200L);
         organismDepartment0.setName("Organisme de la région - Niveau 0");
         organismDepartment0.setAddress(address3);
         organismDepartment0.setEmail("organisme@test.fr");
@@ -174,8 +174,8 @@ public class ModelJaxbTest {
         organismDepartment0.setParentDepartment(null);
 
         organismDepartment1 = new OrganismDepartment();
-        organismDepartment1.setId(new Long(2));
-        organismDepartment1.setExternalId(new Long(1220));
+        organismDepartment1.setId(2L);
+        organismDepartment1.setExternalId(1220L);
         organismDepartment1.setName("Organisme de la région - Niveau 1");
         organismDepartment1.setAddress(address3);
         organismDepartment1.setEmail("organisme@test.fr");
@@ -187,8 +187,8 @@ public class ModelJaxbTest {
         organismDepartment1.setParentDepartment(organismDepartment0);
 
         organismDepartment2 = new OrganismDepartment();
-        organismDepartment2.setId(new Long(3));
-        organismDepartment2.setExternalId(new Long(1230));
+        organismDepartment2.setId(3L);
+        organismDepartment2.setExternalId(1230L);
         organismDepartment2.setName("Organisme de la région - Niveau 2");
         organismDepartment2.setAddress(address3);
         organismDepartment2.setEmail("organisme@test.fr");
@@ -200,8 +200,8 @@ public class ModelJaxbTest {
         organismDepartment2.setParentDepartment(organismDepartment1);
 
         organismDepartment3 = new OrganismDepartment();
-        organismDepartment3.setId(new Long(4));
-        organismDepartment3.setExternalId(new Long(1240));
+        organismDepartment3.setId(4L);
+        organismDepartment3.setExternalId(1240L);
         organismDepartment3.setName("Organisme de la région - Niveau 3");
         organismDepartment3.setAddress(address3);
         organismDepartment3.setEmail("organisme@test.fr");
@@ -213,8 +213,8 @@ public class ModelJaxbTest {
         organismDepartment3.setParentDepartment(organismDepartment2);
 
         agent = new AgentProfile();
-        agent.setId(new Long(8));
-        agent.setExternalId(new Long(1240));
+        agent.setId(8L);
+        agent.setExternalId(1240L);
         agent.setName("Agent Bernard Dupond");
         agent.setAddress(address3);
         agent.setEmail("bernard.dupond@test.fr");
@@ -227,7 +227,7 @@ public class ModelJaxbTest {
         agent.setUser(user);
 
         customer = new Customer();
-        customer.setId(new Long(1));
+        customer.setId(1L);
         customer.setName("Customer");
         customer.setLabel("Customer label");
         customer.setAdminProfiles(new ArrayList<>());

@@ -154,7 +154,7 @@ public class ApplicationServiceTest extends AbstractDbSocleUnitTest {
     public void testPersist() throws Exception {
         Application newApplication = new Application(APP_NAME_2,
                 "ApplicationCreateLabel");
-        newApplication.setExternalId(new Long(123));
+        newApplication.setExternalId(123L);
         newApplication.setUrl("http://test/application");
 
         applicationService.create(newApplication);

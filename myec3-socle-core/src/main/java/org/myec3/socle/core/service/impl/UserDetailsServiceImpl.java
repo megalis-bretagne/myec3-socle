@@ -70,7 +70,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 			Long id = null;
 			Profile profile = null;
 			try {
-				id = new Long(uid);
+				id = Long.valueOf(uid);
 				profile = this.profileService.findOne(id);
 			} catch (Exception e) {
 				// When trying to re-authenticate user, username is used insteadOf SSO id

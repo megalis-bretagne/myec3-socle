@@ -141,7 +141,7 @@ public class RoleServiceTest extends AbstractDbSocleUnitTest {
 		organism.setName(ORGANISM_NAME);
 		organism.setLabel("OrganismLabel");
 		organism.setDescription("OrganismDescription");
-		organism.setExternalId(new Long(123));
+		organism.setExternalId(123L);
 		organism.setPhone("0000000000");
 		organism.setArticle(Article.LE);
 		organism.setMember(true);
@@ -181,7 +181,7 @@ public class RoleServiceTest extends AbstractDbSocleUnitTest {
 
 		application = new Application();
 		application.setName(APPLICATION_NAME);
-		application.setExternalId(new Long(1246));
+		application.setExternalId(1246L);
 		application.setUrl("http://urlged");
 
 		applicationService.create(application);
@@ -194,7 +194,7 @@ public class RoleServiceTest extends AbstractDbSocleUnitTest {
 				APPLICATION_NAME, application.getName());
 
 		roleAdmin = new Role();
-		roleAdmin.setExternalId(new Long(1242));
+		roleAdmin.setExternalId(1242L);
 		roleAdmin.setName(ROLE_NAME_ADMIN);
 		roleAdmin.setApplication(application);
 
@@ -217,7 +217,7 @@ public class RoleServiceTest extends AbstractDbSocleUnitTest {
 		profileTypeRoleService.create(profileTypeRoleAdmin);
 
 		roleBasic = new Role();
-		roleBasic.setExternalId(new Long(1243));
+		roleBasic.setExternalId(1243L);
 		roleBasic.setName(ROLE_NAME_BASIC);
 		roleBasic.setApplication(application);
 
@@ -242,7 +242,7 @@ public class RoleServiceTest extends AbstractDbSocleUnitTest {
 		listRole.add(roleBasic);
 
 		agent = new AgentProfile();
-		agent.setExternalId(new Long(1240));
+		agent.setExternalId(1240L);
 		agent.setName(AGENT_NAME);
 		agent.setAddress(address);
 		agent.setEmail(EMAIL_AGENT);
@@ -374,7 +374,7 @@ public class RoleServiceTest extends AbstractDbSocleUnitTest {
 		Application testApplication = new Application();
 		testApplication.setName("Test Application "
 				+ Calendar.getInstance().getTimeInMillis());
-		testApplication.setExternalId(new Long(1246));
+		testApplication.setExternalId(1246L);
 		testApplication.setUrl("http://urlged");
 
 		applicationService.create(testApplication);
@@ -462,7 +462,7 @@ public class RoleServiceTest extends AbstractDbSocleUnitTest {
 		Application testApplication = new Application();
 		testApplication.setName("Test Application "
 				+ Calendar.getInstance().getTimeInMillis());
-		testApplication.setExternalId(new Long(1246));
+		testApplication.setExternalId(1246L);
 		testApplication.setUrl("http://urlged");
 
 		applicationService.create(testApplication);
@@ -520,7 +520,7 @@ public class RoleServiceTest extends AbstractDbSocleUnitTest {
 		Application testApplication = new Application();
 		testApplication.setName("Test Application "
 				+ Calendar.getInstance().getTimeInMillis());
-		testApplication.setExternalId(new Long(1246));
+		testApplication.setExternalId(1246L);
 		testApplication.setUrl("http://urlged");
 
 		applicationService.create(testApplication);
@@ -619,7 +619,7 @@ public class RoleServiceTest extends AbstractDbSocleUnitTest {
 		Application testApplication = new Application();
 		testApplication.setName("Test Application "
 				+ Calendar.getInstance().getTimeInMillis());
-		testApplication.setExternalId(new Long(1246));
+		testApplication.setExternalId(1246L);
 		testApplication.setUrl("http://urlged");
 
 		applicationService.create(testApplication);
@@ -701,7 +701,7 @@ public class RoleServiceTest extends AbstractDbSocleUnitTest {
 		Application testApplication = new Application();
 		testApplication.setName("Test Application "
 				+ Calendar.getInstance().getTimeInMillis());
-		testApplication.setExternalId(new Long(1246));
+		testApplication.setExternalId(1246L);
 		testApplication.setUrl("http://urlged");
 
 		applicationService.create(testApplication);
