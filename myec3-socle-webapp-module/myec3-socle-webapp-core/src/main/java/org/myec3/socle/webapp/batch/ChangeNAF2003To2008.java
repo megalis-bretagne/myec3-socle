@@ -87,9 +87,9 @@ public class ChangeNAF2003To2008 {
 							SynchronizationConfiguration configSync = new SynchronizationConfiguration();
 							// Apps ID
 							ArrayList<Long> listeApplicationId = new ArrayList<Long>();
-							listeApplicationId.add(applicationService.findByName(MyEc3ApplicationConstants.GRC_SERVICE).getId());
+							listeApplicationId.add(applicationService.findByName(MyEc3ApplicationConstants.GRC_APPLICATION).getId());
 							listeApplicationId.add(applicationService.findByName(MyEc3ApplicationConstants.SDM_APPLICATION).getId());
-							listeApplicationId.add(applicationService.findByName(MyEc3ApplicationConstants.JEB_SERVICE).getId());
+							listeApplicationId.add(applicationService.findByName(MyEc3ApplicationConstants.JEB_APPLICATION).getId());
 							configSync.setListApplicationIdToResynchronize(listeApplicationId);
 							configSync.setSynchronizationType(SynchronizationType.SYNCHRONIZATION);
 							configSync.setSendingApplication("Socle GU");

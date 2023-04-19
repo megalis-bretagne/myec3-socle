@@ -238,7 +238,6 @@ public class SdmConverterServiceImpl implements SdmConverterService {
         organismeSDM.setSiren(resource.getSiren());
         organismeSDM.setNic(resource.getNic());
         organismeSDM.setAdresse(convertToSdmAdresse(resource.getAddress()));
-
         return organismeSDM;
     }
 
