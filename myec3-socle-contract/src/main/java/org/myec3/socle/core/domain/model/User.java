@@ -56,12 +56,8 @@ public class User extends Resource {
 
 	private static final long serialVersionUID = 226040247356973607L;
 	private String username;
-	private String password;
-	private Date modifDatePassword;
 	private Date creationDate;
-	private Date expirationDatePassword;
-	private String controlKeyNewPassword;
-	private String newPassword;
+	private String temporaryPassword;
 	private String certificate;
 	private String lastname;
 	private String firstname;
@@ -161,38 +157,6 @@ public class User extends Resource {
 	}
 
 	/**
-	 * Key to check whether the user is allowed to change his password from a url
-	 * 
-	 * @return user's password control key.
-	 */
-	@Column
-	@XmlElement(required = false)
-	public String getControlKeyNewPassword() {
-		return controlKeyNewPassword;
-	}
-
-	public void setControlKeyNewPassword(String controlKeyNewPassword) {
-		this.controlKeyNewPassword = controlKeyNewPassword;
-	}
-
-	/**
-	 * Modification date of password.
-	 * 
-	 * @return modification date of password.
-	 */
-	@Column(nullable = true)
-	@Temporal(TemporalType.TIMESTAMP)
-	@XmlElement(required = false)
-	@XmlJavaTypeAdapter(TimestampAdapter.class)
-	public Date getModifDatePassword() {
-		return modifDatePassword;
-	}
-
-	public void setModifDatePassword(Date modifDatePassword) {
-		this.modifDatePassword = modifDatePassword;
-	}
-
-	/**
 	 * creation date of user.
 	 *
 	 * @return modification date of creation.
@@ -207,52 +171,23 @@ public class User extends Resource {
 		this.creationDate = creationDate;
 	}
 
-
 	/**
-	 * Expiration date of password.
-	 * 
-	 * @return expiration date of password.
-	 */
-	@Column(nullable = true)
-	@Type(type = "date")
-	@XmlElement(required = false)
-	@XmlJavaTypeAdapter(DateAdapter.class)
-	public Date getExpirationDatePassword() {
-		return expirationDatePassword;
-	}
-
-	public void setExpirationDatePassword(Date expirationDatePassword) {
-		this.expirationDatePassword = expirationDatePassword;
-	}
-
-	/**
-	 * The password of the user. it is encrypted with Scrypt encryption method.
-	 * 
-	 * @return user's password.
-	 */
-	@Column
-	@XmlElement(required = false)
-	public String getPassword() {
-		return password;
-	}
-
-	public void setPassword(String password) {
-		this.password = password;
-	}
-
-	/**
-	 * The new password of the user. it is encrypted with Scrypt encryption method.
-	 * 
-	 * @return user's new password.
+	 * The temporary password of the user.
+	 *
+	 * @return user's temporary password.
 	 */
 	@Transient
-	@XmlElement(required = false)
-	public String getNewPassword() {
-		return newPassword;
+	@XmlTransient
+	@JsonIgnore
+	public String getTemporaryPassword() {
+		return temporaryPassword;
 	}
 
-	public void setNewPassword(String newPassword) {
-		this.newPassword = newPassword;
+	/**
+	 * Set a temporary password for the user.
+	 */
+	public void setTemporaryPassword(String temporaryPassword) {
+		this.temporaryPassword = temporaryPassword;
 	}
 
 	/**
@@ -285,7 +220,7 @@ public class User extends Resource {
     /**
      * The svi Profil of the user. A user can have only on SVI Profil.
      * 
-     * @return user's new password.
+     * @return user's SVI profile.
      */
     @OneToOne
     @XmlElement(required = false) 
@@ -388,14 +323,6 @@ public class User extends Resource {
 		this.setFirstname(user.getFirstname());
 		this.setLastname(user.getLastname());
 		this.setName(user.getName());
-		this.setModifDatePassword(user.getModifDatePassword());
-		this.setExpirationDatePassword(user.getExpirationDatePassword());
-
-		// If the password have been updated
-		if (user.getNewPassword() != null) {
-			this.setPassword(user.getPassword());
-
-		}
 
 		// if the certificate have been updated
 		if (user.getCertificate() != null) {

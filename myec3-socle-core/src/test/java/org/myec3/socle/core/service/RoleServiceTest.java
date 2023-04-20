@@ -168,7 +168,6 @@ public class RoleServiceTest extends AbstractDbSocleUnitTest {
 		user.setLastname("dupond");
 		user.setCivility(Civility.MR);
 		user.setEnabled(Boolean.TRUE);
-		user.setPassword("password");
 		user.setUsername("a209070 " + Calendar.getInstance().getTimeInMillis());
 		userService.create(user);
 		USER_FINAL_NAME = user.getName();

@@ -269,34 +269,4 @@ public abstract class JpaGenericProfileDao<T extends Profile> extends JpaResourc
 		}
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@SuppressWarnings("unchecked")
-	@Override
-	public List<T> findAllProfileEnabledByExpirationDatePassword(Date expirationDatePassword) {
-		// validate entry parameters
-		Assert.notNull(expirationDatePassword, "expirationDatePassword is mandatory. null value is forbidden.");
-
-		this.getLog().debug("find all profiles enabled of class " + this.getDomainClass().getSimpleName()
-				+ " by expiration date password : " + expirationDatePassword);
-
-		try {
-			Query query = this.getEm().createQuery("select p from " + this.getDomainClass().getSimpleName()
-					+ " p inner join p.user u where u.expirationDatePassword = :expirationDatePassword and u.enabled = true");
-			query.setParameter("expirationDatePassword", expirationDatePassword);
-
-			List<T> resourceList = query.getResultList();
-			this.getLog().debug("findAllProfileEnabledByExpirationDatePassword successfull.");
-			return resourceList;
-		} catch (NoResultException re) {
-			getLog().info("findAllProfileEnabledByExpirationDatePassword returned no result. " + re.getMessage());
-			return new ArrayList<T>();
-		} catch (RuntimeException re) {
-			// error occured
-			this.getLog().error("findAllProfileEnabledByExpirationDatePassword failed.", re);
-			throw re;
-		}
-	}
-
 }

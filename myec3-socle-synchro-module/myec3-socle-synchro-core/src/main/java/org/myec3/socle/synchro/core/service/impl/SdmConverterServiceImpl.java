@@ -128,7 +128,7 @@ public class SdmConverterServiceImpl implements SdmConverterService {
         int myInt = resource.isEnabled() ? 1 : 0;
         inscritSDM.setActif(String.valueOf(myInt));
         inscritSDM.setTelephone(resource.getPhone());
-        inscritSDM.setMotDePasse(resource.getUser().getPassword());
+        inscritSDM.setMotDePasse("******");
         inscritSDM.setTypeHash("sha256");
         inscritSDM.setAdresse(convertToSdmAdresse(resource.getAddress()));
         //inscritSDM.setInscritAnnuaireDefense();

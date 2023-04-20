@@ -167,62 +167,6 @@ public class View extends AbstractPage {
 		return (this.agentProfile != null) ? this.agentProfile.getId() : null;
 	}
 
-	@OnEvent(value = EventConstants.ACTION, component = "regeneratePassword")
-	public Object regeneratePasswordOfAgentProfile() {
-		try {
-			// redirect to the main page if the user is not Enable
-			if (!this.agentProfile.getUser().isEnabled()) {
-				return viewPage;
-			}
-
-			// Password to display
-			String password = this.userService.generatePassword();
-
-			// Generate HASH
-			this.agentProfile.getUser().setPassword(this.userService.generateHashPassword(password));
-
-			this.agentProfile.getUser().setModifDatePassword(EbDate.getDateNow());
-
-			this.agentProfile.getUser()
-					.setExpirationDatePassword(EbDate.addDays(this.agentProfile.getUser().getModifDatePassword(),
-							GuWebAppConstants.expirationTimeAgentRegeneratePassword));
-
-			this.userService.update(this.agentProfile.getUser());
-
-			// We have to build a List of application, to send the synchronization to the
-			// GRC only
-			List<Long> listOfApplicationIdToSynchronize = new ArrayList<Long>();
-			Application grcApplication = applicationService.findByName(MyEc3ApplicationConstants.GRC_APPLICATION);
-
-			if (grcApplication != null) {
-				listOfApplicationIdToSynchronize.add(grcApplication.getId());
-			}
-
-			// build the synchronizationConfiguration
-			SynchronizationConfiguration synchronizationConfiguration = new SynchronizationConfiguration();
-			synchronizationConfiguration.setSendingApplication(MyEc3EsbConstants.getApplicationSendingJmsName());
-			synchronizationConfiguration.setSynchronizationType(SynchronizationType.SYNCHRONIZATION);
-			synchronizationConfiguration.setListApplicationIdToResynchronize(listOfApplicationIdToSynchronize);
-
-			// Synchronize the resource
-			this.synchronizationService.notifyUpdate(this.agentProfile.getUser(), synchronizationConfiguration);
-
-			this.setPasswordRegeneration(Boolean.TRUE);
-
-			this.successMessage = this.messages.get("regenerate-password-success-agent-1");
-
-			this.successNewPassword = password;
-
-			this.successMessage2 = this.messages.get("regenerate-password-success-agent-2") + " "
-					+ GuWebAppConstants.expirationTimeAgentRegeneratePassword + " "
-					+ this.messages.get("regenerate-password-success-agent-2-2");
-
-		} catch (Exception e) {
-			this.errorMessage = this.getMessages().get("regenerate-password-error");
-		}
-		return this;
-	}
-
 	public Boolean getHasRightsOnOrganism() {
 		if (this.getIsAdmin() || this.hasRightsOnOrganism(this.agentProfile.getOrganismDepartment().getOrganism())) {
 			return Boolean.TRUE;

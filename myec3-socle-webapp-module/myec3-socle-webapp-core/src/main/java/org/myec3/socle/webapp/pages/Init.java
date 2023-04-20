@@ -463,7 +463,7 @@ public class Init extends AbstractPage {
 				superAdminUser.setLastname("Technique");
 				superAdminUser.setEnabled(Boolean.TRUE);
 				superAdminUser.setUsername(SUPER_ADMIN_EMAIL_USERNAME);
-				superAdminUser.setPassword(this.userService.generateHashPassword(SUPER_ADMIN_DEFAULT_PASSWORD));
+				superAdminUser.setTemporaryPassword(SUPER_ADMIN_DEFAULT_PASSWORD);
 				this.userService.create(superAdminUser);
 				superAdmin.setUser(superAdminUser);
 				superAdmin.setProfileType(adminProfileType);
@@ -493,7 +493,7 @@ public class Init extends AbstractPage {
 				adminUser.setLastname("Fonctionnel");
 				adminUser.setEnabled(Boolean.TRUE);
 				adminUser.setUsername(ADMIN_EMAIL_USERNAME);
-				adminUser.setPassword(this.userService.generateHashPassword(ADMIN_DEFAULT_PASSWORD));
+				adminUser.setTemporaryPassword(ADMIN_DEFAULT_PASSWORD);
 				this.userService.create(adminUser);
 				admin.setUser(adminUser);
 				admin.setProfileType(adminProfileType);

@@ -132,32 +132,6 @@ public class View extends AbstractPage {
 		return (this.employeeProfile != null) ? this.employeeProfile.getId() : null;
 	}
 
-	@OnEvent(value = "action", component = "regeneratePassword")
-	public Object regeneratePasswordOfAgentProfile() {
-		// redirect to the main page if the user is not Enable
-		if (!this.employeeProfile.getUser().isEnabled()) {
-			return viewPage;
-		}
-		try {
-			this.employeeProfile.getUser()
-					.setPassword(this.userService.generateHashPassword(this.getMessages().get("default-password")));
-
-			this.employeeProfile.getUser().setModifDatePassword(EbDate.getDateNow());
-
-			this.employeeProfile.getUser()
-					.setExpirationDatePassword(EbDate.addDays(this.employeeProfile.getUser().getModifDatePassword(),
-							GuWebAppConstants.expirationTimeRegeneratePassword));
-
-			this.userService.update(this.employeeProfile.getUser());
-			this.synchronizationService.notifyUpdate(this.employeeProfile);
-
-			this.successMessage = this.getMessages().get("regenerate-password-success");
-		} catch (Exception e) {
-			this.errorMessage = this.getMessages().get("regenerate-password-error");
-		}
-		return this;
-	}
-
 	// Getters n Setters
 	public String getErrorMessage() {
 		return errorMessage;

@@ -33,25 +33,12 @@
 					<div class="actions-bar">
 						<ul>
 						<t:if test="isEnabled">
-							<t:if test="isAdmin">
-								<li>
-									<t:actionlink t:id="regeneratePassword" t:mixins="confirm" t:message="message:confirm-regenerate-password-label">
-										<img src="${context:static/images/regenerate_password.png}" alt="${message:regenerate-password-label}" title="${message:regenerate-password-label}" />  ${message:regenerate-password-label}
-									</t:actionlink>
-								</li>
-							</t:if>
-
 							<li>
 								<t:pagelink page="company/employee/modify" context="employeeProfile.id">
 									<img src="${context:static/images/agent_modifier.png}" alt="${message:modify-label}" title="${message:modify-label}" />  ${message:modify-label}
 								</t:pagelink>
 							</li>
 							<p:else>
-								<li>
-									<a class="disable" >
-										<img src="${context:static/images/regenerate_password.png}" alt="${message:regenerate-password-label}" title="${message:modify-user-label-disable}" /> <span title="${message:modify-user-label-disable}">${message:regenerate-password-label}</span>
-									</a>
-								</li>
 								<li>
 									<a class="disable" >
 										<img src="${context:static/images/agent_modifier.png}" alt="${message:modify-user-label}" title="${message:modify-user-label-disable}"  />  <span title="${message:modify-user-label-disable}">${message:modify-user-label}</span>
@@ -78,20 +65,6 @@
 						</label>
 						<t:output format="timestampFormat" t:value="employeeProfile.user.creationDate"/>
 					</p>
-					<t:if test="modifyDisplay">
-						<p>
-							<label>
-								 ${message:modificationDatePassword-label} :
-							</label>
-							<t:output format="timestampFormat" t:value="employeeProfile.user.modifDatePassword"/>
-						</p>
-						<p>
-							<label>
-								 ${message:expirationDatePassword-label} :
-							</label>
-							<t:output format="dateFormat" t:value="employeeProfile.user.expirationDatePassword"/>
-						</p>
-					</t:if>
 					 <p>
 						<label>
 							${message:establishment-label} :

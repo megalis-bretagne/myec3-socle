@@ -4,6 +4,7 @@ import org.jboss.resteasy.client.jaxrs.ResteasyClientBuilder;
 import org.keycloak.admin.client.KeycloakBuilder;
 import org.keycloak.admin.client.resource.RealmResource;
 import org.keycloak.admin.client.resource.UserResource;
+import org.keycloak.representations.idm.CredentialRepresentation;
 import org.keycloak.representations.idm.UserRepresentation;
 import org.myec3.socle.config.KeycloakAdminConfig;
 import org.myec3.socle.core.domain.model.AgentProfile;
@@ -61,22 +62,38 @@ public class KeycloakUserServiceImpl implements KeycloakUserService {
     @Override
     public void saveProfileToKeycloak(Profile profile) {
         Optional<UserRepresentation> existingUser = this.getKeycloakUserByUsername(profile.getUsername());
+        UserResource userResource;
         if (existingUser.isPresent()) {
             // User account exists in Keycloak, we will update it
-            updateKeycloakUserWithProfile(existingUser.get(), profile);
+            userResource = updateKeycloakUserWithProfile(existingUser.get(), profile);
         } else {
             // User account does not exist in Keycloak, we will create it
             createKeycloakUserWithProfile(profile);
+            userResource = null;
+        }
+
+        if (profile.getUser().getTemporaryPassword() != null) {
+            if (userResource == null) {
+                existingUser = this.getKeycloakUserByUsername(profile.getUsername());
+                userResource = this.realm.users().get(existingUser.orElseThrow(() -> new IllegalStateException("Created account not found")).getId());
+            }
+            // A temporary password is defined for the user, we set it on the user account.
+            CredentialRepresentation credentialRepresentation = new CredentialRepresentation();
+            credentialRepresentation.setType("password");
+            credentialRepresentation.setValue(profile.getUser().getTemporaryPassword());
+            credentialRepresentation.setTemporary(true);
+            userResource.resetPassword(credentialRepresentation);
         }
     }
 
     /**
      * Update an existing Keycloak account with data from a given profile.
      */
-    private void updateKeycloakUserWithProfile(UserRepresentation userToUpdate, Profile profile) {
+    private UserResource updateKeycloakUserWithProfile(UserRepresentation userToUpdate, Profile profile) {
         applyProfileToUserRepresentation(profile, userToUpdate);
         UserResource userResource = this.realm.users().get(userToUpdate.getId());
         userResource.update(userToUpdate);
+        return userResource;
     }
 
     /**

@@ -151,7 +151,6 @@ public class EmployeeProfileServiceTest extends AbstractDbSocleUnitTest {
 		user1.setLastname("Abitbol");
 		user1.setCivility(Civility.MR);
 		user1.setEnabled(Boolean.TRUE);
-		user1.setPassword("password");
 		user1.setUsername("username" + Calendar.getInstance().getTimeInMillis());
 		userService.create(user1);
 		USER_FINAL_NAME = user1.getName();

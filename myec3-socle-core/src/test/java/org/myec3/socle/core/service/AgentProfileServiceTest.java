@@ -177,7 +177,6 @@ public class AgentProfileServiceTest extends AbstractDbSocleUnitTest {
         user.setLastname("Dupont");
         user.setCivility(Civility.MR);
         user.setEnabled(Boolean.TRUE);
-        user.setPassword("password");
         user.setUsername("a88888 " + Calendar.getInstance().getTimeInMillis());
         userService.create(user);
         USER_FINAL_NAME = user.getName();
@@ -718,7 +717,6 @@ public class AgentProfileServiceTest extends AbstractDbSocleUnitTest {
         newUser.setLastname("Abitbol");
         newUser.setCivility(Civility.MR);
         newUser.setEnabled(Boolean.TRUE);
-        newUser.setPassword("password");
         newUser.setUsername("a77777 "
                 + Calendar.getInstance().getTimeInMillis());
         userService.create(newUser);

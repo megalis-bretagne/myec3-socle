@@ -248,15 +248,4 @@ public abstract class GenericProfileServiceImpl<T extends Profile, D extends Gen
 
 		return this.dao.findAllProfilesByListOfId(listOfIds);
 	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public List<T> findAllProfileEnabledByExpirationDatePassword(Date expirationDatePassword) {
-		// validate parameters
-		Assert.notNull(expirationDatePassword, "expiration dat word is mandatory. null value is forbidden.");
-
-		return this.dao.findAllProfileEnabledByExpirationDatePassword(expirationDatePassword);
-	}
 }

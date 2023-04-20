@@ -210,12 +210,6 @@ public class EmployeeProfileServiceImpl extends GenericProfileServiceImpl<Employ
 			// Get the user from the database
 			User foundUser = userService.findOne(employeeProfile.getUser().getId());
 
-			// We check if the password have been updated
-			if (employeeProfile.getUser().getNewPassword() != null) {
-				// We set the new password into the old password
-				employeeProfile.getUser().setPassword(employeeProfile.getUser().getNewPassword());
-			}
-
 			// reattach user object to the agent else the user is not updated
 			foundUser.reattach(employeeProfile.getUser());
 			employeeProfile.setUser(foundUser);

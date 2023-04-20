@@ -280,8 +280,6 @@ public class ExportAgentServiceImpl implements ExportAgentService {
             putElement(csvDataMap, "user_lastname", user.getLastname());
             putElement(csvDataMap, "user_username", user.getUsername());
             putElement(csvDataMap, "user_connectionAttempts", user.getConnectionAttempts());
-            putElement(csvDataMap, "user_expirationDatePassword", user.getExpirationDatePassword());
-            putElement(csvDataMap, "user_modifDatePassword", user.getModifDatePassword());
         } else {
             csvDataMap.put("user_id", "");
             csvDataMap.put("user_civility", "");
@@ -289,8 +287,6 @@ public class ExportAgentServiceImpl implements ExportAgentService {
             csvDataMap.put("user_lastname", "");
             csvDataMap.put("user_username", "");
             csvDataMap.put("user_connectionAttempts", "");
-            csvDataMap.put("user_expirationDatePassword", "");
-            csvDataMap.put("user_modifDatePassword", "");
         }
 
     }
@@ -389,8 +385,6 @@ public class ExportAgentServiceImpl implements ExportAgentService {
         header.add("user_lastname");
         header.add("user_username");
         header.add("user_connectionAttempts");
-        header.add("user_expirationDatePassword");
-        header.add("user_modifDatePassword");
         header.add("profil_id");
         header.add("profil_externalId");
         header.add("profil_technicalIdentifier");

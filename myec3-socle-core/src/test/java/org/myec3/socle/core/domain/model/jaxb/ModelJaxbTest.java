@@ -82,7 +82,6 @@ public class ModelJaxbTest {
         user.setLastname("Dupond");
         user.setCivility(Civility.MR);
         user.setEnabled(Boolean.TRUE);
-        user.setPassword("password");
         user.setUsername("username");
 
         company = new Company();

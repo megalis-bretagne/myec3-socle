@@ -259,13 +259,11 @@ public class ListAgents extends AbstractPage {
 		BeanModel<AgentProfile> model = this.beanModelSource.createDisplayModel(AgentProfile.class, this.getMessages());
 
 		PropertyConduit propCdtAttributeLastName = this.propertyConduitSource.create(AgentProfile.class, "user.lastname");
-		PropertyConduit propCdtAttributeExpirationDatePassword = this.propertyConduitSource.create(AgentProfile.class, "user.expirationDatePassword");
 
 		model.add("user", propCdtAttributeLastName).sortable(true);
 		model.add("guRoles", null);
-		model.add("expirationDatePassword", propCdtAttributeExpirationDatePassword).sortable(true);
 		model.add("actions", null);
-		model.include("user", "email", "username", "guRoles","expirationDatePassword", "actions");
+		model.include("user", "email", "username", "guRoles", "actions");
 		return model;
 	}
 

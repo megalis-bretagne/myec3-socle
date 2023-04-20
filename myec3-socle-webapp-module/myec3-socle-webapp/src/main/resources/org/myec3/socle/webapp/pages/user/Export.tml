@@ -134,14 +134,6 @@
 							<td>Nombre de tentatives de connexion erronées avec le compte de l’agent</td>
 						</tr>
 						<tr>
-							<td>user_expirationDatePassword</td>
-							<td>Date d’expiration du mot de passe actuel de l’agent</td>
-						</tr>
-						<tr>
-							<td>user_modifDatePassword</td>
-							<td>Date de dernière modification connue du mot de passe de l’agent</td>
-						</tr>
-						<tr>
 							<td>profil_id</td>
 							<td>Identifiant technique du profil de l’agent sur la plate-forme</td>
 						</tr>

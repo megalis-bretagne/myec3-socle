@@ -261,8 +261,6 @@ public class AgentProfileServiceImpl extends GenericProfileServiceImpl<AgentProf
 			User foundUser = this.userService.findOne(agentProfile.getUser().getId());
 
 			// reattach user object to the agent else the user is not updated
-			// agentProfile.setSyncDelayed(agentProfile.isOperationDelayed());
-			// agentProfile.getUser().setSyncDelayed(agentProfile.isSyncDelayed());
 			foundUser.reattach(agentProfile.getUser());
 			agentProfile.setUser(foundUser);
 

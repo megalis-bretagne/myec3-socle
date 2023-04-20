@@ -45,7 +45,6 @@ public class ProjectAccountServiceTest extends AbstractDbSocleUnitTest {
 		projectAccount.setEnabled(Boolean.TRUE);
 		projectAccount.setLogin("test"
 				+ Calendar.getInstance().getTimeInMillis());
-		projectAccount.setPassword("scryptPassword");
 	}
 
 	@Test
@@ -61,7 +60,6 @@ public class ProjectAccountServiceTest extends AbstractDbSocleUnitTest {
 		User user = userService.findByUsername(foundProjectAccount.getLogin());
 		assertNotNull(user);
 		assertEquals(projectAccount.getLogin(), user.getUsername());
-		assertEquals(projectAccount.getPassword(), user.getPassword());
 		assertTrue(user.isEnabled());
 	}
 
@@ -75,13 +73,11 @@ public class ProjectAccountServiceTest extends AbstractDbSocleUnitTest {
 
 		foundProjectAccount.setLogin("newLogin"
 				+ Calendar.getInstance().getTimeInMillis());
-		foundProjectAccount.setPassword("newPassword");
 
 		foundProjectAccount.getUser().setFirstname("new First Name");
 
 		ProjectAccount updatedProject = projectAccountService.update(foundProjectAccount);
 		Assert.assertEquals(foundProjectAccount.getLogin(), updatedProject.getLogin());
-		Assert.assertEquals(foundProjectAccount.getPassword(), updatedProject.getPassword());
 
 	}
 }

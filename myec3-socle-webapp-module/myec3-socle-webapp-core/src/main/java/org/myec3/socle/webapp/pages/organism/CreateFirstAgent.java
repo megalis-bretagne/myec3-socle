@@ -225,8 +225,7 @@ public class CreateFirstAgent extends AbstractPage {
 
 			// password for mail
 			String password = this.userService.generatePassword();
-			user.setPassword(this.userService.generateHashPassword(password));
-			user.setExpirationDatePassword(this.userService.generateExpirationDatePassword());
+			user.setTemporaryPassword(password);
 			this.userService.create(user);
 
 			this.organismDepartment = this.organismDepartmentService.findRootOrganismDepartment(this.organism);

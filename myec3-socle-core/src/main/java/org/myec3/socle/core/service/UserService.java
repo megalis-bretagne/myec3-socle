@@ -66,58 +66,10 @@ public interface UserService extends ResourceService<User> {
 
     /**
      * Generate a simple password
-     * 
+     *
      * @return random alphanumeric password
      */
     String generatePassword();
-
-    /**
-     * Generate key for url change password format :
-     * currentTimeMillisecond|generatePassword
-     * 
-     * @return random key to change password
-     */
-    String generateControlKeyNewPassword();
-
-    /**
-     * Generate a md5 encoded password
-     * 
-     * @param password
-     *            to encode
-     * @return md5 encoded password
-     * @throws IllegalArgumentException
-     *             if password is null.
-     */
-    String generateHashPassword(String password);
-
-    /**
-     * Generate Hash password with SHA1 algorithm
-     * 
-     * @param password
-     * @return The hashed password.
-     * @throws NoSuchAlgorithmException
-     */
-    String generateSHA1HashPassword(String password);
-
-    /**
-     * Method for controlling a password from its hash (SHA1 or SCRYPT)
-     * 
-     * @param enteredPassword
-     *            password control
-     * @param storedPassword
-     *            the hash of the password control
-     * @return true if the password matches the hash, false otherwise
-     */
-    boolean isPasswordOk(String enteredPassword, String storedPassword);
-
-    /**
-     * Method for controlling a password is policy compliant
-     *
-     * @param password
-     *            password to control
-     * @return true if the password matches requirements
-     */
-    boolean isPasswordConform(String password);
 
     /**
      * This method allows to populate user's collections
@@ -140,8 +92,6 @@ public interface UserService extends ResourceService<User> {
      *             if user is null
      */
     void cleanCollections(User user);
-    
-    Date generateExpirationDatePassword();
     
     Long getConnectionInfosRelatedUser(ConnectionInfos connectionInfos);
     
