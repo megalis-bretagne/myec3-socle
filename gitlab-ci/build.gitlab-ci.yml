@@ -1,0 +1,88 @@
+
+before_script:
+  - source ./gitlab-ci/init.sh
+  - export http_proxy=http://pro01.sib.fr:3128
+  - export https_proxy=http://pro01.sib.fr:3128
+  - export no_proxy=sib.fr
+  - apk update && apk add sshpass openssh-client bash
+
+.build:
+  image: docker:stable-dind
+  only:
+    - master
+    - develop
+    - /^feature.*$/
+    - /^hotfix.*$/
+    - tags
+  variables:
+    BUILD_CONTEXT: "."
+    DOCKER_FILE: "Dockerfile"
+    IMAGE_NAME: "${CI_PROJECT_PATH}"
+  script:
+    - export COMMIT_REF_NAME=$(echo "$CI_COMMIT_REF_NAME" | tr '[:upper:]' '[:lower:]' | sed -e 's/\///g')
+    - echo $COMMIT_REF_NAME
+    - export IMAGE=$REGISTRY/${IMAGE_NAME}/$COMMIT_REF_NAME
+    - echo $IMAGE && docker build -f ${BUILD_CONTEXT}/${DOCKER_FILE} -t ${IMAGE} ${BUILD_CONTEXT}
+    - docker tag ${IMAGE} ${IMAGE}:${CI_COMMIT_SHA:0:8}
+    - echo "push ${IMAGE}:latest" && docker push ${IMAGE}:latest
+    - echo "push ${IMAGE}:${CI_COMMIT_SHA:0:8}" && docker push ${IMAGE}:${CI_COMMIT_SHA:0:8}
+
+.maven-build:
+  image : maven:3.6.2-jdk-8
+  only:
+    - master
+    - develop
+    - tags
+    - /^feature.*$/
+    - /^hotfix.*$/
+  script :
+    - mvn deploy -DskipTests=true
+  artifacts:
+    paths:
+      - '${BUILD_CONTEXT}/target/*.war'
+
+.deployInteg:
+  only:
+    - /^feature.*$/
+    - /^hotfix.*$/
+  variables:
+    STACK_NAME: "${CI_PROJECT_NAME}"
+  script:
+    - export IMAGE_NAME=$(echo "$CI_COMMIT_REF_NAME" | tr '[:upper:]' '[:lower:]' | sed -e 's/\///g')
+    - ssh ${SSH_TARGET} "echo ${REGISTRY_PASSWORD} | docker login ${REGISTRY} -u ${REGISTRY_USER} --password-stdin"
+    - echo 'ssh ${SSH_TARGET} "${DEPLOY_PATH} ${STACK_NAME} integ ${CI_COMMIT_SHA:0:8} ${IMAGE_NAME} $REGISTRY"'
+    - ssh ${SSH_TARGET} "${DEPLOY_PATH} ${STACK_NAME} integ ${CI_COMMIT_SHA:0:8} ${IMAGE_NAME} $REGISTRY"
+  when: manual
+
+.deployPreprod:
+  only:
+    - develop
+  variables:
+    STACK_NAME: "${CI_PROJECT_NAME}"
+  script:
+    - ssh ${SSH_TARGET} "echo ${REGISTRY_PASSWORD} | docker login ${REGISTRY} -u ${REGISTRY_USER} --password-stdin"
+    - echo 'ssh ${SSH_TARGET} "${DEPLOY_PATH} ${STACK_NAME} preprod ${CI_COMMIT_SHA:0:8} develop $REGISTRY"'
+    - ssh ${SSH_TARGET} "${DEPLOY_PATH} ${STACK_NAME} preprod ${CI_COMMIT_SHA:0:8} develop $REGISTRY"
+
+
+.deployPreprodManual:
+  only:
+    - master
+  variables:
+    STACK_NAME: "${CI_PROJECT_NAME}"
+  script:
+    - ssh ${SSH_TARGET} "echo ${REGISTRY_PASSWORD} | docker login ${REGISTRY} -u ${REGISTRY_USER} --password-stdin"
+    - echo 'ssh ${SSH_TARGET} "${DEPLOY_PATH} ${STACK_NAME} preprod ${CI_COMMIT_SHA:0:8} master$REGISTRY"'
+    - ssh ${SSH_TARGET} "${DEPLOY_PATH} ${STACK_NAME} preprod ${CI_COMMIT_SHA:0:8} master $REGISTRY"
+  when: manual
+
+
+.deployProd:
+  only:
+    - tags
+  variables:
+    STACK_NAME: "${CI_PROJECT_NAME}"
+  script:
+    - ssh ${SSH_TARGET} "echo ${REGISTRY_PASSWORD} | docker login ${REGISTRY} -u ${REGISTRY_USER} --password-stdin"
+    - ssh ${SSH_TARGET} "${DEPLOY_PATH} ${STACK_NAME} prod ${CI_COMMIT_SHA:0:8} master $REGISTRY"
+  when: manual
