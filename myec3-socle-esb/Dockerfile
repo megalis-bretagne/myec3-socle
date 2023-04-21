@@ -17,7 +17,8 @@ echo "multi.dir=true" >> /glowroot/glowroot.properties
 
 #recupération de nexus de l'artifact
 # TODO : récupérer la version du pom.xml
-ADD "http://nexus.sib.fr:8081/nexus/service/local/artifact/maven/redirect?r=sib-group&g=org.myec3.socle&a=myec3-socle-esb&v=5.6.2-MEGALIS-SNAPSHOT&p=war" /usr/local/tomcat/webapps/myec3-socle-esb.war
+COPY target/myec3-socle-esb-*.war /usr/local/tomcat/webapps/myec3-socle-esb.war
+#ADD "http://nexus.sib.fr:8081/nexus/service/local/artifact/maven/redirect?r=sib-group&g=org.myec3.socle&a=myec3-socle-esb&v=5.6.2-MEGALIS-SNAPSHOT&p=war" /usr/local/tomcat/webapps/myec3-socle-esb.war
 
 EXPOSE 61616/tcp
 
