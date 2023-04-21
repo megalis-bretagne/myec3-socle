@@ -238,10 +238,7 @@ public class ExportAgentServiceImpl implements ExportAgentService {
      */
     private void setAgentProfilData(HashMap<String, String> csvDataMap, AgentProfile ap) {
         if (ap != null) {
-            if(ap.getCreatedDate() != null){
-                putElement(csvDataMap, "agent_profil_creation_date", ap.getCreatedDate());
-                logger.debug("Agent account creation date added for export : " + ap.getCreatedDate());
-            }
+            putElement(csvDataMap, "agent_profil_creation_date", ap.getCreatedDate());
             putElement(csvDataMap, "agent_profil_elected", ap.getElected());
             putElement(csvDataMap, "agent_profil_executive", ap.getExecutive());
             putElement(csvDataMap, "agent_profil_representative", ap.getRepresentative());
@@ -270,12 +267,8 @@ public class ExportAgentServiceImpl implements ExportAgentService {
     private void setUserData(HashMap<String, String> csvDataMap, User user) {
         if (user != null) {
             putElement(csvDataMap, "user_id", user.getId());
-            if (user.getCivility() != null) {
-                putElement(csvDataMap, "user_civility", user.getCivility().getLabel());
-            } else {
-                putElement(csvDataMap, "user_civility", "");
-            }
-
+            putElement(csvDataMap, "user_civility",
+                    user.getCivility() != null ? user.getCivility().getLabel() : "");
             putElement(csvDataMap, "user_firstname", user.getFirstname());
             putElement(csvDataMap, "user_lastname", user.getLastname());
             putElement(csvDataMap, "user_username", user.getUsername());
@@ -295,11 +288,7 @@ public class ExportAgentServiceImpl implements ExportAgentService {
         putElement(csvDataMap, "organism_id", organism.getId());
         putElement(csvDataMap, "organism_label", organism.getLabel());
         putElement(csvDataMap, "organism_siren", organism.getSiren());
-        if (organism.getNic() != null) {
-            putElement(csvDataMap, "organism_nic", organism.getNic());
-        } else {
-            putElement(csvDataMap, "organism_nic", "");
-        }
+        putElement(csvDataMap, "organism_nic", organism.getNic());
     }
 
     /**
@@ -313,11 +302,7 @@ public class ExportAgentServiceImpl implements ExportAgentService {
         if (profile != null) {
             putElement(csvDataMap, "profil_id", profile.getId());
             putElement(csvDataMap, "profil_externalId", profile.getExternalId());
-            if (profile.getTechnicalIdentifier() != null) {
-                putElement(csvDataMap, "profil_technicalIdentifier", profile.getTechnicalIdentifier());
-            } else {
-                putElement(csvDataMap, "profil_technicalIdentifier", "");
-            }
+            putElement(csvDataMap, "profil_technicalIdentifier", profile.getTechnicalIdentifier());
             putElement(csvDataMap, "profil_canton", profile.getAddress().getCanton());
             putElement(csvDataMap, "profil_city", profile.getAddress().getCity());
             putElement(csvDataMap, "profil_country", profile.getAddress().getCountry());

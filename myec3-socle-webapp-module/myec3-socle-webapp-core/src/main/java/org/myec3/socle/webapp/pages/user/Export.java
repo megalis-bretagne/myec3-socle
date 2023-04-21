@@ -265,12 +265,8 @@ public class Export extends AbstractPage {
 	public void setUserData(HashMap<String, String> csvDataMap, User user) {
 		if (user != null) {
 			putElement(csvDataMap, "user_id", user.getId());
-			if (user.getCivility() != null) {
-				putElement(csvDataMap, "user_civility", user.getCivility().getLabel());
-			} else {
-				putElement(csvDataMap, "user_civility", "");
-			}
-
+			putElement(csvDataMap, "user_civility",
+					user.getCivility() != null ? user.getCivility().getLabel() : "");
 			putElement(csvDataMap, "user_firstname", user.getFirstname());
 			putElement(csvDataMap, "user_lastname", user.getLastname());
 			putElement(csvDataMap, "user_username", user.getUsername());
@@ -290,11 +286,7 @@ public class Export extends AbstractPage {
 		putElement(csvDataMap, "organism_id", organism.getId());
 		putElement(csvDataMap, "organism_label", organism.getLabel());
 		putElement(csvDataMap, "organism_siren", organism.getSiren());
-		if (organism.getNic() != null) {
-			putElement(csvDataMap, "organism_nic", organism.getNic());
-		} else {
-			putElement(csvDataMap, "organism_nic", "");
-		}
+		putElement(csvDataMap, "organism_nic", organism.getNic());
 	}
 
 	/**
@@ -307,11 +299,7 @@ public class Export extends AbstractPage {
 	public void setProfileData(HashMap<String, String> csvDataMap, Profile profile) {
 		if (profile != null) {
 			putElement(csvDataMap, "profil_id", profile.getId());
-			if (profile.getTechnicalIdentifier() != null) {
-				putElement(csvDataMap, "profil_technicalIdentifier", profile.getTechnicalIdentifier());
-			} else {
-				putElement(csvDataMap, "profil_technicalIdentifier", "");
-			}
+			putElement(csvDataMap, "profil_technicalIdentifier", profile.getTechnicalIdentifier());
 			putElement(csvDataMap, "profil_canton", profile.getAddress().getCanton());
 			putElement(csvDataMap, "profil_city", profile.getAddress().getCity());
 			putElement(csvDataMap, "profil_country", profile.getAddress().getCountry());
