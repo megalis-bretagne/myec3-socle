@@ -163,7 +163,6 @@ public class SdmConverterServiceImpl implements SdmConverterService {
         etablissementSDM.setSiege(String.valueOf(siege));
 
         etablissementSDM.setSiret(resource.getSiret());
-
         if (resource.getCompany() != null && resource.getCompany().getId() != null) {
             List<SynchroIdentifiantExterne> synchroIdentifiantExterne = synchroIdentifiantExterneService.findListByIdSocle(resource.getCompany().getId(), ResourceType.COMPANY);
             if (resource.getCompany().getForeignIdentifier()) {
@@ -238,6 +237,7 @@ public class SdmConverterServiceImpl implements SdmConverterService {
         organismeSDM.setSiren(resource.getSiren());
         organismeSDM.setNic(resource.getNic());
         organismeSDM.setAdresse(convertToSdmAdresse(resource.getAddress()));
+        organismeSDM.setLogoUrl(resource.getLogoUrl());
         return organismeSDM;
     }
 
