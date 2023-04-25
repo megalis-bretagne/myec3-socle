@@ -10,6 +10,7 @@ import java.util.ResourceBundle;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.myec3.socle.core.constants.MyEc3ApplicationConstants;
 import org.myec3.socle.core.domain.model.Application;
 import org.myec3.socle.core.domain.model.Company;
 import org.myec3.socle.core.domain.model.Resource;
@@ -86,9 +87,9 @@ public class ChangeNAF2003To2008 {
 							SynchronizationConfiguration configSync = new SynchronizationConfiguration();
 							// Apps ID
 							ArrayList<Long> listeApplicationId = new ArrayList<Long>();
-							listeApplicationId.add(applicationService.findByName("Application - GRC").getId());
-							listeApplicationId.add(applicationService.findByName("sdm").getId());
-							listeApplicationId.add(applicationService.findByName("jeb").getId());
+							listeApplicationId.add(applicationService.findByName(MyEc3ApplicationConstants.GRC_APPLICATION).getId());
+							listeApplicationId.add(applicationService.findByName(MyEc3ApplicationConstants.SDM_APPLICATION).getId());
+							listeApplicationId.add(applicationService.findByName(MyEc3ApplicationConstants.JEB_APPLICATION).getId());
 							configSync.setListApplicationIdToResynchronize(listeApplicationId);
 							configSync.setSynchronizationType(SynchronizationType.SYNCHRONIZATION);
 							configSync.setSendingApplication("Socle GU");

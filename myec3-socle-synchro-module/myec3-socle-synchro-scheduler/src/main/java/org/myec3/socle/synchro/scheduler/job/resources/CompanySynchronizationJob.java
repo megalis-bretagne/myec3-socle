@@ -18,6 +18,7 @@
 package org.myec3.socle.synchro.scheduler.job.resources;
 
 import org.apache.commons.lang3.BooleanUtils;
+import org.myec3.socle.core.constants.MyEc3ApplicationConstants;
 import org.myec3.socle.core.domain.model.Company;
 import org.myec3.socle.core.domain.model.enums.ResourceType;
 import org.myec3.socle.core.domain.sdm.model.SdmEntreprise;
@@ -25,6 +26,7 @@ import org.myec3.socle.core.sync.api.*;
 import org.myec3.socle.core.sync.api.Error;
 import org.myec3.socle.synchro.core.domain.model.SynchroIdentifiantExterne;
 import org.myec3.socle.synchro.core.domain.model.SynchronizationSubscription;
+import org.myec3.socle.synchro.core.service.SdmConverterService;
 import org.myec3.socle.synchro.core.service.SynchroIdentifiantExterneService;
 import org.myec3.socle.ws.client.ResourceWsClient;
 import org.myec3.socle.ws.client.impl.SdmWsClientImpl;
@@ -58,6 +60,11 @@ public class CompanySynchronizationJob extends
     @Qualifier("synchroIdentifiantExterneService")
     private SynchroIdentifiantExterneService synchroIdentifiantExterneService;
 
+    @Autowired
+    @Qualifier("sdmConverterService")
+    private SdmConverterService sdmConverterService;
+
+
     /**
      * {@inheritDoc}
      */
@@ -65,8 +72,8 @@ public class CompanySynchronizationJob extends
     public ResponseMessage create(Company resource,
                                   SynchronizationSubscription synchronizationSubscription,
                                   ResourceWsClient resourceWsClient) {
-        if ("SDM".equals(synchronizationSubscription.getApplication().getName())) {
-            SdmEntreprise entrepriseSDM = convertSdmEntreprise(resource);
+        if (MyEc3ApplicationConstants.SDM_APPLICATION.equals(synchronizationSubscription.getApplication().getName())) {
+            SdmEntreprise entrepriseSDM = sdmConverterService.convertSdmEntreprise(resource);
             SdmWsClientImpl sdmWsClient = (SdmWsClientImpl) resourceWsClient;
             return sdmWsClient.post(resource, entrepriseSDM, synchronizationSubscription);
         }
@@ -80,9 +87,9 @@ public class CompanySynchronizationJob extends
     public ResponseMessage delete(Company resource,
                                   SynchronizationSubscription synchronizationSubscription,
                                   ResourceWsClient resourceWsClient) {
-        if ("SDM".equals(synchronizationSubscription.getApplication().getName())) {
+        if (MyEc3ApplicationConstants.SDM_APPLICATION.equals(synchronizationSubscription.getApplication().getName())) {
 
-            SdmEntreprise entrepriseSDM = convertSdmEntreprise(resource);
+            SdmEntreprise entrepriseSDM = sdmConverterService.convertSdmEntreprise(resource);
             List<SynchroIdentifiantExterne> synchroIdentifiantExterne = synchroIdentifiantExterneService.findListByIdSocle(resource.getId(), ResourceType.COMPANY);
 
             SdmWsClientImpl sdmWsClient = (SdmWsClientImpl) resourceWsClient;
@@ -115,8 +122,8 @@ public class CompanySynchronizationJob extends
                                   SynchronizationSubscription synchronizationSubscription,
                                   ResourceWsClient resourceWsClient) {
 
-        if ("SDM".equals(synchronizationSubscription.getApplication().getName())) {
-            SdmEntreprise entrepriseSDM = convertSdmEntreprise(resource);
+        if (MyEc3ApplicationConstants.SDM_APPLICATION.equals(synchronizationSubscription.getApplication().getName())) {
+            SdmEntreprise entrepriseSDM = sdmConverterService.convertSdmEntreprise(resource);
             List<SynchroIdentifiantExterne> synchroIdentifiantExterne = synchroIdentifiantExterneService.findListByIdSocle(resource.getId(), ResourceType.COMPANY);
 
             SdmWsClientImpl sdmWsClient = (SdmWsClientImpl) resourceWsClient;
@@ -138,23 +145,5 @@ public class CompanySynchronizationJob extends
     }
 
 
-    private SdmEntreprise convertSdmEntreprise(Company resource) {
-        SdmEntreprise entrepriseSDM = new SdmEntreprise();
-        entrepriseSDM.setIdExterne(String.valueOf(resource.getExternalId()));
-        entrepriseSDM.setSiren(resource.getSiren());
-        if (BooleanUtils.isTrue(resource.getForeignIdentifier())) {
-            entrepriseSDM.setSirenEtranger(resource.getNationalID());
-            entrepriseSDM.setPaysenregistrement(resource.getRegistrationCountry().name());
-        }
-        entrepriseSDM.setFormeJuridique(resource.getLegalCategory().getLabel());
-        entrepriseSDM.setCodeAPE(resource.getApeCode());
-        entrepriseSDM.setEmail(resource.getEmail());
-        entrepriseSDM.setRaisonSociale(resource.getLabel());
-        //pas de mapping trouvé pour les deux champs ci-dessous
-        entrepriseSDM.setCapitalSocial("");
-        entrepriseSDM.setEffectif("");
-        entrepriseSDM.setAdresse(convertToSdmAdresse(resource.getAddress()));
 
-        return entrepriseSDM;
-    }
 }

@@ -18,6 +18,7 @@
 package org.myec3.socle.synchro.scheduler.job.resources;
 
 import org.apache.commons.lang3.BooleanUtils;
+import org.myec3.socle.core.constants.MyEc3ApplicationConstants;
 import org.myec3.socle.core.domain.model.AgentProfile;
 import org.myec3.socle.core.domain.model.Application;
 import org.myec3.socle.core.domain.model.Role;
@@ -31,6 +32,7 @@ import org.myec3.socle.core.sync.api.MethodType;
 import org.myec3.socle.core.sync.api.ResponseMessage;
 import org.myec3.socle.synchro.core.domain.model.SynchroIdentifiantExterne;
 import org.myec3.socle.synchro.core.domain.model.SynchronizationSubscription;
+import org.myec3.socle.synchro.core.service.SdmConverterService;
 import org.myec3.socle.synchro.core.service.SynchroIdentifiantExterneService;
 import org.myec3.socle.ws.client.ResourceWsClient;
 import org.myec3.socle.ws.client.impl.SdmWsClientImpl;
@@ -72,6 +74,9 @@ public class AgentSynchronizationJob extends
     @Qualifier("synchroIdentifiantExterneService")
     private SynchroIdentifiantExterneService synchroIdentifiantExterneService;
 
+    @Autowired
+    @Qualifier("sdmConverterService")
+    private SdmConverterService sdmConverterService;
 
     /**
      * {@inheritDoc}
@@ -80,8 +85,8 @@ public class AgentSynchronizationJob extends
     public ResponseMessage create(AgentProfile resource,
                                   SynchronizationSubscription synchronizationSubscription,
                                   ResourceWsClient resourceWsClient) {
-        if ("SDM".equals(synchronizationSubscription.getApplication().getName())) {
-            SdmAgent agentSDM = convertToSdmAgent(resource);
+        if (MyEc3ApplicationConstants.SDM_APPLICATION.equals(synchronizationSubscription.getApplication().getName())) {
+            SdmAgent agentSDM = sdmConverterService.convertToSdmAgent(resource);
             SdmWsClientImpl sdmWsClient = (SdmWsClientImpl) resourceWsClient;
             return sdmWsClient.post(resource, agentSDM, synchronizationSubscription);
         } else {
@@ -99,8 +104,8 @@ public class AgentSynchronizationJob extends
     public ResponseMessage delete(AgentProfile resource,
                                   SynchronizationSubscription synchronizationSubscription,
                                   ResourceWsClient resourceWsClient) {
-        if ("SDM".equals(synchronizationSubscription.getApplication().getName())) {
-            SdmAgent agentSDM = convertToSdmAgent(resource);
+        if (MyEc3ApplicationConstants.SDM_APPLICATION.equals(synchronizationSubscription.getApplication().getName())) {
+            SdmAgent agentSDM = sdmConverterService.convertToSdmAgent(resource);
             SynchroIdentifiantExterne synchroIdentifiantExterne = synchroIdentifiantExterneService.findByIdSocle(resource.getUser().getId(), ResourceType.AGENT_PROFILE);
             SdmWsClientImpl sdmWsClient = (SdmWsClientImpl) resourceWsClient;
             if (synchroIdentifiantExterne != null) {
@@ -127,8 +132,8 @@ public class AgentSynchronizationJob extends
     public ResponseMessage update(AgentProfile resource,
                                   SynchronizationSubscription synchronizationSubscription,
                                   ResourceWsClient resourceWsClient) {
-        if ("SDM".equals(synchronizationSubscription.getApplication().getName())) {
-            SdmAgent agentSDM = convertToSdmAgent(resource);
+        if (MyEc3ApplicationConstants.SDM_APPLICATION.equals(synchronizationSubscription.getApplication().getName())) {
+            SdmAgent agentSDM = sdmConverterService.convertToSdmAgent(resource);
             SynchroIdentifiantExterne synchroIdentifiantExterne = synchroIdentifiantExterneService.findByIdSocle(resource.getUser().getId(), ResourceType.AGENT_PROFILE);
             SdmWsClientImpl sdmWsClient = (SdmWsClientImpl) resourceWsClient;
             if (synchroIdentifiantExterne != null) {
@@ -146,65 +151,6 @@ public class AgentSynchronizationJob extends
         }
     }
 
-    /**
-     * Conversion d'un AgentProfile socle dans un Agent pour la SDM
-     *
-     * @param resource
-     * @return
-     */
-    private SdmAgent convertToSdmAgent(AgentProfile resource) {
-        SdmAgent agentSDM = new SdmAgent();
-        agentSDM.setIdExterne(String.valueOf(resource.getExternalId()));
-
-        agentSDM.setIdentifiant(resource.getUsername());
-
-        //mapping du role
-        if (resource.getRoles() != null && !resource.getRoles().isEmpty()) {
-            for (Role role : resource.getRoles()) {
-                if ("SDM".equals(role.getApplication().getName())) {
-                    agentSDM.setIdProfil(role.getExternalId());
-                    break;
-                }
-            }
-        }
-
-        agentSDM.setEmail(resource.getEmail());
-        agentSDM.setNom(resource.getUser().getLastname());
-        agentSDM.setPrenom(resource.getUser().getFirstname());
-
-        int myInt = resource.isEnabled() ? 1 : 0;
-        agentSDM.setActif(String.valueOf(myInt));
-
-        if (!StringUtils.isEmpty(resource.getPhone())) {
-            agentSDM.setTelephone(resource.getPhone());
-        }
-        if (!StringUtils.isEmpty(resource.getCellPhone())) {
-            agentSDM.setTelephone(resource.getCellPhone());
-        }
-        agentSDM.setFax(resource.getFax());
-
-
-        //On réalise une requete sur SynchroIdentifiantExterne pour récupérer l'acronyme retourné par la SDM
-        if (resource.getOrganismDepartment() != null && resource.getOrganismDepartment().getOrganism() != null){
-            SynchroIdentifiantExterne synchroIdentifiantExterneOrganisme = synchroIdentifiantExterneService.findByIdSocle(resource.getOrganismDepartment().getOrganism().getId(), ResourceType.ORGANISM);
-            agentSDM.setAcronymeOrganisme(synchroIdentifiantExterneOrganisme.getAcronyme());
-        }
-
-        agentSDM.setAdresse(convertToSdmAdresse(resource.getAddress()));
-        // on ne renseigne pas le service dans le cas d'un service root
-        if (BooleanUtils.isFalse(resource.getOrganismDepartment().isRootDepartment())) {
-            SdmService serviceSDM = new SdmService();
-            SynchroIdentifiantExterne synchroIdentifiantExterne = synchroIdentifiantExterneService.findByIdSocle(resource.getOrganismDepartment().getId(), ResourceType.ORGANISM_DEPARTMENT);
-            if (synchroIdentifiantExterne != null) {
-                serviceSDM.setId(synchroIdentifiantExterne.getIdAppliExterne());
-            } else {
-                logger.warn("Agent {} n'a pas de ORGANISM_DEPARTMENT SDM dans la table synchroIdentifiantExterneService pour l'idSocle {}", resource.getId(), resource.getOrganismDepartment().getId());
-            }
-            agentSDM.setService(serviceSDM);
-        }
-
-        return agentSDM;
-    }
 
     /**
      * Valued mandatory field for delete.

@@ -192,7 +192,7 @@ public class View extends AbstractPage {
 			// We have to build a List of application, to send the synchronization to the
 			// GRC only
 			List<Long> listOfApplicationIdToSynchronize = new ArrayList<Long>();
-			Application grcApplication = applicationService.findByName(MyEc3ApplicationConstants.GRC_SERVICE);
+			Application grcApplication = applicationService.findByName(MyEc3ApplicationConstants.GRC_APPLICATION);
 
 			if (grcApplication != null) {
 				listOfApplicationIdToSynchronize.add(grcApplication.getId());
