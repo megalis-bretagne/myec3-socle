@@ -33,7 +33,11 @@ public final class MyEc3ApplicationConstants {
 	public static final String PORTAIL_APPLICATION = "Application - Portail";
 	public static final String GED_APPLICATION = "GED";
 	public static final String SDM_APPLICATION = "SDM";
+	public static final String PORTAIL_MEGALIS_APPLICATION = "portail megalisbretagne";
+	public static final String PASTELL_APPLICATION = "Pastell";
 	public static final String JEB_APPLICATION = "jeb";
+	public static final String UDATA_APPLICATION = "Udata";
+
 	public static final String LOCHALLES_APPLICATION = "Application - LocHalles";
 	public static final String PARAPHEUR_APPLICATION = "i-parapheur";
 	public static final String CAO_APPLICATION = "cao";

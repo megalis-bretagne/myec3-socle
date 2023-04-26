@@ -93,7 +93,7 @@ public class SynchroController {
 
         AgentProfile agent = agentProfileService.findOne(id);
 
-        Application applicationASynchroniser = applicationService.findByName("portail megalisbretagne");
+        Application applicationASynchroniser = applicationService.findByName(MyEc3ApplicationConstants.PORTAIL_MEGALIS_APPLICATION);
         List<Long> listApplicationIdToResynchronize = new ArrayList<>();
         listApplicationIdToResynchronize.add(applicationASynchroniser.getId());
 
@@ -111,7 +111,7 @@ public class SynchroController {
 
         AgentProfile agent = agentProfileService.findOne(id);
 
-        Application applicationASynchroniser = applicationService.findByName("Pastell");
+        Application applicationASynchroniser = applicationService.findByName(MyEc3ApplicationConstants.PASTELL_APPLICATION);
         List<Long> listApplicationIdToResynchronize = new ArrayList<>();
         listApplicationIdToResynchronize.add(applicationASynchroniser.getId());
 
@@ -127,7 +127,7 @@ public class SynchroController {
     public String organismePastell(@RequestParam long id) {
         Organism organism = organismService.findOne(id);
 
-        Application applicationASynchroniser = applicationService.findByName("Pastell");
+        Application applicationASynchroniser = applicationService.findByName(MyEc3ApplicationConstants.PASTELL_APPLICATION);
         List<Long> listApplicationIdToResynchronize = new ArrayList<>();
         listApplicationIdToResynchronize.add(applicationASynchroniser.getId());
         SynchronizationType synchronizationType = SynchronizationType.SYNCHRONIZATION;
@@ -142,7 +142,7 @@ public class SynchroController {
     public String organismDepartmentPastell(@RequestParam long id) {
         OrganismDepartment organismDepartment = organismDepartmentService.findOne(id);
 
-        Application applicationASynchroniser = applicationService.findByName("Pastell");
+        Application applicationASynchroniser = applicationService.findByName(MyEc3ApplicationConstants.PASTELL_APPLICATION);
         List<Long> listApplicationIdToResynchronize = new ArrayList<>();
         listApplicationIdToResynchronize.add(applicationASynchroniser.getId());
         SynchronizationType synchronizationType = SynchronizationType.SYNCHRONIZATION;
@@ -159,7 +159,6 @@ public class SynchroController {
         AgentProfile agent = agentProfileService.findOne(id);
 
         Application applicationASynchroniser = applicationService.findByName(MyEc3ApplicationConstants.SDM_APPLICATION);
-        ;
         List<Long> listApplicationIdToResynchronize = new ArrayList<>();
         listApplicationIdToResynchronize.add(applicationASynchroniser.getId());
 
@@ -177,7 +176,6 @@ public class SynchroController {
         Organism organism = organismService.findOne(id);
 
         Application applicationASynchroniser = applicationService.findByName(MyEc3ApplicationConstants.SDM_APPLICATION);
-        ;
         List<Long> listApplicationIdToResynchronize = new ArrayList<>();
         listApplicationIdToResynchronize.add(applicationASynchroniser.getId());
         SynchronizationType synchronizationType = SynchronizationType.SYNCHRONIZATION;
@@ -192,7 +190,6 @@ public class SynchroController {
         OrganismDepartment organismDepartment = organismDepartmentService.findOne(id);
 
         Application applicationASynchroniser = applicationService.findByName(MyEc3ApplicationConstants.SDM_APPLICATION);
-        ;
         List<Long> listApplicationIdToResynchronize = new ArrayList<>();
         listApplicationIdToResynchronize.add(applicationASynchroniser.getId());
         SynchronizationType synchronizationType = SynchronizationType.SYNCHRONIZATION;
@@ -208,7 +205,6 @@ public class SynchroController {
         EmployeeProfile employeeProfile = employeeProfileService.findOne(id);
 
         Application applicationASynchroniser = applicationService.findByName(MyEc3ApplicationConstants.SDM_APPLICATION);
-        ;
         List<Long> listApplicationIdToResynchronize = new ArrayList<>();
         listApplicationIdToResynchronize.add(applicationASynchroniser.getId());
         SynchronizationType synchronizationType = SynchronizationType.SYNCHRONIZATION;
@@ -223,7 +219,6 @@ public class SynchroController {
         Company company = companyService.findOne(id);
 
         Application applicationASynchroniser = applicationService.findByName(MyEc3ApplicationConstants.SDM_APPLICATION);
-        ;
         List<Long> listApplicationIdToResynchronize = new ArrayList<>();
         listApplicationIdToResynchronize.add(applicationASynchroniser.getId());
         SynchronizationType synchronizationType = SynchronizationType.SYNCHRONIZATION;
@@ -238,7 +233,6 @@ public class SynchroController {
         Establishment establishment = establishmentService.findOne(id);
 
         Application applicationASynchroniser = applicationService.findByName(MyEc3ApplicationConstants.SDM_APPLICATION);
-        ;
         List<Long> listApplicationIdToResynchronize = new ArrayList<>();
         listApplicationIdToResynchronize.add(applicationASynchroniser.getId());
         SynchronizationType synchronizationType = SynchronizationType.SYNCHRONIZATION;
@@ -252,7 +246,7 @@ public class SynchroController {
     public String udataOrganism(@RequestParam long id) {
         Organism organism = organismService.findOne(id);
 
-        Application applicationASynchroniser = applicationService.findByName("Udata");
+        Application applicationASynchroniser = applicationService.findByName(MyEc3ApplicationConstants.UDATA_APPLICATION);
         List<Long> listApplicationIdToResynchronize = new ArrayList<>();
         listApplicationIdToResynchronize.add(applicationASynchroniser.getId());
         SynchronizationType synchronizationType = SynchronizationType.SYNCHRONIZATION;
@@ -266,7 +260,7 @@ public class SynchroController {
     public String udataAgent(@RequestParam long id) {
         AgentProfile agentProfile = agentProfileService.findOne(id);
 
-        Application applicationASynchroniser = applicationService.findByName("Udata");
+        Application applicationASynchroniser = applicationService.findByName(MyEc3ApplicationConstants.UDATA_APPLICATION);
         List<Long> listApplicationIdToResynchronize = new ArrayList<>();
         listApplicationIdToResynchronize.add(applicationASynchroniser.getId());
         SynchronizationType synchronizationType = SynchronizationType.SYNCHRONIZATION;
