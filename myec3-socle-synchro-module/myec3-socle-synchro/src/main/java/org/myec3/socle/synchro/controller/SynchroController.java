@@ -6,7 +6,8 @@ import org.myec3.socle.core.service.*;
 import org.myec3.socle.synchro.api.constants.SynchronizationType;
 import org.myec3.socle.synchro.scheduler.manager.ResourceSynchronizationManager;
 import org.myec3.socle.ws.client.impl.mps.MpsWsClient;
-import org.myec3.socle.ws.client.impl.mps.response.ResponseEntreprises;
+import org.myec3.socle.ws.client.impl.mps.response.ResponseEtablissement;
+import org.myec3.socle.ws.client.impl.mps.response.ResponseUniteLegale;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -304,12 +305,14 @@ public class SynchroController {
         CompletableFuture.supplyAsync(() -> {
             AtomicInteger index = new AtomicInteger(0);
             organisms.forEach(organismLightDTO -> {
-                ResponseEntreprises entreprises = mpsWsClient.getInfoEntreprises(organismLightDTO.getSiren());
-                if (entreprises ==null || entreprises.getEntreprise() == null) {
+                ResponseUniteLegale entreprises = mpsWsClient.getInfoEntreprises(organismLightDTO.getSiren());
+                ResponseEtablissement etablissement = mpsWsClient.getInfoEtablissements(entreprises.getData().getSiretSiegeSocial());
+
+                if (entreprises ==null || entreprises.getData() == null) {
                     logger.info("[RESYNC] [" + organismLightDTO.getId() + "] [" + organismLightDTO.getSiren() + "] Pas de reponse de API INSEE");
                 } else {
-                    String labelInsee = entreprises.getEntreprise().getLabel();
-                    String city = entreprises.getEtablissement_siege().getAddress().getCity();
+                    String labelInsee = entreprises.getData().getPersonneMoraleAttributs().raisonSociale;
+                    String city = etablissement.getData().getAdresse().getLibelleCommune();
 
                     // SI le libelle ACTION SOCIALE est présent et sans la présence de la commune, alors on ajoute la commune dans le label
                     if ((labelInsee.contains(ACTION_SOCIALE) || labelInsee.contains(CAISSE_ECOLE)) && !labelInsee.contains(city)) {

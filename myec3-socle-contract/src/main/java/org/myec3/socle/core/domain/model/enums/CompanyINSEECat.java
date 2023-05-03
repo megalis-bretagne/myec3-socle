@@ -30,21 +30,24 @@ import javax.xml.bind.annotation.XmlEnum;
  */
 @XmlEnum
 public enum CompanyINSEECat implements StructureINSEECat {
-
-	ASSOCIATION("Association"), 
-	AUTRE("Autre"), 
-	EARL("EARL"), 
-	EURL("EURL"), 
-	EI("EI"), 
-	GIE("GIE"), 
-	GROUPEMENT_D_ENTREPRISE("Groupement d\'entreprise"), 
-	SA("SA"), SARL("SARL"), 
-	SAS("SAS"), 
-	SASU("SASU"), 
-	SCOP("SCOP"), 
-	SNC("SNC");
+	//http://sigr.iau-idf.fr/amfphp/services/visiaurif_sigarif/aides/bil.cte/Cat_Juridiques.pdf
+	ASSOCIATION("Association","9220"),
+	AUTRE("Autre",""),
+	EARL("EARL",""),
+	EURL("EURL","5488"),
+	EI("EI",""),
+	GIE("GIE",""),
+	GROUPEMENT_D_ENTREPRISE("Groupement d\'entreprise",""),
+	SA("SA",""),
+	SARL("SARL","5499"),
+	SAS("SAS","5710"),
+	SASU("SASU","5720"),
+	SCOP("SCOP",""),
+	SNC("SNC","");
 
 	private final String label;
+
+	private final String code;
 
 	/**
 	 * Constructor. Initialize the INSEE category.
@@ -52,8 +55,8 @@ public enum CompanyINSEECat implements StructureINSEECat {
 	 * @param label
 	 *            : the INSEE category to set
 	 */
-	private CompanyINSEECat(String label) {
-		this.label = label;
+	private CompanyINSEECat(String label,String code) {
+		this.label = label;this.code = code;
 	}
 
 	/**
@@ -61,6 +64,11 @@ public enum CompanyINSEECat implements StructureINSEECat {
 	 */
 	public String getLabel() {
 		return label;
+	}
+
+
+	public String getCode() {
+		return code;
 	}
 
 	/**
@@ -83,4 +91,13 @@ public enum CompanyINSEECat implements StructureINSEECat {
         }
         return CompanyINSEECat.AUTRE;
     }
+
+	public static CompanyINSEECat getByCode(String code){
+		for (final CompanyINSEECat element : EnumSet.allOf(CompanyINSEECat.class)) {
+			if (element.getCode().equals(code)) {
+				return element;
+			}
+		}
+		return CompanyINSEECat.AUTRE;
+	}
 }

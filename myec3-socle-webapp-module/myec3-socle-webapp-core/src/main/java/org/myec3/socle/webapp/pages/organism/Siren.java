@@ -15,7 +15,7 @@ import org.myec3.socle.core.domain.model.enums.OrganismNafCode;
 import org.myec3.socle.core.service.OrganismService;
 import org.myec3.socle.webapp.pages.Index;
 import org.myec3.socle.ws.client.impl.mps.MpsWsClient;
-import org.myec3.socle.ws.client.impl.mps.response.ResponseEntreprises;
+import org.myec3.socle.ws.client.impl.mps.response.ResponseUniteLegale;
 
 public class Siren {
 
@@ -87,7 +87,7 @@ public class Siren {
      */
     private void completeOrganismInfo() {
         try {
-            ResponseEntreprises infos = mpsWsClient.getInfoEntreprises(organism.getSiren());
+            ResponseUniteLegale infos = mpsWsClient.getInfoEntreprises(organism.getSiren());
             if ( infos != null && infos.getEntreprise() !=null){
                 this.organism.setLabel(infos.getEntreprise().getLabel());
                 Address address = infos.getEtablissement_siege().getAddress();
