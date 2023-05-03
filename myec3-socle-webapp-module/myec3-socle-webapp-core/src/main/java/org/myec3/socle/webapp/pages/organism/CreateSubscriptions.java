@@ -24,7 +24,7 @@ import org.apache.tapestry5.PersistenceConstants;
 import org.apache.tapestry5.annotations.*;
 import org.apache.tapestry5.corelib.components.Form;
 import org.apache.tapestry5.ioc.annotations.Inject;
-import org.apache.tapestry5.ioc.services.PropertyAccess;
+import org.apache.tapestry5.commons.services.PropertyAccess;
 import org.myec3.socle.core.domain.model.*;
 import org.myec3.socle.core.service.ApplicationService;
 import org.myec3.socle.core.service.OrganismDepartmentService;

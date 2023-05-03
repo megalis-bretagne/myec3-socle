@@ -19,6 +19,8 @@ public class SdmOrganisme extends SdmResource  {
     private String email;
     private String tel;
 
+    private String logoUrl;
+
     public Long getId() {
         return id;
     }
@@ -113,5 +115,13 @@ public class SdmOrganisme extends SdmResource  {
 
     public void setTel(String tel) {
         this.tel = Objects.toString(tel,"");
+    }
+
+    public String getLogoUrl() {
+        return logoUrl;
+    }
+
+    public void setLogoUrl(String logoUrl) {
+        this.logoUrl = Objects.toString(logoUrl,"");
     }
 }

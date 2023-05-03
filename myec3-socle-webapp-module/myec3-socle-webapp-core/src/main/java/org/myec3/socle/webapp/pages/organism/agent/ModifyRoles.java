@@ -180,19 +180,19 @@ public class ModifyRoles extends AbstractPage {
 		Application gu = this.applicationService.findByName(MyEc3ApplicationConstants.GU);
 		this.systemApplications.remove(gu);
 
-		Application ged = this.applicationService.findByName(MyEc3ApplicationConstants.GED_SERVICE);
+		Application ged = this.applicationService.findByName(MyEc3ApplicationConstants.GED_APPLICATION);
 		this.systemApplications.remove(ged);
 
 		// Remove ocProjets because that's a specific application.
-		Application ocProjets = this.applicationService.findByName(MyEc3ApplicationConstants.OC_PROJETS_SERVICE);
+		Application ocProjets = this.applicationService.findByName(MyEc3ApplicationConstants.OC_PROJETS_APPLICATION);
 		this.systemApplications.remove(ocProjets);
 
 		// Remove ocReunions because that's a specific application.
-		Application ocReunions = this.applicationService.findByName(MyEc3ApplicationConstants.OC_REUNIONS_SERVICE);
+		Application ocReunions = this.applicationService.findByName(MyEc3ApplicationConstants.OC_REUNIONS_APPLICATION);
 		this.systemApplications.remove(ocReunions);
 
 		// Remove ocBlocNotes because that's a specific application.
-		Application ocBlocNotes = this.applicationService.findByName(MyEc3ApplicationConstants.OC_BLOC_NOTES_SERVICE);
+		Application ocBlocNotes = this.applicationService.findByName(MyEc3ApplicationConstants.OC_BLOC_NOTES_APPLICATION);
 		this.systemApplications.remove(ocBlocNotes);
 
 		this.agentRoles = this.agentProfile.getRoles();
@@ -406,7 +406,7 @@ public class ModifyRoles extends AbstractPage {
 		// If there is only application GU in the list
 		if ((this.activeRole == null)
 				&& (MyEc3ApplicationConstants.GU.equals(roleSelected.getApplication().getName())
-				|| MyEc3ApplicationConstants.GED_SERVICE.equals(roleSelected.getApplication().getName()))) {
+				|| MyEc3ApplicationConstants.GED_APPLICATION.equals(roleSelected.getApplication().getName()))) {
 			this.selectedRoles.add(roleSelected);
 		} else if ((this.activeRole)
 				|| (MyEc3ApplicationConstants.GU.equals(roleSelected.getApplication().getName()))) {
@@ -457,16 +457,16 @@ public class ModifyRoles extends AbstractPage {
 
 	public Boolean getIsCurrentApplicationEnabled() {
 		return MyEc3ApplicationConstants.GU.equals(this.applicationLoop.getName())
-				|| MyEc3ApplicationConstants.GED_SERVICE.equals(this.applicationLoop.getName())
-				|| MyEc3ApplicationConstants.OC_PROJETS_SERVICE.equals(this.applicationLoop.getName())
-				|| MyEc3ApplicationConstants.OC_REUNIONS_SERVICE.equals(this.applicationLoop.getName())
-				|| MyEc3ApplicationConstants.OC_BLOC_NOTES_SERVICE.equals(this.applicationLoop.getName());
+				|| MyEc3ApplicationConstants.GED_APPLICATION.equals(this.applicationLoop.getName())
+				|| MyEc3ApplicationConstants.OC_PROJETS_APPLICATION.equals(this.applicationLoop.getName())
+				|| MyEc3ApplicationConstants.OC_REUNIONS_APPLICATION.equals(this.applicationLoop.getName())
+				|| MyEc3ApplicationConstants.OC_BLOC_NOTES_APPLICATION.equals(this.applicationLoop.getName());
 	}
 
 	public Boolean getIsCurrentApplicationOC() {
-		return MyEc3ApplicationConstants.OC_PROJETS_SERVICE.equals(this.applicationLoop.getName())
-				|| MyEc3ApplicationConstants.OC_REUNIONS_SERVICE.equals(this.applicationLoop.getName())
-				|| MyEc3ApplicationConstants.OC_BLOC_NOTES_SERVICE.equals(this.applicationLoop.getName());
+		return MyEc3ApplicationConstants.OC_PROJETS_APPLICATION.equals(this.applicationLoop.getName())
+				|| MyEc3ApplicationConstants.OC_REUNIONS_APPLICATION.equals(this.applicationLoop.getName())
+				|| MyEc3ApplicationConstants.OC_BLOC_NOTES_APPLICATION.equals(this.applicationLoop.getName());
 	}
 
 	public Boolean getIsCurrentApplicationGU() {

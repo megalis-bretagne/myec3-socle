@@ -28,7 +28,7 @@ import org.apache.tapestry5.ValueEncoder;
 import org.apache.tapestry5.annotations.*;
 import org.apache.tapestry5.corelib.components.Form;
 import org.apache.tapestry5.ioc.annotations.Inject;
-import org.apache.tapestry5.services.Request;
+import org.apache.tapestry5.http.services.Request;
 import org.apache.tapestry5.services.javascript.JavaScriptSupport;
 import org.myec3.socle.core.domain.model.Company;
 import org.myec3.socle.core.domain.model.Person;

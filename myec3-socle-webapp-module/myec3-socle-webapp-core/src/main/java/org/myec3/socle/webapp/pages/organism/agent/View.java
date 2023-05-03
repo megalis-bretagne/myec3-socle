@@ -23,7 +23,7 @@ import org.apache.tapestry5.annotations.InjectPage;
 import org.apache.tapestry5.annotations.OnEvent;
 import org.apache.tapestry5.annotations.Persist;
 import org.apache.tapestry5.annotations.Property;
-import org.apache.tapestry5.ioc.Messages;
+import org.apache.tapestry5.commons.Messages;
 import org.apache.tapestry5.ioc.annotations.Inject;
 import org.myec3.socle.core.constants.MyEc3ApplicationConstants;
 import org.myec3.socle.core.constants.MyEc3EsbConstants;
@@ -192,7 +192,7 @@ public class View extends AbstractPage {
 			// We have to build a List of application, to send the synchronization to the
 			// GRC only
 			List<Long> listOfApplicationIdToSynchronize = new ArrayList<Long>();
-			Application grcApplication = applicationService.findByName(MyEc3ApplicationConstants.GRC_SERVICE);
+			Application grcApplication = applicationService.findByName(MyEc3ApplicationConstants.GRC_APPLICATION);
 
 			if (grcApplication != null) {
 				listOfApplicationIdToSynchronize.add(grcApplication.getId());

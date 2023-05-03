@@ -116,19 +116,19 @@ public class ViewRoles extends AbstractPage {
 		Application gu = this.applicationService.findByName(MyEc3ApplicationConstants.GU);
 		this.systemApplications.remove(gu);
 
-		Application ged = this.applicationService.findByName(MyEc3ApplicationConstants.GED_SERVICE);
+		Application ged = this.applicationService.findByName(MyEc3ApplicationConstants.GED_APPLICATION);
 		this.systemApplications.remove(ged);
 
 		// Remove ocProjets because that's a specific application.
-		Application ocProjets = this.applicationService.findByName(MyEc3ApplicationConstants.OC_PROJETS_SERVICE);
+		Application ocProjets = this.applicationService.findByName(MyEc3ApplicationConstants.OC_PROJETS_APPLICATION);
 		this.systemApplications.remove(ocProjets);
 
 		// Remove ocReunions because that's a specific application.
-		Application ocReunions = this.applicationService.findByName(MyEc3ApplicationConstants.OC_REUNIONS_SERVICE);
+		Application ocReunions = this.applicationService.findByName(MyEc3ApplicationConstants.OC_REUNIONS_APPLICATION);
 		this.systemApplications.remove(ocReunions);
 
 		// Remove ocBlocNotes because that's a specific application.
-		Application ocBlocNotes = this.applicationService.findByName(MyEc3ApplicationConstants.OC_BLOC_NOTES_SERVICE);
+		Application ocBlocNotes = this.applicationService.findByName(MyEc3ApplicationConstants.OC_BLOC_NOTES_APPLICATION);
 		this.systemApplications.remove(ocBlocNotes);
 
 		// Check if loggedUser can access at this page

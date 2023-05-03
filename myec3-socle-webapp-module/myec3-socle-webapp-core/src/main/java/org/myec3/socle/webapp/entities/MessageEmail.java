@@ -23,7 +23,7 @@ import java.util.Properties;
 import java.util.ResourceBundle;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.tapestry5.ioc.Messages;
+import org.apache.tapestry5.commons.Messages;
 import org.myec3.socle.core.domain.model.Company;
 import org.myec3.socle.core.domain.model.Customer;
 import org.myec3.socle.core.domain.model.Establishment;
@@ -500,14 +500,9 @@ public class MessageEmail {
 							mapAttributes.get(ATTR_EXPIRATION_DATE_PASSWORD)));
 
 			content.append("<br/><br/>");
-			content.append(getMessage(messages,
-					"content-email-password-about-to-expired-info1"));
-			content.append("<a href=\"")
-					.append(GuWebAppConstants.REGENERATE_PASSWORD)
-					.append("\">")
-					.append("content-hypertext-regenerate-password-on-mail-expiration")
-					.append("</a>");
-			content.append("<br/></br>");
+			content.append(MessageFormat.format(getMessage(messages,
+					"content-email-password-about-to-expired-info1"), GuWebAppConstants.MYEC3_BASE_URL));
+			content.append("<br/><br/>");
 
 			String imgModifPwdURL = GU_BUNDLE
 					.getString("filer.img.modif.pwd.mail.url");

@@ -1,5 +1,5 @@
 include:
-  - 'https://gitlab.sib.fr/megalis/megalis-template/raw/master/.docker-template.yml'
+  - /gitlab-ci/build.gitlab-ci.yml
 
 stages:
   - test
@@ -14,19 +14,6 @@ mvnTest:
   script :
     - mvn test
 
-
-mvnDeploy:
-  image : maven:3.6.2-jdk-8
-  stage : mvn_build
-  only:
-    - master
-    - develop
-    - tags
-    - /^feature.*$/
-    - /^hotfix.*$/
-  script :
-    - mvn deploy -DskipTests=true
-    
 sonarqube-check:
   only:
     - master
@@ -43,86 +30,119 @@ sonarqube-check:
     - mvn verify -DskipTests=true sonar:sonar -Dhttps.proxyHost=${PROXY_HOST} -Dhttps.proxyPort=${PROXY_PORT}
   allow_failure: true
 
-
 buildSocleEsb:
+  extends: .maven-build
+  stage: mvn_build
+  variables:
+    BUILD_CONTEXT: "myec3-socle-esb"
+
+buildSocleSynchro:
+  extends: .maven-build
+  stage: mvn_build
+  variables:
+    BUILD_CONTEXT: "myec3-socle-synchro-module/myec3-socle-synchro"
+
+buildSocleWebapp:
+  extends: .maven-build
+  stage: mvn_build
+  variables:
+    BUILD_CONTEXT: "myec3-socle-webapp-module/myec3-socle-webapp"
+
+
+buildimageSocleEsb:
   extends: .build
+  stage: build
   variables:
     BUILD_CONTEXT: "myec3-socle-esb"
     IMAGE_NAME: "megalis/socle-esb"
 
-buildSocleSynchro:
+buildimageSocleSynchro:
   extends: .build
+  stage: build
   variables:
     BUILD_CONTEXT: "myec3-socle-synchro-module/myec3-socle-synchro"
     IMAGE_NAME: "megalis/socle-synchro"
 
-buildSocleWebapp:
+buildimageSocleWebapp:
   extends: .build
+  stage: build
   variables:
     BUILD_CONTEXT: "myec3-socle-webapp-module/myec3-socle-webapp"
     IMAGE_NAME: "megalis/socle-webapp"
 
 deployWebapp:
   extends: .deployInteg
+  stage: deploy
   variables:
     STACK_NAME: "socle-webapp"
 
 deploySynchro:
   extends: .deployInteg
+  stage: deploy
   variables:
     STACK_NAME: "socle-synchro"
 
 deployEsb:
   extends: .deployInteg
+  stage: deploy
   variables:
     STACK_NAME: "socle-esb"
 
 
 deployPreprodWebapp:
   extends: .deployPreprod
+  stage: deploy
   variables:
     STACK_NAME: "socle-webapp"
     
 
 deployPreprodSynchro:
   extends: .deployPreprod
+  stage: deploy
   variables:
     STACK_NAME: "socle-synchro"
 
 deployPreprodEsb:
   extends: .deployPreprod
+  stage: deploy
   variables:
     STACK_NAME: "socle-esb"
     
  
 deployPreprodWebappManual:
   extends: .deployPreprodManual
+  stage: deploy
   variables:
     STACK_NAME: "socle-webapp"
     
 
 deployPreprodSynchroManual:
   extends: .deployPreprodManual
+  stage: deploy
   variables:
     STACK_NAME: "socle-synchro"
 
 deployPreprodEsbManual:
   extends: .deployPreprodManual
+  stage: deploy
   variables:
     STACK_NAME: "socle-esb"
      
     
 deployProdWebapp:
   extends: .deployProd
+  stage: deploy
   variables:
     STACK_NAME: "socle-webapp"
 
 deployProdSynchro:
   extends: .deployProd
+  stage: deploy
   variables:
     STACK_NAME: "socle-synchro"
 
 deployProdEsb:
   extends: .deployProd
+  stage: deploy
   variables:
     STACK_NAME: "socle-esb"

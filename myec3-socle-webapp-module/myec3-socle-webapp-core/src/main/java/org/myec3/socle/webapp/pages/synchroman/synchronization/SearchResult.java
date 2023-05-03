@@ -1,36 +1,48 @@
 package org.myec3.socle.webapp.pages.synchroman.synchronization;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.tapestry5.StreamResponse;
 import org.apache.tapestry5.annotations.*;
-import org.apache.tapestry5.beaneditor.BeanModel;
+import org.apache.tapestry5.beanmodel.BeanModel;
+import org.apache.tapestry5.beanmodel.services.BeanModelSource;
+import org.apache.tapestry5.beanmodel.services.PropertyConduitSource;
+import org.apache.tapestry5.commons.Messages;
 import org.apache.tapestry5.corelib.components.Grid;
-import org.apache.tapestry5.ioc.Messages;
 import org.apache.tapestry5.ioc.annotations.Inject;
-import org.apache.tapestry5.services.BeanModelSource;
 import org.apache.tapestry5.services.PageRenderLinkSource;
-import org.apache.tapestry5.services.PropertyConduitSource;
 import org.apache.tapestry5.services.javascript.JavaScriptSupport;
-import org.myec3.socle.core.domain.model.Resource;
+import org.myec3.socle.core.constants.MyEc3ApplicationConstants;
+import org.myec3.socle.core.domain.model.*;
 import org.myec3.socle.core.domain.model.enums.ResourceType;
+import org.myec3.socle.core.domain.sdm.model.SdmResource;
 import org.myec3.socle.core.service.*;
 import org.myec3.socle.core.sync.api.ErrorCodeType;
 import org.myec3.socle.core.sync.api.HttpStatus;
 import org.myec3.socle.core.sync.api.MethodType;
+import org.myec3.socle.core.tools.SynchronizationMarshaller;
 import org.myec3.socle.synchro.api.SynchronizationService;
 import org.myec3.socle.synchro.api.constants.SynchronizationType;
 import org.myec3.socle.synchro.core.domain.model.SynchronizationInitial;
 import org.myec3.socle.synchro.core.domain.model.SynchronizationLog;
+import org.myec3.socle.synchro.core.service.SdmConverterService;
 import org.myec3.socle.synchro.core.service.SynchronizationInitialService;
-import org.myec3.socle.synchro.core.service.SynchronizationLogService;
 import org.myec3.socle.webapp.pages.AbstractPage;
 import org.myec3.socle.webapp.pages.company.DetailCompany;
 import org.myec3.socle.webapp.pages.organism.DetailOrganism;
 import org.myec3.socle.webapp.pages.organism.agent.View;
 import org.myec3.socle.webapp.pages.organism.department.DetailDepartment;
+import org.myec3.socle.webapp.utils.JsonStreamResponse;
+import org.myec3.socle.webapp.utils.XmlStreamResponse;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.List;
 
@@ -58,6 +70,11 @@ public class SearchResult extends AbstractPage {
     private EmployeeProfileService employeeProfileService;
 
     @Inject
+    @Service("establishmentService")
+    private EstablishmentService establishmentService;
+
+
+    @Inject
     @Service("organismService")
     private OrganismService organismService;
 
@@ -78,8 +95,9 @@ public class SearchResult extends AbstractPage {
     private SynchronizationInitialService synchronizationInitialService;
 
     @Inject
-    @Service("synchronizationLogService")
-    private SynchronizationLogService synchronizationLogService;
+    @Service("sdmConverterService")
+    private SdmConverterService sdmConverterService;
+
 
     @SuppressWarnings("unused")
     @Property
@@ -141,10 +159,131 @@ public class SearchResult extends AbstractPage {
 
 
     /**
-     * REdirect to view page given type resource and his id
-     * @param ressourceId   resource Identifier
-     * @param resourceType  resourceType
-     * @return  page
+     * Download XML or Json Export of the current version of resource synchronized
+     *
+     * @param applicationName sending Application
+     * @param resourceId      resource Identifier
+     * @param resourceType    resource Type
+     * @return page
+     */
+    public StreamResponse onDownloadSynchroFile(String applicationName, String resourceId, ResourceType resourceType) {
+
+        StreamResponse response = null;
+        //Check again that current user is SA
+        if (super.getIsAdmin() || super.getIsGlobalManagerAgent()) {
+            //Build file name regarding synchro parameter
+            final String filename = applicationName + "_" + resourceType + "_" + resourceId;
+                //Specific treatement for "Salle des marchés" that export json instead of XML
+                if (MyEc3ApplicationConstants.SDM_APPLICATION.equals(applicationName)) {
+                    response = new JsonStreamResponse(filename,
+                            getJsonSynchroFile(Long.parseLong(resourceId), resourceType)
+                    );
+                } else {
+                    response = new XmlStreamResponse(filename,
+                            getXmlSynchroFile(Long.parseLong(resourceId), resourceType)
+                    );
+                }
+        }
+        return response;
+    }
+
+    /**
+     * Generate XML export file
+     *
+     * @param resourceId   resource Identifier
+     * @param resourceType  resource Type
+     * @return XML file as input stream
+     */
+    protected InputStream getXmlSynchroFile(Long resourceId, ResourceType resourceType) {
+        ByteArrayOutputStream baOutputStream = null;
+        Resource resource = null;
+        switch (resourceType) {
+            case AGENT_PROFILE:
+                resource = agentProfileService.findOne(resourceId);
+                break;
+            case EMPLOYEE_PROFILE:
+                resource = employeeProfileService.findOne(resourceId);
+                break;
+            case COMPANY:
+                resource = companyService.findOne(resourceId);
+                break;
+            case COMPANY_DEPARTMENT:
+                resource = companyDepartmentService.findOne(resourceId);
+            case ESTABLISHMENT:
+                resource = establishmentService.findOne(resourceId);
+                break;
+            case ORGANISM:
+                resource = organismService.findOne(resourceId);
+                break;
+            case ORGANISM_DEPARTMENT:
+                resource = organismDepartmentService.findOne(resourceId);
+                break;
+            default:
+                resource = null;
+                break;
+        }
+        baOutputStream = SynchronizationMarshaller.marshalResource(resource);
+        return new ByteArrayInputStream(baOutputStream.toByteArray());
+    }
+
+    /**
+     * Generate JSON export file
+     *
+     * @param resourceId  resource Identifier
+     * @param resourceType  resource Type
+     * @return JSON file as input stream
+     */
+    protected InputStream getJsonSynchroFile(Long resourceId, ResourceType resourceType) {
+        InputStream inputStream = null;
+        SdmResource sdmResource = null;
+        try {
+            switch (resourceType) {
+                case AGENT_PROFILE:
+                    AgentProfile agentProfile = agentProfileService.findOne(resourceId);
+                    sdmResource = sdmConverterService.convertToSdmAgent(agentProfile);
+                    break;
+                case EMPLOYEE_PROFILE:
+                    EmployeeProfile employeeProfile = employeeProfileService.findOne(resourceId);
+                    sdmResource = sdmConverterService.convertToSdmInscrit(employeeProfile);
+                    break;
+                case COMPANY:
+                    Company company = companyService.findOne(resourceId);
+                    sdmResource = sdmConverterService.convertSdmEntreprise(company);
+                    break;
+                case COMPANY_DEPARTMENT:
+                    break;
+                case ESTABLISHMENT:
+                    Establishment establishment = establishmentService.findOne(resourceId);
+                    sdmResource = sdmConverterService.convertSdmEtablissement(establishment);
+                    break;
+                case ORGANISM:
+                    Organism organism = organismService.findOne(resourceId);
+                    sdmResource = sdmConverterService.convertSdmOrganisme(organism);
+                    break;
+                case ORGANISM_DEPARTMENT:
+                    OrganismDepartment organismDepartment = organismDepartmentService.findOne(resourceId);
+                    sdmResource = sdmConverterService.convertToSdmService(organismDepartment);
+                    break;
+                default:
+                    sdmResource = null;
+                    break;
+            }
+            ObjectMapper mapper = new ObjectMapper();
+            String json = mapper.writeValueAsString(sdmResource);
+            inputStream = new ByteArrayInputStream(json.getBytes());
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
+        return inputStream;
+    }
+
+
+    /**
+     * Redirect to view page given type resource and his id
+     *
+     * @param ressourceId  resource Identifier
+     * @param resourceType resourceType
+     * @return page
      */
     public Object onSeeResource(String ressourceId, ResourceType resourceType) {
         switch (resourceType) {
@@ -218,6 +357,7 @@ public class SearchResult extends AbstractPage {
 
     /**
      * Get Label for resource Type column
+     *
      * @return resource Label
      */
     public String getResourceLabel() {

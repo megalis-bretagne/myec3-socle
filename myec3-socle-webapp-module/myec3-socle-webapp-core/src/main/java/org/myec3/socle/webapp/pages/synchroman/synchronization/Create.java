@@ -15,7 +15,7 @@ import org.apache.tapestry5.annotations.Persist;
 import org.apache.tapestry5.annotations.Property;
 import org.apache.tapestry5.annotations.Service;
 import org.apache.tapestry5.corelib.components.Form;
-import org.apache.tapestry5.ioc.Messages;
+import org.apache.tapestry5.commons.Messages;
 import org.apache.tapestry5.ioc.annotations.Inject;
 import org.myec3.socle.core.domain.model.Resource;
 import org.myec3.socle.core.domain.model.enums.ResourceType;

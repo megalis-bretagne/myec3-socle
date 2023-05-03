@@ -17,6 +17,7 @@
  */
 package org.myec3.socle.synchro.scheduler.job.resources;
 
+import org.myec3.socle.core.constants.MyEc3ApplicationConstants;
 import org.myec3.socle.core.domain.model.Organism;
 import org.myec3.socle.core.domain.model.enums.ResourceType;
 import org.myec3.socle.core.domain.sdm.model.SdmOrganisme;
@@ -24,6 +25,7 @@ import org.myec3.socle.core.sync.api.*;
 import org.myec3.socle.core.sync.api.Error;
 import org.myec3.socle.synchro.core.domain.model.SynchroIdentifiantExterne;
 import org.myec3.socle.synchro.core.domain.model.SynchronizationSubscription;
+import org.myec3.socle.synchro.core.service.SdmConverterService;
 import org.myec3.socle.synchro.core.service.SynchroIdentifiantExterneService;
 import org.myec3.socle.ws.client.ResourceWsClient;
 import org.myec3.socle.ws.client.impl.SdmWsClientImpl;
@@ -58,6 +60,10 @@ public class OrganismSynchronizationJob extends
     @Qualifier("synchroIdentifiantExterneService")
     private SynchroIdentifiantExterneService synchroIdentifiantExterneService;
 
+    @Autowired
+    @Qualifier("sdmConverterService")
+    private SdmConverterService sdmConverterService;
+
     /**
      * {@inheritDoc}
      */
@@ -66,8 +72,8 @@ public class OrganismSynchronizationJob extends
                                   SynchronizationSubscription synchronizationSubscription,
                                   ResourceWsClient resourceWsClient) {
 
-        if ("SDM".equals(synchronizationSubscription.getApplication().getName())) {
-            SdmOrganisme organismeSDM = convertSdmOrganisme(resource);
+        if (MyEc3ApplicationConstants.SDM_APPLICATION.equals(synchronizationSubscription.getApplication().getName())) {
+            SdmOrganisme organismeSDM = sdmConverterService.convertSdmOrganisme(resource);
             //on met l'acronyme à vide car la salle des marchés va nous retourner l'acronyme
             organismeSDM.setAcronyme("");
             SdmWsClientImpl sdmWsClient = (SdmWsClientImpl) resourceWsClient;
@@ -83,8 +89,8 @@ public class OrganismSynchronizationJob extends
     public ResponseMessage delete(Organism resource,
                                   SynchronizationSubscription synchronizationSubscription,
                                   ResourceWsClient resourceWsClient) {
-        if ("SDM".equals(synchronizationSubscription.getApplication().getName())) {
-            SdmOrganisme organismeSDM = convertSdmOrganisme(resource);
+        if (MyEc3ApplicationConstants.SDM_APPLICATION.equals(synchronizationSubscription.getApplication().getName())) {
+            SdmOrganisme organismeSDM = sdmConverterService.convertSdmOrganisme(resource);
             SynchroIdentifiantExterne synchroIdentifiantExterne = synchroIdentifiantExterneService.findByAcronyme(resource.getAcronym(), ResourceType.ORGANISM);
             SdmWsClientImpl sdmWsClient = (SdmWsClientImpl) resourceWsClient;
             if (synchroIdentifiantExterne !=null){
@@ -107,8 +113,8 @@ public class OrganismSynchronizationJob extends
     public ResponseMessage update(Organism resource,
                                   SynchronizationSubscription synchronizationSubscription,
                                   ResourceWsClient resourceWsClient) {
-        if ("SDM".equals(synchronizationSubscription.getApplication().getName())) {
-            SdmOrganisme organismeSDM = convertSdmOrganisme(resource);
+        if (MyEc3ApplicationConstants.SDM_APPLICATION.equals(synchronizationSubscription.getApplication().getName())) {
+            SdmOrganisme organismeSDM = sdmConverterService.convertSdmOrganisme(resource);
 
             SynchroIdentifiantExterne synchroIdentifiantExterne=null;
             if (!StringUtils.isEmpty(resource.getAcronym())){
@@ -127,22 +133,4 @@ public class OrganismSynchronizationJob extends
     }
 
 
-    private SdmOrganisme convertSdmOrganisme(Organism resource) {
-        SdmOrganisme organismeSDM = new SdmOrganisme();
-        organismeSDM.setIdExterne(String.valueOf(resource.getExternalId()));
-
-        organismeSDM.setId(0l);
-        organismeSDM.setAcronyme(resource.getAcronym());
-        organismeSDM.setEmail(resource.getEmail());
-        organismeSDM.setUrl(resource.getWebsite());
-        organismeSDM.setTel(resource.getPhone());
-        organismeSDM.setSigle(resource.getLabel());
-        organismeSDM.setCategorieInsee(resource.getLegalCategory().getId());
-        organismeSDM.setDenomination(resource.getLabel());
-        organismeSDM.setSiren(resource.getSiren());
-        organismeSDM.setNic(resource.getNic());
-        organismeSDM.setAdresse(convertToSdmAdresse(resource.getAddress()));
-
-        return organismeSDM;
-    }
 }
