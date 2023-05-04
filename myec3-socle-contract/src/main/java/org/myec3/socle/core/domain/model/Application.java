@@ -75,6 +75,8 @@ public class Application extends Resource {
 	private String pictoUrl;
 	private String description;
 	private Long nbMaxLicenses;
+	// MEGALIS-192 : APPLICATION MONOTENANT
+	private boolean monotenant;
 
 	/**
 	 * Default constructor. Do nothing.
@@ -412,6 +414,17 @@ public class Application extends Resource {
 
 	public void setStructureApplicationInfos(List<StructureApplicationInfo> structureApplicationInfos) {
 		this.structureApplicationInfos = structureApplicationInfos;
+	}
+
+	@Column(nullable = false, columnDefinition = "BIT default 0")
+	@XmlTransient
+	@JsonIgnore
+	public boolean isMonotenant() {
+		return monotenant;
+	}
+
+	public void setMonotenant(boolean monotenant) {
+		this.monotenant = monotenant;
 	}
 
 	/**

@@ -14,7 +14,6 @@ import org.myec3.socle.core.domain.model.Role;
 import org.myec3.socle.core.domain.model.enums.ProfileTypeValue;
 import org.myec3.socle.core.service.KeycloakUserService;
 import org.myec3.socle.core.util.KeycloakJacksonProvider;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import javax.ws.rs.client.Client;
@@ -33,9 +32,6 @@ public class KeycloakUserServiceImpl implements KeycloakUserService {
     private static final String SIREN = "siren";
     private static final String ROLE = "role";
     private static final String SUFFIX_MONOTENANT = "@monotenant.megalis";
-
-    @Value("#{'${myec3.synchro.applications.monotenant.ids}'.split(',')}")
-    private List<Integer> idsApplicationMonotenant;
 
     private final RealmResource realm;
 
@@ -141,8 +137,7 @@ public class KeycloakUserServiceImpl implements KeycloakUserService {
 
         boolean isAbonneeParapheur = profile.getRoles().stream()
                 .map(Role::getApplication)
-                .distinct()
-                .anyMatch(this::isMonotenant);
+                .anyMatch(Application::isMonotenant);
         String alfUserNameMonoTenant = isAbonneeParapheur
                 ? profile.getId() + SUFFIX_MONOTENANT
                 : profile.getAlfUserName();
@@ -187,18 +182,5 @@ public class KeycloakUserServiceImpl implements KeycloakUserService {
         return this.realm.users().searchByUsername(username, true).stream()
                 .filter(user -> user.getUsername().equals(username))
                 .findFirst();
-    }
-
-    /**
-     * Check if application is monotenant
-     *
-     * @param application the application to check
-     * @return true if sucess
-     */
-    private boolean isMonotenant(Application application) {
-        if (application == null || application.getId() == null) {
-            return false;
-        }
-        return idsApplicationMonotenant.contains(application.getId().intValue());
     }
 }
