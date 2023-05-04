@@ -21,6 +21,14 @@ public class ResponseMandataires {
 		this.data = data;
 	}
 
+	public ApiGouvMeta getMeta() {
+		return meta;
+	}
+
+	public void setMeta(ApiGouvMeta meta) {
+		this.meta = meta;
+	}
+
 	@Override
 	public String toString() {
 		return "ResponseEntreprises{" +
