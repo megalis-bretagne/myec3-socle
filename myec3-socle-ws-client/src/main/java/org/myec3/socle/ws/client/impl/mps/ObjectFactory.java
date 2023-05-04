@@ -7,6 +7,7 @@
 
 package org.myec3.socle.ws.client.impl.mps;
 
+import org.myec3.socle.ws.client.impl.mps.response.ResponseMandataires;
 import org.myec3.socle.ws.client.impl.mps.response.ResponseUniteLegale;
 import org.myec3.socle.ws.client.impl.mps.response.ResponseEtablissement;
 
@@ -41,6 +42,10 @@ public class ObjectFactory {
 
 	public ResponseUniteLegale createResponseEntreprises() {
 		return new ResponseUniteLegale();
+	}
+
+	public ResponseMandataires createResponseMandataires() {
+		return new ResponseMandataires();
 	}
 
 }

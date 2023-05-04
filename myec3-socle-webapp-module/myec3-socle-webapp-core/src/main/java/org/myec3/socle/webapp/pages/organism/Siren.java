@@ -93,7 +93,7 @@ public class Siren {
             ResponseEtablissement etablissement = mpsWsClient.getInfoEtablissements(infos.getData().getSiretSiegeSocial());
             if ( infos != null && infos.getData() !=null){
                 this.organism.setLabel(infos.getData().getPersonneMoraleAttributs().getRaisonSociale());
-                Address address = convertAdresseToAddress(etablissement.getData().getAdresse());
+                Address address = MpsWsClient.convertAdresseToAddress(etablissement.getData().getAdresse());
 
                 // complete postalAddress with streetNumber/Street type and streetName
                 address.setPostalAddress(address.getStreetNumber()+" "+address.getStreetType()+" "+address.getStreetName());
@@ -117,7 +117,5 @@ public class Siren {
         }
     }
 
-    private Address convertAdresseToAddress(ApiGouvAdresse adresse) {
-        return null;
-    }
+
 }

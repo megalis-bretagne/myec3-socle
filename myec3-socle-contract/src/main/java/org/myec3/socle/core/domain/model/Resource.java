@@ -18,6 +18,7 @@
 package org.myec3.socle.core.domain.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.AllArgsConstructor;
 import org.hibernate.envers.Audited;
 
 import javax.persistence.*;
@@ -128,7 +129,6 @@ public class Resource implements Serializable, Cloneable, PE {
 	@NotNull
 	@Column(nullable = false)
 	@XmlElement(required = true)
-	@JsonProperty("raison_sociale")
 	public String getName() {
 		return name;
 	}

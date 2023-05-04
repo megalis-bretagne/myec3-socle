@@ -7,8 +7,12 @@ import javax.persistence.Transient;
 import javax.xml.bind.annotation.XmlElement;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 
 @Embeddable
+@Builder
+@AllArgsConstructor
 public class PaysImplantation implements Serializable {
 	/**
 	 * 
@@ -19,9 +23,12 @@ public class PaysImplantation implements Serializable {
 
 	private String value;
 
+	public PaysImplantation() {
+
+	}
+
 	@Transient
 	@XmlElement(required = false)
-	@JsonProperty("code")
 	public String getCode() {
 		return code;
 	}
@@ -32,7 +39,6 @@ public class PaysImplantation implements Serializable {
 
 	@Transient
 	@XmlElement(required = false)
-	@JsonProperty("value")
 	public String getValue() {
 		return value;
 	}

@@ -20,6 +20,8 @@ package org.myec3.socle.core.domain.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSetter;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 import org.hibernate.envers.Audited;
@@ -58,6 +60,8 @@ import java.util.List;
 @XmlRootElement
 @Audited
 @Synchronized
+@Builder
+@AllArgsConstructor
 public class Company extends Structure {
 
 	private static final long serialVersionUID = 2797441818971406424L;
@@ -101,7 +105,6 @@ public class Company extends Structure {
 	@NotNull
 	@Column(nullable = false)
 	@XmlElement(required = true)
-	@JsonProperty("forme_juridique_code")
 	public String getApeCode() {
 		return apeCode;
 	}
@@ -193,7 +196,6 @@ public class Company extends Structure {
 	}
 
 	@Transient
-	@JsonProperty("forme_juridique")
 	public String getLegalCategoryString() {
 		return this.legalCategoryString;
 	}
@@ -227,7 +229,6 @@ public class Company extends Structure {
 	}
 
 	@Transient
-	@JsonProperty("siret_siege_social")
 	public String getSiretHeadOffice() {
 		return siretHeadOffice;
 	}
@@ -326,7 +327,6 @@ public class Company extends Structure {
 
 	@Column(nullable = true)
 	@XmlElement(required = false)
-	@JsonProperty("date_creation")
 	public Date getCreationDate() {
 		return creationDate;
 	}
@@ -521,7 +521,6 @@ public class Company extends Structure {
 	@XmlElement(name = "responsible", required = false)
 	@XmlElementWrapper(name = "responsibles", required = false)
 	@OneToMany(mappedBy = "company", cascade = { CascadeType.ALL }, fetch = FetchType.EAGER , orphanRemoval = true)
-	@JsonProperty("mandataires_sociaux")
 	public List<Person> getResponsibles() {
 		return responsibles;
 	}
