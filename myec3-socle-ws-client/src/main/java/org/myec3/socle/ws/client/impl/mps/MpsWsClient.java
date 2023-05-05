@@ -30,7 +30,7 @@ public class MpsWsClient implements CompanyWSinfo {
 
     ResourceBundle bundle = ResourceBundle.getBundle("mpsWs");
 
-    private final String MPS_URL_MANDATAIRES = bundle.getString("mpsUrlmandataires");
+    private final String MPS_URL_MANDATAIRES = bundle.getString("mpsUrlMandataires");
     private final String MPS_URL_ENTREPRISES = bundle.getString("mpsUrlEntreprises");
     private final String MPS_URL_ETABLISSEMENT = bundle.getString("mpsUrlEtablissement");
     private final String MPS_TOKEN = bundle.getString("mpsToken");

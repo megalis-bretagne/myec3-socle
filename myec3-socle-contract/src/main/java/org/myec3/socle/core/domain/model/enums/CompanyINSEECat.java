@@ -30,20 +30,22 @@ import javax.xml.bind.annotation.XmlEnum;
  */
 @XmlEnum
 public enum CompanyINSEECat implements StructureINSEECat {
-	//http://sigr.iau-idf.fr/amfphp/services/visiaurif_sigarif/aides/bil.cte/Cat_Juridiques.pdf
+
+	//https://public.opendatasoft.com/explore/dataset/categories-juridiques-insee/export/
+
 	ASSOCIATION("Association","9220"),
 	AUTRE("Autre",""),
 	EARL("EARL",""),
 	EURL("EURL","5488"),
-	EI("EI",""),
-	GIE("GIE",""),
-	GROUPEMENT_D_ENTREPRISE("Groupement d\'entreprise",""),
-	SA("SA",""),
+	EI("EI","1"),
+	GIE("GIE","6220"),
+	GROUPEMENT_D_ENTREPRISE("Groupement d\'entreprise","62"),
+	SA("SA","56"),
 	SARL("SARL","5499"),
 	SAS("SAS","5710"),
 	SASU("SASU","5720"),
-	SCOP("SCOP",""),
-	SNC("SNC","");
+	SCOP("SCOP","5458"),
+	SNC("SNC","5203");
 
 	private final String label;
 
