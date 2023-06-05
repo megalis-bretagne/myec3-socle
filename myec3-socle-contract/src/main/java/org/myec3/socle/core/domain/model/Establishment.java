@@ -19,6 +19,8 @@ package org.myec3.socle.core.domain.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSetter;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.envers.Audited;
@@ -49,6 +51,8 @@ import java.util.List;
 @XmlRootElement
 @Audited
 @Synchronized
+@Builder
+@AllArgsConstructor
 public class Establishment extends Resource {
 
 	private static final long serialVersionUID = -6213849679066931043L;
@@ -132,7 +136,6 @@ public class Establishment extends Resource {
 	@NotNull
 	@Column(nullable = false)
 	@XmlElement(required = true)
-	@JsonProperty("siege_social")
 	public Boolean getIsHeadOffice() {
 		// return (isHeadOffice &= (isHeadOffice != null)); // isHeadOffice == null <=>
 		// isHeadOffice == false
@@ -262,7 +265,6 @@ public class Establishment extends Resource {
 	@NotNull
 	@Column(nullable = false)
 	@XmlElement(required = true)
-	@JsonProperty("naf")
 	public String getApeCode() {
 		return apeCode;
 	}
@@ -276,7 +278,6 @@ public class Establishment extends Resource {
 	 * 
 	 * @return NAF label
 	 */
-	@JsonProperty("libelle_naf")
 	public String getApeNafLabel() {
 		return apeNafLabel;
 	}
@@ -314,7 +315,6 @@ public class Establishment extends Resource {
 	@Embedded
 	@Column(nullable = false)
 	@XmlElement(required = true)
-	@JsonProperty("adresse")
 	public Address getAddress() {
 		return address;
 	}
@@ -417,7 +417,6 @@ public class Establishment extends Resource {
 
 	@Column(nullable = true)
 	@XmlElement(required = false)
-	@JsonProperty("date_mise_a_jour")
 	public Date getLastUpdate() {
 		return this.lastUpdate;
 	}
@@ -434,7 +433,6 @@ public class Establishment extends Resource {
 
 	@Column(nullable = false)
 	@XmlElement(required = false)
-	@JsonProperty("diffusable_commercialement")
 	public Boolean getDiffusableInformations() {
 		return this.diffusableInformations;
 	}
@@ -452,7 +450,6 @@ public class Establishment extends Resource {
 	}
 
 	@XmlElement(required = false)
-	@JsonProperty("pays_implantation")
 	@Transient
 	public PaysImplantation getPays() {
 		return pays;
@@ -465,10 +462,10 @@ public class Establishment extends Resource {
     @NotNull
     @Column(nullable = false)
     @XmlElement(required = true)
-    @JsonProperty("enseigne")
     @Override
     public String getName() {
         return super.getName();
     }
+
 
 }

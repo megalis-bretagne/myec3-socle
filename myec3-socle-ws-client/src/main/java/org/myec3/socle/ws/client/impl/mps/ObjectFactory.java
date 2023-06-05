@@ -7,8 +7,9 @@
 
 package org.myec3.socle.ws.client.impl.mps;
 
-import org.myec3.socle.ws.client.impl.mps.response.ResponseEntreprises;
-import org.myec3.socle.ws.client.impl.mps.response.ResponseEtablissements;
+import org.myec3.socle.ws.client.impl.mps.response.ResponseMandataires;
+import org.myec3.socle.ws.client.impl.mps.response.ResponseUniteLegale;
+import org.myec3.socle.ws.client.impl.mps.response.ResponseEtablissement;
 
 import javax.xml.bind.annotation.XmlRegistry;
 
@@ -35,12 +36,16 @@ public class ObjectFactory {
 	public ObjectFactory() {
 	}
 
-	public ResponseEtablissements createResponseEtablissements() {
-		return new ResponseEtablissements();
+	public ResponseEtablissement createResponseEtablissements() {
+		return new ResponseEtablissement();
 	}
 
-	public ResponseEntreprises createResponseEntreprises() {
-		return new ResponseEntreprises();
+	public ResponseUniteLegale createResponseEntreprises() {
+		return new ResponseUniteLegale();
+	}
+
+	public ResponseMandataires createResponseMandataires() {
+		return new ResponseMandataires();
 	}
 
 }

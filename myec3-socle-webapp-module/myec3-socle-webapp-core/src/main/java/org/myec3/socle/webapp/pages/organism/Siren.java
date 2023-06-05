@@ -12,10 +12,12 @@ import org.myec3.socle.core.domain.model.Organism;
 import org.myec3.socle.core.domain.model.enums.Country;
 import org.myec3.socle.core.domain.model.enums.OrganismINSEECat;
 import org.myec3.socle.core.domain.model.enums.OrganismNafCode;
+import org.myec3.socle.core.domain.model.json.ApiGouvAdresse;
 import org.myec3.socle.core.service.OrganismService;
 import org.myec3.socle.webapp.pages.Index;
 import org.myec3.socle.ws.client.impl.mps.MpsWsClient;
-import org.myec3.socle.ws.client.impl.mps.response.ResponseEntreprises;
+import org.myec3.socle.ws.client.impl.mps.response.ResponseEtablissement;
+import org.myec3.socle.ws.client.impl.mps.response.ResponseUniteLegale;
 
 public class Siren {
 
@@ -87,18 +89,19 @@ public class Siren {
      */
     private void completeOrganismInfo() {
         try {
-            ResponseEntreprises infos = mpsWsClient.getInfoEntreprises(organism.getSiren());
-            if ( infos != null && infos.getEntreprise() !=null){
-                this.organism.setLabel(infos.getEntreprise().getLabel());
-                Address address = infos.getEtablissement_siege().getAddress();
+            ResponseUniteLegale infos = mpsWsClient.getInfoEntreprises(organism.getSiren());
+            ResponseEtablissement etablissement = mpsWsClient.getInfoEtablissements(infos.getData().getSiretSiegeSocial());
+            if ( infos != null && infos.getData() !=null){
+                this.organism.setLabel(infos.getData().getPersonneMoraleAttributs().getRaisonSociale());
+                Address address = MpsWsClient.convertAdresseToAddress(etablissement.getData().getAdresse());
 
                 // complete postalAddress with streetNumber/Street type and streetName
                 address.setPostalAddress(address.getStreetNumber()+" "+address.getStreetType()+" "+address.getStreetName());
                 // complete with forme_juridique
-                OrganismNafCode naf = OrganismNafCode.fromApeCode(infos.getEtablissement_siege().getApeCode());
+                OrganismNafCode naf = OrganismNafCode.fromApeCode(infos.getData().getFormeJuridique().getCode());
                 this.organism.setApeCode(naf);
 
-                String formeJuridique = infos.getEntreprise().getApeCode();
+                String formeJuridique = infos.getData().getFormeJuridique().getCode();
                 // La forme juridique est sur 4 caractère (refentiel INSEE). Il faut le code ABCD en A.B.CD pour obtenir le bon enum
                 if (formeJuridique.length() == 4) {
                     String id = formeJuridique.charAt(0) + "."+formeJuridique.charAt(1)+"."+formeJuridique.substring(2);
@@ -113,4 +116,6 @@ public class Siren {
             this.errorMessage = this.messages.get("mps-error-message");
         }
     }
+
+
 }

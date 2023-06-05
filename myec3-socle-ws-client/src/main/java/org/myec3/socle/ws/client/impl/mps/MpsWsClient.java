@@ -3,25 +3,24 @@ package org.myec3.socle.ws.client.impl.mps;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.myec3.socle.core.domain.model.Company;
-import org.myec3.socle.core.domain.model.Establishment;
-import org.myec3.socle.core.domain.model.Person;
+import org.myec3.socle.core.domain.model.*;
 import org.myec3.socle.core.domain.model.enums.CompanyINSEECat;
 import org.myec3.socle.core.domain.model.enums.Country;
+import org.myec3.socle.core.domain.model.json.*;
 import org.myec3.socle.core.service.InseeLegalCategoryService;
 import org.myec3.socle.core.sync.api.HttpStatus;
 import org.myec3.socle.ws.client.CompanyWSinfo;
-import org.myec3.socle.ws.client.impl.mps.response.ResponseEntreprises;
-import org.myec3.socle.ws.client.impl.mps.response.ResponseEtablissements;
+import org.myec3.socle.ws.client.impl.mps.response.ResponseEtablissement;
+import org.myec3.socle.ws.client.impl.mps.response.ResponseMandataires;
+import org.myec3.socle.ws.client.impl.mps.response.ResponseUniteLegale;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpHeaders;
 
-import javax.ws.rs.core.Response.Status;
 import java.io.*;
 import java.net.*;
 import java.nio.charset.StandardCharsets;
-import java.util.HashMap;
-import java.util.ResourceBundle;
+import java.util.*;
 
 import static java.util.stream.Collectors.joining;
 
@@ -31,6 +30,7 @@ public class MpsWsClient implements CompanyWSinfo {
 
     ResourceBundle bundle = ResourceBundle.getBundle("mpsWs");
 
+    private final String MPS_URL_MANDATAIRES = bundle.getString("mpsUrlMandataires");
     private final String MPS_URL_ENTREPRISES = bundle.getString("mpsUrlEntreprises");
     private final String MPS_URL_ETABLISSEMENT = bundle.getString("mpsUrlEtablissement");
     private final String MPS_TOKEN = bundle.getString("mpsToken");
@@ -38,11 +38,11 @@ public class MpsWsClient implements CompanyWSinfo {
     private final String MPS_OBJECT = bundle.getString("mpsObject");
 
     // use Enterprise WebService
-    public ResponseEntreprises getInfoEntreprises(String companySiren) {
+    public ResponseUniteLegale getInfoEntreprises(String companySiren) {
 
         ObjectFactory factory = new ObjectFactory();
         String url = this.getUrlEntreprise(companySiren);
-        ResponseEntreprises response = factory.createResponseEntreprises();
+        ResponseUniteLegale response = factory.createResponseEntreprises();
         HttpURLConnection conn;
         InputStream responseTmp;
 
@@ -63,7 +63,7 @@ public class MpsWsClient implements CompanyWSinfo {
                 mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
 
                 // Match MPS response with ReponseEntreprise class
-                response = mapper.readValue(jsonReply, ResponseEntreprises.class);
+                response = mapper.readValue(jsonReply, ResponseUniteLegale.class);
 
                 // Temporary debug to view response content
                 logger.info("Json representation : " + response.toString());
@@ -72,24 +72,70 @@ public class MpsWsClient implements CompanyWSinfo {
                 // connection on server)
                 conn.disconnect();
             } catch (IOException e) {
-				logger.error("Unable to connect to : " + url, e);
+                logger.error("Unable to connect to : " + url, e);
                 return null;
 
-			} finally {
-				// close connection properly if not closed yet
-				conn.disconnect();
-			}
+            } finally {
+                // close connection properly if not closed yet
+                conn.disconnect();
+            }
+        }
+
+        return response;
+    }
+
+    public ResponseMandataires getInfoMandataires(String companySiren) {
+
+        ObjectFactory factory = new ObjectFactory();
+        String url = this.getUrlMandataires(companySiren);
+        ResponseMandataires response = factory.createResponseMandataires();
+        HttpURLConnection conn;
+        InputStream responseTmp;
+
+        logger.info("Asking Mandataires Webservice on url : " + url);
+        conn = this.getUrlConnection(url);
+
+        if (null != conn) {
+            // Get the raw MPS response
+            try {
+                responseTmp = conn.getInputStream();
+
+                // Convert JSON response to string for Jackson parsing
+                String jsonReply = this.getStringFromInputStream(responseTmp);
+                ObjectMapper mapper = new ObjectMapper();
+
+                // Do not stack on unknown / null values
+                mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+                mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+
+                // Match MPS response with ReponseEntreprise class
+                response = mapper.readValue(jsonReply, ResponseMandataires.class);
+
+                // Temporary debug to view response content
+                logger.info("Json representation : " + response.toString());
+
+                // close connection after retrieving query result (avoid time wait close
+                // connection on server)
+                conn.disconnect();
+            } catch (IOException e) {
+                logger.error("Unable to connect to : " + url, e);
+                return null;
+
+            } finally {
+                // close connection properly if not closed yet
+                conn.disconnect();
+            }
         }
 
         return response;
     }
 
     // use Establishments WebService
-    private ResponseEtablissements getInfoEtablissements(String siegeSocialSiret) {
+    public ResponseEtablissement getInfoEtablissements(String siegeSocialSiret) {
 
         ObjectFactory factory = new ObjectFactory();
         String url = this.getUrlEtablissement(siegeSocialSiret);
-        ResponseEtablissements response = factory.createResponseEtablissements();
+        ResponseEtablissement response = factory.createResponseEtablissements();
         HttpURLConnection conn = null;
 
         try {
@@ -98,6 +144,8 @@ public class MpsWsClient implements CompanyWSinfo {
             logger.info("Asking Etablissements Webservice on url : " + url);
             conn = (HttpURLConnection) urlTemp.openConnection();
             conn.setRequestMethod("GET");
+            conn.setRequestProperty(HttpHeaders.AUTHORIZATION, "Bearer " + MPS_TOKEN);
+            conn.setRequestProperty(HttpHeaders.CONTENT_TYPE, "application/json");
             conn.setConnectTimeout(8000); // set timeout to 5 seconds
 
             // Get the raw MPS response
@@ -112,10 +160,10 @@ public class MpsWsClient implements CompanyWSinfo {
             mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
 
             // Match MPS response with ReponseEntreprise class
-            response = mapper.readValue(jsonReply, ResponseEtablissements.class);
+            response = mapper.readValue(jsonReply, ResponseEtablissement.class);
 
             // Temporary debug to view response content
-            logger.info("ResponseEtablissements DTO representation : " + response.getEtablissement().toString());
+            logger.info("ResponseEtablissements DTO representation : " + response.getData().toString());
 
             // close connection after retrieving query result (avoid time wait close
             // connection on server)
@@ -125,13 +173,10 @@ public class MpsWsClient implements CompanyWSinfo {
             logger.error("Not a valid URL: " + url);
         } catch (SocketTimeoutException e) { // MPS too long to aswer
             logger.error("Timeout. Unable to connect to : " + url);
-            response.setGateway_error_code(Status.INTERNAL_SERVER_ERROR);
         } catch (FileNotFoundException e) { // No establishment for this siret
             logger.error("Unable to connect to : " + url + ". Wrong Siret");
-            response.setGateway_error_code(Status.NOT_FOUND);
         } catch (IOException e) { // default
             logger.error("Unable to connect to : " + url);
-            response.setGateway_error_code(Status.INTERNAL_SERVER_ERROR);
         } finally {
             // close connection properly if not closed yet
             if (conn != null) {
@@ -141,20 +186,23 @@ public class MpsWsClient implements CompanyWSinfo {
         return response;
     }
 
+
     @Override
     public Company updateCompanyInfo(Company company, InseeLegalCategoryService inseeLegalCategoryService) {
         logger.info("Update Company " + company.getSiren() + " Information with the MPS WS ");
 
         // Call MPS to get the Company informations
-        ResponseEntreprises responseEntreprises = this.getInfoEntreprises(company.getSiren());
-        if (responseEntreprises !=null) {
-            company = responseEntreprises.getEntreprise();
+        ResponseUniteLegale responseEntreprises = this.getInfoEntreprises(company.getSiren());
+        ResponseEtablissement responseEtablissement = this.getInfoEtablissements(responseEntreprises.getData().getSiretSiegeSocial());
+        ResponseMandataires responseMandataires =  this.getInfoMandataires(company.getSiren());
 
-            this.setCompanyMissingFields(responseEntreprises, company, inseeLegalCategoryService);
+        if (responseEntreprises != null) {
+            company = convertUniteLegaleToCompany(responseEntreprises.getData(), responseEtablissement.getMeta(),responseMandataires.getData() );
+
+            this.setCompanyMissingFields(responseEntreprises, responseEtablissement, company, inseeLegalCategoryService);
 
             return company;
-        }
-        else return null;
+        } else return null;
     }
 
     @Override
@@ -164,51 +212,39 @@ public class MpsWsClient implements CompanyWSinfo {
             logger.info("update establishment information : " + establishment.getSiret());
 
             // Call MPS to get the Establishment informations
-            ResponseEtablissements responseEtablissements = this.getInfoEtablissements(establishment.getSiret());
+            ResponseEtablissement responseEtablissements = this.getInfoEtablissements(establishment.getSiret());
 
-            if (responseEtablissements.getGateway_error_code() != null) {
-                switch (responseEtablissements.getGateway_error_code()) {
-                    case INTERNAL_SERVER_ERROR:
-                        throw new IOException();
-                    case NOT_FOUND:
-                        throw new FileNotFoundException();
-                    default:
-                        throw new IOException();
-                }
-
-            }
-
-            establishment = responseEtablissements.getEtablissement();
+            establishment = convertEtablissementToEtablishment(responseEtablissements.getData(), responseEtablissements.getMeta());
             establishment.setCompany(company);
 
-            if (responseEtablissements.getEtablissement().getDiffusableInformations() == null
-                    || responseEtablissements.getEtablissement().getDiffusableInformations().equals(Boolean.TRUE)) {
+            if (responseEtablissements.getData().getDiffusableCommercialement() == null
+                    || responseEtablissements.getData().getDiffusableCommercialement().equals(Boolean.TRUE)) {
                 establishment.setDiffusableInformations(Boolean.TRUE);
             }
 
-            if (responseEtablissements.getEtablissement().getAddress().getStreetNumber() != null) {
-                finalAddresse += responseEtablissements.getEtablissement().getAddress().getStreetNumber();
+            if (responseEtablissements.getData().getAdresse().getNumeroVoie() != null) {
+                finalAddresse += responseEtablissements.getData().getAdresse().getNumeroVoie();
             }
 
-            if (responseEtablissements.getEtablissement().getAddress().getStreetType() != null) {
+            if (responseEtablissements.getData().getAdresse().getTypeVoie() != null) {
                 if (finalAddresse != "") {
-                    finalAddresse += " " + responseEtablissements.getEtablissement().getAddress().getStreetType();
+                    finalAddresse += " " + responseEtablissements.getData().getAdresse().getTypeVoie();
                 } else {
-                    finalAddresse += responseEtablissements.getEtablissement().getAddress().getStreetType();
+                    finalAddresse += responseEtablissements.getData().getAdresse().getTypeVoie();
                 }
             }
 
-            if (responseEtablissements.getEtablissement().getAddress().getStreetName() != null) {
+            if (responseEtablissements.getData().getAdresse().getLibelleVoie() != null) {
                 if (finalAddresse != "") {
-                    finalAddresse += " " + responseEtablissements.getEtablissement().getAddress().getStreetName();
+                    finalAddresse += " " + responseEtablissements.getData().getAdresse().getLibelleVoie();
                 } else {
-                    finalAddresse += responseEtablissements.getEtablissement().getAddress().getStreetName();
+                    finalAddresse += responseEtablissements.getData().getAdresse().getLibelleVoie();
                 }
             }
 
             establishment.getAddress().setPostalAddress(finalAddresse);
-            if (responseEtablissements.getEtablissement().getSiret() != null) {
-                establishment.setNic(responseEtablissements.getEtablissement().getSiret().substring(9, 14));
+            if (responseEtablissements.getData().getSiret() != null) {
+                establishment.setNic(responseEtablissements.getData().getSiret().substring(9, 14));
             }
 
         } else {
@@ -224,27 +260,15 @@ public class MpsWsClient implements CompanyWSinfo {
             logger.info("Getting establishment information : " + siret);
 
             // Call MPS to get the Establishment informations
-            ResponseEtablissements responseEtablissements = this.getInfoEtablissements(siret);
-
-            if (responseEtablissements.getGateway_error_code() != null) {
-                switch (responseEtablissements.getGateway_error_code()) {
-                    case INTERNAL_SERVER_ERROR:
-                        throw new IOException();
-                    case NOT_FOUND:
-                        throw new FileNotFoundException();
-                    default:
-                        throw new IOException();
-                }
-
-            } else {
-                establishment = responseEtablissements.getEtablissement();
-                this.setEstablishmentMissingFields(responseEtablissements, establishment);
-            }
+            ResponseEtablissement responseEtablissements = this.getInfoEtablissements(siret);
+            establishment = convertEtablissementToEtablishment(responseEtablissements.getData(), responseEtablissements.getMeta());
+            this.setEstablishmentMissingFields(responseEtablissements, establishment);
         } else {
             logger.info("SIRET invalid or null !");
         }
         return establishment;
     }
+
 
     @Override
     public Company updateCompany(String siren, InseeLegalCategoryService inseeLegalCategoryService) {
@@ -253,10 +277,11 @@ public class MpsWsClient implements CompanyWSinfo {
             logger.info("Updating company : " + siren);
 
             // Call MPS to get the Company informations
-            ResponseEntreprises responseEntreprise = this.getInfoEntreprises(siren);
-
-            company = responseEntreprise.getEntreprise();
-            this.setCompanyMissingFields(responseEntreprise, company, inseeLegalCategoryService);
+            ResponseUniteLegale responseEntreprise = this.getInfoEntreprises(siren);
+            ResponseEtablissement responseEtablissement = this.getInfoEtablissements(responseEntreprise.getData().getSiretSiegeSocial());
+            ResponseMandataires responseMandataires =  this.getInfoMandataires(siren);
+            company = convertUniteLegaleToCompany(responseEntreprise.getData(), responseEtablissement.getMeta(),responseMandataires.getData() );
+            this.setCompanyMissingFields(responseEntreprise, responseEtablissement, company, inseeLegalCategoryService);
 
         } else {
             logger.info("SIREN invalid or null !");
@@ -290,11 +315,10 @@ public class MpsWsClient implements CompanyWSinfo {
         }
     }
 
-    private String getUrlEntreprise(String companySiren) {
+    private String getUrlMandataires(String companySiren) {
 
-        String baseUrl = MPS_URL_ENTREPRISES.replace("COMPANY_SIREN", companySiren);
+        String baseUrl = MPS_URL_MANDATAIRES.replace("COMPANY_SIREN", companySiren);
         HashMap<String, String> paramsUrl = new HashMap<>();
-        paramsUrl.put("token", MPS_TOKEN);
         paramsUrl.put("context", MPS_CONTEXT);
         paramsUrl.put("recipient", companySiren);
         paramsUrl.put("object", MPS_OBJECT);
@@ -304,11 +328,24 @@ public class MpsWsClient implements CompanyWSinfo {
                 .collect(joining("&", baseUrl + "?", ""));
     }
 
+    private String getUrlEntreprise(String companySiren) {
+
+        String baseUrl = MPS_URL_ENTREPRISES.replace("COMPANY_SIREN", companySiren);
+        HashMap<String, String> paramsUrl = new HashMap<>();
+        paramsUrl.put("context", MPS_CONTEXT);
+        paramsUrl.put("recipient", companySiren);
+        paramsUrl.put("object", MPS_OBJECT);
+
+        return paramsUrl.keySet().stream()
+                .map(key -> key + "=" + encodeValue(paramsUrl.get(key)))
+                .collect(joining("&", baseUrl + "?", ""));
+    }
+
+
     private String getUrlEtablissement(String siegeSocialSiret) {
 
         String baseUrl = MPS_URL_ETABLISSEMENT.replace("SIEGE_SOCIAL_SIRET", siegeSocialSiret);
         HashMap<String, String> paramsUrl = new HashMap<>();
-        paramsUrl.put("token", MPS_TOKEN);
         paramsUrl.put("context", MPS_CONTEXT);
         paramsUrl.put("recipient", siegeSocialSiret);
 //		paramsUrl.put("siret_siege_social", siegeSocialSiret);
@@ -328,23 +365,23 @@ public class MpsWsClient implements CompanyWSinfo {
         }
     }
 
-	private HttpURLConnection getUrlConnection(String url) {
+    private HttpURLConnection getUrlConnection(String url) {
 
-		HttpURLConnection conn = null;
+        HttpURLConnection conn = null;
 
-		try {
+        try {
 //			Proxy proxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress("proxyname", port));
-			conn = (HttpURLConnection) new URL(url).openConnection();
-			conn.setRequestMethod("GET");
-			conn.setConnectTimeout(8000); // set timeout to 8 seconds
-		} catch (MalformedURLException e) {
-			logger.error("Not a valid URL: " + url, e);
-		} catch (IOException e) {
-			logger.error("Unable to connect to : " + url, e);
-		}
+            conn = (HttpURLConnection) new URL(url).openConnection();
+            conn.setRequestMethod("GET");
+            conn.setConnectTimeout(8000); // set timeout to 8 seconds
+        } catch (MalformedURLException e) {
+            logger.error("Not a valid URL: " + url, e);
+        } catch (IOException e) {
+            logger.error("Unable to connect to : " + url, e);
+        }
 
-		return conn;
-	}
+        return conn;
+    }
 
     private static String getStringFromInputStream(InputStream is) {
 
@@ -375,34 +412,34 @@ public class MpsWsClient implements CompanyWSinfo {
 
     }
 
-    private void setCompanyMissingFields(ResponseEntreprises responseEntreprises, Company company,
+    private void setCompanyMissingFields(ResponseUniteLegale responseEntreprises, ResponseEtablissement responseEtablissement, Company company,
                                          InseeLegalCategoryService inseeLegalCategoryService) {
 
         // diffusable information
-        if (responseEntreprises.getEtablissement_siege().getDiffusableInformations() == null
-                || responseEntreprises.getEtablissement_siege().getDiffusableInformations().equals(Boolean.TRUE)) {
+        if (responseEntreprises.getData().diffusableCommercialement == null
+                || responseEntreprises.getData().diffusableCommercialement.equals(Boolean.TRUE)) {
             company.setDiffusableInformations(Boolean.TRUE);
         }
 
         // nic
         if (company.getNic() == null || company.getNic().isEmpty()) {
-            company.setNic(responseEntreprises.getEtablissement_siege().getSiret().substring(9, 14));
+            company.setNic(responseEntreprises.getData().siretSiegeSocial.substring(9, 14));
         }
 
         // postal address
         if (company.getAddress().getPostalAddress() == null) {
             String postalAddress = "";
 
-            if (responseEntreprises.getEtablissement_siege().getAddress().getStreetNumber() != null) {
-                postalAddress += responseEntreprises.getEtablissement_siege().getAddress().getStreetNumber() + " ";
+            if (responseEtablissement.getData().getAdresse().getNumeroVoie() != null) {
+                postalAddress += responseEtablissement.getData().getAdresse().getNumeroVoie() + " ";
             }
 
-            if (responseEntreprises.getEtablissement_siege().getAddress().getStreetType() != null) {
-                postalAddress += responseEntreprises.getEtablissement_siege().getAddress().getStreetType() + " ";
+            if (responseEtablissement.getData().getAdresse().getTypeVoie() != null) {
+                postalAddress += responseEtablissement.getData().getAdresse().getTypeVoie() + " ";
             }
 
-            if (responseEntreprises.getEtablissement_siege().getAddress().getStreetName() != null) {
-                postalAddress += responseEntreprises.getEtablissement_siege().getAddress().getStreetName();
+            if (responseEtablissement.getData().getAdresse().getLibelleVoie() != null) {
+                postalAddress += responseEtablissement.getData().getAdresse().getLibelleVoie();
             }
             company.getAddress().setPostalAddress(postalAddress);
         }
@@ -410,7 +447,7 @@ public class MpsWsClient implements CompanyWSinfo {
         // postal code
         if (company.getAddress().getPostalCode() == null) {
             company.getAddress()
-                    .setPostalCode(responseEntreprises.getEtablissement_siege().getAddress().getPostalCode());
+                    .setPostalCode(responseEtablissement.getData().getAdresse().getCodePostal());
         }
         //si pas de code postal dans la reponse on met 00000
         if (company.getAddress().getPostalCode() == null) {
@@ -420,7 +457,7 @@ public class MpsWsClient implements CompanyWSinfo {
 
         // city
         if (company.getAddress().getCity() == null) {
-            company.getAddress().setCity(responseEntreprises.getEtablissement_siege().getAddress().getCity());
+            company.getAddress().setCity(responseEtablissement.getData().getAdresse().getLibelleCommune());
         }
 
         // canton
@@ -434,18 +471,18 @@ public class MpsWsClient implements CompanyWSinfo {
         }
 
         // raison sociale
-        if (responseEntreprises.getEntreprise().getName() != null) {
-            company.setLabel(responseEntreprises.getEntreprise().getName());
+        if (responseEntreprises.getData().getPersonneMoraleAttributs() != null) {
+            company.setLabel(responseEntreprises.getData().getPersonneMoraleAttributs().getRaisonSociale());
         } else {
             logger.info("Label is null");
         }
 
         // catégorie juridique
-        if (responseEntreprises.getEntreprise().getLegalCategoryString() != null) {
+        if (responseEntreprises.getData().getFormeJuridique() != null) {
             String companyLegalCategory = inseeLegalCategoryService
-                    .findParentByLabel(responseEntreprises.getEntreprise().getLegalCategoryString());
+                    .findParentByLabel(responseEntreprises.getData().getFormeJuridique().libelle);
             if (companyLegalCategory != null) {
-                CompanyINSEECat companyINSEECat = CompanyINSEECat.getByValue(companyLegalCategory);
+                CompanyINSEECat companyINSEECat = CompanyINSEECat.getByCode(companyLegalCategory);
                 if (companyINSEECat != null) {
                     company.setLegalCategory(companyINSEECat);
                 } else {
@@ -462,19 +499,19 @@ public class MpsWsClient implements CompanyWSinfo {
         }
 
         // code naf
-        if (responseEntreprises.getEtablissement_siege() != null
-                && responseEntreprises.getEtablissement_siege().getApeCode() != null
-                && responseEntreprises.getEtablissement_siege().getApeCode().length() == 5) {
-            company.setApeCode(responseEntreprises.getEtablissement_siege().getApeCode());
-            if (responseEntreprises.getEtablissement_siege().getApeNafLabel() != null) {
-                company.setApeNafLabel(responseEntreprises.getEtablissement_siege().getApeNafLabel());
+        if (responseEntreprises.getData().getActivitePrincipale() != null
+                && responseEntreprises.getData().getActivitePrincipale().getCode() != null
+                && responseEntreprises.getData().getActivitePrincipale().getCode().length() == 5) {
+            company.setApeCode(responseEntreprises.getData().getActivitePrincipale().getCode());
+            if (responseEntreprises.getData().getActivitePrincipale().getLibelle() != null) {
+                company.setApeNafLabel(responseEntreprises.getData().getActivitePrincipale().getLibelle());
             }
         } else {
             logger.info("Company NAF is invalid or null");
         }
 
         // foreign identifier ?
-        if (responseEntreprises.getEntreprise().getSiren() != null) {
+        if (responseEntreprises.getData().getSiren() != null) {
             company.setForeignIdentifier(Boolean.FALSE);
         }
 
@@ -492,22 +529,22 @@ public class MpsWsClient implements CompanyWSinfo {
         }
     }
 
-    private void setEstablishmentMissingFields(ResponseEtablissements responseEtablissements,
+    private void setEstablishmentMissingFields(ResponseEtablissement responseEtablissements,
                                                Establishment establishment) {
         // postal address
         if (establishment.getAddress().getPostalAddress() == null) {
             String postalAddress = "";
 
-            if (responseEtablissements.getEtablissement().getAddress().getStreetNumber() != null) {
-                postalAddress += responseEtablissements.getEtablissement().getAddress().getStreetNumber() + " ";
+            if (responseEtablissements.getData().getAdresse().getNumeroVoie() != null) {
+                postalAddress += responseEtablissements.getData().getAdresse().getNumeroVoie() + " ";
             }
 
-            if (responseEtablissements.getEtablissement().getAddress().getStreetType() != null) {
-                postalAddress += responseEtablissements.getEtablissement().getAddress().getStreetType() + " ";
+            if (responseEtablissements.getData().getAdresse().getTypeVoie() != null) {
+                postalAddress += responseEtablissements.getData().getAdresse().getTypeVoie() + " ";
             }
 
-            if (responseEtablissements.getEtablissement().getAddress().getStreetName() != null) {
-                postalAddress += responseEtablissements.getEtablissement().getAddress().getStreetName();
+            if (responseEtablissements.getData().getAdresse().getLibelleVoie() != null) {
+                postalAddress += responseEtablissements.getData().getAdresse().getLibelleVoie();
             }
             establishment.getAddress().setPostalAddress(postalAddress);
         }
@@ -515,12 +552,12 @@ public class MpsWsClient implements CompanyWSinfo {
         // postal code
         if (establishment.getAddress().getPostalCode() == null) {
             establishment.getAddress()
-                    .setPostalCode(responseEtablissements.getEtablissement().getAddress().getPostalCode());
+                    .setPostalCode(responseEtablissements.getData().getAdresse().getCodePostal());
         }
 
         // city
         if (establishment.getAddress().getCity() == null) {
-            establishment.getAddress().setCity(responseEtablissements.getEtablissement().getAddress().getCity());
+            establishment.getAddress().setCity(responseEtablissements.getData().getAdresse().getLibelleCommune());
         }
 
         // country
@@ -533,4 +570,71 @@ public class MpsWsClient implements CompanyWSinfo {
             establishment.getAddress().setCanton("Aucun");
         }
     }
+
+    public static Company convertUniteLegaleToCompany(ApiGouvUniteLegale uniteLegale, ApiGouvMeta meta, List<ApiGouvMandataireSocial> mandatairesSociaux) {
+        Company company = (Company) new Resource(uniteLegale.getFormeJuridique().getLibelle(), "");
+        company.builder()
+                .siretHeadOffice(uniteLegale.getSiretSiegeSocial())
+                .apeCode(uniteLegale.getActivitePrincipale().getCode())
+                .apeNafLabel(uniteLegale.getActivitePrincipale().getLibelle())
+                .legalCategoryString(uniteLegale.getActivitePrincipale().getLibelle())
+                .creationDate(new Date(uniteLegale.getDateCreation()))
+                .lastUpdate(meta.getDateDerniereMiseAjourAsDate())
+                .build();
+        if (mandatairesSociaux != null) {
+            List<Person> persons = new ArrayList<>();
+            for (ApiGouvMandataireSocial mandataireSocial : mandatairesSociaux) {
+                persons.add(convertMandataireSocialToPerson(mandataireSocial));
+            }
+            company.setResponsibles(persons);
+        }
+        return company;
+
+    }
+
+    public static Establishment convertEtablissementToEtablishment(ApiGouvEtablissement etablissement, ApiGouvMeta meta) {
+
+        Establishment establishment = new Establishment(etablissement.getEnseigne(), "");
+
+        establishment.builder()
+                .siret(etablissement.getSiret())
+                .isHeadOffice(Boolean.valueOf(etablissement.getSiegeSocial()))
+                .apeCode(etablissement.getActivitePrincipale().getCode())
+                .apeNafLabel(etablissement.getActivitePrincipale().getLibelle())
+                .address(convertAdresseToAddress(etablissement.getAdresse()))
+                .diffusableInformations(Boolean.valueOf(etablissement.getDiffusableCommercialement()))
+                .pays(convertAdresseToPaysImplantation(etablissement.getAdresse()))
+                .lastUpdate(meta.getDateDerniereMiseAjourAsDate())
+                .build();
+        return establishment;
+    }
+
+    public static Address convertAdresseToAddress(ApiGouvAdresse adresse) {
+        return Address.builder()
+                .streetNumber(adresse.getNumeroVoie())
+                .streetType(adresse.getTypeVoie())
+                .streetName(adresse.getLibelleVoie())
+                .insee(adresse.getCodeCommune())
+                .postalCode(adresse.getCodePostal())
+                .city(adresse.getLibelleCommune())
+                .build();
+    }
+
+    public static PaysImplantation convertAdresseToPaysImplantation(ApiGouvAdresse adresse) {
+        return PaysImplantation.builder()
+                .code(adresse.getCodePaysEtranger())
+                .value(adresse.libellePaysEtranger)
+                .build();
+    }
+
+    public static Person convertMandataireSocialToPerson(ApiGouvMandataireSocial mandataireSocial) {
+        return Person.builder()
+                .firstname(mandataireSocial.getPrenom())
+                .lastname(mandataireSocial.getNom())
+                .type(mandataireSocial.getType())
+                .function(mandataireSocial.getFonction())
+                .moralName(mandataireSocial.getRaisonSociale())
+                .build();
+    }
+
 }

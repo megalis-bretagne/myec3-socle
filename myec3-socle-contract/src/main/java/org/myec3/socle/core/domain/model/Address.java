@@ -27,6 +27,8 @@ import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.XmlElement;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import org.myec3.socle.core.domain.model.enums.Country;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -39,9 +41,15 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  *
  */
 @Embeddable
+@Builder
+@AllArgsConstructor
 public class Address implements Serializable {
 
 	private static final long serialVersionUID = -6828812686561183801L;
+
+	public Address() {
+
+	}
 
 	// Fields needed for MPS parsing
 	private String streetNumber;
@@ -58,6 +66,8 @@ public class Address implements Serializable {
 	private String localityAddress;
 	private String additionalInfoAddress;
 
+
+
 	/**
 	 * String containing the street number given by MPS. Can be null Full address is
 	 * compossed of streetNumber, streetName and streetExtraInfos.
@@ -65,7 +75,6 @@ public class Address implements Serializable {
 	 * @return the street number
 	 */
 	@Transient
-	@JsonProperty("numero_voie")
 	public String getStreetNumber() {
 		return this.streetNumber;
 	}
@@ -81,7 +90,6 @@ public class Address implements Serializable {
 	 * @return the street number
 	 */
 	@Transient
-	@JsonProperty("type_voie")
 	public String getStreetType() {
 		return this.streetType;
 	}
@@ -97,7 +105,6 @@ public class Address implements Serializable {
 	 * @return the street number
 	 */
 	@Transient
-	@JsonProperty("nom_voie")
 	public String getStreetName() {
 		return this.streetName;
 	}
@@ -107,7 +114,6 @@ public class Address implements Serializable {
 	}
 
 	@XmlElement(required = false)
-	@JsonProperty("code_insee_localite")
 	public String getInsee() {
 		return insee;
 	}
@@ -140,7 +146,6 @@ public class Address implements Serializable {
 	@NotNull
 	@Column(nullable = false)
 	@XmlElement(required = true)
-	@JsonProperty("code_postal")
 	public String getPostalCode() {
 		return postalCode;
 	}
@@ -157,7 +162,6 @@ public class Address implements Serializable {
 	@NotNull
 	@Column(nullable = false)
 	@XmlElement(required = true)
-	@JsonProperty("localite")
 	public String getCity() {
 		return city;
 	}
