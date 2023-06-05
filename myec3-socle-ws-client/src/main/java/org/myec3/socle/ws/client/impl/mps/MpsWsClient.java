@@ -37,6 +37,8 @@ public class MpsWsClient implements CompanyWSinfo {
     private final String MPS_CONTEXT = bundle.getString("mpsContext");
     private final String MPS_OBJECT = bundle.getString("mpsObject");
 
+    private final String MPS_RECIPIENT = bundle.getString("mpsRecipient");
+
     // use Enterprise WebService
     public ResponseUniteLegale getInfoEntreprises(String companySiren) {
 
@@ -320,7 +322,7 @@ public class MpsWsClient implements CompanyWSinfo {
         String baseUrl = MPS_URL_MANDATAIRES.replace("COMPANY_SIREN", companySiren);
         HashMap<String, String> paramsUrl = new HashMap<>();
         paramsUrl.put("context", MPS_CONTEXT);
-        paramsUrl.put("recipient", companySiren);
+        paramsUrl.put("recipient", MPS_RECIPIENT);
         paramsUrl.put("object", MPS_OBJECT);
 
         return paramsUrl.keySet().stream()
@@ -333,7 +335,7 @@ public class MpsWsClient implements CompanyWSinfo {
         String baseUrl = MPS_URL_ENTREPRISES.replace("COMPANY_SIREN", companySiren);
         HashMap<String, String> paramsUrl = new HashMap<>();
         paramsUrl.put("context", MPS_CONTEXT);
-        paramsUrl.put("recipient", companySiren);
+        paramsUrl.put("recipient", MPS_RECIPIENT);
         paramsUrl.put("object", MPS_OBJECT);
 
         return paramsUrl.keySet().stream()
@@ -347,7 +349,7 @@ public class MpsWsClient implements CompanyWSinfo {
         String baseUrl = MPS_URL_ETABLISSEMENT.replace("SIEGE_SOCIAL_SIRET", siegeSocialSiret);
         HashMap<String, String> paramsUrl = new HashMap<>();
         paramsUrl.put("context", MPS_CONTEXT);
-        paramsUrl.put("recipient", siegeSocialSiret);
+        paramsUrl.put("recipient", MPS_RECIPIENT);
 //		paramsUrl.put("siret_siege_social", siegeSocialSiret);
         paramsUrl.put("object", MPS_OBJECT);
 
@@ -373,6 +375,8 @@ public class MpsWsClient implements CompanyWSinfo {
 //			Proxy proxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress("proxyname", port));
             conn = (HttpURLConnection) new URL(url).openConnection();
             conn.setRequestMethod("GET");
+            conn.setRequestProperty(HttpHeaders.AUTHORIZATION, "Bearer " + MPS_TOKEN);
+            conn.setRequestProperty(HttpHeaders.CONTENT_TYPE, "application/json");
             conn.setConnectTimeout(8000); // set timeout to 8 seconds
         } catch (MalformedURLException e) {
             logger.error("Not a valid URL: " + url, e);
