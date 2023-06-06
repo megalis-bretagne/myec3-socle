@@ -69,6 +69,7 @@ public class MpsWsClient implements CompanyWSinfo {
 
                 // Match MPS response with ReponseEntreprise class
                 response = mapper.readValue(jsonReply, ResponseUniteLegale.class);
+                logger.info("ResponseUniteLegale DTO representation : " + response.toString());
 
                 // close connection after retrieving query result (avoid time wait close
                 // connection on server)
@@ -117,6 +118,7 @@ public class MpsWsClient implements CompanyWSinfo {
 
                 // Match MPS response with ReponseEntreprise class
                 response = mapper.readValue(jsonReply, ResponseMandataires.class);
+                logger.info("ResponseMandataires DTO representation : " + response.toString());
 
                 // close connection after retrieving query result (avoid time wait close
                 // connection on server)
@@ -160,7 +162,7 @@ public class MpsWsClient implements CompanyWSinfo {
                 // Match MPS response with ReponseEntreprise class
                 response = mapper.readValue(jsonReply, ResponseEtablissement.class);
                 // Temporary debug to view response content
-                logger.info("ResponseEtablissements DTO representation : " + response.getData().toString());
+                logger.info("ResponseEtablissements DTO representation : " + response.toString());
 
                 // close connection after retrieving query result (avoid time wait close
                 // connection on server)
