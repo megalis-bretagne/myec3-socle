@@ -191,8 +191,9 @@ public class InitCompany {
 					// we put service in function parameters
 					if (company.getLabel().length() == 0) {
 						try {
-							this.company = mpsWS.updateCompanyInfo(this.company, inseeLegalCategoryService);
 
+							this.company = mpsWS.updateCompanyInfo(this.company, inseeLegalCategoryService);
+							logger.info("Prepare company : "+company.toString());
 							if (this.company.getEstablishments() != null
 									&& !this.company.getEstablishments().isEmpty()
 									&& this.company.getEstablishments().get(0).getDiffusableInformations() != null
@@ -209,6 +210,7 @@ public class InitCompany {
 						}
 
 					}
+					logger.info("Prepare mandataires : "+company.getResponsibles());
 					this.initializePersonsHolder(Boolean.FALSE,
 							this.company.getResponsibles());
 
@@ -223,6 +225,7 @@ public class InitCompany {
 				}
 
 				// find nafCode
+				logger.info("Check ape code : "+company.getApeCode());
 				if (this.companyNafCode == null) {
 					CompanyNafCode[] nafCodes = CompanyNafCode.values();
 					for (CompanyNafCode nafCode : nafCodes) {
@@ -648,4 +651,31 @@ public class InitCompany {
 		}
 	}
 
+	@Override
+	public String toString() {
+		return "InitCompany{" +
+				"companyService=" + companyService +
+				", inseeGeoCodeService=" + inseeGeoCodeService +
+				", establishmentService=" + establishmentService +
+				", inseeLegalCategoryService=" + inseeLegalCategoryService +
+				", messages=" + messages +
+				", successMessage='" + successMessage + '\'' +
+				", errorMessage='" + errorMessage + '\'' +
+				", company=" + company +
+				", nic='" + nic + '\'' +
+				", companyNafCode=" + companyNafCode +
+				", refreshPostalCode=" + refreshPostalCode +
+				", companyNotExists=" + companyNotExists +
+				", submit=" + submit +
+				", citiesList=" + citiesList +
+				", establishmentPage=" + establishmentPage +
+				", form=" + form +
+				", personHolders=" + personHolders +
+				", personHolder=" + personHolder +
+				", mpsWS=" + mpsWS +
+				", request=" + request +
+				", javaScriptSupport=" + javaScriptSupport +
+				", isLocHallesTheme=" + isLocHallesTheme +
+				'}';
+	}
 }

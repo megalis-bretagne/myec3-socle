@@ -36,4 +36,13 @@ public class ApiGouvActivitePrincipale {
     public void setLibelle(String libelle) {
         this.libelle = libelle;
     }
+
+    @Override
+    public String toString() {
+        return "ApiGouvActivitePrincipale{" +
+                "code='" + code + '\'' +
+                ", nomenclature='" + nomenclature + '\'' +
+                ", libelle='" + libelle + '\'' +
+                '}';
+    }
 }

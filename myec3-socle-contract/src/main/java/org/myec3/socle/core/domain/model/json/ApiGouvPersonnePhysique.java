@@ -110,4 +110,20 @@ public class ApiGouvPersonnePhysique {
     public void setSexe(String sexe) {
         this.sexe = sexe;
     }
+
+
+    @Override
+    public String toString() {
+        return "ApiGouvPersonnePhysique{" +
+                "pseudonyme='" + pseudonyme + '\'' +
+                ", prenom_usuel='" + prenom_usuel + '\'' +
+                ", prenom1='" + prenom1 + '\'' +
+                ", prenom2='" + prenom2 + '\'' +
+                ", prenom3='" + prenom3 + '\'' +
+                ", prenom4='" + prenom4 + '\'' +
+                ", nomUsage='" + nomUsage + '\'' +
+                ", nomNaissance='" + nomNaissance + '\'' +
+                ", sexe='" + sexe + '\'' +
+                '}';
+    }
 }

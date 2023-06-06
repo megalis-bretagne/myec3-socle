@@ -41,9 +41,9 @@ public class ResponseEtablissement {
 	@Override
 	public String toString() {
 		return "ResponseEtablissements{" +
-				"data=" + data +
-				", links=" + links +
-				", meta=" + meta +'}';
+				"data=" + data.toString() +
+				", links=" + links.toString() +
+				", meta=" + meta.toString() +'}';
 	}
 
 }

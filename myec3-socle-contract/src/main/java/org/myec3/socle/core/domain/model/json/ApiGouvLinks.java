@@ -16,4 +16,11 @@ public class ApiGouvLinks {
         public void setUniteLegale(String uniteLegale) {
                 this.uniteLegale = uniteLegale;
         }
+
+        @Override
+        public String toString() {
+                return "ApiGouvLinks{" +
+                        "uniteLegale='" + uniteLegale + '\'' +
+                        '}';
+        }
 }

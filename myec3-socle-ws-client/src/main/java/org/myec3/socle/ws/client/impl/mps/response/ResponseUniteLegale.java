@@ -32,9 +32,9 @@ public class ResponseUniteLegale {
 	@Override
 	public String toString() {
 		return "ResponseEntreprises{" +
-				"data=" + data +
-				", links=" + links +
-				", meta=" + meta +
+				"data=" + data.toString() +
+				", links=" + links.toString() +
+				", meta=" + meta.toString() +
 				'}';
 	}
 

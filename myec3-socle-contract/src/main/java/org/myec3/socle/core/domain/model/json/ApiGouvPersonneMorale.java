@@ -25,4 +25,12 @@ public class ApiGouvPersonneMorale {
     public void setSigle(String sigle) {
         this.sigle = sigle;
     }
+
+    @Override
+    public String toString() {
+        return "ApiGouvPersonneMorale{" +
+                "raisonSociale='" + raisonSociale + '\'' +
+                ", sigle='" + sigle + '\'' +
+                '}';
+    }
 }

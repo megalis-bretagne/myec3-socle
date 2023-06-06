@@ -146,4 +146,23 @@ public class ApiGouvEtablissement {
     public void setAdresse(ApiGouvAdresse adresse) {
         this.adresse = adresse;
     }
+
+    @Override
+    public String toString() {
+        return "ApiGouvEtablissement{" +
+                "siret='" + siret + '\'' +
+                ", siegeSocial='" + siegeSocial + '\'' +
+                ", categorie_entreprise='" + categorie_entreprise + '\'' +
+                ", etatAdministratif='" + etatAdministratif + '\'' +
+                ", dateFermeture='" + dateFermeture + '\'' +
+                ", enseigne='" + enseigne + '\'' +
+                ", diffusableCommercialement='" + diffusableCommercialement + '\'' +
+                ", statusDiffusion='" + statusDiffusion + '\'' +
+                ", dateCreation='" + dateCreation + '\'' +
+                ", activitePrincipale=" + activitePrincipale +
+                ", trancheEffectifSalarie=" + trancheEffectifSalarie +
+                ", uniteLegale=" + uniteLegale +
+                ", adresse=" + adresse +
+                '}';
+    }
 }

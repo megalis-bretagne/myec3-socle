@@ -169,4 +169,25 @@ public class ApiGouvUniteLegale {
     public void setTrancheEffectifSalarie(ApiGouvTrancheEffectifSalarie trancheEffectifSalarie) {
         this.trancheEffectifSalarie = trancheEffectifSalarie;
     }
+
+    @Override
+    public String toString() {
+        return "ApiGouvUniteLegale{" +
+                "siren='" + siren + '\'' +
+                ", siretSiegeSocial='" + siretSiegeSocial + '\'' +
+                ", categorieEntreprise='" + categorieEntreprise + '\'' +
+                ", type='" + type + '\'' +
+                ", diffusableCommercialement='" + diffusableCommercialement + '\'' +
+                ", statusDiffusion='" + statusDiffusion + '\'' +
+                ", etatAdministratif='" + etatAdministratif + '\'' +
+                ", economieSocialeEtSolidaire='" + economieSocialeEtSolidaire + '\'' +
+                ", dateCessation='" + dateCessation + '\'' +
+                ", dateCreation='" + dateCreation + '\'' +
+                ", personneMoraleAttributs=" + personneMoraleAttributs +
+                ", personnePhysiqueAttributs=" + personnePhysiqueAttributs +
+                ", formeJuridique=" + formeJuridique +
+                ", activitePrincipale=" + activitePrincipale +
+                ", trancheEffectifSalarie=" + trancheEffectifSalarie +
+                '}';
+    }
 }

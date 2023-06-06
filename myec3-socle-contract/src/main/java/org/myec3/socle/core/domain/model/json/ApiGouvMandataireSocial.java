@@ -175,4 +175,26 @@ public class ApiGouvMandataireSocial {
     public void setLibelleGreffe(String libelleGreffe) {
         this.libelleGreffe = libelleGreffe;
     }
+
+
+    @Override
+    public String toString() {
+        return "ApiGouvMandataireSocial{" +
+                "type='" + type + '\'' +
+                ", fonction='" + fonction + '\'' +
+                ", nom='" + nom + '\'' +
+                ", prenom='" + prenom + '\'' +
+                ", dateNaissance='" + dateNaissance + '\'' +
+                ", dateNaissanceTimestamp='" + dateNaissanceTimestamp + '\'' +
+                ", lieu_naissance='" + lieu_naissance + '\'' +
+                ", paysNaissance='" + paysNaissance + '\'' +
+                ", codePaysNaissance='" + codePaysNaissance + '\'' +
+                ", nationalite='" + nationalite + '\'' +
+                ", codeNationalite='" + codeNationalite + '\'' +
+                ", numeroIdentification='" + numeroIdentification + '\'' +
+                ", raisonSociale='" + raisonSociale + '\'' +
+                ", codeGreffe='" + codeGreffe + '\'' +
+                ", libelleGreffe='" + libelleGreffe + '\'' +
+                '}';
+    }
 }

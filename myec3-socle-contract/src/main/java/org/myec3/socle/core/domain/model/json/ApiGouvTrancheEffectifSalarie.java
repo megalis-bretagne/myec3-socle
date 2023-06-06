@@ -58,4 +58,16 @@ public class ApiGouvTrancheEffectifSalarie {
     public void setIntitule(String intitule) {
         this.intitule = intitule;
     }
+
+
+    @Override
+    public String toString() {
+        return "ApiGouvTrancheEffectifSalarie{" +
+                "de='" + de + '\'' +
+                ", a='" + a + '\'' +
+                ", code='" + code + '\'' +
+                ", dateReference='" + dateReference + '\'' +
+                ", intitule='" + intitule + '\'' +
+                '}';
+    }
 }

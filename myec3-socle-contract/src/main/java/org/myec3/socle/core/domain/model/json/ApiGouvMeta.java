@@ -31,4 +31,12 @@ public class ApiGouvMeta {
         public void setDateDerniereMiseAjour(Long dateDerniereMiseAjour) {
                 this.dateDerniereMiseAjour = dateDerniereMiseAjour;
         }
+
+        @Override
+        public String toString() {
+                return "ApiGouvMeta{" +
+                        "dateDerniereMiseAjour=" + dateDerniereMiseAjour +
+                        ", redirectFromSiret='" + redirectFromSiret + '\'' +
+                        '}';
+        }
 }

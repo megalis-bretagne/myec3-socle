@@ -262,4 +262,25 @@ public class ApiGouvAdresse {
     public void setAcheminementPostal(AcheminementPostal acheminementPostal) {
         this.acheminementPostal = acheminementPostal;
     }*/
+
+    @Override
+    public String toString() {
+        return "ApiGouvAdresse{" +
+                "statusDiffusion='" + statusDiffusion + '\'' +
+                ", complementAdresse='" + complementAdresse + '\'' +
+                ", numeroVoie='" + numeroVoie + '\'' +
+                ", indiceRepetitionVoie='" + indiceRepetitionVoie + '\'' +
+                ", typeVoie='" + typeVoie + '\'' +
+                ", libelleVoie='" + libelleVoie + '\'' +
+                ", codePostal='" + codePostal + '\'' +
+                ", libelleCommune='" + libelleCommune + '\'' +
+                ", libelleCommunEtranger='" + libelleCommunEtranger + '\'' +
+                ", distributionSpeciale='" + distributionSpeciale + '\'' +
+                ", codeCommune='" + codeCommune + '\'' +
+                ", codeCedex='" + codeCedex + '\'' +
+                ", libelleCedex='" + libelleCedex + '\'' +
+                ", codePaysEtranger='" + codePaysEtranger + '\'' +
+                ", libellePaysEtranger='" + libellePaysEtranger + '\'' +
+                '}';
+    }
 }
