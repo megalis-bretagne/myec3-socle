@@ -18,7 +18,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
 
 import java.io.*;
-import java.net.*;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 
@@ -48,7 +51,7 @@ public class MpsWsClient implements CompanyWSinfo {
         HttpURLConnection conn;
         InputStream responseTmp;
 
-        logger.info("Create connection for :" + url );
+        logger.info("Create connection for :" + url);
         conn = this.getUrlConnection(url);
         logger.info("Asking Entreprises Webservice on url : ");
 
@@ -95,7 +98,7 @@ public class MpsWsClient implements CompanyWSinfo {
         HttpURLConnection conn;
         InputStream responseTmp;
 
-        logger.info("Create connection for :" + url );
+        logger.info("Create connection for :" + url);
         conn = this.getUrlConnection(url);
         logger.info("Asking Mandataires Webservice on url");
 
@@ -144,7 +147,7 @@ public class MpsWsClient implements CompanyWSinfo {
         ResponseEtablissement response = factory.createResponseEtablissements();
         HttpURLConnection conn;
         InputStream responseTmp;
-        logger.info("Create connection for :" + url );
+        logger.info("Create connection for :" + url);
         conn = this.getUrlConnection(url);
         logger.info("Asking Etablissements Webservice on url");
         if (null != conn) {
@@ -176,7 +179,6 @@ public class MpsWsClient implements CompanyWSinfo {
                 conn.disconnect();
             }
         }
-
         return response;
     }
 
@@ -188,15 +190,13 @@ public class MpsWsClient implements CompanyWSinfo {
         // Call MPS to get the Company informations
         ResponseUniteLegale responseEntreprises = this.getInfoEntreprises(company.getSiren());
         ResponseEtablissement responseEtablissement = this.getInfoEtablissements(responseEntreprises.getData().getSiretSiegeSocial());
-        ResponseMandataires responseMandataires =  this.getInfoMandataires(company.getSiren());
+        ResponseMandataires responseMandataires = this.getInfoMandataires(company.getSiren());
 
-        if (responseEntreprises != null) {
-            company = convertUniteLegaleToCompany(responseEntreprises.getData(), responseEtablissement.getMeta(),responseMandataires.getData() );
+        company = convertUniteLegaleToCompany(responseEntreprises.getData(), responseEtablissement.getMeta(), responseMandataires.getData());
+        this.setCompanyMissingFields(responseEntreprises, responseEtablissement, company, inseeLegalCategoryService);
 
-            this.setCompanyMissingFields(responseEntreprises, responseEtablissement, company, inseeLegalCategoryService);
+        return company;
 
-            return company;
-        } else return null;
     }
 
     @Override
@@ -273,8 +273,8 @@ public class MpsWsClient implements CompanyWSinfo {
             // Call MPS to get the Company informations
             ResponseUniteLegale responseEntreprise = this.getInfoEntreprises(siren);
             ResponseEtablissement responseEtablissement = this.getInfoEtablissements(responseEntreprise.getData().getSiretSiegeSocial());
-            ResponseMandataires responseMandataires =  this.getInfoMandataires(siren);
-            company = convertUniteLegaleToCompany(responseEntreprise.getData(), responseEtablissement.getMeta(),responseMandataires.getData() );
+            ResponseMandataires responseMandataires = this.getInfoMandataires(siren);
+            company = convertUniteLegaleToCompany(responseEntreprise.getData(), responseEtablissement.getMeta(), responseMandataires.getData());
             this.setCompanyMissingFields(responseEntreprise, responseEtablissement, company, inseeLegalCategoryService);
 
         } else {
@@ -420,49 +420,50 @@ public class MpsWsClient implements CompanyWSinfo {
         }
 
         // postal address
-        if (company.getAddress().getPostalAddress() == null) {
-            String postalAddress = "";
+        if (company.getAddress() != null) {
+            if (company.getAddress().getPostalAddress() == null) {
+                String postalAddress = "";
 
-            if (responseEtablissement.getData().getAdresse().getNumeroVoie() != null) {
-                postalAddress += responseEtablissement.getData().getAdresse().getNumeroVoie() + " ";
+                if (responseEtablissement.getData().getAdresse().getNumeroVoie() != null) {
+                    postalAddress += responseEtablissement.getData().getAdresse().getNumeroVoie() + " ";
+                }
+
+                if (responseEtablissement.getData().getAdresse().getTypeVoie() != null) {
+                    postalAddress += responseEtablissement.getData().getAdresse().getTypeVoie() + " ";
+                }
+
+                if (responseEtablissement.getData().getAdresse().getLibelleVoie() != null) {
+                    postalAddress += responseEtablissement.getData().getAdresse().getLibelleVoie();
+                }
+                company.getAddress().setPostalAddress(postalAddress);
             }
 
-            if (responseEtablissement.getData().getAdresse().getTypeVoie() != null) {
-                postalAddress += responseEtablissement.getData().getAdresse().getTypeVoie() + " ";
+            // postal code
+            if (company.getAddress().getPostalCode() == null) {
+                company.getAddress()
+                        .setPostalCode(responseEtablissement.getData().getAdresse().getCodePostal());
+            }
+            //si pas de code postal dans la reponse on met 00000
+            if (company.getAddress().getPostalCode() == null) {
+                company.getAddress()
+                        .setPostalCode("00000");
             }
 
-            if (responseEtablissement.getData().getAdresse().getLibelleVoie() != null) {
-                postalAddress += responseEtablissement.getData().getAdresse().getLibelleVoie();
+            // city
+            if (company.getAddress().getCity() == null) {
+                company.getAddress().setCity(responseEtablissement.getData().getAdresse().getLibelleCommune());
             }
-            company.getAddress().setPostalAddress(postalAddress);
-        }
 
-        // postal code
-        if (company.getAddress().getPostalCode() == null) {
-            company.getAddress()
-                    .setPostalCode(responseEtablissement.getData().getAdresse().getCodePostal());
-        }
-        //si pas de code postal dans la reponse on met 00000
-        if (company.getAddress().getPostalCode() == null) {
-            company.getAddress()
-                    .setPostalCode("00000");
-        }
+            // canton
+            if (company.getAddress().getCanton() == null) {
+                company.getAddress().setCanton("Aucun");
+            }
 
-        // city
-        if (company.getAddress().getCity() == null) {
-            company.getAddress().setCity(responseEtablissement.getData().getAdresse().getLibelleCommune());
+            // country
+            if (company.getAddress().getCountry() == null) {
+                company.getAddress().setCountry(Country.FR);
+            }
         }
-
-        // canton
-        if (company.getAddress().getCanton() == null) {
-            company.getAddress().setCanton("Aucun");
-        }
-
-        // country
-        if (company.getAddress().getCountry() == null) {
-            company.getAddress().setCountry(Country.FR);
-        }
-
         // raison sociale
         if (responseEntreprises.getData().getPersonneMoraleAttributs() != null) {
             company.setLabel(responseEntreprises.getData().getPersonneMoraleAttributs().getRaisonSociale());
@@ -586,7 +587,7 @@ public class MpsWsClient implements CompanyWSinfo {
             }
             company.setResponsibles(persons);
         }
-        logger.info("New company generated from api.gouv.fr  :"+company.toString());
+        logger.info("New company generated from api.gouv.fr  :" + company.toString());
         return company;
 
     }
@@ -605,12 +606,12 @@ public class MpsWsClient implements CompanyWSinfo {
                 .pays(convertAdresseToPaysImplantation(etablissement.getAdresse()))
                 .lastUpdate(meta.getDateDerniereMiseAjourAsDate())
                 .build();
-        logger.info("New establishment generated from api.gouv WS :"+establishment.toString());
+        logger.info("New establishment generated from api.gouv WS :" + establishment.toString());
         return establishment;
     }
 
     public static Address convertAdresseToAddress(ApiGouvAdresse apiGouvAdresse) {
-        Address adresse =  Address.builder()
+        Address adresse = Address.builder()
                 .streetNumber(apiGouvAdresse.getNumeroVoie())
                 .streetType(apiGouvAdresse.getTypeVoie())
                 .streetName(apiGouvAdresse.getLibelleVoie())
@@ -618,28 +619,28 @@ public class MpsWsClient implements CompanyWSinfo {
                 .postalCode(apiGouvAdresse.getCodePostal())
                 .city(apiGouvAdresse.getLibelleCommune())
                 .build();
-        logger.info("New adresse generated from api.gouv WS :"+adresse.toString());
+        logger.info("New adresse generated from api.gouv WS :" + adresse.toString());
         return adresse;
     }
 
     public static PaysImplantation convertAdresseToPaysImplantation(ApiGouvAdresse adresse) {
-        PaysImplantation paysImplantation =  PaysImplantation.builder()
+        PaysImplantation paysImplantation = PaysImplantation.builder()
                 .code(adresse.getCodePaysEtranger())
                 .value(adresse.libellePaysEtranger)
                 .build();
-        logger.info("New paysImplantation generated from api.gouv WS :"+paysImplantation.toString());
+        logger.info("New paysImplantation generated from api.gouv WS :" + paysImplantation.toString());
         return paysImplantation;
     }
 
     public static Person convertMandataireSocialToPerson(ApiGouvMandataireSocial mandataireSocial) {
-         Person person = Person.builder()
+        Person person = Person.builder()
                 .firstname(mandataireSocial.getPrenom())
                 .lastname(mandataireSocial.getNom())
                 .type(mandataireSocial.getType())
                 .function(mandataireSocial.getFonction())
                 .moralName(mandataireSocial.getRaisonSociale())
                 .build();
-        logger.info("New person generated from api.gouv WS :"+person.toString());
+        logger.info("New person generated from api.gouv WS :" + person.toString());
         return person;
     }
 
