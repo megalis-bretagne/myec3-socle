@@ -581,6 +581,7 @@ public class MpsWsClient implements CompanyWSinfo {
             }
             company.setResponsibles(persons);
         }
+        logger.info("New company generated from api.gouv.fr  :"+company.toString());
         return company;
 
     }
@@ -599,35 +600,42 @@ public class MpsWsClient implements CompanyWSinfo {
                 .pays(convertAdresseToPaysImplantation(etablissement.getAdresse()))
                 .lastUpdate(meta.getDateDerniereMiseAjourAsDate())
                 .build();
+        logger.info("New establishment generated from api.gouv WS :"+establishment.toString());
         return establishment;
     }
 
-    public static Address convertAdresseToAddress(ApiGouvAdresse adresse) {
-        return Address.builder()
-                .streetNumber(adresse.getNumeroVoie())
-                .streetType(adresse.getTypeVoie())
-                .streetName(adresse.getLibelleVoie())
-                .insee(adresse.getCodeCommune())
-                .postalCode(adresse.getCodePostal())
-                .city(adresse.getLibelleCommune())
+    public static Address convertAdresseToAddress(ApiGouvAdresse apiGouvAdresse) {
+        Address adresse =  Address.builder()
+                .streetNumber(apiGouvAdresse.getNumeroVoie())
+                .streetType(apiGouvAdresse.getTypeVoie())
+                .streetName(apiGouvAdresse.getLibelleVoie())
+                .insee(apiGouvAdresse.getCodeCommune())
+                .postalCode(apiGouvAdresse.getCodePostal())
+                .city(apiGouvAdresse.getLibelleCommune())
                 .build();
+        logger.info("New adresse generated from api.gouv WS :"+adresse.toString());
+        return adresse;
     }
 
     public static PaysImplantation convertAdresseToPaysImplantation(ApiGouvAdresse adresse) {
-        return PaysImplantation.builder()
+        PaysImplantation paysImplantation =  PaysImplantation.builder()
                 .code(adresse.getCodePaysEtranger())
                 .value(adresse.libellePaysEtranger)
                 .build();
+        logger.info("New paysImplantation generated from api.gouv WS :"+paysImplantation.toString());
+        return paysImplantation;
     }
 
     public static Person convertMandataireSocialToPerson(ApiGouvMandataireSocial mandataireSocial) {
-        return Person.builder()
+         Person person = Person.builder()
                 .firstname(mandataireSocial.getPrenom())
                 .lastname(mandataireSocial.getNom())
                 .type(mandataireSocial.getType())
                 .function(mandataireSocial.getFonction())
                 .moralName(mandataireSocial.getRaisonSociale())
                 .build();
+        logger.info("New person generated from api.gouv WS :"+person.toString());
+        return person;
     }
 
 }
