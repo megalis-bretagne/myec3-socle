@@ -525,42 +525,47 @@ public class MpsWsClient implements CompanyWSinfo {
     private void setEstablishmentMissingFields(ResponseEtablissement responseEtablissements,
                                                Establishment establishment) {
         // postal address
-        if (establishment.getAddress().getPostalAddress() == null) {
-            String postalAddress = "";
+        if (establishment.getAddress() != null) {
+            if (establishment.getAddress().getPostalAddress() == null) {
+                String postalAddress = "";
+                if (responseEtablissements.getData().getAdresse() != null) {
 
-            if (responseEtablissements.getData().getAdresse().getNumeroVoie() != null) {
-                postalAddress += responseEtablissements.getData().getAdresse().getNumeroVoie() + " ";
+
+                    if (responseEtablissements.getData().getAdresse().getNumeroVoie() != null) {
+                        postalAddress += responseEtablissements.getData().getAdresse().getNumeroVoie() + " ";
+                    }
+
+                    if (responseEtablissements.getData().getAdresse().getTypeVoie() != null) {
+                        postalAddress += responseEtablissements.getData().getAdresse().getTypeVoie() + " ";
+                    }
+
+                    if (responseEtablissements.getData().getAdresse().getLibelleVoie() != null) {
+                        postalAddress += responseEtablissements.getData().getAdresse().getLibelleVoie();
+                    }
+                    establishment.getAddress().setPostalAddress(postalAddress);
+                }
             }
 
-            if (responseEtablissements.getData().getAdresse().getTypeVoie() != null) {
-                postalAddress += responseEtablissements.getData().getAdresse().getTypeVoie() + " ";
+            // postal code
+            if (establishment.getAddress().getPostalCode() == null) {
+                establishment.getAddress()
+                        .setPostalCode(responseEtablissements.getData().getAdresse().getCodePostal());
             }
 
-            if (responseEtablissements.getData().getAdresse().getLibelleVoie() != null) {
-                postalAddress += responseEtablissements.getData().getAdresse().getLibelleVoie();
+            // city
+            if (establishment.getAddress().getCity() == null) {
+                establishment.getAddress().setCity(responseEtablissements.getData().getAdresse().getLibelleCommune());
             }
-            establishment.getAddress().setPostalAddress(postalAddress);
-        }
 
-        // postal code
-        if (establishment.getAddress().getPostalCode() == null) {
-            establishment.getAddress()
-                    .setPostalCode(responseEtablissements.getData().getAdresse().getCodePostal());
-        }
+            // country
+            if (establishment.getAddress().getCountry() == null) {
+                establishment.getAddress().setCountry(Country.FR);
+            }
 
-        // city
-        if (establishment.getAddress().getCity() == null) {
-            establishment.getAddress().setCity(responseEtablissements.getData().getAdresse().getLibelleCommune());
-        }
-
-        // country
-        if (establishment.getAddress().getCountry() == null) {
-            establishment.getAddress().setCountry(Country.FR);
-        }
-
-        // canton
-        if (establishment.getAddress().getCanton() == null) {
-            establishment.getAddress().setCanton("Aucun");
+            // canton
+            if (establishment.getAddress().getCanton() == null) {
+                establishment.getAddress().setCanton("Aucun");
+            }
         }
     }
 
