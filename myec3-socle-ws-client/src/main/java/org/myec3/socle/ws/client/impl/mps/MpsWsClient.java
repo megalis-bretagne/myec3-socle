@@ -172,13 +172,13 @@ public class MpsWsClient implements CompanyWSinfo {
             conn.disconnect();
 
         } catch (MalformedURLException e) {
-            logger.error("Not a valid URL: " + url);
+            logger.error("Not a valid URL: " + url, e);
         } catch (SocketTimeoutException e) { // MPS too long to aswer
-            logger.error("Timeout. Unable to connect to : " + url);
+            logger.error("Timeout. Unable to connect to : " + url, e);
         } catch (FileNotFoundException e) { // No establishment for this siret
             logger.error("Unable to connect to : " + url + ". Wrong Siret");
         } catch (IOException e) { // default
-            logger.error("Unable to connect to : " + url);
+            logger.error("Unable to connect to : " + url, e);
         } finally {
             // close connection properly if not closed yet
             if (conn != null) {
