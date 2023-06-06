@@ -51,9 +51,9 @@ public class ApiGouvAdresse {
     @JsonProperty("libelle_pays_etranger")
     public String libellePaysEtranger;
 
-    @JsonProperty("acheminement_postal")
+  /*  @JsonProperty("acheminement_postal")
     public AcheminementPostal acheminementPostal;
-
+*/
 
     private class AcheminementPostal {
 
@@ -255,11 +255,11 @@ public class ApiGouvAdresse {
         this.libellePaysEtranger = libellePaysEtranger;
     }
 
-    public AcheminementPostal getAcheminementPostal() {
+/*    public AcheminementPostal getAcheminementPostal() {
         return acheminementPostal;
     }
 
     public void setAcheminementPostal(AcheminementPostal acheminementPostal) {
         this.acheminementPostal = acheminementPostal;
-    }
+    }*/
 }
