@@ -48,8 +48,9 @@ public class MpsWsClient implements CompanyWSinfo {
         HttpURLConnection conn;
         InputStream responseTmp;
 
-        logger.info("Asking Entreprises Webservice on url : " + url);
+        logger.info("Create connection for :" + url );
         conn = this.getUrlConnection(url);
+        logger.info("Asking Entreprises Webservice on url : ");
 
         if (null != conn) {
             // Get the raw MPS response
@@ -58,6 +59,8 @@ public class MpsWsClient implements CompanyWSinfo {
 
                 // Convert JSON response to string for Jackson parsing
                 String jsonReply = this.getStringFromInputStream(responseTmp);
+                // Temporary debug to view response content
+                logger.info("Json representation : " + jsonReply);
                 ObjectMapper mapper = new ObjectMapper();
 
                 // Do not stack on unknown / null values
@@ -66,9 +69,6 @@ public class MpsWsClient implements CompanyWSinfo {
 
                 // Match MPS response with ReponseEntreprise class
                 response = mapper.readValue(jsonReply, ResponseUniteLegale.class);
-
-                // Temporary debug to view response content
-                logger.info("Json representation : " + response.toString());
 
                 // close connection after retrieving query result (avoid time wait close
                 // connection on server)
@@ -94,8 +94,9 @@ public class MpsWsClient implements CompanyWSinfo {
         HttpURLConnection conn;
         InputStream responseTmp;
 
-        logger.info("Asking Mandataires Webservice on url : " + url);
+        logger.info("Create connection for :" + url );
         conn = this.getUrlConnection(url);
+        logger.info("Asking Mandataires Webservice on url");
 
         if (null != conn) {
             // Get the raw MPS response
@@ -104,6 +105,10 @@ public class MpsWsClient implements CompanyWSinfo {
 
                 // Convert JSON response to string for Jackson parsing
                 String jsonReply = this.getStringFromInputStream(responseTmp);
+                // Temporary debug to view response content
+                logger.info("Json representation : " + jsonReply);
+
+
                 ObjectMapper mapper = new ObjectMapper();
 
                 // Do not stack on unknown / null values
@@ -112,9 +117,6 @@ public class MpsWsClient implements CompanyWSinfo {
 
                 // Match MPS response with ReponseEntreprise class
                 response = mapper.readValue(jsonReply, ResponseMandataires.class);
-
-                // Temporary debug to view response content
-                logger.info("Json representation : " + response.toString());
 
                 // close connection after retrieving query result (avoid time wait close
                 // connection on server)
@@ -138,53 +140,41 @@ public class MpsWsClient implements CompanyWSinfo {
         ObjectFactory factory = new ObjectFactory();
         String url = this.getUrlEtablissement(siegeSocialSiret);
         ResponseEtablissement response = factory.createResponseEtablissements();
-        HttpURLConnection conn = null;
+        HttpURLConnection conn;
+        InputStream responseTmp;
+        logger.info("Create connection for :" + url );
+        conn = this.getUrlConnection(url);
+        logger.info("Asking Etablissements Webservice on url");
+        if (null != conn) {
+            try {
+                responseTmp = conn.getInputStream();
+                // Convert JSON response to string for Jackson parsing
+                String jsonReply = this.getStringFromInputStream(responseTmp);
+                // Temporary debug to view response content
+                logger.info("Json representation : " + response.toString());
 
-        try {
-            URL urlTemp = new URL(url);
+                ObjectMapper mapper = new ObjectMapper();
+                // Do not stack on unknown / null values
+                mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+                mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+                // Match MPS response with ReponseEntreprise class
+                response = mapper.readValue(jsonReply, ResponseEtablissement.class);
+                // Temporary debug to view response content
+                logger.info("ResponseEtablissements DTO representation : " + response.getData().toString());
 
-            logger.info("Asking Etablissements Webservice on url : " + url);
-            conn = (HttpURLConnection) urlTemp.openConnection();
-            conn.setRequestMethod("GET");
-            conn.setRequestProperty(HttpHeaders.AUTHORIZATION, "Bearer " + MPS_TOKEN);
-            conn.setRequestProperty(HttpHeaders.CONTENT_TYPE, "application/json");
-            conn.setConnectTimeout(8000); // set timeout to 5 seconds
+                // close connection after retrieving query result (avoid time wait close
+                // connection on server)
+                conn.disconnect();
+            } catch (IOException e) {
+                logger.error("Unable to connect to : " + url, e);
+                return null;
 
-            // Get the raw MPS response
-            InputStream responseTmp = conn.getInputStream();
-
-            // Convert JSON response to string for Jackson parsing
-            String jsonReply = this.getStringFromInputStream(responseTmp);
-            ObjectMapper mapper = new ObjectMapper();
-
-            // Do not stack on unknown / null values
-            mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-            mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
-
-            // Match MPS response with ReponseEntreprise class
-            response = mapper.readValue(jsonReply, ResponseEtablissement.class);
-
-            // Temporary debug to view response content
-            logger.info("ResponseEtablissements DTO representation : " + response.getData().toString());
-
-            // close connection after retrieving query result (avoid time wait close
-            // connection on server)
-            conn.disconnect();
-
-        } catch (MalformedURLException e) {
-            logger.error("Not a valid URL: " + url, e);
-        } catch (SocketTimeoutException e) { // MPS too long to aswer
-            logger.error("Timeout. Unable to connect to : " + url, e);
-        } catch (FileNotFoundException e) { // No establishment for this siret
-            logger.error("Unable to connect to : " + url + ". Wrong Siret");
-        } catch (IOException e) { // default
-            logger.error("Unable to connect to : " + url, e);
-        } finally {
-            // close connection properly if not closed yet
-            if (conn != null) {
+            } finally {
+                // close connection properly if not closed yet
                 conn.disconnect();
             }
         }
+
         return response;
     }
 
@@ -350,7 +340,6 @@ public class MpsWsClient implements CompanyWSinfo {
         HashMap<String, String> paramsUrl = new HashMap<>();
         paramsUrl.put("context", MPS_CONTEXT);
         paramsUrl.put("recipient", MPS_RECIPIENT);
-//		paramsUrl.put("siret_siege_social", siegeSocialSiret);
         paramsUrl.put("object", MPS_OBJECT);
 
         return paramsUrl.keySet().stream()
@@ -370,7 +359,6 @@ public class MpsWsClient implements CompanyWSinfo {
     private HttpURLConnection getUrlConnection(String url) {
 
         HttpURLConnection conn = null;
-
         try {
 //			Proxy proxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress("proxyname", port));
             conn = (HttpURLConnection) new URL(url).openConnection();
@@ -383,7 +371,6 @@ public class MpsWsClient implements CompanyWSinfo {
         } catch (IOException e) {
             logger.error("Unable to connect to : " + url, e);
         }
-
         return conn;
     }
 
