@@ -24,6 +24,7 @@ import java.net.URL;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.joining;
@@ -195,7 +196,7 @@ public class MpsWsClient implements CompanyWSinfo {
             ResponseMandataires responseMandataires = this.getInfoMandataires(company.getSiren());
             company = convertUniteLegaleToCompany(responseEntreprises.getData(), responseEtablissement.getMeta(), responseMandataires.getData());
             this.setCompanyMissingFields(responseEntreprises, responseEtablissement, company, inseeLegalCategoryService);
-        } catch(Exception e) {
+        } catch (Exception e) {
             logger.error("Error happen during api.gouv.fr call :", e);
         }
         logger.info("Consolidates company : " + company.toString());
@@ -568,10 +569,10 @@ public class MpsWsClient implements CompanyWSinfo {
         Company company = new Company(uniteLegale.getFormeJuridique().getLibelle(), uniteLegale.getFormeJuridique().getLibelle());
         company.builder()
                 .siretHeadOffice(uniteLegale.getSiretSiegeSocial())
-                .apeCode(uniteLegale.getActivitePrincipale().getCode())
-                .apeNafLabel(uniteLegale.getActivitePrincipale().getLibelle())
-                .legalCategoryString(uniteLegale.getActivitePrincipale().getLibelle())
-                .creationDate(uniteLegale.getDateCreation() != null ? new Date(uniteLegale.getDateCreation()) : new Date())
+                .apeCode(uniteLegale.getActivitePrincipale() != null ? uniteLegale.getActivitePrincipale().getCode() : "")
+                .apeNafLabel(uniteLegale.getActivitePrincipale() != null ? uniteLegale.getActivitePrincipale().getLibelle() : "")
+                .legalCategoryString(uniteLegale.getActivitePrincipale() != null ? uniteLegale.getActivitePrincipale().getLibelle() : "")
+                .creationDate(convertLongToDate(uniteLegale.getDateCreation()))
                 .lastUpdate(meta.getDateDerniereMiseAjourAsDate())
                 .build();
         if (mandatairesSociaux != null) {
@@ -583,7 +584,14 @@ public class MpsWsClient implements CompanyWSinfo {
         }
         logger.info("New company generated from api.gouv.fr  :" + company.toString());
         return company;
+    }
 
+    private static Date convertLongToDate(String dateaslong) {
+        Date date = null;
+        if (dateaslong != null) {
+            date = new Date(TimeUnit.SECONDS.toMillis(Long.valueOf(dateaslong)));
+        }
+        return date;
     }
 
     public static Establishment convertEtablissementToEtablishment(ApiGouvEtablissement etablissement, ApiGouvMeta
@@ -594,8 +602,8 @@ public class MpsWsClient implements CompanyWSinfo {
         establishment.builder()
                 .siret(etablissement.getSiret())
                 .isHeadOffice(Boolean.valueOf(etablissement.getSiegeSocial()))
-                .apeCode(etablissement.getActivitePrincipale().getCode())
-                .apeNafLabel(etablissement.getActivitePrincipale().getLibelle())
+                .apeCode(etablissement.getActivitePrincipale() != null ? etablissement.getActivitePrincipale().getCode() : "")
+                .apeNafLabel(etablissement.getActivitePrincipale() != null ? etablissement.getActivitePrincipale().getLibelle() : "")
                 .address(convertAdresseToAddress(etablissement.getAdresse()))
                 .diffusableInformations(Boolean.valueOf(etablissement.getDiffusableCommercialement()))
                 .pays(convertAdresseToPaysImplantation(etablissement.getAdresse()))
