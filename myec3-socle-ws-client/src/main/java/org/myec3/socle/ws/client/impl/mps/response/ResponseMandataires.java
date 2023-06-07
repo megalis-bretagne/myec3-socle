@@ -1,9 +1,8 @@
 package org.myec3.socle.ws.client.impl.mps.response;
 
-import org.myec3.socle.core.domain.model.json.ApiGouvLinks;
 import org.myec3.socle.core.domain.model.json.ApiGouvMandataireSocial;
+import org.myec3.socle.core.domain.model.json.ApiGouvMandataireSocialData;
 import org.myec3.socle.core.domain.model.json.ApiGouvMeta;
-import org.myec3.socle.core.domain.model.json.ApiGouvUniteLegale;
 
 import java.util.List;
 

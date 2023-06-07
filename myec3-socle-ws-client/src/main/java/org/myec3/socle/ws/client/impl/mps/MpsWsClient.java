@@ -399,8 +399,7 @@ public class MpsWsClient implements CompanyWSinfo {
     }
 
     private void setCompanyMissingFields(ResponseUniteLegale responseEntreprises, ResponseEtablissement
-            responseEtablissement, Company company,
-                                         InseeLegalCategoryService inseeLegalCategoryService) {
+            responseEtablissement, Company company, InseeLegalCategoryService inseeLegalCategoryService) {
 
         // diffusable information
         if (responseEntreprises.getData().diffusableCommercialement == null
@@ -467,9 +466,7 @@ public class MpsWsClient implements CompanyWSinfo {
 
         // catégorie juridique
         if (responseEntreprises.getData().getFormeJuridique() != null) {
-            String companyLegalCategory = inseeLegalCategoryService.findParentByLabel(responseEntreprises.getData().getFormeJuridique().code);
-            if (companyLegalCategory != null) {
-                CompanyINSEECat companyINSEECat = CompanyINSEECat.getByCode(companyLegalCategory);
+                CompanyINSEECat companyINSEECat = CompanyINSEECat.getByCode(responseEntreprises.getData().getFormeJuridique().getCode());
                 if (companyINSEECat != null) {
                     company.setLegalCategory(companyINSEECat);
                 } else {
@@ -478,21 +475,12 @@ public class MpsWsClient implements CompanyWSinfo {
                     company.setLegalCategory(CompanyINSEECat.AUTRE);
                     logger.info("Unknown InseeLegalCategory ... Set InseeLegalCategory to default OTHER");
                 }
-            }
         } else {
             logger.info("Company InseeLegalCategory is null. Setting it to 'Autre'");
             CompanyINSEECat companyINSEECat = CompanyINSEECat.getByValue("AUTRE");
             company.setLegalCategory(companyINSEECat);
         }
-
-        // code naf
-        if (responseEntreprises.getData().getActivitePrincipale() != null) {
-            company.setApeCode(responseEntreprises.getData().getActivitePrincipale().getCode());
-            company.setApeNafLabel(responseEntreprises.getData().getActivitePrincipale().getLibelle());
-        } else {
-            logger.info("Company NAF is invalid or null");
-        }
-
+        
         // foreign identifier ?
         if (responseEntreprises.getData().getSiren() != null) {
             company.setForeignIdentifier(Boolean.FALSE);
@@ -564,6 +552,8 @@ public class MpsWsClient implements CompanyWSinfo {
 
         String raisonSociale =    uniteLegale.getPersonneMoraleAttributs() != null ? etablissement.getEnseigne() : "";
         Company company = new Company(uniteLegale.getFormeJuridique().getLibelle(), "");
+        company.setSiren(uniteLegale.getSiren());
+        company.setDescription(uniteLegale.getStatusDiffusion());
         company.builder()
                 .siretHeadOffice(uniteLegale.getSiretSiegeSocial())
                 .apeCode(uniteLegale.getActivitePrincipale() != null ? uniteLegale.getActivitePrincipale().getCode() : "")
@@ -634,11 +624,11 @@ public class MpsWsClient implements CompanyWSinfo {
 
     public static Person convertMandataireSocialToPerson(ApiGouvMandataireSocial mandataireSocial) {
         Person person = Person.builder()
-                .firstname(mandataireSocial.getPrenom())
-                .lastname(mandataireSocial.getNom())
-                .type(mandataireSocial.getType())
-                .function(mandataireSocial.getFonction())
-                .moralName(mandataireSocial.getRaisonSociale())
+                .firstname(mandataireSocial.getData().getPrenom())
+                .lastname(mandataireSocial.getData().getNom())
+                .type(mandataireSocial.getData().getType())
+                .function(mandataireSocial.getData().getFonction())
+                .moralName(mandataireSocial.getData().getRaisonSociale())
                 .build();
         logger.info("New person generated from api.gouv WS :" + person.toString());
         return person;
