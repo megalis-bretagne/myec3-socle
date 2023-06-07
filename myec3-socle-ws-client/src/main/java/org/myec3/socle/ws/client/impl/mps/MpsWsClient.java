@@ -43,7 +43,7 @@ public class MpsWsClient implements CompanyWSinfo {
     private final String MPS_RECIPIENT = bundle.getString("mpsRecipient");
 
     // use Enterprise WebService
-    public ResponseUniteLegale getInfoEntreprises(String companySiren) {
+    public ResponseUniteLegale getInfoEntreprises(String companySiren) throws IOException {
 
         ObjectFactory factory = new ObjectFactory();
         String url = this.getUrlEntreprise(companySiren);
@@ -73,24 +73,21 @@ public class MpsWsClient implements CompanyWSinfo {
                 // Match MPS response with ReponseEntreprise class
                 response = mapper.readValue(jsonReply, ResponseUniteLegale.class);
                 logger.info("ResponseUniteLegale DTO representation : " + response.toString());
-
-                // close connection after retrieving query result (avoid time wait close
-                // connection on server)
-                conn.disconnect();
             } catch (IOException e) {
                 logger.error("Unable to connect to : " + url, e);
-                return null;
-
+                throw e;
             } finally {
                 // close connection properly if not closed yet
                 conn.disconnect();
             }
+        } else {
+            logger.error("Connection failed for url : " + url);
         }
 
         return response;
     }
 
-    public ResponseMandataires getInfoMandataires(String companySiren) {
+    public ResponseMandataires getInfoMandataires(String companySiren) throws IOException {
 
         ObjectFactory factory = new ObjectFactory();
         String url = this.getUrlMandataires(companySiren);
@@ -122,25 +119,22 @@ public class MpsWsClient implements CompanyWSinfo {
                 // Match MPS response with ReponseEntreprise class
                 response = mapper.readValue(jsonReply, ResponseMandataires.class);
                 logger.info("ResponseMandataires DTO representation : " + response.toString());
-
-                // close connection after retrieving query result (avoid time wait close
-                // connection on server)
-                conn.disconnect();
             } catch (IOException e) {
                 logger.error("Unable to connect to : " + url, e);
-                return null;
-
+                throw e;
             } finally {
                 // close connection properly if not closed yet
                 conn.disconnect();
             }
+        } else {
+            logger.error("Connection failed for url : " + url);
         }
 
         return response;
     }
 
     // use Establishments WebService
-    public ResponseEtablissement getInfoEtablissements(String siegeSocialSiret) {
+    public ResponseEtablissement getInfoEtablissements(String siegeSocialSiret) throws IOException {
 
         ObjectFactory factory = new ObjectFactory();
         String url = this.getUrlEtablissement(siegeSocialSiret);
@@ -166,22 +160,36 @@ public class MpsWsClient implements CompanyWSinfo {
                 response = mapper.readValue(jsonReply, ResponseEtablissement.class);
                 // Temporary debug to view response content
                 logger.info("ResponseEtablissements DTO representation : " + response.toString());
-
-                // close connection after retrieving query result (avoid time wait close
-                // connection on server)
-                conn.disconnect();
             } catch (IOException e) {
                 logger.error("Unable to connect to : " + url, e);
-                return null;
-
+                throw e;
             } finally {
                 // close connection properly if not closed yet
                 conn.disconnect();
             }
+        } else {
+            logger.error("Connection failed for url : " + url);
         }
         return response;
     }
 
+    private HttpURLConnection getUrlConnection(String url) {
+
+        HttpURLConnection conn = null;
+        try {
+//			Proxy proxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress("proxyname", port));
+            conn = (HttpURLConnection) new URL(url).openConnection();
+            conn.setRequestMethod("GET");
+            conn.setRequestProperty(HttpHeaders.AUTHORIZATION, "Bearer " + MPS_TOKEN);
+            conn.setRequestProperty(HttpHeaders.CONTENT_TYPE, "application/json");
+            conn.setConnectTimeout(8000); // set timeout to 8 seconds
+        } catch (MalformedURLException e) {
+            logger.error("Not a valid URL: " + url, e);
+        } catch (IOException e) {
+            logger.error("Unable to connect to : " + url, e);
+        }
+        return conn;
+    }
 
     @Override
     public Company updateCompanyInfo(Company company, InseeLegalCategoryService inseeLegalCategoryService) {
@@ -189,20 +197,17 @@ public class MpsWsClient implements CompanyWSinfo {
 
         // Call MPS to get the Company informations
         logger.info("Search for entreprise matching siren : " + company.getSiren());
-        ResponseUniteLegale responseEntreprises = this.getInfoEntreprises(company.getSiren());
-        logger.info("Search for 'unité legale' matching siren : " + company.getSiren());
-        ResponseEtablissement responseEtablissement = this.getInfoEtablissements(responseEntreprises.getData().getSiretSiegeSocial());
-        logger.info("Search for mandataires matching siren : " + company.getSiren());
-        ResponseMandataires responseMandataires = this.getInfoMandataires(company.getSiren());
-
-        if (responseEntreprises != null) {
+        try {
+            ResponseUniteLegale responseEntreprises = responseEntreprises = this.getInfoEntreprises(company.getSiren());
+            logger.info("Search for 'unité legale' matching siren : " + company.getSiren());
+            ResponseEtablissement responseEtablissement = this.getInfoEtablissements(responseEntreprises.getData().getSiretSiegeSocial());
+            logger.info("Search for mandataires matching siren : " + company.getSiren());
+            ResponseMandataires responseMandataires = this.getInfoMandataires(company.getSiren());
             company = convertUniteLegaleToCompany(responseEntreprises.getData(), responseEtablissement.getMeta(), responseMandataires.getData());
             this.setCompanyMissingFields(responseEntreprises, responseEtablissement, company, inseeLegalCategoryService);
-        } else {
-            logger.info("Api did not found any matching Siren : " + company.getSiren());
-            company = null;
+        } catch (IOException e) {
+            logger.error("Error happen during api.gouv.fr call :", e);
         }
-
         return company;
 
     }
@@ -277,14 +282,16 @@ public class MpsWsClient implements CompanyWSinfo {
         Company company = new Company();
         if (siren != null) {
             logger.info("Updating company : " + siren);
-
-            // Call MPS to get the Company informations
-            ResponseUniteLegale responseEntreprise = this.getInfoEntreprises(siren);
-            ResponseEtablissement responseEtablissement = this.getInfoEtablissements(responseEntreprise.getData().getSiretSiegeSocial());
-            ResponseMandataires responseMandataires = this.getInfoMandataires(siren);
-            company = convertUniteLegaleToCompany(responseEntreprise.getData(), responseEtablissement.getMeta(), responseMandataires.getData());
-            this.setCompanyMissingFields(responseEntreprise, responseEtablissement, company, inseeLegalCategoryService);
-
+            try {
+                // Call MPS to get the Company informations
+                ResponseUniteLegale responseEntreprise = this.getInfoEntreprises(siren);
+                ResponseEtablissement responseEtablissement = this.getInfoEtablissements(responseEntreprise.getData().getSiretSiegeSocial());
+                ResponseMandataires responseMandataires = this.getInfoMandataires(siren);
+                company = convertUniteLegaleToCompany(responseEntreprise.getData(), responseEtablissement.getMeta(), responseMandataires.getData());
+                this.setCompanyMissingFields(responseEntreprise, responseEtablissement, company, inseeLegalCategoryService);
+            } catch (IOException e) {
+                logger.error("Error happen during api.gouv.fr call :", e);
+            }
         } else {
             logger.info("SIREN invalid or null !");
         }
@@ -366,23 +373,6 @@ public class MpsWsClient implements CompanyWSinfo {
         }
     }
 
-    private HttpURLConnection getUrlConnection(String url) {
-
-        HttpURLConnection conn = null;
-        try {
-//			Proxy proxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress("proxyname", port));
-            conn = (HttpURLConnection) new URL(url).openConnection();
-            conn.setRequestMethod("GET");
-            conn.setRequestProperty(HttpHeaders.AUTHORIZATION, "Bearer " + MPS_TOKEN);
-            conn.setRequestProperty(HttpHeaders.CONTENT_TYPE, "application/json");
-            conn.setConnectTimeout(8000); // set timeout to 8 seconds
-        } catch (MalformedURLException e) {
-            logger.error("Not a valid URL: " + url, e);
-        } catch (IOException e) {
-            logger.error("Unable to connect to : " + url, e);
-        }
-        return conn;
-    }
 
     private static String getStringFromInputStream(InputStream is) {
 
