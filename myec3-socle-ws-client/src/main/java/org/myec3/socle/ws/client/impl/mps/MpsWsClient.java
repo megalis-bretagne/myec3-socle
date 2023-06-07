@@ -18,7 +18,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
 
 import java.io.*;
-import java.net.*;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 
@@ -66,31 +69,25 @@ public class MpsWsClient implements CompanyWSinfo {
         logger.info("Asking Entreprises Webservice on url : ");
 
         // Get the raw MPS response
-        try {
-            logger.info("Get stream");
-            InputStream responseTmp = conn.getInputStream();
-            logger.info("Convert JSON response to string for Jackson parsing");
-            // Convert JSON response to string for Jackson parsing
-            String jsonReply = this.getStringFromInputStream(responseTmp);
-            // Temporary debug to view response content
-            logger.info("Json representation : " + jsonReply);
-            ObjectMapper mapper = new ObjectMapper();
+        logger.info("Get stream");
+        InputStream responseTmp = conn.getInputStream();
+        logger.info("Convert JSON response to string for Jackson parsing");
+        // Convert JSON response to string for Jackson parsing
+        String jsonReply = this.getStringFromInputStream(responseTmp);
+        // Temporary debug to view response content
+        logger.info("Json representation : " + jsonReply);
+        ObjectMapper mapper = new ObjectMapper();
 
-            // Do not stack on unknown / null values
-            mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-            mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+        // Do not stack on unknown / null values
+        mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
 
-            // Match MPS response with ReponseEntreprise class
-            response = mapper.readValue(jsonReply, ResponseUniteLegale.class);
-            logger.info("ResponseUniteLegale DTO representation : " + response.toString());
-        } catch (IOException e) {
-            logger.error("Unable to connect to : " + url, e);
-            throw e;
-        } finally {
-            // close connection properly if not closed yet
-            conn.disconnect();
-        }
-
+        // Match MPS response with ReponseEntreprise class
+        response = mapper.readValue(jsonReply, ResponseUniteLegale.class);
+        logger.info("ResponseUniteLegale DTO representation : " + response.toString());
+        logger.info("finally");
+        conn.disconnect();
+        logger.info("response");
         return response;
     }
 
@@ -119,29 +116,24 @@ public class MpsWsClient implements CompanyWSinfo {
         }
         logger.info("Asking Mandataires Webservice on url");
         // Get the raw MPS response
-        try {
-            logger.info("Get stream");
-            InputStream responseTmp = conn.getInputStream();
-            // Convert JSON response to string for Jackson parsing
-            logger.info("Convert JSON response to string for Jackson parsing");
-            String jsonReply = this.getStringFromInputStream(responseTmp);
-            // Temporary debug to view response content
-            logger.info("Json representation : " + jsonReply);
-            ObjectMapper mapper = new ObjectMapper();
-            // Do not stack on unknown / null values
-            mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-            mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+        logger.info("Get stream");
+        InputStream responseTmp = conn.getInputStream();
+        // Convert JSON response to string for Jackson parsing
+        logger.info("Convert JSON response to string for Jackson parsing");
+        String jsonReply = this.getStringFromInputStream(responseTmp);
+        // Temporary debug to view response content
+        logger.info("Json representation : " + jsonReply);
+        ObjectMapper mapper = new ObjectMapper();
+        // Do not stack on unknown / null values
+        mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+        // Match MPS response with ReponseEntreprise class
+        response = mapper.readValue(jsonReply, ResponseMandataires.class);
+        logger.info("ResponseMandataires DTO representation : " + response.toString());
+        logger.error("Unable to connect to : " + url, e);
+        // close connection properly if not closed yet
+        conn.disconnect();
 
-            // Match MPS response with ReponseEntreprise class
-            response = mapper.readValue(jsonReply, ResponseMandataires.class);
-            logger.info("ResponseMandataires DTO representation : " + response.toString());
-        } catch (IOException e) {
-            logger.error("Unable to connect to : " + url, e);
-            throw e;
-        } finally {
-            // close connection properly if not closed yet
-            conn.disconnect();
-        }
         return response;
     }
 
@@ -170,31 +162,23 @@ public class MpsWsClient implements CompanyWSinfo {
             throw e;
         }
         logger.info("Asking Etablissements Webservice on url");
-        try {
-            logger.info("Get stream");
-            InputStream responseTmp = conn.getInputStream();
-            // Convert JSON response to string for Jackson parsing
-            logger.info("Convert JSON response to string for Jackson parsing");
-            String jsonReply = this.getStringFromInputStream(responseTmp);
-            // Temporary debug to view response content
-            logger.info("Json representation : " + response.toString());
-
-            ObjectMapper mapper = new ObjectMapper();
-            // Do not stack on unknown / null values
-            mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-            mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
-            // Match MPS response with ReponseEntreprise class
-            response = mapper.readValue(jsonReply, ResponseEtablissement.class);
-            // Temporary debug to view response content
-            logger.info("ResponseEtablissements DTO representation : " + response.toString());
-        } catch (IOException e) {
-            logger.error("Unable to connect to : " + url, e);
-            throw e;
-        } finally {
-            // close connection properly if not closed yet
-            conn.disconnect();
-        }
-
+        logger.info("Get stream");
+        InputStream responseTmp = conn.getInputStream();
+        // Convert JSON response to string for Jackson parsing
+        logger.info("Convert JSON response to string for Jackson parsing");
+        String jsonReply = this.getStringFromInputStream(responseTmp);
+        // Temporary debug to view response content
+        logger.info("Json representation : " + response.toString());
+        ObjectMapper mapper = new ObjectMapper();
+        // Do not stack on unknown / null values
+        mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+        // Match MPS response with ReponseEntreprise class
+        response = mapper.readValue(jsonReply, ResponseEtablissement.class);
+        // Temporary debug to view response content
+        logger.info("ResponseEtablissements DTO representation : " + response.toString());
+        // close connection properly if not closed yet
+        conn.disconnect();
         return response;
     }
 
