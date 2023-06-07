@@ -35,17 +35,4 @@ public class ObjectFactory {
 	 */
 	public ObjectFactory() {
 	}
-
-	public ResponseEtablissement createResponseEtablissements() {
-		return new ResponseEtablissement();
-	}
-
-	public ResponseUniteLegale createResponseEntreprises() {
-		return new ResponseUniteLegale();
-	}
-
-	public ResponseMandataires createResponseMandataires() {
-		return new ResponseMandataires();
-	}
-
 }

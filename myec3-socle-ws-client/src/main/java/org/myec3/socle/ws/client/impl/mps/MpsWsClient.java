@@ -48,7 +48,7 @@ public class MpsWsClient implements CompanyWSinfo {
 
         ObjectFactory factory = new ObjectFactory();
         String url = this.getUrlEntreprise(companySiren);
-        ResponseUniteLegale response = factory.createResponseEntreprises();
+        ResponseUniteLegale response;
         logger.info("Create connection for :" + url);
         HttpURLConnection conn;
         try {
@@ -96,7 +96,7 @@ public class MpsWsClient implements CompanyWSinfo {
 
         ObjectFactory factory = new ObjectFactory();
         String url = this.getUrlMandataires(companySiren);
-        ResponseMandataires response = factory.createResponseMandataires();
+        ResponseMandataires response;
         logger.info("Create connection for :" + url);
         HttpURLConnection conn;
         try {
@@ -142,7 +142,7 @@ public class MpsWsClient implements CompanyWSinfo {
 
         ObjectFactory factory = new ObjectFactory();
         String url = this.getUrlEtablissement(siegeSocialSiret);
-        ResponseEtablissement response = factory.createResponseEtablissements();
+        ResponseEtablissement response;
         logger.info("Create connection for :" + url);
         HttpURLConnection conn;
         try {
