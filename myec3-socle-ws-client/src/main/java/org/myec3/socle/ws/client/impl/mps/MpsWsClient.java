@@ -466,6 +466,7 @@ public class MpsWsClient implements CompanyWSinfo {
 
         // catégorie juridique
         if (responseEntreprises.getData().getFormeJuridique() != null) {
+
                 CompanyINSEECat companyINSEECat = CompanyINSEECat.getByCode(responseEntreprises.getData().getFormeJuridique().getCode());
                 if (companyINSEECat != null) {
                     company.setLegalCategory(companyINSEECat);
@@ -480,7 +481,7 @@ public class MpsWsClient implements CompanyWSinfo {
             CompanyINSEECat companyINSEECat = CompanyINSEECat.getByValue("AUTRE");
             company.setLegalCategory(companyINSEECat);
         }
-        
+
         // foreign identifier ?
         if (responseEntreprises.getData().getSiren() != null) {
             company.setForeignIdentifier(Boolean.FALSE);
@@ -507,8 +508,6 @@ public class MpsWsClient implements CompanyWSinfo {
             if (establishment.getAddress().getPostalAddress() == null) {
                 String postalAddress = "";
                 if (responseEtablissements.getData().getAdresse() != null) {
-
-
                     if (responseEtablissements.getData().getAdresse().getNumeroVoie() != null) {
                         postalAddress += responseEtablissements.getData().getAdresse().getNumeroVoie() + " ";
                     }
@@ -553,10 +552,9 @@ public class MpsWsClient implements CompanyWSinfo {
         String raisonSociale =    uniteLegale.getPersonneMoraleAttributs() != null ? etablissement.getEnseigne() : "";
         Company company = new Company(uniteLegale.getFormeJuridique().getLibelle(), "");
         company.setSiren(uniteLegale.getSiren());
-        company.setDescription(uniteLegale.getStatusDiffusion());
         company.builder()
                 .siretHeadOffice(uniteLegale.getSiretSiegeSocial())
-                .apeCode(uniteLegale.getActivitePrincipale() != null ? uniteLegale.getActivitePrincipale().getCode() : "")
+                .apeCode(uniteLegale.getActivitePrincipale() != null ? converToNAF(uniteLegale.getActivitePrincipale().getCode()) : "")
                 .apeNafLabel(uniteLegale.getActivitePrincipale() != null ? uniteLegale.getActivitePrincipale().getLibelle() : "")
                 .legalCategoryString(uniteLegale.getActivitePrincipale() != null ? uniteLegale.getActivitePrincipale().getLibelle() : "")
                 .creationDate(convertLongToDate(uniteLegale.getDateCreation()))
@@ -581,15 +579,21 @@ public class MpsWsClient implements CompanyWSinfo {
         return date;
     }
 
+    private static String converToNAF(String codeApe) {
+        String codeNAF = null;
+        if (codeApe != null) {
+            codeNAF = codeApe.substring(0,1).concat(codeNAF.substring(3));
+        }
+        return codeNAF;
+    }
+
     public static Establishment convertEtablissementToEtablishment(ApiGouvEtablissement etablissement, ApiGouvMeta
             meta) {
-
         Establishment establishment = new Establishment(etablissement.getEnseigne(), "");
-
         establishment.builder()
                 .siret(etablissement.getSiret())
                 .isHeadOffice(Boolean.valueOf(etablissement.getSiegeSocial()))
-                .apeCode(etablissement.getActivitePrincipale() != null ? etablissement.getActivitePrincipale().getCode() : "")
+                .apeCode(etablissement.getActivitePrincipale() != null ? converToNAF(etablissement.getActivitePrincipale().getCode()) : "")
                 .apeNafLabel(etablissement.getActivitePrincipale() != null ? etablissement.getActivitePrincipale().getLibelle() : "")
                 .address(convertAdresseToAddress(etablissement.getAdresse()))
                 .diffusableInformations(Boolean.valueOf(etablissement.getDiffusableCommercialement()))
