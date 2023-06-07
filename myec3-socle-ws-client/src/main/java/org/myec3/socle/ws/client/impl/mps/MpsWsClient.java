@@ -114,6 +114,7 @@ public class MpsWsClient implements CompanyWSinfo {
             logger.error("Unable to connect to : " + url, e);
             throw e;
         }
+
         logger.info("Asking Mandataires Webservice on url");
         // Get the raw MPS response
         logger.info("Get stream");
@@ -130,10 +131,8 @@ public class MpsWsClient implements CompanyWSinfo {
         // Match MPS response with ReponseEntreprise class
         response = mapper.readValue(jsonReply, ResponseMandataires.class);
         logger.info("ResponseMandataires DTO representation : " + response.toString());
-        logger.error("Unable to connect to : " + url, e);
         // close connection properly if not closed yet
         conn.disconnect();
-
         return response;
     }
 
