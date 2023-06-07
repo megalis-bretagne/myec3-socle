@@ -239,4 +239,19 @@ public class Person extends Resource {
 		}
 		return true;
 	}
+
+	@Override
+	public String toString() {
+		return "Person{" +
+				"civility=" + civility +
+				", firstname='" + firstname + '\'' +
+				", lastname='" + lastname + '\'' +
+				", type='" + type + '\'' +
+				", email='" + email + '\'' +
+				", phone='" + phone + '\'' +
+				", company=" + company +
+				", function='" + function + '\'' +
+				", moralName='" + moralName + '\'' +
+				'}';
+	}
 }

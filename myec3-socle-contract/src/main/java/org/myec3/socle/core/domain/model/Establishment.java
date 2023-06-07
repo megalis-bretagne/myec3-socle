@@ -467,5 +467,30 @@ public class Establishment extends Resource {
         return super.getName();
     }
 
-
+	@Override
+	public String toString() {
+		return "Establishment{" +
+				"name=" + super.getName() +
+				",label=" + super.getLabel() +
+				",isHeadOffice=" + isHeadOffice +
+				", company=" + company +
+				", employees=" + employees +
+				", foreignIdentifier=" + foreignIdentifier +
+				", nationalID='" + nationalID + '\'' +
+				", nic='" + nic + '\'' +
+				", siret='" + siret + '\'' +
+				", apeCode='" + apeCode + '\'' +
+				", apeNafLabel='" + apeNafLabel + '\'' +
+				", administrativeState=" + administrativeState +
+				", address=" + address +
+				", email='" + email + '\'' +
+				", phone='" + phone + '\'' +
+				", fax='" + fax + '\'' +
+				", lastUpdate=" + lastUpdate +
+				", diffusableInformations=" + diffusableInformations +
+				", pays=" + pays +
+				", createdDate=" + createdDate +
+				", createdUserId=" + createdUserId +
+				'}';
+	}
 }
