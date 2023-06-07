@@ -571,7 +571,7 @@ public class MpsWsClient implements CompanyWSinfo {
                 .apeCode(uniteLegale.getActivitePrincipale().getCode())
                 .apeNafLabel(uniteLegale.getActivitePrincipale().getLibelle())
                 .legalCategoryString(uniteLegale.getActivitePrincipale().getLibelle())
-                .creationDate(new Date(uniteLegale.getDateCreation()))
+                .creationDate(uniteLegale.getDateCreation() != null ? new Date(uniteLegale.getDateCreation()) : new Date())
                 .lastUpdate(meta.getDateDerniereMiseAjourAsDate())
                 .build();
         if (mandatairesSociaux != null) {
