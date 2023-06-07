@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
@@ -294,8 +295,15 @@ public class SynchroController {
         CompletableFuture.supplyAsync(() -> {
             AtomicInteger index = new AtomicInteger(0);
             organisms.forEach(organismLightDTO -> {
-                ResponseUniteLegale entreprises = mpsWsClient.getInfoEntreprises(organismLightDTO.getSiren());
-                ResponseEtablissement etablissement = mpsWsClient.getInfoEtablissements(entreprises.getData().getSiretSiegeSocial());
+
+                ResponseUniteLegale entreprises = null;
+                ResponseEtablissement etablissement = null;
+                try {
+                    entreprises = mpsWsClient.getInfoEntreprises(organismLightDTO.getSiren());
+                    etablissement = mpsWsClient.getInfoEtablissements(entreprises.getData().getSiretSiegeSocial());
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
 
                 if (entreprises ==null || entreprises.getData() == null) {
                     logger.info("[RESYNC] [" + organismLightDTO.getId() + "] [" + organismLightDTO.getSiren() + "] Pas de reponse de API INSEE");
