@@ -66,8 +66,9 @@ public class MpsWsClient implements CompanyWSinfo {
 
         // Get the raw MPS response
         try {
+            logger.info("Get stream");
             InputStream responseTmp = conn.getInputStream();
-
+            logger.info("Convert JSON response to string for Jackson parsing");
             // Convert JSON response to string for Jackson parsing
             String jsonReply = this.getStringFromInputStream(responseTmp);
             // Temporary debug to view response content
