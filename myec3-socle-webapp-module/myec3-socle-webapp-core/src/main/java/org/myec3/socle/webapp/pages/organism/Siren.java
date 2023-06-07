@@ -98,7 +98,7 @@ public class Siren {
                 address.setPostalAddress(address.getStreetNumber() + " " + address.getStreetType() + " " + address.getStreetName());
                 // complete with forme_juridique
                 String codeApe = infos.getData().getFormeJuridique().getCode();
-                String codeNAF = codeApe.substring(0, 1).concat(codeApe.substring(3));
+                String codeNAF = codeApe.substring(0, 1)+""+codeApe.substring(3);
                 OrganismNafCode naf = OrganismNafCode.fromApeCode(infos.getData().getFormeJuridique().getCode());
                 this.organism.setApeCode(naf);
 

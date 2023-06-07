@@ -580,9 +580,9 @@ public class MpsWsClient implements CompanyWSinfo {
     }
 
     private static String converToNAF(String codeApe) {
-        String codeNAF = null;
+        String codeNAF = "";
         if (codeApe != null) {
-            codeNAF = codeApe.substring(0,1).concat(codeNAF.substring(3));
+            codeNAF = codeApe.substring(0,1)+""+codeApe.substring(3);
         }
         return codeNAF;
     }
