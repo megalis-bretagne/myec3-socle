@@ -185,7 +185,6 @@ public class MpsWsClient implements CompanyWSinfo {
     @Override
     public Company updateCompanyInfo(Company company, InseeLegalCategoryService inseeLegalCategoryService) {
         logger.info("Update Company " + company.getSiren() + " Information with the MPS WS ");
-
         // Call MPS to get the Company informations
         logger.info("Search for entreprise matching siren : " + company.getSiren());
         try {
@@ -196,9 +195,10 @@ public class MpsWsClient implements CompanyWSinfo {
             ResponseMandataires responseMandataires = this.getInfoMandataires(company.getSiren());
             company = convertUniteLegaleToCompany(responseEntreprises.getData(), responseEtablissement.getMeta(), responseMandataires.getData());
             this.setCompanyMissingFields(responseEntreprises, responseEtablissement, company, inseeLegalCategoryService);
-        } catch (IOException e) {
+        } catch(Exception e) {
             logger.error("Error happen during api.gouv.fr call :", e);
         }
+        logger.info("Consolidates company : " + company.toString());
         return company;
 
     }
@@ -565,7 +565,7 @@ public class MpsWsClient implements CompanyWSinfo {
 
     public static Company convertUniteLegaleToCompany(ApiGouvUniteLegale uniteLegale, ApiGouvMeta
             meta, List<ApiGouvMandataireSocial> mandatairesSociaux) {
-        Company company = (Company) new Resource(uniteLegale.getFormeJuridique().getLibelle(), "");
+        Company company = new Company(uniteLegale.getFormeJuridique().getLibelle(), uniteLegale.getFormeJuridique().getLibelle());
         company.builder()
                 .siretHeadOffice(uniteLegale.getSiretSiegeSocial())
                 .apeCode(uniteLegale.getActivitePrincipale().getCode())
@@ -589,7 +589,7 @@ public class MpsWsClient implements CompanyWSinfo {
     public static Establishment convertEtablissementToEtablishment(ApiGouvEtablissement etablissement, ApiGouvMeta
             meta) {
 
-        Establishment establishment = new Establishment(etablissement.getEnseigne(), "");
+        Establishment establishment = new Establishment(etablissement.getEnseigne(), etablissement.getEnseigne());
 
         establishment.builder()
                 .siret(etablissement.getSiret())

@@ -108,6 +108,10 @@ public abstract class Structure extends Resource {
 		this.createdDate = new Date(System.currentTimeMillis());
 	}
 
+	public Structure(String name, String label) {
+		super(name, label);
+	}
+
 	/**
 	 * email of the structure. Should be compliant with the format defined by
 	 * {@link Email annotation) and cannot be null

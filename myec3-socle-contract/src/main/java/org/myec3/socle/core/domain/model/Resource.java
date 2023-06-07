@@ -212,9 +212,11 @@ public class Resource implements Serializable, Cloneable, PE {
 	 */
 	@Override
 	public String toString() {
-		StringBuilder sb = new StringBuilder();
-		sb.append("Resource [").append("id=").append(this.getId()).append(",").append("name=").append(this.getName())
-				.append(",").append("label=").append(this.getLabel()).append("]");
-		return sb.toString();
+		return "Resource{" +
+				"id=" + id +
+				", externalId=" + externalId +
+				", name='" + name + '\'' +
+				", label='" + label + '\'' +
+				'}';
 	}
 }

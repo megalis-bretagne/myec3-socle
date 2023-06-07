@@ -650,32 +650,4 @@ public class InitCompany {
 			}
 		}
 	}
-
-	@Override
-	public String toString() {
-		return "InitCompany{" +
-				"companyService=" + companyService +
-				", inseeGeoCodeService=" + inseeGeoCodeService +
-				", establishmentService=" + establishmentService +
-				", inseeLegalCategoryService=" + inseeLegalCategoryService +
-				", messages=" + messages +
-				", successMessage='" + successMessage + '\'' +
-				", errorMessage='" + errorMessage + '\'' +
-				", company=" + company +
-				", nic='" + nic + '\'' +
-				", companyNafCode=" + companyNafCode +
-				", refreshPostalCode=" + refreshPostalCode +
-				", companyNotExists=" + companyNotExists +
-				", submit=" + submit +
-				", citiesList=" + citiesList +
-				", establishmentPage=" + establishmentPage +
-				", form=" + form +
-				", personHolders=" + personHolders +
-				", personHolder=" + personHolder +
-				", mpsWS=" + mpsWS +
-				", request=" + request +
-				", javaScriptSupport=" + javaScriptSupport +
-				", isLocHallesTheme=" + isLocHallesTheme +
-				'}';
-	}
 }

@@ -97,6 +97,11 @@ public class Company extends Structure {
 		super();
 	}
 
+
+	public Company(String name, String label) {
+		super(name, label);
+	}
+
 	/**
 	 * ape code (issued by INSEE)
 	 *
