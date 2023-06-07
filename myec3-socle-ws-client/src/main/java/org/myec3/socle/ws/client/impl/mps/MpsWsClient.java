@@ -168,7 +168,7 @@ public class MpsWsClient implements CompanyWSinfo {
         logger.info("Convert JSON response to string for Jackson parsing");
         String jsonReply = this.getStringFromInputStream(responseTmp);
         // Temporary debug to view response content
-        logger.info("Json representation : " + response.toString());
+        logger.info("Json representation : " + jsonReply);
         ObjectMapper mapper = new ObjectMapper();
         // Do not stack on unknown / null values
         mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
