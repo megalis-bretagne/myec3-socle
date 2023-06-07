@@ -48,9 +48,10 @@ public class MpsWsClient implements CompanyWSinfo {
         logger.info("Create connection for :" + url);
         HttpURLConnection conn;
         try {
+            URL urlTemp = new URL(url);
                 /*   Proxy proxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress("172.31.6.15", 3128));
             conn = (HttpURLConnection) new URL(url).openConnection(proxy);*/
-            conn = (HttpURLConnection) new URL(url).openConnection();
+            conn = (HttpURLConnection) urlTemp.openConnection();
             conn.setRequestMethod("GET");
             conn.setRequestProperty(HttpHeaders.AUTHORIZATION, "Bearer " + MPS_TOKEN);
             conn.setRequestProperty(HttpHeaders.CONTENT_TYPE, "application/json");
@@ -101,9 +102,10 @@ public class MpsWsClient implements CompanyWSinfo {
         logger.info("Create connection for :" + url);
         HttpURLConnection conn;
         try {
+            URL urlTemp = new URL(url);
          /*   Proxy proxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress("172.31.6.15", 3128));
             conn = (HttpURLConnection) new URL(url).openConnection(proxy);*/
-            conn = (HttpURLConnection) new URL(url).openConnection();
+            conn = (HttpURLConnection) urlTemp.openConnection();
             conn.setRequestMethod("GET");
             conn.setRequestProperty(HttpHeaders.AUTHORIZATION, "Bearer " + MPS_TOKEN);
             conn.setRequestProperty(HttpHeaders.CONTENT_TYPE, "application/json");
@@ -118,8 +120,10 @@ public class MpsWsClient implements CompanyWSinfo {
         logger.info("Asking Mandataires Webservice on url");
         // Get the raw MPS response
         try {
+            logger.info("Get stream");
             InputStream responseTmp = conn.getInputStream();
             // Convert JSON response to string for Jackson parsing
+            logger.info("Convert JSON response to string for Jackson parsing");
             String jsonReply = this.getStringFromInputStream(responseTmp);
             // Temporary debug to view response content
             logger.info("Json representation : " + jsonReply);
@@ -150,9 +154,10 @@ public class MpsWsClient implements CompanyWSinfo {
         logger.info("Create connection for :" + url);
         HttpURLConnection conn;
         try {
+            URL urlTemp = new URL(url);
                  /*   Proxy proxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress("172.31.6.15", 3128));
             conn = (HttpURLConnection) new URL(url).openConnection(proxy);*/
-            conn = (HttpURLConnection) new URL(url).openConnection();
+            conn = (HttpURLConnection) urlTemp.openConnection();
             conn.setRequestMethod("GET");
             conn.setRequestProperty(HttpHeaders.AUTHORIZATION, "Bearer " + MPS_TOKEN);
             conn.setRequestProperty(HttpHeaders.CONTENT_TYPE, "application/json");
@@ -166,8 +171,10 @@ public class MpsWsClient implements CompanyWSinfo {
         }
         logger.info("Asking Etablissements Webservice on url");
         try {
+            logger.info("Get stream");
             InputStream responseTmp = conn.getInputStream();
             // Convert JSON response to string for Jackson parsing
+            logger.info("Convert JSON response to string for Jackson parsing");
             String jsonReply = this.getStringFromInputStream(responseTmp);
             // Temporary debug to view response content
             logger.info("Json representation : " + response.toString());
@@ -189,24 +196,6 @@ public class MpsWsClient implements CompanyWSinfo {
         }
 
         return response;
-    }
-
-    private HttpURLConnection getUrlConnection(String url) {
-
-        HttpURLConnection conn = null;
-        try {
-            Proxy proxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress("172.31.6.15", 3128));
-            conn = (HttpURLConnection) new URL(url).openConnection(proxy);
-            conn.setRequestMethod("GET");
-            conn.setRequestProperty(HttpHeaders.AUTHORIZATION, "Bearer " + MPS_TOKEN);
-            conn.setRequestProperty(HttpHeaders.CONTENT_TYPE, "application/json");
-            conn.setConnectTimeout(8000); // set timeout to 8 seconds
-        } catch (MalformedURLException e) {
-            logger.error("Not a valid URL: " + url, e);
-        } catch (IOException e) {
-            logger.error("Unable to connect to : " + url, e);
-        }
-        return conn;
     }
 
     @Override
