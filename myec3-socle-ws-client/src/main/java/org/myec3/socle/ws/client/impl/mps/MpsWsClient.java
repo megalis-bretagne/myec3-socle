@@ -188,12 +188,20 @@ public class MpsWsClient implements CompanyWSinfo {
         logger.info("Update Company " + company.getSiren() + " Information with the MPS WS ");
 
         // Call MPS to get the Company informations
+        logger.info("Search for entreprise matching siren : " + company.getSiren());
         ResponseUniteLegale responseEntreprises = this.getInfoEntreprises(company.getSiren());
+        logger.info("Search for 'unité legale' matching siren : " + company.getSiren());
         ResponseEtablissement responseEtablissement = this.getInfoEtablissements(responseEntreprises.getData().getSiretSiegeSocial());
+        logger.info("Search for mandataires matching siren : " + company.getSiren());
         ResponseMandataires responseMandataires = this.getInfoMandataires(company.getSiren());
 
-        company = convertUniteLegaleToCompany(responseEntreprises.getData(), responseEtablissement.getMeta(), responseMandataires.getData());
-        this.setCompanyMissingFields(responseEntreprises, responseEtablissement, company, inseeLegalCategoryService);
+        if (responseEntreprises != null) {
+            company = convertUniteLegaleToCompany(responseEntreprises.getData(), responseEtablissement.getMeta(), responseMandataires.getData());
+            this.setCompanyMissingFields(responseEntreprises, responseEtablissement, company, inseeLegalCategoryService);
+        } else {
+            logger.info("Api did not found any matching Siren : " + company.getSiren());
+            company = null;
+        }
 
         return company;
 
@@ -571,7 +579,7 @@ public class MpsWsClient implements CompanyWSinfo {
     }
 
     public static Company convertUniteLegaleToCompany(ApiGouvUniteLegale uniteLegale, ApiGouvMeta meta, List<ApiGouvMandataireSocial> mandatairesSociaux) {
-        Company company = (Company) new Resource(uniteLegale.getFormeJuridique().getLibelle(), "");
+        Company company = (Company) new Resource(uniteLegale.getFormeJuridique().getLibelle(), uniteLegale.getFormeJuridique().getLibelle());
         company.builder()
                 .siretHeadOffice(uniteLegale.getSiretSiegeSocial())
                 .apeCode(uniteLegale.getActivitePrincipale().getCode())
@@ -594,7 +602,7 @@ public class MpsWsClient implements CompanyWSinfo {
 
     public static Establishment convertEtablissementToEtablishment(ApiGouvEtablissement etablissement, ApiGouvMeta meta) {
 
-        Establishment establishment = new Establishment(etablissement.getEnseigne(), "");
+        Establishment establishment = new Establishment(etablissement.getEnseigne(), etablissement.getEnseigne());
 
         establishment.builder()
                 .siret(etablissement.getSiret())

@@ -32,8 +32,8 @@ public class ResponseMandataires {
 	@Override
 	public String toString() {
 		return "ResponseEntreprises{" +
-				"data=" + data.toString() +
-				", meta=" + meta.toString() +
+				"data=" + data != null ? data.toString() : "" +
+				", meta=" + meta != null ? meta.toString() : "" +
 				'}';
 	}
 
