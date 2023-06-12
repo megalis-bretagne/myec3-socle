@@ -624,7 +624,7 @@ public class MpsWsClient implements CompanyWSinfo {
         Person person = new Person();
         person.setFirstname(mandataireSocial.getData().getPrenom());
         person.setLastname(mandataireSocial.getData().getNom());
-        person.setName(mandataireSocial.getData().getNom()+" "mandataireSocial.getData().getPrenom());
+        person.setName(mandataireSocial.getData().getNom()+" "+mandataireSocial.getData().getPrenom());
         person.setType(mandataireSocial.getData().getType());
         person.setFunction(mandataireSocial.getData().getFonction());
         person.setMoralName(mandataireSocial.getData().getRaisonSociale());
