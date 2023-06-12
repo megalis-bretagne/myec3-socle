@@ -197,8 +197,7 @@ public class InitCompany {
                     this.company.getApplications();
 
                     // Resets the attributes of ajaxformloop list
-                    this.initializePersonsHolder(Boolean.TRUE,
-                            this.company.getResponsibles());
+                    this.initializePersonsHolder(Boolean.TRUE, this.company.getResponsibles());
                 }
 
                 // find nafCode
@@ -206,8 +205,7 @@ public class InitCompany {
                 if (this.companyNafCode == null) {
                     CompanyNafCode[] nafCodes = CompanyNafCode.values();
                     for (CompanyNafCode nafCode : nafCodes) {
-                        if (nafCode.getApeCode().equalsIgnoreCase(
-                                this.company.getApeCode()))
+                        if (nafCode.getApeCode().equalsIgnoreCase(this.company.getApeCode()))
                             this.companyNafCode = nafCode;
                     }
                 }
@@ -303,16 +301,13 @@ public class InitCompany {
             // careful of sync. existing applications
             if (this.companyNafCode != null) {
                 this.company.setApeCode(companyNafCode.getApeCode());
-                this.company.setApeNafLabel(this
-                        .getApeNaflabelValue(this.companyNafCode.name()));
+                this.company.setApeNafLabel(this.getApeNaflabelValue(this.companyNafCode.name()));
             }
             // if french company
-            if (null == this.company.getForeignIdentifier()
-                    || !this.company.getForeignIdentifier()) {
+            if (null == this.company.getForeignIdentifier() || !this.company.getForeignIdentifier()) {
                 // set inseeCode via select
-                if (null == this.company.getInsee()) {
-                    this.company.setInsee(this.company.getAddress()
-                            .getCity());
+                if (null == this.company.getInsee() && this.company.getAddress() != null) {
+                    this.company.setInsee(this.company.getAddress().getCity());
                 }
             }
 
