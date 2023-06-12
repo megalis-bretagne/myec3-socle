@@ -65,14 +65,13 @@ public class MpsWsClient implements CompanyWSinfo {
         } catch (MalformedURLException e) {
             logger.error("Not a valid URL: " + url, e);
             throw e;
-        } catch (IOException e) {
+        } catch (Exception e) {
             logger.error("Unable to connect to : " + url, e);
             throw e;
         }
         logger.info("Asking Entreprises Webservice on url : ");
 
         // Get the raw MPS response
-        logger.info("Get stream");
         InputStream responseTmp = conn.getInputStream();
         logger.info("Convert JSON response to string for Jackson parsing");
         // Convert JSON response to string for Jackson parsing
@@ -88,9 +87,7 @@ public class MpsWsClient implements CompanyWSinfo {
         // Match MPS response with ReponseEntreprise class
         response = mapper.readValue(jsonReply, ResponseUniteLegale.class);
         logger.info("ResponseUniteLegale DTO representation : " + response.toString());
-        logger.info("finally");
         conn.disconnect();
-        logger.info("response");
         return response;
     }
 
@@ -113,14 +110,13 @@ public class MpsWsClient implements CompanyWSinfo {
         } catch (MalformedURLException e) {
             logger.error("Not a valid URL: " + url, e);
             throw e;
-        } catch (IOException e) {
+        } catch (Exception e) {
             logger.error("Unable to connect to : " + url, e);
             throw e;
         }
 
         logger.info("Asking Mandataires Webservice on url");
         // Get the raw MPS response
-        logger.info("Get stream");
         InputStream responseTmp = conn.getInputStream();
         // Convert JSON response to string for Jackson parsing
         logger.info("Convert JSON response to string for Jackson parsing");
@@ -159,12 +155,11 @@ public class MpsWsClient implements CompanyWSinfo {
         } catch (MalformedURLException e) {
             logger.error("Not a valid URL: " + url, e);
             throw e;
-        } catch (IOException e) {
+        } catch (Exception e) {
             logger.error("Unable to connect to : " + url, e);
             throw e;
         }
         logger.info("Asking Etablissements Webservice on url");
-        logger.info("Get stream");
         InputStream responseTmp = conn.getInputStream();
         // Convert JSON response to string for Jackson parsing
         logger.info("Convert JSON response to string for Jackson parsing");
@@ -282,7 +277,7 @@ public class MpsWsClient implements CompanyWSinfo {
                 ResponseMandataires responseMandataires = this.getInfoMandataires(siren);
                 company = convertUniteLegaleToCompany(responseEntreprise.getData(), responseEtablissement.getData(), responseEtablissement.getMeta(), responseMandataires.getData());
                 this.setCompanyMissingFields(responseEntreprise, responseEtablissement, company, inseeLegalCategoryService);
-            } catch (IOException e) {
+            } catch (Exception e) {
                 logger.error("Error happen during api.gouv.fr call :", e);
             }
         } else {
@@ -309,7 +304,7 @@ public class MpsWsClient implements CompanyWSinfo {
             conn.disconnect();
         } catch (MalformedURLException e) {
             logger.error("Not a valid URL: " + url, e);
-        } catch (IOException e) {
+        } catch (Exception e) {
             logger.error("Unable to connect to : " + url, e);
         }
         return exist;
@@ -333,7 +328,7 @@ public class MpsWsClient implements CompanyWSinfo {
             conn.disconnect();
         } catch (MalformedURLException e) {
             logger.error("Not a valid URL: " + url, e);
-        } catch (IOException e) {
+        } catch (Exception e) {
             logger.error("Unable to connect to : " + url, e);
         } finally {
         }
@@ -467,8 +462,6 @@ public class MpsWsClient implements CompanyWSinfo {
 
         // catégorie juridique
         if (responseEntreprises.getData().getFormeJuridique() != null) {
-
-
             CompanyINSEECat companyINSEECat = CompanyINSEECat.getByCode(responseEntreprises.getData().getFormeJuridique().getCode());
             if (companyINSEECat != null) {
                 company.setLegalCategory(companyINSEECat);
