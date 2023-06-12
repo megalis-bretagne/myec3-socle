@@ -27,9 +27,9 @@
                     <h1>
                         <img src="${context:static/images/layout/logo_megalis.png}" alt="Banner"/>
                     </h1>
-                    <h1>
+                    <h3>
                         <p id="structureHeader">${structureLabel}</p>
-                    </h1>
+                    </h3>
                     <t:parameter name="else">
                         <h1>
                             <img src="${context:static/images/layout/logo_organisme.png}" alt="Banner"/>
