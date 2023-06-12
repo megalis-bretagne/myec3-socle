@@ -173,23 +173,23 @@ public class InitCompany {
                 if (companyExists.size() == 0) {
                     this.companyNotExists = Boolean.TRUE;
                     // we put service in function parameters
-                    if (company.getLabel().length() == 0) {
+                   /* if (company.getLabel().length() == 0) {*/
                         try {
                             this.company = mpsWS.updateCompanyInfo(this.company, inseeLegalCategoryService);
-                            logger.info("Prepare company : " + company.toString());
-                            if (this.company.getEstablishments() != null
+                            logger.info("Prepare company : " + company.getSiren());
+                          /*  if (this.company.getEstablishments() != null
                                     && !this.company.getEstablishments().isEmpty()
                                     && this.company.getEstablishments().get(0).getDiffusableInformations() != null
                                     && this.company.getEstablishments().get(0).getDiffusableInformations()
                                     .equals(Boolean.TRUE)) {
                                 this.errorMessage = this.messages.get("mps-not-diffusable-message");
-                            }
+                            }*/
                         } catch (Exception e) {
                             logger.error("Prepare company action went in error ", e);
                             this.errorMessage = this.messages.get("mps-error-message");
                         }
-                    }
-                    logger.info("Prepare mandataires : " + company.getResponsibles());
+                    /*}*/
+                    logger.info("Prepare mandataires : " + company.getResponsibles().size());
                     this.initializePersonsHolder(Boolean.FALSE, this.company.getResponsibles());
                 } else {
                     // company in db

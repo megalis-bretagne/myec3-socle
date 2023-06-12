@@ -195,7 +195,7 @@ public class MpsWsClient implements CompanyWSinfo {
         } catch (Exception e) {
             logger.error("Error happen during api.gouv.fr call :", e);
         }
-        logger.info("Consolidates company : " + company.toString());
+        logger.info("Consolidates company : " + company.getSiren());
         return company;
 
     }
@@ -562,7 +562,7 @@ public class MpsWsClient implements CompanyWSinfo {
             }
             company.setResponsibles(persons);
         }
-        logger.info("New company generated from api.gouv.fr  :" + company.toString());
+        logger.info("New company generated from api.gouv.fr  :" + company.getSiren());
         return company;
     }
 
@@ -601,7 +601,7 @@ public class MpsWsClient implements CompanyWSinfo {
                 .pays(convertAdresseToPaysImplantation(etablissement.getAdresse()))
                 .lastUpdate(meta.getDateDerniereMiseAjourAsDate())
                 .build();
-        logger.info("New establishment generated from api.gouv WS :" + establishment.toString());
+        logger.info("New establishment generated from api.gouv WS :" + establishment.getSiret();
         return establishment;
     }
 
@@ -614,7 +614,7 @@ public class MpsWsClient implements CompanyWSinfo {
                 .postalCode(apiGouvAdresse.getCodePostal())
                 .city(apiGouvAdresse.getLibelleCommune())
                 .build();
-        logger.info("New adresse generated from api.gouv WS :" + adresse.toString());
+        logger.info("New adresse generated from api.gouv WS :" + adresse.getStreetName());
         return adresse;
     }
 
@@ -623,7 +623,7 @@ public class MpsWsClient implements CompanyWSinfo {
                 .code(adresse.getCodePaysEtranger())
                 .value(adresse.libellePaysEtranger)
                 .build();
-        logger.info("New paysImplantation generated from api.gouv WS :" + paysImplantation.toString());
+        logger.info("New paysImplantation generated from api.gouv WS :" + paysImplantation.getValue());
         return paysImplantation;
     }
 
@@ -635,7 +635,7 @@ public class MpsWsClient implements CompanyWSinfo {
                 .function(mandataireSocial.getData().getFonction())
                 .moralName(mandataireSocial.getData().getRaisonSociale())
                 .build();
-        logger.info("New person generated from api.gouv WS :" + person.toString());
+        logger.info("New person generated from api.gouv WS :" + person.getName());
         return person;
     }
 
