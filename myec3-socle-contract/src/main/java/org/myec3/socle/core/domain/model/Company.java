@@ -59,8 +59,6 @@ import java.util.List;
 @XmlRootElement
 @Audited
 @Synchronized
-@Builder
-@AllArgsConstructor
 public class Company extends Structure {
 
     private static final long serialVersionUID = 2797441818971406424L;

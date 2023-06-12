@@ -543,18 +543,15 @@ public class MpsWsClient implements CompanyWSinfo {
 
     public static Company convertUniteLegaleToCompany(ApiGouvUniteLegale uniteLegale, ApiGouvEtablissement etablissement, ApiGouvMeta
             meta, List<ApiGouvMandataireSocial> mandatairesSociaux) {
-
         String raisonSociale = uniteLegale.getPersonneMoraleAttributs() != null ? etablissement.getEnseigne() : "";
         Company company = new Company(uniteLegale.getFormeJuridique().getLibelle(), "");
         company.setSiren(uniteLegale.getSiren());
-        company.builder()
-                .siretHeadOffice(uniteLegale.getSiretSiegeSocial())
-                .apeCode(convertMyec3NafFormat(uniteLegale.getActivitePrincipale()))
-                .apeNafLabel(uniteLegale.getActivitePrincipale() != null ? uniteLegale.getActivitePrincipale().getLibelle() : "")
-                .legalCategoryString(uniteLegale.getActivitePrincipale() != null ? uniteLegale.getActivitePrincipale().getLibelle() : "")
-                .creationDate(convertLongToDate(uniteLegale.getDateCreation()))
-                .lastUpdate(meta.getDateDerniereMiseAjourAsDate())
-                .build();
+        company.setSiretHeadOffice(uniteLegale.getSiretSiegeSocial());
+        company.setApeCode(convertMyec3NafFormat(etablissement.getActivitePrincipale()));
+        company.setApeNafLabel(etablissement.getActivitePrincipale() != null ? etablissement.getActivitePrincipale().getLibelle() : "");
+        company.setLegalCategoryString(uniteLegale.getActivitePrincipale() != null ? uniteLegale.getActivitePrincipale().getLibelle() : "");
+        company.setCreationDate(convertLongToDate(uniteLegale.getDateCreation()));
+        company.setLastUpdate(meta.getDateDerniereMiseAjourAsDate());
         if (mandatairesSociaux != null) {
             List<Person> persons = new ArrayList<>();
             for (ApiGouvMandataireSocial mandataireSocial : mandatairesSociaux) {
@@ -591,16 +588,14 @@ public class MpsWsClient implements CompanyWSinfo {
     public static Establishment convertEtablissementToEtablishment(ApiGouvEtablissement etablissement, ApiGouvMeta
             meta) {
         Establishment establishment = new Establishment(etablissement.getEnseigne(), "");
-        establishment.builder()
-                .siret(etablissement.getSiret())
-                .isHeadOffice(Boolean.valueOf(etablissement.getSiegeSocial()))
-                .apeCode(convertMyec3NafFormat(etablissement.getActivitePrincipale()))
-                .apeNafLabel(etablissement.getActivitePrincipale() != null ? etablissement.getActivitePrincipale().getLibelle() : "")
-                .address(convertAdresseToAddress(etablissement.getAdresse()))
-                .diffusableInformations(Boolean.valueOf(etablissement.getDiffusableCommercialement()))
-                .pays(convertAdresseToPaysImplantation(etablissement.getAdresse()))
-                .lastUpdate(meta.getDateDerniereMiseAjourAsDate())
-                .build();
+        establishment.setSiret(etablissement.getSiret());
+        establishment.setIsHeadOffice(Boolean.valueOf(etablissement.getSiegeSocial()));
+        establishment.setApeCode(convertMyec3NafFormat(etablissement.getActivitePrincipale()));
+        establishment.setApeNafLabel(etablissement.getActivitePrincipale() != null ? etablissement.getActivitePrincipale().getLibelle() : "");
+        establishment.setAddress(convertAdresseToAddress(etablissement.getAdresse()));
+        establishment.setDiffusableInformations(Boolean.valueOf(etablissement.getDiffusableCommercialement()));
+        establishment.setPays(convertAdresseToPaysImplantation(etablissement.getAdresse()));
+        establishment.setLastUpdate(meta.getDateDerniereMiseAjourAsDate());
         logger.info("New establishment generated from api.gouv WS :" + establishment.getSiret());
         return establishment;
     }

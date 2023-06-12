@@ -51,8 +51,6 @@ import java.util.List;
 @XmlRootElement
 @Audited
 @Synchronized
-@Builder
-@AllArgsConstructor
 public class Establishment extends Resource {
 
 	private static final long serialVersionUID = -6213849679066931043L;
