@@ -618,4 +618,5 @@ public class Company extends Structure {
         }
         return false;
     }
+
 }
