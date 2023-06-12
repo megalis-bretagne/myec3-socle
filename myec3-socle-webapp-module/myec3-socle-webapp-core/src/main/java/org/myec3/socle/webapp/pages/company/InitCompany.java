@@ -443,8 +443,7 @@ public class InitCompany {
     @OnEvent(value = EventConstants.ADD_ROW, component = "person_list")
     public PersonHolder onAddRow() {
         Person newPerson = new Person();
-        PersonHolder newPersonHolder = new PersonHolder(newPerson,
-                Boolean.TRUE, Boolean.FALSE, 0 - System.nanoTime());
+        PersonHolder newPersonHolder = new PersonHolder(newPerson, Boolean.TRUE, Boolean.FALSE, 0 - System.nanoTime());
         this.personHolders.add(newPersonHolder);
         return newPersonHolder;
     }

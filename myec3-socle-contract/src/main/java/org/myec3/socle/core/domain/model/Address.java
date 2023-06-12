@@ -41,8 +41,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  *
  */
 @Embeddable
-@Builder
-@AllArgsConstructor
 public class Address implements Serializable {
 
 	private static final long serialVersionUID = -6828812686561183801L;

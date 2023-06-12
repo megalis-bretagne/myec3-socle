@@ -11,8 +11,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 
 @Embeddable
-@Builder
-@AllArgsConstructor
 public class PaysImplantation implements Serializable {
 	/**
 	 * 

@@ -49,8 +49,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 @Entity
 @Audited
 @XmlRootElement
-@Builder
-@AllArgsConstructor
 public class Person extends Resource {
 
 	private static final long serialVersionUID = 2936976151703876984L;

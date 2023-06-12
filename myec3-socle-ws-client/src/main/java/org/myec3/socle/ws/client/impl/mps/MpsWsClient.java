@@ -601,35 +601,33 @@ public class MpsWsClient implements CompanyWSinfo {
     }
 
     public static Address convertAdresseToAddress(ApiGouvAdresse apiGouvAdresse) {
-        Address adresse = Address.builder()
-                .streetNumber(apiGouvAdresse.getNumeroVoie())
-                .streetType(apiGouvAdresse.getTypeVoie())
-                .streetName(apiGouvAdresse.getLibelleVoie())
-                .insee(apiGouvAdresse.getCodeCommune())
-                .postalCode(apiGouvAdresse.getCodePostal())
-                .city(apiGouvAdresse.getLibelleCommune())
-                .build();
+        Address adresse = new Address();
+        adresse.setStreetNumber(apiGouvAdresse.getNumeroVoie());
+        adresse.setStreetType(apiGouvAdresse.getTypeVoie());
+        adresse.setStreetName(apiGouvAdresse.getLibelleVoie());
+        adresse.setInsee(apiGouvAdresse.getCodeCommune());
+        adresse.setPostalCode(apiGouvAdresse.getCodePostal());
+        adresse.setCity(apiGouvAdresse.getLibelleCommune());
         logger.info("New adresse generated from api.gouv WS :" + adresse.getStreetName());
         return adresse;
     }
 
     public static PaysImplantation convertAdresseToPaysImplantation(ApiGouvAdresse adresse) {
-        PaysImplantation paysImplantation = PaysImplantation.builder()
-                .code(adresse.getCodePaysEtranger())
-                .value(adresse.libellePaysEtranger)
-                .build();
+        PaysImplantation paysImplantation = new PaysImplantation();
+        paysImplantation.setCode(adresse.getCodePaysEtranger());
+        paysImplantation.setValue(adresse.libellePaysEtranger);
         logger.info("New paysImplantation generated from api.gouv WS :" + paysImplantation.getValue());
         return paysImplantation;
     }
 
     public static Person convertMandataireSocialToPerson(ApiGouvMandataireSocial mandataireSocial) {
-        Person person = Person.builder()
-                .firstname(mandataireSocial.getData().getPrenom())
-                .lastname(mandataireSocial.getData().getNom())
-                .type(mandataireSocial.getData().getType())
-                .function(mandataireSocial.getData().getFonction())
-                .moralName(mandataireSocial.getData().getRaisonSociale())
-                .build();
+        Person person = new Person();
+        person.setFirstname(mandataireSocial.getData().getPrenom());
+        person.setLastname(mandataireSocial.getData().getNom());
+        person.setName(mandataireSocial.getData().getNom()+" "mandataireSocial.getData().getPrenom());
+        person.setType(mandataireSocial.getData().getType());
+        person.setFunction(mandataireSocial.getData().getFonction());
+        person.setMoralName(mandataireSocial.getData().getRaisonSociale());
         logger.info("New person generated from api.gouv WS :" + person.getName());
         return person;
     }
