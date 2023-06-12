@@ -31,6 +31,7 @@ import static java.util.stream.Collectors.joining;
 
 public class MpsWsClient implements CompanyWSinfo {
 
+    public static final String NAFREV_2 = "NAFRev2";
     private static Logger logger = LoggerFactory.getLogger(MpsWsClient.class);
 
     ResourceBundle bundle = ResourceBundle.getBundle("mpsWs");
@@ -194,7 +195,7 @@ public class MpsWsClient implements CompanyWSinfo {
             ResponseEtablissement responseEtablissement = this.getInfoEtablissements(responseEntreprises.getData().getSiretSiegeSocial());
             logger.info("Search for mandataires matching siren : " + company.getSiren());
             ResponseMandataires responseMandataires = this.getInfoMandataires(company.getSiren());
-            company = convertUniteLegaleToCompany(responseEntreprises.getData(), responseEtablissement.getData(),responseEtablissement.getMeta(), responseMandataires.getData());
+            company = convertUniteLegaleToCompany(responseEntreprises.getData(), responseEtablissement.getData(), responseEtablissement.getMeta(), responseMandataires.getData());
             this.setCompanyMissingFields(responseEntreprises, responseEtablissement, company, inseeLegalCategoryService);
         } catch (Exception e) {
             logger.error("Error happen during api.gouv.fr call :", e);
@@ -279,7 +280,7 @@ public class MpsWsClient implements CompanyWSinfo {
                 ResponseUniteLegale responseEntreprise = this.getInfoEntreprises(siren);
                 ResponseEtablissement responseEtablissement = this.getInfoEtablissements(responseEntreprise.getData().getSiretSiegeSocial());
                 ResponseMandataires responseMandataires = this.getInfoMandataires(siren);
-                company = convertUniteLegaleToCompany(responseEntreprise.getData(),responseEtablissement.getData(), responseEtablissement.getMeta(), responseMandataires.getData());
+                company = convertUniteLegaleToCompany(responseEntreprise.getData(), responseEtablissement.getData(), responseEtablissement.getMeta(), responseMandataires.getData());
                 this.setCompanyMissingFields(responseEntreprise, responseEtablissement, company, inseeLegalCategoryService);
             } catch (IOException e) {
                 logger.error("Error happen during api.gouv.fr call :", e);
@@ -467,15 +468,16 @@ public class MpsWsClient implements CompanyWSinfo {
         // catégorie juridique
         if (responseEntreprises.getData().getFormeJuridique() != null) {
 
-                CompanyINSEECat companyINSEECat = CompanyINSEECat.getByCode(responseEntreprises.getData().getFormeJuridique().getCode());
-                if (companyINSEECat != null) {
-                    company.setLegalCategory(companyINSEECat);
-                } else {
-                    // set to other InseeLegalCategory because we are not able to
-                    // retrieve a known INSEECat
-                    company.setLegalCategory(CompanyINSEECat.AUTRE);
-                    logger.info("Unknown InseeLegalCategory ... Set InseeLegalCategory to default OTHER");
-                }
+
+            CompanyINSEECat companyINSEECat = CompanyINSEECat.getByCode(responseEntreprises.getData().getFormeJuridique().getCode());
+            if (companyINSEECat != null) {
+                company.setLegalCategory(companyINSEECat);
+            } else {
+                // set to other InseeLegalCategory because we are not able to
+                // retrieve a known INSEECat
+                company.setLegalCategory(CompanyINSEECat.AUTRE);
+                logger.info("Unknown InseeLegalCategory ... Set InseeLegalCategory to default OTHER");
+            }
         } else {
             logger.info("Company InseeLegalCategory is null. Setting it to 'Autre'");
             CompanyINSEECat companyINSEECat = CompanyINSEECat.getByValue("AUTRE");
@@ -546,15 +548,15 @@ public class MpsWsClient implements CompanyWSinfo {
         }
     }
 
-    public static Company convertUniteLegaleToCompany(ApiGouvUniteLegale uniteLegale,ApiGouvEtablissement etablissement, ApiGouvMeta
+    public static Company convertUniteLegaleToCompany(ApiGouvUniteLegale uniteLegale, ApiGouvEtablissement etablissement, ApiGouvMeta
             meta, List<ApiGouvMandataireSocial> mandatairesSociaux) {
 
-        String raisonSociale =    uniteLegale.getPersonneMoraleAttributs() != null ? etablissement.getEnseigne() : "";
+        String raisonSociale = uniteLegale.getPersonneMoraleAttributs() != null ? etablissement.getEnseigne() : "";
         Company company = new Company(uniteLegale.getFormeJuridique().getLibelle(), "");
         company.setSiren(uniteLegale.getSiren());
         company.builder()
                 .siretHeadOffice(uniteLegale.getSiretSiegeSocial())
-                .apeCode(uniteLegale.getActivitePrincipale() != null ? converToNAF(uniteLegale.getActivitePrincipale().getCode()) : "")
+                .apeCode(convertMyec3NafFormat(uniteLegale.getActivitePrincipale()))
                 .apeNafLabel(uniteLegale.getActivitePrincipale() != null ? uniteLegale.getActivitePrincipale().getLibelle() : "")
                 .legalCategoryString(uniteLegale.getActivitePrincipale() != null ? uniteLegale.getActivitePrincipale().getLibelle() : "")
                 .creationDate(convertLongToDate(uniteLegale.getDateCreation()))
@@ -579,10 +581,16 @@ public class MpsWsClient implements CompanyWSinfo {
         return date;
     }
 
-    private static String converToNAF(String codeApe) {
+    public static String convertMyec3NafFormat(ApiGouvActivitePrincipale activitePrincipale) {
         String codeNAF = "";
-        if (codeApe != null) {
-            codeNAF = codeApe.substring(0,1)+""+codeApe.substring(3);
+        if (activitePrincipale != null) {
+            if (NAFREV_2.equals(activitePrincipale)) {
+                logger.info("Company activity received in NAFREV_2 format, processing conversion :", activitePrincipale.getCode());
+                codeNAF = activitePrincipale.getCode().replace(".", "");
+                logger.info("Company activity convert to :", codeNAF);
+            }
+        } else {
+            logger.warn("Company activity not defined in data.");
         }
         return codeNAF;
     }
@@ -593,7 +601,7 @@ public class MpsWsClient implements CompanyWSinfo {
         establishment.builder()
                 .siret(etablissement.getSiret())
                 .isHeadOffice(Boolean.valueOf(etablissement.getSiegeSocial()))
-                .apeCode(etablissement.getActivitePrincipale() != null ? converToNAF(etablissement.getActivitePrincipale().getCode()) : "")
+                .apeCode(convertMyec3NafFormat(etablissement.getActivitePrincipale()))
                 .apeNafLabel(etablissement.getActivitePrincipale() != null ? etablissement.getActivitePrincipale().getLibelle() : "")
                 .address(convertAdresseToAddress(etablissement.getAdresse()))
                 .diffusableInformations(Boolean.valueOf(etablissement.getDiffusableCommercialement()))

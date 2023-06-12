@@ -93,13 +93,11 @@ public class Siren {
             if (infos != null && infos.getData() != null) {
                 this.organism.setLabel(infos.getData().getPersonneMoraleAttributs().getRaisonSociale());
                 Address address = MpsWsClient.convertAdresseToAddress(etablissement.getData().getAdresse());
-
                 // complete postalAddress with streetNumber/Street type and streetName
                 address.setPostalAddress(address.getStreetNumber() + " " + address.getStreetType() + " " + address.getStreetName());
-                // complete with forme_juridique
-                String codeApe = infos.getData().getFormeJuridique().getCode();
-                String codeNAF = codeApe.substring(0, 1)+""+codeApe.substring(3);
-                OrganismNafCode naf = OrganismNafCode.fromApeCode(infos.getData().getFormeJuridique().getCode());
+                // complete Ape infos
+                String codeApe = mpsWsClient.convertMyec3NafFormat(infos.getData().getActivitePrincipale());
+                OrganismNafCode naf = OrganismNafCode.fromApeCode(codeApe);
                 this.organism.setApeCode(naf);
 
                 String formeJuridique = infos.getData().getFormeJuridique().getCode();
