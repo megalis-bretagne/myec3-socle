@@ -547,8 +547,8 @@ public class MpsWsClient implements CompanyWSinfo {
         Company company = new Company(uniteLegale.getFormeJuridique().getLibelle(), "");
         company.setSiren(uniteLegale.getSiren());
         company.setSiretHeadOffice(uniteLegale.getSiretSiegeSocial());
-        company.setApeCode(convertMyec3NafFormat(etablissement.getActivitePrincipale()));
-        company.setApeNafLabel(etablissement.getActivitePrincipale() != null ? etablissement.getActivitePrincipale().getLibelle() : "");
+        company.setApeCode(convertMyec3NafFormat(uniteLegale.getActivitePrincipale()));
+        company.setApeNafLabel(uniteLegale.getActivitePrincipale() != null ? uniteLegale.getActivitePrincipale().getLibelle() : "");
         company.setLegalCategoryString(uniteLegale.getActivitePrincipale() != null ? uniteLegale.getActivitePrincipale().getLibelle() : "");
         company.setCreationDate(convertLongToDate(uniteLegale.getDateCreation()));
         company.setLastUpdate(meta.getDateDerniereMiseAjourAsDate());
@@ -577,10 +577,14 @@ public class MpsWsClient implements CompanyWSinfo {
     public static String convertMyec3NafFormat(ApiGouvActivitePrincipale activitePrincipale) {
         String codeNAF = "";
         if (activitePrincipale != null) {
-            if (NAFREV_2.equals(activitePrincipale)) {
+            if (NAFREV_2.equals(activitePrincipale.getNomenclature())) {
                 logger.info("Company activity received in NAFREV_2 format, processing conversion :", activitePrincipale.getCode());
                 codeNAF = activitePrincipale.getCode().replace(".", "");
                 logger.info("Company activity convert to :", codeNAF);
+            }else{
+                logger.info("Company activity received in other format, processing conversion :", activitePrincipale.getCode());
+                codeNAF = activitePrincipale.getCode().replace(".", "");
+                logger.info("Company activity convert to :", codeNAF); 
             }
         } else {
             logger.warn("Company activity not defined in data.");
