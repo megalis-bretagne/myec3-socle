@@ -601,7 +601,7 @@ public class MpsWsClient implements CompanyWSinfo {
                 .pays(convertAdresseToPaysImplantation(etablissement.getAdresse()))
                 .lastUpdate(meta.getDateDerniereMiseAjourAsDate())
                 .build();
-        logger.info("New establishment generated from api.gouv WS :" + establishment.getSiret();
+        logger.info("New establishment generated from api.gouv WS :" + establishment.getSiret());
         return establishment;
     }
 
