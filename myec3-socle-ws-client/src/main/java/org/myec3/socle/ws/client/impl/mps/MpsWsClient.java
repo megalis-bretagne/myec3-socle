@@ -587,7 +587,7 @@ public class MpsWsClient implements CompanyWSinfo {
 
     public static Establishment convertEtablissementToEtablishment(ApiGouvEtablissement etablissement, ApiGouvMeta
             meta) {
-        Establishment establishment = new Establishment(etablissement.getEnseigne(), "");
+        Establishment establishment = new Establishment(etablissement.getEnseigne(), etablissement.getEnseigne());
         establishment.setSiret(etablissement.getSiret());
         establishment.setIsHeadOffice(Boolean.valueOf(etablissement.getSiegeSocial()));
         establishment.setApeCode(convertMyec3NafFormat(etablissement.getActivitePrincipale()));

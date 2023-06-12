@@ -618,34 +618,4 @@ public class Company extends Structure {
         }
         return false;
     }
-
-    @Override
-    public String toString() {
-        return "Company{" +
-                "name=" + super.getName() +
-                ",label=" + super.getLabel() +
-                ",foreignIdentifier=" + foreignIdentifier +
-                ", apeCode='" + apeCode + '\'' +
-                ", apeNafLabel='" + apeNafLabel + '\'' +
-                ", administrativeState=" + administrativeState +
-                ", registrationCountry=" + registrationCountry +
-                ", legalCategory=" + legalCategory +
-                ", nic='" + nic + '\'' +
-                ", siretHeadOffice='" + siretHeadOffice + '\'' +
-                ", nationalID='" + nationalID + '\'' +
-                ", rm=" + rm +
-                ", rcs=" + rcs +
-                ", insee='" + insee + '\'' +
-                ", lastUpdate=" + lastUpdate +
-                ", creationDate=" + creationDate +
-                ", radiationDate=" + radiationDate +
-                ", departments=" + departments +
-                ", establishments=" + establishments +
-                ", responsibles=" + responsibles +
-                ", companyAcronym='" + companyAcronym + '\'' +
-                ", companyCategory=" + companyCategory +
-                ", legalCategoryString='" + legalCategoryString + '\'' +
-                ", diffusableInformations=" + diffusableInformations +
-                '}';
-    }
 }

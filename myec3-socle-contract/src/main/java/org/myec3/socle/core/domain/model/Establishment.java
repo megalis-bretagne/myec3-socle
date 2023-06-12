@@ -248,7 +248,7 @@ public class Establishment extends Resource {
 	/**
 	 * Set {@link Establishment}'s SIRET and update its NIC accordingly.
 	 * 
-	 * @param nic
+	 * @param siret
 	 */
 	public void setSiret(String siret) {
 		this.siret = siret;
@@ -464,31 +464,4 @@ public class Establishment extends Resource {
     public String getName() {
         return super.getName();
     }
-
-	@Override
-	public String toString() {
-		return "Establishment{" +
-				"name=" + super.getName() +
-				",label=" + super.getLabel() +
-				",isHeadOffice=" + isHeadOffice +
-				", company=" + company +
-				", employees=" + employees +
-				", foreignIdentifier=" + foreignIdentifier +
-				", nationalID='" + nationalID + '\'' +
-				", nic='" + nic + '\'' +
-				", siret='" + siret + '\'' +
-				", apeCode='" + apeCode + '\'' +
-				", apeNafLabel='" + apeNafLabel + '\'' +
-				", administrativeState=" + administrativeState +
-				", address=" + address +
-				", email='" + email + '\'' +
-				", phone='" + phone + '\'' +
-				", fax='" + fax + '\'' +
-				", lastUpdate=" + lastUpdate +
-				", diffusableInformations=" + diffusableInformations +
-				", pays=" + pays +
-				", createdDate=" + createdDate +
-				", createdUserId=" + createdUserId +
-				'}';
-	}
 }
