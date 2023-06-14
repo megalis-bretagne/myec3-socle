@@ -189,8 +189,14 @@ public class MpsWsClient implements CompanyWSinfo {
             logger.info("Search for 'unité legale' matching siren : " + company.getSiren());
             ResponseEtablissement responseEtablissement = this.getInfoEtablissements(responseEntreprises.getData().getSiretSiegeSocial());
             logger.info("Search for mandataires matching siren : " + company.getSiren());
-            ResponseMandataires responseMandataires = this.getInfoMandataires(company.getSiren());
-            company = convertUniteLegaleToCompany(responseEntreprises.getData(), responseEtablissement.getData(), responseEtablissement.getMeta(), responseMandataires.getData());
+            List<ApiGouvMandataireSocial> mandataireSocials = null;
+            try {
+                ResponseMandataires responseMandataires = this.getInfoMandataires(company.getSiren());
+                mandataireSocials = responseMandataires.getData();
+            }catch (Exception e){
+                logger.warn("Api do not found any matching mandataire :", e);
+            }
+            company = convertUniteLegaleToCompany(responseEntreprises.getData(), responseEtablissement.getData(), responseEtablissement.getMeta(), mandataireSocials);
             this.setCompanyMissingFields(responseEntreprises, responseEtablissement, company, inseeLegalCategoryService);
         } catch (Exception e) {
             logger.error("Error happen during api.gouv.fr call :", e);
@@ -272,11 +278,19 @@ public class MpsWsClient implements CompanyWSinfo {
             logger.info("Updating company : " + siren);
             try {
                 // Call MPS to get the Company informations
-                ResponseUniteLegale responseEntreprise = this.getInfoEntreprises(siren);
-                ResponseEtablissement responseEtablissement = this.getInfoEtablissements(responseEntreprise.getData().getSiretSiegeSocial());
-                ResponseMandataires responseMandataires = this.getInfoMandataires(siren);
-                company = convertUniteLegaleToCompany(responseEntreprise.getData(), responseEtablissement.getData(), responseEtablissement.getMeta(), responseMandataires.getData());
-                this.setCompanyMissingFields(responseEntreprise, responseEtablissement, company, inseeLegalCategoryService);
+                ResponseUniteLegale responseEntreprises = responseEntreprises = this.getInfoEntreprises(company.getSiren());
+                logger.info("Search for 'unité legale' matching siren : " + company.getSiren());
+                ResponseEtablissement responseEtablissement = this.getInfoEtablissements(responseEntreprises.getData().getSiretSiegeSocial());
+                logger.info("Search for mandataires matching siren : " + company.getSiren());
+                List<ApiGouvMandataireSocial> mandataireSocials = null;
+                try {
+                    ResponseMandataires responseMandataires = this.getInfoMandataires(company.getSiren());
+                    mandataireSocials = responseMandataires.getData();
+                }catch (Exception e){
+                    logger.warn("Api do not found any matching mandataire :", e);
+                }
+                company = convertUniteLegaleToCompany(responseEntreprises.getData(), responseEtablissement.getData(), responseEtablissement.getMeta(), mandataireSocials);
+                this.setCompanyMissingFields(responseEntreprises, responseEtablissement, company, inseeLegalCategoryService);
             } catch (Exception e) {
                 logger.error("Error happen during api.gouv.fr call :", e);
             }
