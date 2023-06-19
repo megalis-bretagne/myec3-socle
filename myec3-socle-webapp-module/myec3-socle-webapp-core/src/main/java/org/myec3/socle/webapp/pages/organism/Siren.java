@@ -4,8 +4,8 @@ import org.apache.commons.lang3.BooleanUtils;
 import org.apache.tapestry5.EventConstants;
 import org.apache.tapestry5.PersistenceConstants;
 import org.apache.tapestry5.annotations.*;
+import org.apache.tapestry5.commons.Messages;
 import org.apache.tapestry5.corelib.components.Form;
-import org.apache.tapestry5.ioc.Messages;
 import org.apache.tapestry5.ioc.annotations.Inject;
 import org.myec3.socle.core.domain.model.Address;
 import org.myec3.socle.core.domain.model.Organism;
@@ -15,7 +15,8 @@ import org.myec3.socle.core.domain.model.enums.OrganismNafCode;
 import org.myec3.socle.core.service.OrganismService;
 import org.myec3.socle.webapp.pages.Index;
 import org.myec3.socle.ws.client.impl.mps.MpsWsClient;
-import org.myec3.socle.ws.client.impl.mps.response.ResponseEntreprises;
+import org.myec3.socle.ws.client.impl.mps.response.ResponseEtablissement;
+import org.myec3.socle.ws.client.impl.mps.response.ResponseUniteLegale;
 
 public class Siren {
 
@@ -69,7 +70,7 @@ public class Siren {
 
         if (null != this.organismService.findBySiren(organism.getSiren())) {
             this.siretForm.recordError(this.messages.get(
-                "organism-exists-error"));
+                    "organism-exists-error"));
             return false;
         }
 
@@ -87,30 +88,33 @@ public class Siren {
      */
     private void completeOrganismInfo() {
         try {
-            ResponseEntreprises infos = mpsWsClient.getInfoEntreprises(organism.getSiren());
-            if ( infos != null && infos.getEntreprise() !=null){
-                this.organism.setLabel(infos.getEntreprise().getLabel());
-                Address address = infos.getEtablissement_siege().getAddress();
-
+            ResponseUniteLegale infos = mpsWsClient.getInfoEntreprises(organism.getSiren());
+            ResponseEtablissement etablissement = mpsWsClient.getInfoEtablissements(infos.getData().getSiretSiegeSocial());
+            if (infos != null && infos.getData() != null) {
+                this.organism.setLabel(infos.getData().getPersonneMoraleAttributs().getRaisonSociale());
+                Address address = MpsWsClient.convertAdresseToAddress(etablissement.getData().getAdresse());
                 // complete postalAddress with streetNumber/Street type and streetName
-                address.setPostalAddress(address.getStreetNumber()+" "+address.getStreetType()+" "+address.getStreetName());
-                // complete with forme_juridique
-                OrganismNafCode naf = OrganismNafCode.fromApeCode(infos.getEtablissement_siege().getApeCode());
+                address.setPostalAddress(address.getStreetNumber() + " " + address.getStreetType() + " " + address.getStreetName());
+                // complete Ape infos
+                String codeApe = mpsWsClient.convertMyec3NafFormat(infos.getData().getActivitePrincipale());
+                OrganismNafCode naf = OrganismNafCode.fromApeCode(codeApe);
                 this.organism.setApeCode(naf);
 
-                String formeJuridique = infos.getEntreprise().getApeCode();
+                String formeJuridique = infos.getData().getFormeJuridique().getCode();
                 // La forme juridique est sur 4 caractère (refentiel INSEE). Il faut le code ABCD en A.B.CD pour obtenir le bon enum
                 if (formeJuridique.length() == 4) {
-                    String id = formeJuridique.charAt(0) + "."+formeJuridique.charAt(1)+"."+formeJuridique.substring(2);
+                    String id = formeJuridique.charAt(0) + "." + formeJuridique.charAt(1) + "." + formeJuridique.substring(2);
                     OrganismINSEECat categogry = OrganismINSEECat.fromId(id);
                     this.organism.setLegalCategory(categogry);
                 }
                 this.organism.setAddress(address);
-            }else{
+            } else {
                 this.errorMessage = this.messages.get("mps-error-message");
             }
         } catch (Exception e) {
             this.errorMessage = this.messages.get("mps-error-message");
         }
     }
+
+
 }

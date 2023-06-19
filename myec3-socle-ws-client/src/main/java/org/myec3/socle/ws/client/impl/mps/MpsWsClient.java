@@ -3,158 +3,207 @@ package org.myec3.socle.ws.client.impl.mps;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.myec3.socle.core.domain.model.Company;
-import org.myec3.socle.core.domain.model.Establishment;
-import org.myec3.socle.core.domain.model.Person;
+import org.myec3.socle.core.domain.model.*;
 import org.myec3.socle.core.domain.model.enums.CompanyINSEECat;
 import org.myec3.socle.core.domain.model.enums.Country;
+import org.myec3.socle.core.domain.model.json.*;
 import org.myec3.socle.core.service.InseeLegalCategoryService;
 import org.myec3.socle.core.sync.api.HttpStatus;
 import org.myec3.socle.ws.client.CompanyWSinfo;
-import org.myec3.socle.ws.client.impl.mps.response.ResponseEntreprises;
-import org.myec3.socle.ws.client.impl.mps.response.ResponseEtablissements;
+import org.myec3.socle.ws.client.impl.mps.response.ResponseEtablissement;
+import org.myec3.socle.ws.client.impl.mps.response.ResponseMandataires;
+import org.myec3.socle.ws.client.impl.mps.response.ResponseUniteLegale;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpHeaders;
 
-import javax.ws.rs.core.Response.Status;
 import java.io.*;
-import java.net.*;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
-import java.util.HashMap;
-import java.util.ResourceBundle;
+import java.util.*;
+import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.joining;
 
 public class MpsWsClient implements CompanyWSinfo {
 
+    public static final String NAFREV_2 = "NAFRev2";
     private static Logger logger = LoggerFactory.getLogger(MpsWsClient.class);
 
     ResourceBundle bundle = ResourceBundle.getBundle("mpsWs");
 
+    private final String MPS_URL_MANDATAIRES = bundle.getString("mpsUrlMandataires");
     private final String MPS_URL_ENTREPRISES = bundle.getString("mpsUrlEntreprises");
     private final String MPS_URL_ETABLISSEMENT = bundle.getString("mpsUrlEtablissement");
     private final String MPS_TOKEN = bundle.getString("mpsToken");
     private final String MPS_CONTEXT = bundle.getString("mpsContext");
     private final String MPS_OBJECT = bundle.getString("mpsObject");
 
+    private final String MPS_RECIPIENT = bundle.getString("mpsRecipient");
+
     // use Enterprise WebService
-    public ResponseEntreprises getInfoEntreprises(String companySiren) {
+    public ResponseUniteLegale getInfoEntreprises(String companySiren) throws IOException {
 
         ObjectFactory factory = new ObjectFactory();
         String url = this.getUrlEntreprise(companySiren);
-        ResponseEntreprises response = factory.createResponseEntreprises();
+        ResponseUniteLegale response;
+        logger.info("Create connection for :" + url);
         HttpURLConnection conn;
-        InputStream responseTmp;
+        try {
+            URL urlTemp = new URL(url);
+                /*   Proxy proxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress("172.31.6.15", 3128));
+            conn = (HttpURLConnection) new URL(url).openConnection(proxy);*/
+            conn = (HttpURLConnection) urlTemp.openConnection();
+            conn.setRequestMethod("GET");
+            conn.setRequestProperty(HttpHeaders.AUTHORIZATION, "Bearer " + MPS_TOKEN);
+            conn.setRequestProperty(HttpHeaders.CONTENT_TYPE, "application/json");
+            conn.setConnectTimeout(8000); // set timeout to 8 seconds
+        } catch (MalformedURLException e) {
+            logger.error("Not a valid URL: " + url, e);
+            throw e;
+        } catch (Exception e) {
+            logger.error("Unable to connect to : " + url, e);
+            throw e;
+        }
+        logger.info("Asking Entreprises Webservice on url : ");
 
-        logger.info("Asking Entreprises Webservice on url : " + url);
-        conn = this.getUrlConnection(url);
+        // Get the raw MPS response
+        InputStream responseTmp = conn.getInputStream();
+        logger.info("Convert JSON response to string for Jackson parsing");
+        // Convert JSON response to string for Jackson parsing
+        String jsonReply = this.getStringFromInputStream(responseTmp);
+        // Temporary debug to view response content
+        logger.info("Json representation : " + jsonReply);
+        ObjectMapper mapper = new ObjectMapper();
 
-        if (null != conn) {
-            // Get the raw MPS response
-            try {
-                responseTmp = conn.getInputStream();
+        // Do not stack on unknown / null values
+        mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
 
-                // Convert JSON response to string for Jackson parsing
-                String jsonReply = this.getStringFromInputStream(responseTmp);
-                ObjectMapper mapper = new ObjectMapper();
+        // Match MPS response with ReponseEntreprise class
+        response = mapper.readValue(jsonReply, ResponseUniteLegale.class);
+        logger.info("ResponseUniteLegale DTO representation : " + response.toString());
+        conn.disconnect();
+        return response;
+    }
 
-                // Do not stack on unknown / null values
-                mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-                mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+    public ResponseMandataires getInfoMandataires(String companySiren) throws IOException {
 
-                // Match MPS response with ReponseEntreprise class
-                response = mapper.readValue(jsonReply, ResponseEntreprises.class);
-
-                // Temporary debug to view response content
-                logger.info("Json representation : " + response.toString());
-
-                // close connection after retrieving query result (avoid time wait close
-                // connection on server)
-                conn.disconnect();
-            } catch (IOException e) {
-				logger.error("Unable to connect to : " + url, e);
-                return null;
-
-			} finally {
-				// close connection properly if not closed yet
-				conn.disconnect();
-			}
+        ObjectFactory factory = new ObjectFactory();
+        String url = this.getUrlMandataires(companySiren);
+        ResponseMandataires response;
+        logger.info("Create connection for :" + url);
+        HttpURLConnection conn;
+        try {
+            URL urlTemp = new URL(url);
+         /*   Proxy proxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress("172.31.6.15", 3128));
+            conn = (HttpURLConnection) new URL(url).openConnection(proxy);*/
+            conn = (HttpURLConnection) urlTemp.openConnection();
+            conn.setRequestMethod("GET");
+            conn.setRequestProperty(HttpHeaders.AUTHORIZATION, "Bearer " + MPS_TOKEN);
+            conn.setRequestProperty(HttpHeaders.CONTENT_TYPE, "application/json");
+            conn.setConnectTimeout(8000); // set timeout to 8 seconds
+        } catch (MalformedURLException e) {
+            logger.error("Not a valid URL: " + url, e);
+            throw e;
+        } catch (Exception e) {
+            logger.error("Unable to connect to : " + url, e);
+            throw e;
         }
 
+        logger.info("Asking Mandataires Webservice on url");
+        // Get the raw MPS response
+        InputStream responseTmp = conn.getInputStream();
+        // Convert JSON response to string for Jackson parsing
+        logger.info("Convert JSON response to string for Jackson parsing");
+        String jsonReply = this.getStringFromInputStream(responseTmp);
+        // Temporary debug to view response content
+        logger.info("Json representation : " + jsonReply);
+        ObjectMapper mapper = new ObjectMapper();
+        // Do not stack on unknown / null values
+        mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+        // Match MPS response with ReponseEntreprise class
+        response = mapper.readValue(jsonReply, ResponseMandataires.class);
+        logger.info("ResponseMandataires DTO representation : " + response.toString());
+        // close connection properly if not closed yet
+        conn.disconnect();
         return response;
     }
 
     // use Establishments WebService
-    private ResponseEtablissements getInfoEtablissements(String siegeSocialSiret) {
+    public ResponseEtablissement getInfoEtablissements(String siegeSocialSiret) throws IOException {
 
         ObjectFactory factory = new ObjectFactory();
         String url = this.getUrlEtablissement(siegeSocialSiret);
-        ResponseEtablissements response = factory.createResponseEtablissements();
-        HttpURLConnection conn = null;
-
+        ResponseEtablissement response;
+        logger.info("Create connection for :" + url);
+        HttpURLConnection conn;
         try {
             URL urlTemp = new URL(url);
-
-            logger.info("Asking Etablissements Webservice on url : " + url);
+                 /*   Proxy proxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress("172.31.6.15", 3128));
+            conn = (HttpURLConnection) new URL(url).openConnection(proxy);*/
             conn = (HttpURLConnection) urlTemp.openConnection();
             conn.setRequestMethod("GET");
-            conn.setConnectTimeout(8000); // set timeout to 5 seconds
-
-            // Get the raw MPS response
-            InputStream responseTmp = conn.getInputStream();
-
-            // Convert JSON response to string for Jackson parsing
-            String jsonReply = this.getStringFromInputStream(responseTmp);
-            ObjectMapper mapper = new ObjectMapper();
-
-            // Do not stack on unknown / null values
-            mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-            mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
-
-            // Match MPS response with ReponseEntreprise class
-            response = mapper.readValue(jsonReply, ResponseEtablissements.class);
-
-            // Temporary debug to view response content
-            logger.info("ResponseEtablissements DTO representation : " + response.getEtablissement().toString());
-
-            // close connection after retrieving query result (avoid time wait close
-            // connection on server)
-            conn.disconnect();
-
+            conn.setRequestProperty(HttpHeaders.AUTHORIZATION, "Bearer " + MPS_TOKEN);
+            conn.setRequestProperty(HttpHeaders.CONTENT_TYPE, "application/json");
+            conn.setConnectTimeout(8000); // set timeout to 8 seconds
         } catch (MalformedURLException e) {
-            logger.error("Not a valid URL: " + url);
-        } catch (SocketTimeoutException e) { // MPS too long to aswer
-            logger.error("Timeout. Unable to connect to : " + url);
-            response.setGateway_error_code(Status.INTERNAL_SERVER_ERROR);
-        } catch (FileNotFoundException e) { // No establishment for this siret
-            logger.error("Unable to connect to : " + url + ". Wrong Siret");
-            response.setGateway_error_code(Status.NOT_FOUND);
-        } catch (IOException e) { // default
-            logger.error("Unable to connect to : " + url);
-            response.setGateway_error_code(Status.INTERNAL_SERVER_ERROR);
-        } finally {
-            // close connection properly if not closed yet
-            if (conn != null) {
-                conn.disconnect();
-            }
+            logger.error("Not a valid URL: " + url, e);
+            throw e;
+        } catch (Exception e) {
+            logger.error("Unable to connect to : " + url, e);
+            throw e;
         }
+        logger.info("Asking Etablissements Webservice on url");
+        InputStream responseTmp = conn.getInputStream();
+        // Convert JSON response to string for Jackson parsing
+        logger.info("Convert JSON response to string for Jackson parsing");
+        String jsonReply = this.getStringFromInputStream(responseTmp);
+        // Temporary debug to view response content
+        logger.info("Json representation : " + jsonReply);
+        ObjectMapper mapper = new ObjectMapper();
+        // Do not stack on unknown / null values
+        mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+        // Match MPS response with ReponseEntreprise class
+        response = mapper.readValue(jsonReply, ResponseEtablissement.class);
+        // Temporary debug to view response content
+        logger.info("ResponseEtablissements DTO representation : " + response.toString());
+        // close connection properly if not closed yet
+        conn.disconnect();
         return response;
     }
 
     @Override
     public Company updateCompanyInfo(Company company, InseeLegalCategoryService inseeLegalCategoryService) {
         logger.info("Update Company " + company.getSiren() + " Information with the MPS WS ");
-
         // Call MPS to get the Company informations
-        ResponseEntreprises responseEntreprises = this.getInfoEntreprises(company.getSiren());
-        if (responseEntreprises !=null) {
-            company = responseEntreprises.getEntreprise();
-
-            this.setCompanyMissingFields(responseEntreprises, company, inseeLegalCategoryService);
-
-            return company;
+        logger.info("Search for entreprise matching siren : " + company.getSiren());
+        try {
+            ResponseUniteLegale responseEntreprises = responseEntreprises = this.getInfoEntreprises(company.getSiren());
+            logger.info("Search for 'unité legale' matching siren : " + company.getSiren());
+            ResponseEtablissement responseEtablissement = this.getInfoEtablissements(responseEntreprises.getData().getSiretSiegeSocial());
+            logger.info("Search for mandataires matching siren : " + company.getSiren());
+            List<ApiGouvMandataireSocial> mandataireSocials = null;
+            try {
+                ResponseMandataires responseMandataires = this.getInfoMandataires(company.getSiren());
+                mandataireSocials = responseMandataires.getData();
+            }catch (Exception e){
+                logger.warn("Api do not found any matching mandataire :", e);
+            }
+            company = convertUniteLegaleToCompany(responseEntreprises.getData(), responseEtablissement.getData(), responseEtablissement.getMeta(), mandataireSocials);
+            this.setCompanyMissingFields(responseEntreprises, responseEtablissement, company, inseeLegalCategoryService);
+        } catch (Exception e) {
+            logger.error("Error happen during api.gouv.fr call :", e);
         }
-        else return null;
+        logger.info("Consolidates company : " + company.getSiren());
+        return company;
+
     }
 
     @Override
@@ -164,51 +213,39 @@ public class MpsWsClient implements CompanyWSinfo {
             logger.info("update establishment information : " + establishment.getSiret());
 
             // Call MPS to get the Establishment informations
-            ResponseEtablissements responseEtablissements = this.getInfoEtablissements(establishment.getSiret());
+            ResponseEtablissement responseEtablissements = this.getInfoEtablissements(establishment.getSiret());
 
-            if (responseEtablissements.getGateway_error_code() != null) {
-                switch (responseEtablissements.getGateway_error_code()) {
-                    case INTERNAL_SERVER_ERROR:
-                        throw new IOException();
-                    case NOT_FOUND:
-                        throw new FileNotFoundException();
-                    default:
-                        throw new IOException();
-                }
-
-            }
-
-            establishment = responseEtablissements.getEtablissement();
+            establishment = convertEtablissementToEtablishment(responseEtablissements.getData(), responseEtablissements.getMeta());
             establishment.setCompany(company);
 
-            if (responseEtablissements.getEtablissement().getDiffusableInformations() == null
-                    || responseEtablissements.getEtablissement().getDiffusableInformations().equals(Boolean.TRUE)) {
+            if (responseEtablissements.getData().getDiffusableCommercialement() == null
+                    || responseEtablissements.getData().getDiffusableCommercialement().equals(Boolean.TRUE)) {
                 establishment.setDiffusableInformations(Boolean.TRUE);
             }
 
-            if (responseEtablissements.getEtablissement().getAddress().getStreetNumber() != null) {
-                finalAddresse += responseEtablissements.getEtablissement().getAddress().getStreetNumber();
+            if (responseEtablissements.getData().getAdresse().getNumeroVoie() != null) {
+                finalAddresse += responseEtablissements.getData().getAdresse().getNumeroVoie();
             }
 
-            if (responseEtablissements.getEtablissement().getAddress().getStreetType() != null) {
+            if (responseEtablissements.getData().getAdresse().getTypeVoie() != null) {
                 if (finalAddresse != "") {
-                    finalAddresse += " " + responseEtablissements.getEtablissement().getAddress().getStreetType();
+                    finalAddresse += " " + responseEtablissements.getData().getAdresse().getTypeVoie();
                 } else {
-                    finalAddresse += responseEtablissements.getEtablissement().getAddress().getStreetType();
+                    finalAddresse += responseEtablissements.getData().getAdresse().getTypeVoie();
                 }
             }
 
-            if (responseEtablissements.getEtablissement().getAddress().getStreetName() != null) {
+            if (responseEtablissements.getData().getAdresse().getLibelleVoie() != null) {
                 if (finalAddresse != "") {
-                    finalAddresse += " " + responseEtablissements.getEtablissement().getAddress().getStreetName();
+                    finalAddresse += " " + responseEtablissements.getData().getAdresse().getLibelleVoie();
                 } else {
-                    finalAddresse += responseEtablissements.getEtablissement().getAddress().getStreetName();
+                    finalAddresse += responseEtablissements.getData().getAdresse().getLibelleVoie();
                 }
             }
 
             establishment.getAddress().setPostalAddress(finalAddresse);
-            if (responseEtablissements.getEtablissement().getSiret() != null) {
-                establishment.setNic(responseEtablissements.getEtablissement().getSiret().substring(9, 14));
+            if (responseEtablissements.getData().getSiret() != null) {
+                establishment.setNic(responseEtablissements.getData().getSiret().substring(9, 14));
             }
 
         } else {
@@ -224,40 +261,39 @@ public class MpsWsClient implements CompanyWSinfo {
             logger.info("Getting establishment information : " + siret);
 
             // Call MPS to get the Establishment informations
-            ResponseEtablissements responseEtablissements = this.getInfoEtablissements(siret);
-
-            if (responseEtablissements.getGateway_error_code() != null) {
-                switch (responseEtablissements.getGateway_error_code()) {
-                    case INTERNAL_SERVER_ERROR:
-                        throw new IOException();
-                    case NOT_FOUND:
-                        throw new FileNotFoundException();
-                    default:
-                        throw new IOException();
-                }
-
-            } else {
-                establishment = responseEtablissements.getEtablissement();
-                this.setEstablishmentMissingFields(responseEtablissements, establishment);
-            }
+            ResponseEtablissement responseEtablissements = this.getInfoEtablissements(siret);
+            establishment = convertEtablissementToEtablishment(responseEtablissements.getData(), responseEtablissements.getMeta());
+            this.setEstablishmentMissingFields(responseEtablissements, establishment);
         } else {
             logger.info("SIRET invalid or null !");
         }
         return establishment;
     }
 
+
     @Override
     public Company updateCompany(String siren, InseeLegalCategoryService inseeLegalCategoryService) {
         Company company = new Company();
         if (siren != null) {
             logger.info("Updating company : " + siren);
-
-            // Call MPS to get the Company informations
-            ResponseEntreprises responseEntreprise = this.getInfoEntreprises(siren);
-
-            company = responseEntreprise.getEntreprise();
-            this.setCompanyMissingFields(responseEntreprise, company, inseeLegalCategoryService);
-
+            try {
+                // Call MPS to get the Company informations
+                ResponseUniteLegale responseEntreprises = responseEntreprises = this.getInfoEntreprises(company.getSiren());
+                logger.info("Search for 'unité legale' matching siren : " + company.getSiren());
+                ResponseEtablissement responseEtablissement = this.getInfoEtablissements(responseEntreprises.getData().getSiretSiegeSocial());
+                logger.info("Search for mandataires matching siren : " + company.getSiren());
+                List<ApiGouvMandataireSocial> mandataireSocials = null;
+                try {
+                    ResponseMandataires responseMandataires = this.getInfoMandataires(company.getSiren());
+                    mandataireSocials = responseMandataires.getData();
+                }catch (Exception e){
+                    logger.warn("Api do not found any matching mandataire :", e);
+                }
+                company = convertUniteLegaleToCompany(responseEntreprises.getData(), responseEtablissement.getData(), responseEtablissement.getMeta(), mandataireSocials);
+                this.setCompanyMissingFields(responseEntreprises, responseEtablissement, company, inseeLegalCategoryService);
+            } catch (Exception e) {
+                logger.error("Error happen during api.gouv.fr call :", e);
+            }
         } else {
             logger.info("SIREN invalid or null !");
         }
@@ -267,36 +303,59 @@ public class MpsWsClient implements CompanyWSinfo {
     @Override
     public boolean companyExist(Company company) {
         logger.info("Check Company with siren " + company.getSiren() + " exist");
-
+        boolean exist = false;
+        String url = this.getUrlEntreprise(company.getSiren());
+        HttpURLConnection conn;
         try {
-            String url = this.getUrlEntreprise(company.getSiren());
-            HttpURLConnection conn = this.getUrlConnection(url);
-            return conn != null && conn.getResponseCode() >= HttpStatus.OK.getValue() && conn.getResponseCode() <= HttpStatus.NO_CONTENT.getValue();
-        } catch (IOException e) {
-            return false;
+                 /*   Proxy proxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress("172.31.6.15", 3128));
+            conn = (HttpURLConnection) new URL(url).openConnection(proxy);*/
+            conn = (HttpURLConnection) new URL(url).openConnection();
+            conn.setRequestMethod("GET");
+            conn.setRequestProperty(HttpHeaders.AUTHORIZATION, "Bearer " + MPS_TOKEN);
+            conn.setRequestProperty(HttpHeaders.CONTENT_TYPE, "application/json");
+            conn.setConnectTimeout(8000); // set timeout to 8 seconds
+            exist = conn.getResponseCode() >= HttpStatus.OK.getValue() && conn.getResponseCode() <= HttpStatus.NO_CONTENT.getValue();
+            conn.disconnect();
+        } catch (MalformedURLException e) {
+            logger.error("Not a valid URL: " + url, e);
+        } catch (Exception e) {
+            logger.error("Unable to connect to : " + url, e);
         }
+        return exist;
     }
 
     @Override
     public boolean establishmentExist(Establishment establishment) {
         logger.info("Check establishment with siret " + establishment.getSiret() + " exist");
-
+        boolean exist = false;
+        String url = this.getUrlEtablissement(establishment.getSiret());
+        HttpURLConnection conn;
         try {
-            String url = this.getUrlEtablissement(establishment.getSiret());
-            HttpURLConnection conn = this.getUrlConnection(url);
-            return conn != null && conn.getResponseCode() >= HttpStatus.OK.getValue() && conn.getResponseCode() <= HttpStatus.NO_CONTENT.getValue();
-        } catch (IOException e) {
-            return false;
+                 /*   Proxy proxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress("172.31.6.15", 3128));
+            conn = (HttpURLConnection) new URL(url).openConnection(proxy);*/
+            conn = (HttpURLConnection) new URL(url).openConnection();
+            conn.setRequestMethod("GET");
+            conn.setRequestProperty(HttpHeaders.AUTHORIZATION, "Bearer " + MPS_TOKEN);
+            conn.setRequestProperty(HttpHeaders.CONTENT_TYPE, "application/json");
+            conn.setConnectTimeout(8000); // set timeout to 8 seconds
+            exist = conn.getResponseCode() >= HttpStatus.OK.getValue() && conn.getResponseCode() <= HttpStatus.NO_CONTENT.getValue();
+            conn.disconnect();
+        } catch (MalformedURLException e) {
+            logger.error("Not a valid URL: " + url, e);
+        } catch (Exception e) {
+            logger.error("Unable to connect to : " + url, e);
+        } finally {
         }
+
+        return exist;
     }
 
-    private String getUrlEntreprise(String companySiren) {
+    private String getUrlMandataires(String companySiren) {
 
-        String baseUrl = MPS_URL_ENTREPRISES.replace("COMPANY_SIREN", companySiren);
+        String baseUrl = MPS_URL_MANDATAIRES.replace("COMPANY_SIREN", companySiren);
         HashMap<String, String> paramsUrl = new HashMap<>();
-        paramsUrl.put("token", MPS_TOKEN);
         paramsUrl.put("context", MPS_CONTEXT);
-        paramsUrl.put("recipient", companySiren);
+        paramsUrl.put("recipient", MPS_RECIPIENT);
         paramsUrl.put("object", MPS_OBJECT);
 
         return paramsUrl.keySet().stream()
@@ -304,14 +363,26 @@ public class MpsWsClient implements CompanyWSinfo {
                 .collect(joining("&", baseUrl + "?", ""));
     }
 
+    private String getUrlEntreprise(String companySiren) {
+
+        String baseUrl = MPS_URL_ENTREPRISES.replace("COMPANY_SIREN", companySiren);
+        HashMap<String, String> paramsUrl = new HashMap<>();
+        paramsUrl.put("context", MPS_CONTEXT);
+        paramsUrl.put("recipient", MPS_RECIPIENT);
+        paramsUrl.put("object", MPS_OBJECT);
+
+        return paramsUrl.keySet().stream()
+                .map(key -> key + "=" + encodeValue(paramsUrl.get(key)))
+                .collect(joining("&", baseUrl + "?", ""));
+    }
+
+
     private String getUrlEtablissement(String siegeSocialSiret) {
 
         String baseUrl = MPS_URL_ETABLISSEMENT.replace("SIEGE_SOCIAL_SIRET", siegeSocialSiret);
         HashMap<String, String> paramsUrl = new HashMap<>();
-        paramsUrl.put("token", MPS_TOKEN);
         paramsUrl.put("context", MPS_CONTEXT);
-        paramsUrl.put("recipient", siegeSocialSiret);
-//		paramsUrl.put("siret_siege_social", siegeSocialSiret);
+        paramsUrl.put("recipient", MPS_RECIPIENT);
         paramsUrl.put("object", MPS_OBJECT);
 
         return paramsUrl.keySet().stream()
@@ -328,132 +399,91 @@ public class MpsWsClient implements CompanyWSinfo {
         }
     }
 
-	private HttpURLConnection getUrlConnection(String url) {
-
-		HttpURLConnection conn = null;
-
-		try {
-//			Proxy proxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress("proxyname", port));
-			conn = (HttpURLConnection) new URL(url).openConnection();
-			conn.setRequestMethod("GET");
-			conn.setConnectTimeout(8000); // set timeout to 8 seconds
-		} catch (MalformedURLException e) {
-			logger.error("Not a valid URL: " + url, e);
-		} catch (IOException e) {
-			logger.error("Unable to connect to : " + url, e);
-		}
-
-		return conn;
-	}
 
     private static String getStringFromInputStream(InputStream is) {
+        String text = new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8))
+                .lines()
+                .collect(Collectors.joining("\n"));
 
-        BufferedReader br = null;
-        StringBuilder sb = new StringBuilder();
-
-        String line;
-        try {
-
-            br = new BufferedReader(new InputStreamReader(is));
-            while ((line = br.readLine()) != null) {
-                sb.append(line);
-            }
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            if (br != null) {
-                try {
-                    br.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-
-        return sb.toString();
-
+        return text;
     }
 
-    private void setCompanyMissingFields(ResponseEntreprises responseEntreprises, Company company,
-                                         InseeLegalCategoryService inseeLegalCategoryService) {
+    private void setCompanyMissingFields(ResponseUniteLegale responseEntreprises, ResponseEtablissement
+            responseEtablissement, Company company, InseeLegalCategoryService inseeLegalCategoryService) {
 
         // diffusable information
-        if (responseEntreprises.getEtablissement_siege().getDiffusableInformations() == null
-                || responseEntreprises.getEtablissement_siege().getDiffusableInformations().equals(Boolean.TRUE)) {
+        if (responseEntreprises.getData().diffusableCommercialement == null
+                || responseEntreprises.getData().diffusableCommercialement.equals(Boolean.TRUE)) {
             company.setDiffusableInformations(Boolean.TRUE);
         }
 
         // nic
         if (company.getNic() == null || company.getNic().isEmpty()) {
-            company.setNic(responseEntreprises.getEtablissement_siege().getSiret().substring(9, 14));
+            company.setNic(responseEntreprises.getData().siretSiegeSocial.substring(9, 14));
         }
 
         // postal address
-        if (company.getAddress().getPostalAddress() == null) {
-            String postalAddress = "";
+        if (company.getAddress() != null) {
+            if (company.getAddress().getPostalAddress() == null) {
+                String postalAddress = "";
 
-            if (responseEntreprises.getEtablissement_siege().getAddress().getStreetNumber() != null) {
-                postalAddress += responseEntreprises.getEtablissement_siege().getAddress().getStreetNumber() + " ";
+                if (responseEtablissement.getData().getAdresse().getNumeroVoie() != null) {
+                    postalAddress += responseEtablissement.getData().getAdresse().getNumeroVoie() + " ";
+                }
+
+                if (responseEtablissement.getData().getAdresse().getTypeVoie() != null) {
+                    postalAddress += responseEtablissement.getData().getAdresse().getTypeVoie() + " ";
+                }
+
+                if (responseEtablissement.getData().getAdresse().getLibelleVoie() != null) {
+                    postalAddress += responseEtablissement.getData().getAdresse().getLibelleVoie();
+                }
+                company.getAddress().setPostalAddress(postalAddress);
             }
 
-            if (responseEntreprises.getEtablissement_siege().getAddress().getStreetType() != null) {
-                postalAddress += responseEntreprises.getEtablissement_siege().getAddress().getStreetType() + " ";
+            // postal code
+            if (company.getAddress().getPostalCode() == null) {
+                company.getAddress()
+                        .setPostalCode(responseEtablissement.getData().getAdresse().getCodePostal());
+            }
+            //si pas de code postal dans la reponse on met 00000
+            if (company.getAddress().getPostalCode() == null) {
+                company.getAddress()
+                        .setPostalCode("00000");
             }
 
-            if (responseEntreprises.getEtablissement_siege().getAddress().getStreetName() != null) {
-                postalAddress += responseEntreprises.getEtablissement_siege().getAddress().getStreetName();
+            // city
+            if (company.getAddress().getCity() == null) {
+                company.getAddress().setCity(responseEtablissement.getData().getAdresse().getLibelleCommune());
             }
-            company.getAddress().setPostalAddress(postalAddress);
-        }
 
-        // postal code
-        if (company.getAddress().getPostalCode() == null) {
-            company.getAddress()
-                    .setPostalCode(responseEntreprises.getEtablissement_siege().getAddress().getPostalCode());
-        }
-        //si pas de code postal dans la reponse on met 00000
-        if (company.getAddress().getPostalCode() == null) {
-            company.getAddress()
-                    .setPostalCode("00000");
-        }
+            // canton
+            if (company.getAddress().getCanton() == null) {
+                company.getAddress().setCanton("Aucun");
+            }
 
-        // city
-        if (company.getAddress().getCity() == null) {
-            company.getAddress().setCity(responseEntreprises.getEtablissement_siege().getAddress().getCity());
+            // country
+            if (company.getAddress().getCountry() == null) {
+                company.getAddress().setCountry(Country.FR);
+            }
         }
-
-        // canton
-        if (company.getAddress().getCanton() == null) {
-            company.getAddress().setCanton("Aucun");
-        }
-
-        // country
-        if (company.getAddress().getCountry() == null) {
-            company.getAddress().setCountry(Country.FR);
-        }
-
         // raison sociale
-        if (responseEntreprises.getEntreprise().getName() != null) {
-            company.setLabel(responseEntreprises.getEntreprise().getName());
+        if (responseEntreprises.getData().getPersonneMoraleAttributs() != null) {
+            company.setLabel(responseEntreprises.getData().getPersonneMoraleAttributs().getRaisonSociale());
         } else {
             logger.info("Label is null");
         }
 
         // catégorie juridique
-        if (responseEntreprises.getEntreprise().getLegalCategoryString() != null) {
-            String companyLegalCategory = inseeLegalCategoryService
-                    .findParentByLabel(responseEntreprises.getEntreprise().getLegalCategoryString());
-            if (companyLegalCategory != null) {
-                CompanyINSEECat companyINSEECat = CompanyINSEECat.getByValue(companyLegalCategory);
-                if (companyINSEECat != null) {
-                    company.setLegalCategory(companyINSEECat);
-                } else {
-                    // set to other InseeLegalCategory because we are not able to
-                    // retrieve a known INSEECat
-                    company.setLegalCategory(CompanyINSEECat.AUTRE);
-                    logger.info("Unknown InseeLegalCategory ... Set InseeLegalCategory to default OTHER");
-                }
+        if (responseEntreprises.getData().getFormeJuridique() != null) {
+            CompanyINSEECat companyINSEECat = CompanyINSEECat.getByCode(responseEntreprises.getData().getFormeJuridique().getCode());
+            if (companyINSEECat != null) {
+                company.setLegalCategory(companyINSEECat);
+            } else {
+                // set to other InseeLegalCategory because we are not able to
+                // retrieve a known INSEECat
+                company.setLegalCategory(CompanyINSEECat.AUTRE);
+                logger.info("Unknown InseeLegalCategory ... Set InseeLegalCategory to default OTHER");
             }
         } else {
             logger.info("Company InseeLegalCategory is null. Setting it to 'Autre'");
@@ -461,20 +491,8 @@ public class MpsWsClient implements CompanyWSinfo {
             company.setLegalCategory(companyINSEECat);
         }
 
-        // code naf
-        if (responseEntreprises.getEtablissement_siege() != null
-                && responseEntreprises.getEtablissement_siege().getApeCode() != null
-                && responseEntreprises.getEtablissement_siege().getApeCode().length() == 5) {
-            company.setApeCode(responseEntreprises.getEtablissement_siege().getApeCode());
-            if (responseEntreprises.getEtablissement_siege().getApeNafLabel() != null) {
-                company.setApeNafLabel(responseEntreprises.getEtablissement_siege().getApeNafLabel());
-            }
-        } else {
-            logger.info("Company NAF is invalid or null");
-        }
-
         // foreign identifier ?
-        if (responseEntreprises.getEntreprise().getSiren() != null) {
+        if (responseEntreprises.getData().getSiren() != null) {
             company.setForeignIdentifier(Boolean.FALSE);
         }
 
@@ -492,45 +510,148 @@ public class MpsWsClient implements CompanyWSinfo {
         }
     }
 
-    private void setEstablishmentMissingFields(ResponseEtablissements responseEtablissements,
+    private void setEstablishmentMissingFields(ResponseEtablissement responseEtablissements,
                                                Establishment establishment) {
         // postal address
-        if (establishment.getAddress().getPostalAddress() == null) {
-            String postalAddress = "";
+        if (establishment.getAddress() != null) {
+            if (establishment.getAddress().getPostalAddress() == null) {
+                String postalAddress = "";
+                if (responseEtablissements.getData().getAdresse() != null) {
+                    if (responseEtablissements.getData().getAdresse().getNumeroVoie() != null) {
+                        postalAddress += responseEtablissements.getData().getAdresse().getNumeroVoie() + " ";
+                    }
 
-            if (responseEtablissements.getEtablissement().getAddress().getStreetNumber() != null) {
-                postalAddress += responseEtablissements.getEtablissement().getAddress().getStreetNumber() + " ";
+                    if (responseEtablissements.getData().getAdresse().getTypeVoie() != null) {
+                        postalAddress += responseEtablissements.getData().getAdresse().getTypeVoie() + " ";
+                    }
+
+                    if (responseEtablissements.getData().getAdresse().getLibelleVoie() != null) {
+                        postalAddress += responseEtablissements.getData().getAdresse().getLibelleVoie();
+                    }
+                    establishment.getAddress().setPostalAddress(postalAddress);
+                }
             }
 
-            if (responseEtablissements.getEtablissement().getAddress().getStreetType() != null) {
-                postalAddress += responseEtablissements.getEtablissement().getAddress().getStreetType() + " ";
+            // postal code
+            if (establishment.getAddress().getPostalCode() == null) {
+                establishment.getAddress()
+                        .setPostalCode(responseEtablissements.getData().getAdresse().getCodePostal());
             }
 
-            if (responseEtablissements.getEtablissement().getAddress().getStreetName() != null) {
-                postalAddress += responseEtablissements.getEtablissement().getAddress().getStreetName();
+            // city
+            if (establishment.getAddress().getCity() == null) {
+                establishment.getAddress().setCity(responseEtablissements.getData().getAdresse().getLibelleCommune());
             }
-            establishment.getAddress().setPostalAddress(postalAddress);
-        }
 
-        // postal code
-        if (establishment.getAddress().getPostalCode() == null) {
-            establishment.getAddress()
-                    .setPostalCode(responseEtablissements.getEtablissement().getAddress().getPostalCode());
-        }
+            // country
+            if (establishment.getAddress().getCountry() == null) {
+                establishment.getAddress().setCountry(Country.FR);
+            }
 
-        // city
-        if (establishment.getAddress().getCity() == null) {
-            establishment.getAddress().setCity(responseEtablissements.getEtablissement().getAddress().getCity());
-        }
-
-        // country
-        if (establishment.getAddress().getCountry() == null) {
-            establishment.getAddress().setCountry(Country.FR);
-        }
-
-        // canton
-        if (establishment.getAddress().getCanton() == null) {
-            establishment.getAddress().setCanton("Aucun");
+            // canton
+            if (establishment.getAddress().getCanton() == null) {
+                establishment.getAddress().setCanton("Aucun");
+            }
         }
     }
+
+    public static Company convertUniteLegaleToCompany(ApiGouvUniteLegale uniteLegale, ApiGouvEtablissement etablissement, ApiGouvMeta
+            meta, List<ApiGouvMandataireSocial> mandatairesSociaux) {
+        String raisonSociale = uniteLegale.getPersonneMoraleAttributs() != null ? etablissement.getEnseigne() : "";
+        Company company = new Company(uniteLegale.getFormeJuridique().getLibelle(), "");
+        company.setSiren(uniteLegale.getSiren());
+        company.setSiretHeadOffice(uniteLegale.getSiretSiegeSocial());
+        company.setApeCode(convertMyec3NafFormat(uniteLegale.getActivitePrincipale()));
+        company.setApeNafLabel(uniteLegale.getActivitePrincipale() != null ? uniteLegale.getActivitePrincipale().getLibelle() : "");
+        company.setLegalCategoryString(uniteLegale.getActivitePrincipale() != null ? uniteLegale.getActivitePrincipale().getLibelle() : "");
+        company.setCreationDate(convertLongToDate(uniteLegale.getDateCreation()));
+        company.setLastUpdate(meta.getDateDerniereMiseAjourAsDate());
+
+        if (mandatairesSociaux != null) {
+            List<Person> persons = new ArrayList<>();
+            for (ApiGouvMandataireSocial mandataireSocial : mandatairesSociaux) {
+                persons.add(convertMandataireSocialToPerson(mandataireSocial));
+            }
+            company.setResponsibles(persons);
+        }
+        logger.info("New company generated from api.gouv.fr  :" + company.getSiren());
+        company.setEnabled(true);
+        company.setCreatedDate(new Date());
+        return company;
+    }
+
+    private static Date convertLongToDate(String dateaslong) {
+        Date date = null;
+        if (dateaslong != null) {
+            date = new Date(TimeUnit.SECONDS.toMillis(Long.valueOf(dateaslong)));
+        }
+        return date;
+    }
+
+    public static String convertMyec3NafFormat(ApiGouvActivitePrincipale activitePrincipale) {
+        String codeNAF = "";
+        if (activitePrincipale != null) {
+            if (NAFREV_2.equals(activitePrincipale.getNomenclature())) {
+                logger.info("Company activity received in NAFREV_2 format, processing conversion :", activitePrincipale.getCode());
+                codeNAF = activitePrincipale.getCode().replace(".", "");
+                logger.info("Company activity convert to :", codeNAF);
+            }else{
+                logger.info("Company activity received in other format, processing conversion :", activitePrincipale.getCode());
+                codeNAF = activitePrincipale.getCode().replace(".", "");
+                logger.info("Company activity convert to :", codeNAF); 
+            }
+        } else {
+            logger.warn("Company activity not defined in data.");
+        }
+        return codeNAF;
+    }
+
+    public static Establishment convertEtablissementToEtablishment(ApiGouvEtablissement etablissement, ApiGouvMeta
+            meta) {
+        String raisonSociale = etablissement.getUniteLegale() != null && etablissement.getUniteLegale().getPersonneMoraleAttributs() != null ? etablissement.getEnseigne() : "";
+        Establishment establishment = new Establishment(raisonSociale, raisonSociale);
+        establishment.setSiret(etablissement.getSiret());
+        establishment.setIsHeadOffice(Boolean.valueOf(etablissement.getSiegeSocial()));
+        establishment.setApeCode(convertMyec3NafFormat(etablissement.getActivitePrincipale()));
+        establishment.setApeNafLabel(etablissement.getActivitePrincipale() != null ? etablissement.getActivitePrincipale().getLibelle() : "");
+        establishment.setAddress(convertAdresseToAddress(etablissement.getAdresse()));
+        establishment.setDiffusableInformations(Boolean.valueOf(etablissement.getDiffusableCommercialement()));
+        establishment.setPays(convertAdresseToPaysImplantation(etablissement.getAdresse()));
+        establishment.setLastUpdate(meta.getDateDerniereMiseAjourAsDate());
+        logger.info("New establishment generated from api.gouv WS :" + establishment.getSiret());
+        return establishment;
+    }
+
+    public static Address convertAdresseToAddress(ApiGouvAdresse apiGouvAdresse) {
+        Address adresse = new Address();
+        adresse.setStreetNumber(apiGouvAdresse.getNumeroVoie());
+        adresse.setStreetType(apiGouvAdresse.getTypeVoie());
+        adresse.setStreetName(apiGouvAdresse.getLibelleVoie());
+        adresse.setInsee(apiGouvAdresse.getCodeCommune());
+        adresse.setPostalCode(apiGouvAdresse.getCodePostal());
+        adresse.setCity(apiGouvAdresse.getLibelleCommune());
+        logger.info("New adresse generated from api.gouv WS :" + adresse.getStreetName());
+        return adresse;
+    }
+
+    public static PaysImplantation convertAdresseToPaysImplantation(ApiGouvAdresse adresse) {
+        PaysImplantation paysImplantation = new PaysImplantation();
+        paysImplantation.setCode(adresse.getCodePaysEtranger());
+        paysImplantation.setValue(adresse.libellePaysEtranger);
+        logger.info("New paysImplantation generated from api.gouv WS :" + paysImplantation.getValue());
+        return paysImplantation;
+    }
+
+    public static Person convertMandataireSocialToPerson(ApiGouvMandataireSocial mandataireSocial) {
+        Person person = new Person();
+        person.setFirstname(mandataireSocial.getData().getPrenom());
+        person.setLastname(mandataireSocial.getData().getNom());
+        person.setName(mandataireSocial.getData().getNom()+" "+mandataireSocial.getData().getPrenom());
+        person.setType(mandataireSocial.getData().getType());
+        person.setFunction(mandataireSocial.getData().getFonction());
+        person.setMoralName(mandataireSocial.getData().getRaisonSociale());
+        logger.info("New person generated from api.gouv WS :" + person.getName());
+        return person;
+    }
+
 }

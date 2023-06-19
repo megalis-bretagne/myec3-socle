@@ -25,7 +25,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.tapestry5.ComponentResources;
 import org.apache.tapestry5.EventConstants;
-import org.apache.tapestry5.Link;
+import org.apache.tapestry5.http.Link;
 import org.apache.tapestry5.annotations.OnEvent;
 import org.apache.tapestry5.annotations.Parameter;
 import org.apache.tapestry5.annotations.Property;

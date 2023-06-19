@@ -4,7 +4,7 @@ import org.apache.tapestry5.MarkupWriter;
 import org.apache.tapestry5.OptionGroupModel;
 import org.apache.tapestry5.OptionModel;
 import org.apache.tapestry5.SelectModelVisitor;
-import org.apache.tapestry5.ioc.internal.util.TapestryException;
+import org.apache.tapestry5.commons.internal.util.TapestryException;
 import org.myec3.socle.webapp.encoder.MultipleValueEncoder;
 
 import java.util.Iterator;

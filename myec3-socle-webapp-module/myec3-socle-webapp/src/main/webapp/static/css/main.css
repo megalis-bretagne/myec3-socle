@@ -291,6 +291,13 @@ label.form-subscription {
 	box-shadow: 1px 2px 4px #E2E2E2;
 }
 
+#structureHeader {
+	font-weight: bold;
+	color: #1E68B1;
+	margin-top: 2em;
+	text-align: -webkit-center;
+}
+
 /* LOGIN DATA */
 #user-data {
 	float: right;

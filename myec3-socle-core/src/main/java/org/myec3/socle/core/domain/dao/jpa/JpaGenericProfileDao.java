@@ -179,9 +179,12 @@ public abstract class JpaGenericProfileDao<T extends Profile> extends JpaResourc
 					|| (null != sviProfile)) {
 				queryString.append(" where ");
 
-				if (null != email) {
+				if (null != email ) {
 					queryString.append("s.email like :email");
 					hasCriteria = Boolean.TRUE;
+				}
+				if (null != username && null != email) {
+					queryString.append(" and ");
 				}
 				if (null != username) {
 					queryString.append("s.user.username like :username");

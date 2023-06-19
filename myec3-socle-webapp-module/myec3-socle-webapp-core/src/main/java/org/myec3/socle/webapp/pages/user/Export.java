@@ -14,11 +14,11 @@ import org.apache.tapestry5.EventConstants;
 import org.apache.tapestry5.PersistenceConstants;
 import org.apache.tapestry5.StreamResponse;
 import org.apache.tapestry5.annotations.*;
-import org.apache.tapestry5.beaneditor.BeanModel;
+import org.apache.tapestry5.beanmodel.BeanModel;
 import org.apache.tapestry5.corelib.components.Form;
-import org.apache.tapestry5.ioc.Messages;
+import org.apache.tapestry5.commons.Messages;
 import org.apache.tapestry5.ioc.annotations.Inject;
-import org.apache.tapestry5.services.BeanModelSource;
+import org.apache.tapestry5.beanmodel.services.BeanModelSource;
 import org.myec3.socle.core.domain.model.*;
 import org.myec3.socle.core.domain.model.enums.EtatExport;
 import org.myec3.socle.core.service.*;
@@ -236,6 +236,7 @@ public class Export extends AbstractPage {
 	 */
 	public void setAgentProfilData(HashMap<String, String> csvDataMap, AgentProfile ap) {
 		if (ap != null) {
+			putElement(csvDataMap, "agent_profil_creation_date", ap.getCreatedDate());
 			putElement(csvDataMap, "agent_profil_elected", ap.getElected());
 			putElement(csvDataMap, "agent_profil_executive", ap.getExecutive());
 			putElement(csvDataMap, "agent_profil_representative", ap.getRepresentative());
@@ -243,6 +244,7 @@ public class Export extends AbstractPage {
 			putElement(csvDataMap, "organism_department_id", ap.getOrganismDepartment().getId());
 			putElement(csvDataMap, "organism_department_label", ap.getOrganismDepartment().getLabel());
 		} else {
+			csvDataMap.put("agent_profil_creation_date", "");
 			csvDataMap.put("agent_profil_elected", "");
 			csvDataMap.put("agent_profil_executive", "");
 			csvDataMap.put("agent_profil_representative", "");
@@ -396,6 +398,7 @@ public class Export extends AbstractPage {
 		header.add("profil_function");
 		header.add("profil_grade");
 		header.add("profil_phone");
+		header.add("agent_profil_creation_date");
 		header.add("agent_profil_elected");
 		header.add("agent_profil_executive");
 		header.add("agent_profil_representative");

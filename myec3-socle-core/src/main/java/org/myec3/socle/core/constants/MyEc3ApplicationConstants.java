@@ -29,21 +29,25 @@ public final class MyEc3ApplicationConstants {
 	// GU correspond to myec3-socle-webapp project used to manage users and
 	// structures contained in database
 	public static final String GU = "GU";
-	public static final String GRC_SERVICE = "Application - GRC";
-	public static final String PORTAIL_SERVICE = "Application - Portail";
-	public static final String GED_SERVICE = "GED";
-	public static final String SDM_SERVICE = "SDM";
-	public static final String JEB_SERVICE = "jeb";
-	public static final String LOCHALLES_SERVICE = "Application - LocHalles";
-	public static final String PARAPHEUR_SERVICE = "i-parapheur";
-	public static final String CAO_SERVICE = "cao";
-	public static final String AGC_SERVICE = "agc";
-	public static final String HELIOS_SERVICE = "Helios";
-	public static final String EXTRANET_SERVICE = "Extranet Comptable";
-	public static final String PORTAL_GEN_SERVICE = "Application - Portalgen";
-	public static final String CAMPUS_SERVICE = "Application - Campus";
-	public static final String OC_PROJETS_SERVICE = "Application - OcProjets";
-	public static final String OC_BLOC_NOTES_SERVICE = "Application - OcBlocNotes";
-	public static final String OC_REUNIONS_SERVICE = "Application - OcReunions";
+	public static final String GRC_APPLICATION = "Application - GRC";
+	public static final String PORTAIL_APPLICATION = "Application - Portail";
+	public static final String GED_APPLICATION = "GED";
+	public static final String SDM_APPLICATION = "SDM";
+	public static final String PORTAIL_MEGALIS_APPLICATION = "portail megalisbretagne";
+	public static final String PASTELL_APPLICATION = "Pastell";
+	public static final String JEB_APPLICATION = "jeb";
+	public static final String UDATA_APPLICATION = "Udata";
+
+	public static final String LOCHALLES_APPLICATION = "Application - LocHalles";
+	public static final String PARAPHEUR_APPLICATION = "i-parapheur";
+	public static final String CAO_APPLICATION = "cao";
+	public static final String AGC_APPLICATION = "agc";
+	public static final String HELIOS_APPLICATION = "Helios";
+	public static final String EXTRANET_APPLICATION = "Extranet Comptable";
+	public static final String PORTAL_GEN_APPLICATION = "Application - Portalgen";
+	public static final String CAMPUS_APPLICATION = "Application - Campus";
+	public static final String OC_PROJETS_APPLICATION = "Application - OcProjets";
+	public static final String OC_BLOC_NOTES_APPLICATION = "Application - OcBlocNotes";
+	public static final String OC_REUNIONS_APPLICATION = "Application - OcReunions";
 
 }

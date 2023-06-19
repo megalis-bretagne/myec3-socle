@@ -18,6 +18,7 @@
 package org.myec3.socle.synchro.scheduler.job.resources;
 
 import org.apache.commons.lang3.BooleanUtils;
+import org.myec3.socle.core.constants.MyEc3ApplicationConstants;
 import org.myec3.socle.core.domain.model.*;
 import org.myec3.socle.core.domain.model.enums.ResourceType;
 import org.myec3.socle.core.domain.sdm.model.SdmAdresse;
@@ -685,7 +686,7 @@ public abstract class ResourcesSynchronizationJob<T extends Resource> extends Qu
 	}
 
 	private ResourceWsClient getResourceWsClient(SynchronizationSubscription synchronizationSubscription) {
-		if ("SDM".equals(synchronizationSubscription.getApplication().getName())) {
+		if (MyEc3ApplicationConstants.SDM_APPLICATION.equals(synchronizationSubscription.getApplication().getName())) {
 			return sdmWsClientImpl;
 		}
 		if (BooleanUtils.isTrue(synchronizationSubscription.getHttps())) {
@@ -1626,27 +1627,5 @@ public abstract class ResourcesSynchronizationJob<T extends Resource> extends Qu
 	}
 
 
-	/**
-	 * Conversion d'une adresse socle dans une adresse pour la SDM
-	 * @param resourceAddress
-	 * @return
-	 */
-	protected SdmAdresse convertToSdmAdresse(Address resourceAddress) {
-		if (resourceAddress != null) {
-			SdmAdresse adresseSDM = new SdmAdresse();
-			adresseSDM.setCodePostal(resourceAddress.getPostalCode());
-			if (resourceAddress.getCountry() != null) {
-				adresseSDM.setPays(resourceAddress.getCountry().getLabel());
-			}
-			adresseSDM.setRue(resourceAddress.getPostalAddress());
-			adresseSDM.setVille(resourceAddress.getCity());
-			if (resourceAddress.getCountry() != null) {
-				adresseSDM.setAcronymePays(resourceAddress.getCountry().name());
-			}
-			return adresseSDM;
-		} else {
-			return null;
-		}
-	}
 
 }

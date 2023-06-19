@@ -18,6 +18,7 @@
 package org.myec3.socle.core.domain.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.LazyCollection;
@@ -76,6 +77,9 @@ public abstract class Structure extends Resource {
 	private Integer workforce;
 	private String tenantIdentifier;
 
+	@Transient
+	private CompanyLogo companyLogo;
+
 	@Getter(onMethod=@__(@XmlTransient))
 	@Column(nullable = false)
 	@Setter
@@ -102,6 +106,10 @@ public abstract class Structure extends Resource {
 		this.enabled = Boolean.TRUE;
 		this.address = new Address();
 		this.createdDate = new Date(System.currentTimeMillis());
+	}
+
+	public Structure(String name, String label) {
+		super(name, label);
 	}
 
 	/**
@@ -386,6 +394,18 @@ public abstract class Structure extends Resource {
 	public void setLogoUrl(String logoUrl) {
 		this.logoUrl = logoUrl;
 	}
+
+	@XmlElement(required = false)
+	@JsonProperty("company_logo")
+	@Transient
+	public CompanyLogo getCompanyLogo() {
+		return companyLogo;
+	}
+
+	public void setPays(CompanyLogo companyLogo) {
+		this.companyLogo = companyLogo;
+	}
+
 
 	/**
 	 * Address of this structure. Should be a valid address object. Cannot be null.

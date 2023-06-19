@@ -22,8 +22,8 @@ import org.apache.tapestry5.annotations.InjectPage;
 import org.apache.tapestry5.annotations.OnEvent;
 import org.apache.tapestry5.ioc.annotations.Inject;
 import org.apache.tapestry5.services.Cookies;
-import org.apache.tapestry5.services.Request;
-import org.apache.tapestry5.services.RequestGlobals;
+import org.apache.tapestry5.http.services.Request;
+import org.apache.tapestry5.http.services.RequestGlobals;
 import org.myec3.socle.webapp.constants.GuWebAppConstants;
 
 import javax.servlet.ServletException;

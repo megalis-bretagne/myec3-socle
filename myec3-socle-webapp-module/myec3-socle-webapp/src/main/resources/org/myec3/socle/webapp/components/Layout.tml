@@ -16,27 +16,27 @@
 		<link href="/megalis.ico" rel="icon" type="image/x-icon"/>
     </head>
     <body>
-   
+
     <div id="container">
-    	
+
 	        <div id="header">
 	        	<t:if test="hasCustomLogo">
 					<span id="logo"><img src="${customerLogoUrl}" /></span>
 				</t:if>
-	        	<h1>
-	            	<t:if test="isAgent">
-	            		<img src="${context:static/images/layout/logo_organisme_public.png}" alt="Banner" />
-						<t:parameter name="else">
-							<t:if test="isEmployee">
-								<img src="${context:static/images/layout/logo_entreprise.png}" alt="Banner" />
-								<t:parameter name="else">
-									<img src="${context:static/images/layout/logo_organisme.png}" alt="Banner" />
-								</t:parameter>
-							</t:if>
-						</t:parameter>
-					</t:if>
-	            </h1>
-	            
+                <t:if test="isAgentOrEmployee">
+                    <h1>
+                        <img src="${context:static/images/layout/logo_megalis.png}" alt="Banner"/>
+                    </h1>
+                    <h3>
+                        <p id="structureHeader">${structureLabel}</p>
+                    </h3>
+                    <t:parameter name="else">
+                        <h1>
+                            <img src="${context:static/images/layout/logo_organisme.png}" alt="Banner"/>
+                        </h1>
+                    </t:parameter>
+                </t:if>
+
 				<t:if test="loggedProfileExists">
 					<div id="user-data">
 							<dl>
@@ -45,7 +45,7 @@
 									${message:logout-label}
 								</a></dd>
 							</dl>
-					</div> 
+					</div>
 					<t:navigationMenu t:items="mainMenuList" t:id="navigation"></t:navigationMenu>
 				</t:if>
 			</div>

@@ -30,6 +30,8 @@ import javax.xml.bind.annotation.XmlTransient;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import org.hibernate.envers.Audited;
 import org.myec3.socle.core.domain.model.enums.Civility;
 
@@ -102,7 +104,6 @@ public class Person extends Resource {
 	 */
 	@Column(nullable = false)
 	@XmlElement(required = true)
-	@JsonProperty("prenom")
 	public String getFirstname() {
 		return firstname;
 	}
@@ -117,7 +118,6 @@ public class Person extends Resource {
 	 */
 	@Column(nullable = false)
 	@XmlElement(required = true)
-	@JsonProperty("nom")
 	public String getLastname() {
 		return lastname;
 	}
@@ -132,7 +132,6 @@ public class Person extends Resource {
 	 */
 	@Column(nullable = false)
 	@XmlElement(required = false)
-	@JsonProperty("type")
 	public String getType() {
 		return type;
 	}
@@ -167,7 +166,6 @@ public class Person extends Resource {
 	 */
 	@Column(nullable = true)
 	@XmlElement(required = false)
-	@JsonProperty("fonction")
 	public String getFunction() {
 		return function;
 	}
@@ -193,7 +191,6 @@ public class Person extends Resource {
 	}
 
 	@Transient
-	@JsonProperty("raison_sociale")
 	public String getMoralName() {
 		return this.moralName;
 	}

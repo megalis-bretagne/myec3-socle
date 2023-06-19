@@ -21,14 +21,14 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.tapestry5.EventConstants;
 import org.apache.tapestry5.PersistenceConstants;
-import org.apache.tapestry5.PropertyConduit;
+import org.apache.tapestry5.beanmodel.PropertyConduit;
 import org.apache.tapestry5.annotations.OnEvent;
 import org.apache.tapestry5.annotations.Persist;
 import org.apache.tapestry5.annotations.Property;
-import org.apache.tapestry5.beaneditor.BeanModel;
+import org.apache.tapestry5.beanmodel.BeanModel;
 import org.apache.tapestry5.ioc.annotations.Inject;
-import org.apache.tapestry5.services.BeanModelSource;
-import org.apache.tapestry5.services.PropertyConduitSource;
+import org.apache.tapestry5.beanmodel.services.BeanModelSource;
+import org.apache.tapestry5.beanmodel.services.PropertyConduitSource;
 import org.myec3.socle.core.domain.model.*;
 import org.myec3.socle.core.service.CompanyService;
 import org.myec3.socle.core.service.EmployeeProfileService;
@@ -208,15 +208,14 @@ public class ListEmployees extends AbstractPage {
 	public BeanModel<EmployeeProfile> getGridModel() {
 		BeanModel<EmployeeProfile> model = this.beanModelSource.createDisplayModel(EmployeeProfile.class,
 				this.getMessages());
-		model.add("actions", null);
 
 		PropertyConduit propCdtAttributeUser = this.propertyConduitSource.create(EmployeeProfile.class, "user");
-		PropertyConduit propCdtAttributeExpirationDatePassword = this.propertyConduitSource
-				.create(EmployeeProfile.class, "user.expirationDatePassword");
+		PropertyConduit propCdtAttributeExpirationDatePassword = this.propertyConduitSource.create(EmployeeProfile.class, "user.expirationDatePassword");
 
 		model.add("user", propCdtAttributeUser);
 		model.add("expirationDatePassword", propCdtAttributeExpirationDatePassword).sortable(true);
-		model.include("user", "email", "expirationDatePassword", "actions");
+		model.add("actions", null);
+		model.include("user", "email", "username","expirationDatePassword", "actions");
 		return model;
 	}
 

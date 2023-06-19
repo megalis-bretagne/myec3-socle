@@ -1,12 +1,14 @@
 package org.myec3.socle.synchro.controller;
 
+import org.myec3.socle.core.constants.MyEc3ApplicationConstants;
 import org.myec3.socle.core.domain.dto.OrganismLightDTO;
 import org.myec3.socle.core.domain.model.*;
 import org.myec3.socle.core.service.*;
 import org.myec3.socle.synchro.api.constants.SynchronizationType;
 import org.myec3.socle.synchro.scheduler.manager.ResourceSynchronizationManager;
 import org.myec3.socle.ws.client.impl.mps.MpsWsClient;
-import org.myec3.socle.ws.client.impl.mps.response.ResponseEntreprises;
+import org.myec3.socle.ws.client.impl.mps.response.ResponseEtablissement;
+import org.myec3.socle.ws.client.impl.mps.response.ResponseUniteLegale;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +17,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
@@ -92,14 +95,13 @@ public class SynchroController {
 
         AgentProfile agent = agentProfileService.findOne(id);
 
-        Application applicationASynchroniser = applicationService.findByName("portail megalisbretagne");
+        Application applicationASynchroniser = applicationService.findByName(MyEc3ApplicationConstants.PORTAIL_MEGALIS_APPLICATION);
         List<Long> listApplicationIdToResynchronize = new ArrayList<>();
         listApplicationIdToResynchronize.add(applicationASynchroniser.getId());
 
         SynchronizationType synchronizationType = SynchronizationType.SYNCHRONIZATION;
-        String sendingApplication = "GU";
 
-        agentSynchronizer.synchronizeUpdate(agent, listApplicationIdToResynchronize, synchronizationType, sendingApplication);
+        agentSynchronizer.synchronizeUpdate(agent, listApplicationIdToResynchronize, synchronizationType, MyEc3ApplicationConstants.GU);
         logger.info("synchro agent {}", agent.getUsername());
 
         return "synchro agent " + agent.getName();
@@ -111,14 +113,13 @@ public class SynchroController {
 
         AgentProfile agent = agentProfileService.findOne(id);
 
-        Application applicationASynchroniser = applicationService.findByName("Pastell");
+        Application applicationASynchroniser = applicationService.findByName(MyEc3ApplicationConstants.PASTELL_APPLICATION);
         List<Long> listApplicationIdToResynchronize = new ArrayList<>();
         listApplicationIdToResynchronize.add(applicationASynchroniser.getId());
 
         SynchronizationType synchronizationType = SynchronizationType.SYNCHRONIZATION;
-        String sendingApplication = "GU";
 
-        agentSynchronizer.synchronizeUpdate(agent, listApplicationIdToResynchronize, synchronizationType, sendingApplication);
+        agentSynchronizer.synchronizeUpdate(agent, listApplicationIdToResynchronize, synchronizationType, MyEc3ApplicationConstants.GU);
         logger.info("synchro agent {}", agent.getUsername());
 
         return "synchro agent " + agent.getName();
@@ -128,13 +129,12 @@ public class SynchroController {
     public String organismePastell(@RequestParam long id) {
         Organism organism = organismService.findOne(id);
 
-        Application applicationASynchroniser = applicationService.findByName("Pastell");
+        Application applicationASynchroniser = applicationService.findByName(MyEc3ApplicationConstants.PASTELL_APPLICATION);
         List<Long> listApplicationIdToResynchronize = new ArrayList<>();
         listApplicationIdToResynchronize.add(applicationASynchroniser.getId());
         SynchronizationType synchronizationType = SynchronizationType.SYNCHRONIZATION;
-        String sendingApplication = "GU";
 
-        organismSynchronizer.synchronizeUpdate(organism, listApplicationIdToResynchronize, synchronizationType, sendingApplication);
+        organismSynchronizer.synchronizeUpdate(organism, listApplicationIdToResynchronize, synchronizationType, MyEc3ApplicationConstants.GU);
 
         return "synchro organism " + organism.getName();
     }
@@ -144,13 +144,12 @@ public class SynchroController {
     public String organismDepartmentPastell(@RequestParam long id) {
         OrganismDepartment organismDepartment = organismDepartmentService.findOne(id);
 
-        Application applicationASynchroniser = applicationService.findByName("Pastell");
+        Application applicationASynchroniser = applicationService.findByName(MyEc3ApplicationConstants.PASTELL_APPLICATION);
         List<Long> listApplicationIdToResynchronize = new ArrayList<>();
         listApplicationIdToResynchronize.add(applicationASynchroniser.getId());
         SynchronizationType synchronizationType = SynchronizationType.SYNCHRONIZATION;
-        String sendingApplication = "GU";
 
-        organismDepartmentSynchronizer.synchronizeUpdate(organismDepartment, listApplicationIdToResynchronize, synchronizationType, sendingApplication);
+        organismDepartmentSynchronizer.synchronizeUpdate(organismDepartment, listApplicationIdToResynchronize, synchronizationType, MyEc3ApplicationConstants.GU);
 
         return "synchro organismDepartment " + organismDepartment.getName();
     }
@@ -161,12 +160,12 @@ public class SynchroController {
 
         AgentProfile agent = agentProfileService.findOne(id);
 
-        Application applicationASynchroniser = applicationService.findByName("SDM");
+        Application applicationASynchroniser = applicationService.findByName(MyEc3ApplicationConstants.SDM_APPLICATION);
         List<Long> listApplicationIdToResynchronize = new ArrayList<>();
         listApplicationIdToResynchronize.add(applicationASynchroniser.getId());
 
         SynchronizationType synchronizationType = SynchronizationType.SYNCHRONIZATION;
-        String sendingApplication = "GU";
+        String sendingApplication = MyEc3ApplicationConstants.GU;
 
         agentSynchronizer.synchronizeUpdate(agent, listApplicationIdToResynchronize, synchronizationType, sendingApplication);
         logger.info("synchro agent {}", agent.getUsername());
@@ -178,13 +177,12 @@ public class SynchroController {
     public String organisme(@RequestParam long id) {
         Organism organism = organismService.findOne(id);
 
-        Application applicationASynchroniser = applicationService.findByName("SDM");
+        Application applicationASynchroniser = applicationService.findByName(MyEc3ApplicationConstants.SDM_APPLICATION);
         List<Long> listApplicationIdToResynchronize = new ArrayList<>();
         listApplicationIdToResynchronize.add(applicationASynchroniser.getId());
         SynchronizationType synchronizationType = SynchronizationType.SYNCHRONIZATION;
-        String sendingApplication = "GU";
 
-        organismSynchronizer.synchronizeUpdate(organism, listApplicationIdToResynchronize, synchronizationType, sendingApplication);
+        organismSynchronizer.synchronizeUpdate(organism, listApplicationIdToResynchronize, synchronizationType, MyEc3ApplicationConstants.GU);
 
         return "synchro organism " + organism.getName();
     }
@@ -193,13 +191,12 @@ public class SynchroController {
     public String organismDepartment(@RequestParam long id) {
         OrganismDepartment organismDepartment = organismDepartmentService.findOne(id);
 
-        Application applicationASynchroniser = applicationService.findByName("SDM");
+        Application applicationASynchroniser = applicationService.findByName(MyEc3ApplicationConstants.SDM_APPLICATION);
         List<Long> listApplicationIdToResynchronize = new ArrayList<>();
         listApplicationIdToResynchronize.add(applicationASynchroniser.getId());
         SynchronizationType synchronizationType = SynchronizationType.SYNCHRONIZATION;
-        String sendingApplication = "GU";
 
-        organismDepartmentSynchronizer.synchronizeUpdate(organismDepartment, listApplicationIdToResynchronize, synchronizationType, sendingApplication);
+        organismDepartmentSynchronizer.synchronizeUpdate(organismDepartment, listApplicationIdToResynchronize, synchronizationType, MyEc3ApplicationConstants.GU);
 
         return "synchro organismDepartment " + organismDepartment.getName();
     }
@@ -209,13 +206,12 @@ public class SynchroController {
     public String employee(@RequestParam long id) {
         EmployeeProfile employeeProfile = employeeProfileService.findOne(id);
 
-        Application applicationASynchroniser = applicationService.findByName("SDM");
+        Application applicationASynchroniser = applicationService.findByName(MyEc3ApplicationConstants.SDM_APPLICATION);
         List<Long> listApplicationIdToResynchronize = new ArrayList<>();
         listApplicationIdToResynchronize.add(applicationASynchroniser.getId());
         SynchronizationType synchronizationType = SynchronizationType.SYNCHRONIZATION;
-        String sendingApplication = "GU";
 
-        employeeSynchronizer.synchronizeUpdate(employeeProfile, listApplicationIdToResynchronize, synchronizationType, sendingApplication);
+        employeeSynchronizer.synchronizeUpdate(employeeProfile, listApplicationIdToResynchronize, synchronizationType, MyEc3ApplicationConstants.GU);
 
         return "synchro employee " + employeeProfile.getName();
     }
@@ -224,13 +220,12 @@ public class SynchroController {
     public String company(@RequestParam long id) {
         Company company = companyService.findOne(id);
 
-        Application applicationASynchroniser = applicationService.findByName("SDM");
+        Application applicationASynchroniser = applicationService.findByName(MyEc3ApplicationConstants.SDM_APPLICATION);
         List<Long> listApplicationIdToResynchronize = new ArrayList<>();
         listApplicationIdToResynchronize.add(applicationASynchroniser.getId());
         SynchronizationType synchronizationType = SynchronizationType.SYNCHRONIZATION;
-        String sendingApplication = "GU";
 
-        companySynchronizer.synchronizeUpdate(company, listApplicationIdToResynchronize, synchronizationType, sendingApplication);
+        companySynchronizer.synchronizeUpdate(company, listApplicationIdToResynchronize, synchronizationType, MyEc3ApplicationConstants.GU);
 
         return "synchro company " + company.getName();
     }
@@ -239,13 +234,12 @@ public class SynchroController {
     public String establishment(@RequestParam long id) {
         Establishment establishment = establishmentService.findOne(id);
 
-        Application applicationASynchroniser = applicationService.findByName("SDM");
+        Application applicationASynchroniser = applicationService.findByName(MyEc3ApplicationConstants.SDM_APPLICATION);
         List<Long> listApplicationIdToResynchronize = new ArrayList<>();
         listApplicationIdToResynchronize.add(applicationASynchroniser.getId());
         SynchronizationType synchronizationType = SynchronizationType.SYNCHRONIZATION;
-        String sendingApplication = "GU";
 
-        establishmentSynchronizer.synchronizeUpdate(establishment, listApplicationIdToResynchronize, synchronizationType, sendingApplication);
+        establishmentSynchronizer.synchronizeUpdate(establishment, listApplicationIdToResynchronize, synchronizationType, MyEc3ApplicationConstants.GU);
 
         return "synchro establishment " + establishment.getName();
     }
@@ -254,13 +248,12 @@ public class SynchroController {
     public String udataOrganism(@RequestParam long id) {
         Organism organism = organismService.findOne(id);
 
-        Application applicationASynchroniser = applicationService.findByName("Udata");
+        Application applicationASynchroniser = applicationService.findByName(MyEc3ApplicationConstants.UDATA_APPLICATION);
         List<Long> listApplicationIdToResynchronize = new ArrayList<>();
         listApplicationIdToResynchronize.add(applicationASynchroniser.getId());
         SynchronizationType synchronizationType = SynchronizationType.SYNCHRONIZATION;
-        String sendingApplication = "GU";
 
-        organismSynchronizer.synchronizeUpdate(organism, listApplicationIdToResynchronize, synchronizationType, sendingApplication);
+        organismSynchronizer.synchronizeUpdate(organism, listApplicationIdToResynchronize, synchronizationType, MyEc3ApplicationConstants.GU);
 
         return "synchro organism " + organism.getName();
     }
@@ -269,13 +262,12 @@ public class SynchroController {
     public String udataAgent(@RequestParam long id) {
         AgentProfile agentProfile = agentProfileService.findOne(id);
 
-        Application applicationASynchroniser = applicationService.findByName("Udata");
+        Application applicationASynchroniser = applicationService.findByName(MyEc3ApplicationConstants.UDATA_APPLICATION);
         List<Long> listApplicationIdToResynchronize = new ArrayList<>();
         listApplicationIdToResynchronize.add(applicationASynchroniser.getId());
         SynchronizationType synchronizationType = SynchronizationType.SYNCHRONIZATION;
-        String sendingApplication = "GU";
 
-        agentSynchronizer.synchronizeUpdate(agentProfile, listApplicationIdToResynchronize, synchronizationType, sendingApplication);
+        agentSynchronizer.synchronizeUpdate(agentProfile, listApplicationIdToResynchronize, synchronizationType, MyEc3ApplicationConstants.GU);
 
         return "synchro agent " + agentProfile.getName();
     }
@@ -292,7 +284,6 @@ public class SynchroController {
         logger.info("[RESYNC] Call resync Organism");
 
         SynchronizationType synchronizationType = SynchronizationType.SYNCHRONIZATION;
-        String sendingApplication = "GU";
 
         // Get all organism subscribe to SDM
         List<OrganismLightDTO> organisms = organismService.findOrganismLight()
@@ -304,12 +295,21 @@ public class SynchroController {
         CompletableFuture.supplyAsync(() -> {
             AtomicInteger index = new AtomicInteger(0);
             organisms.forEach(organismLightDTO -> {
-                ResponseEntreprises entreprises = mpsWsClient.getInfoEntreprises(organismLightDTO.getSiren());
-                if (entreprises ==null || entreprises.getEntreprise() == null) {
+
+                ResponseUniteLegale entreprises = null;
+                ResponseEtablissement etablissement = null;
+                try {
+                    entreprises = mpsWsClient.getInfoEntreprises(organismLightDTO.getSiren());
+                    etablissement = mpsWsClient.getInfoEtablissements(entreprises.getData().getSiretSiegeSocial());
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+
+                if (entreprises ==null || entreprises.getData() == null) {
                     logger.info("[RESYNC] [" + organismLightDTO.getId() + "] [" + organismLightDTO.getSiren() + "] Pas de reponse de API INSEE");
                 } else {
-                    String labelInsee = entreprises.getEntreprise().getLabel();
-                    String city = entreprises.getEtablissement_siege().getAddress().getCity();
+                    String labelInsee = entreprises.getData().getPersonneMoraleAttributs().raisonSociale;
+                    String city = etablissement.getData().getAdresse().getLibelleCommune();
 
                     // SI le libelle ACTION SOCIALE est présent et sans la présence de la commune, alors on ajoute la commune dans le label
                     if ((labelInsee.contains(ACTION_SOCIALE) || labelInsee.contains(CAISSE_ECOLE)) && !labelInsee.contains(city)) {
@@ -321,7 +321,7 @@ public class SynchroController {
                         Organism organism = organismService.findOne(organismLightDTO.getId());
                         organism.setLabel(labelInsee);
                         organism = organismService.update(organism);
-                        organismSynchronizer.synchronizeUpdate(organism, null, synchronizationType, sendingApplication);
+                        organismSynchronizer.synchronizeUpdate(organism, null, synchronizationType, MyEc3ApplicationConstants.GU);
                         logger.info("[RESYNC] Organism " + organismLightDTO.getId() + " Updated");
                     }
                 }

@@ -19,22 +19,20 @@ package org.myec3.socle.webapp.pages.organism.agent;
 
 import org.apache.tapestry5.EventConstants;
 import org.apache.tapestry5.PersistenceConstants;
-import org.apache.tapestry5.PropertyConduit;
+import org.apache.tapestry5.beanmodel.PropertyConduit;
 import org.apache.tapestry5.annotations.OnEvent;
 import org.apache.tapestry5.annotations.Persist;
 import org.apache.tapestry5.annotations.Property;
 import org.apache.tapestry5.annotations.SetupRender;
-import org.apache.tapestry5.beaneditor.BeanModel;
+import org.apache.tapestry5.beanmodel.BeanModel;
+import org.apache.tapestry5.beanmodel.services.BeanModelSource;
+import org.apache.tapestry5.beanmodel.services.PropertyConduitSource;
 import org.apache.tapestry5.ioc.annotations.Inject;
-import org.apache.tapestry5.services.BeanModelSource;
-import org.apache.tapestry5.services.PropertyConduitSource;
 import org.apache.tapestry5.services.javascript.JavaScriptSupport;
 import org.apache.tapestry5.services.javascript.StylesheetLink;
 import org.apache.tapestry5.services.javascript.StylesheetOptions;
-import org.myec3.socle.core.domain.model.AgentProfile;
-import org.myec3.socle.core.domain.model.Organism;
-import org.myec3.socle.core.domain.model.OrganismDepartment;
-import org.myec3.socle.core.domain.model.Resource;
+import org.myec3.socle.core.constants.MyEc3ApplicationConstants;
+import org.myec3.socle.core.domain.model.*;
 import org.myec3.socle.core.service.AgentProfileService;
 import org.myec3.socle.core.service.OrganismDepartmentService;
 import org.myec3.socle.core.service.OrganismService;
@@ -43,8 +41,7 @@ import org.myec3.socle.webapp.pages.AbstractPage;
 import org.myec3.socle.webapp.pages.Index;
 
 import javax.inject.Named;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 /**
  * Page used to display the organism's{@link Organism} agents list
@@ -260,16 +257,15 @@ public class ListAgents extends AbstractPage {
 	 */
 	public BeanModel<AgentProfile> getGridModel() {
 		BeanModel<AgentProfile> model = this.beanModelSource.createDisplayModel(AgentProfile.class, this.getMessages());
-		model.add("actions", null);
 
-		PropertyConduit propCdtAttributeLastName = this.propertyConduitSource.create(AgentProfile.class,
-				"user.lastname");
-		PropertyConduit propCdtAttributeExpirationDatePassword = this.propertyConduitSource.create(AgentProfile.class,
-				"user.expirationDatePassword");
+		PropertyConduit propCdtAttributeLastName = this.propertyConduitSource.create(AgentProfile.class, "user.lastname");
+		PropertyConduit propCdtAttributeExpirationDatePassword = this.propertyConduitSource.create(AgentProfile.class, "user.expirationDatePassword");
 
 		model.add("user", propCdtAttributeLastName).sortable(true);
+		model.add("guRoles", null);
 		model.add("expirationDatePassword", propCdtAttributeExpirationDatePassword).sortable(true);
-		model.include("user", "email", "expirationDatePassword", "actions");
+		model.add("actions", null);
+		model.include("user", "email", "username", "guRoles","expirationDatePassword", "actions");
 		return model;
 	}
 
@@ -337,5 +333,22 @@ public class ListAgents extends AbstractPage {
 			return Boolean.FALSE;
 		}
 		return agentProfileRow.getUser().isEnabled();
+	}
+
+	public String getSocleRolesAsString() {
+		SortedSet<String> guRoles = new TreeSet<>();
+		//Vérification que la ligne du tableau organism/agents contient bien un utilisateur
+		if (agentProfileRow.getUser() == null) {
+			return "";
+		}
+		//Récupération de l'application socle
+		Application guApplication = applicationService.findByName(MyEc3ApplicationConstants.GU);
+		for (Profile profile: agentProfileRow.getUser().getProfiles()) {
+			//Récupération du/des roles de l'agents dans l'application socle
+			List<Role> roles = roleService.findAllRoleByProfileAndApplication(profile,guApplication);
+			//On récupère le label en évitant les doublons
+			roles.forEach(r -> guRoles.add(r.getLabel()));
+		}
+		return String.join(", ", guRoles);
 	}
 }

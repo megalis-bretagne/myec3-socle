@@ -50,6 +50,9 @@
 				<t:pagelink page="synchroman/synchronization/DetailSynchronization" context="synchronizationLogRow.id">
 		        	 <img src="${context:static/images/organisme_voir.png}" alt="${message:view-label}" title="${message:view-label}" />
 	        	</t:pagelink>
+				<t:eventlink event="downloadSynchroFile" context="[synchronizationLogRow.applicationName,synchronizationLogRow.resourceId,synchronizationLogRow.resourceType]">
+					<img src="${context:static/images/script_code.png}" alt="${message:download-label}" title="${message:download-label}" />
+				</t:eventlink>
 	        </t:parameter>
   		</table>
   		

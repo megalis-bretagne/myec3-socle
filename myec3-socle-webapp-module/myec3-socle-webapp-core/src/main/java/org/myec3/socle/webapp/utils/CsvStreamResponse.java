@@ -5,7 +5,7 @@ import java.io.InputStream;
 import java.io.StringWriter;
 
 import org.apache.tapestry5.StreamResponse;
-import org.apache.tapestry5.services.Response;
+import org.apache.tapestry5.http.services.Response;
 import org.apache.tapestry5.util.TextStreamResponse;
 
 /**

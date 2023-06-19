@@ -2,6 +2,7 @@ package org.myec3.socle.synchro.core.service.impl;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.lang3.StringUtils;
+import org.myec3.socle.core.constants.MyEc3ApplicationConstants;
 import org.myec3.socle.core.domain.model.*;
 import org.myec3.socle.core.domain.model.enums.ResourceType;
 import org.myec3.socle.core.service.ApplicationService;
@@ -62,7 +63,7 @@ public class TraiterReponseSDMServiceImpl implements TraiterReponseSDMService {
 
                     SynchroIdentifiantExterne s =synchroIdentifiantExterneService.findByIdSocle(agentResource.getUser().getId(), ResourceType.AGENT_PROFILE);
                     if (s==null){
-                        Application sdmApplication = applicationService.findByName("SDM");
+                        Application sdmApplication = applicationService.findByName(MyEc3ApplicationConstants.SDM_APPLICATION);;
                         SynchroIdentifiantExterne synchro = new SynchroIdentifiantExterne();
                         synchro.setApplication(sdmApplication);
                         synchro.setTypeRessource(ResourceType.AGENT_PROFILE);
@@ -91,7 +92,7 @@ public class TraiterReponseSDMServiceImpl implements TraiterReponseSDMService {
 
                     List<SynchroIdentifiantExterne> s =synchroIdentifiantExterneService.findListByIdSocle(employeeResource.getUser().getId(), ResourceType.EMPLOYEE_PROFILE);
                     if (s==null || s.isEmpty()){
-                        Application sdmApplication = applicationService.findByName("SDM");
+                        Application sdmApplication = applicationService.findByName(MyEc3ApplicationConstants.SDM_APPLICATION);;
                         SynchroIdentifiantExterne synchro = new SynchroIdentifiantExterne();
                         synchro.setApplication(sdmApplication);
                         synchro.setTypeRessource(ResourceType.EMPLOYEE_PROFILE);
@@ -120,7 +121,7 @@ public class TraiterReponseSDMServiceImpl implements TraiterReponseSDMService {
                     for (LinkedHashMap<String,String> orga: organismeHM) {
                         SynchroIdentifiantExterne s =synchroIdentifiantExterneService.findByIdSocle(resource.getId(), ResourceType.ORGANISM);
                         if (s==null){
-                            Application sdmApplication = applicationService.findByName("SDM");
+                            Application sdmApplication = applicationService.findByName(MyEc3ApplicationConstants.SDM_APPLICATION);;
                             SynchroIdentifiantExterne synchro = new SynchroIdentifiantExterne();
                             synchro.setApplication(sdmApplication);
                             synchro.setTypeRessource(ResourceType.ORGANISM);
@@ -153,7 +154,7 @@ public class TraiterReponseSDMServiceImpl implements TraiterReponseSDMService {
 
                     List<SynchroIdentifiantExterne> s =synchroIdentifiantExterneService.findListByIdSocle(resource.getId(), ResourceType.COMPANY);
                     if (s==null||s.isEmpty()){
-                        Application sdmApplication = applicationService.findByName("SDM");
+                        Application sdmApplication = applicationService.findByName(MyEc3ApplicationConstants.SDM_APPLICATION);;
                         SynchroIdentifiantExterne synchro = new SynchroIdentifiantExterne();
                         synchro.setApplication(sdmApplication);
                         synchro.setTypeRessource(ResourceType.COMPANY);
@@ -181,7 +182,7 @@ public class TraiterReponseSDMServiceImpl implements TraiterReponseSDMService {
 
                     SynchroIdentifiantExterne s =synchroIdentifiantExterneService.findByIdSocle(resource.getId(), ResourceType.ORGANISM_DEPARTMENT);
                     if (s==null){
-                        Application sdmApplication = applicationService.findByName("SDM");
+                        Application sdmApplication = applicationService.findByName(MyEc3ApplicationConstants.SDM_APPLICATION);;
                         SynchroIdentifiantExterne synchro = new SynchroIdentifiantExterne();
                         synchro.setApplication(sdmApplication);
                         synchro.setTypeRessource(ResourceType.ORGANISM_DEPARTMENT);
@@ -209,7 +210,7 @@ public class TraiterReponseSDMServiceImpl implements TraiterReponseSDMService {
 
                     List<SynchroIdentifiantExterne> s =synchroIdentifiantExterneService.findListByIdSocle(resource.getId(), ResourceType.ESTABLISHMENT);
                     if (s==null||s.isEmpty()){
-                        Application sdmApplication = applicationService.findByName("SDM");
+                        Application sdmApplication = applicationService.findByName(MyEc3ApplicationConstants.SDM_APPLICATION);;
                         SynchroIdentifiantExterne synchro = new SynchroIdentifiantExterne();
                         synchro.setApplication(sdmApplication);
                         synchro.setTypeRessource(ResourceType.ESTABLISHMENT);

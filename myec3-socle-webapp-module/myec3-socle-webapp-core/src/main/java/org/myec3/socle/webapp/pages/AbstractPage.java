@@ -21,10 +21,10 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.tapestry5.annotations.PageLoaded;
 import org.apache.tapestry5.annotations.SessionState;
-import org.apache.tapestry5.ioc.Messages;
+import org.apache.tapestry5.commons.Messages;
+import org.apache.tapestry5.http.services.Request;
+import org.apache.tapestry5.http.services.Session;
 import org.apache.tapestry5.ioc.annotations.Inject;
-import org.apache.tapestry5.services.Request;
-import org.apache.tapestry5.services.Session;
 import org.myec3.socle.core.domain.model.*;
 import org.myec3.socle.core.domain.model.enums.ProfileTypeValue;
 import org.myec3.socle.core.domain.model.enums.RoleProfile;
@@ -69,7 +69,7 @@ public class AbstractPage {
 
 	@Inject
 	@Named("roleService")
-	private RoleService roleService;
+	protected RoleService roleService;
 
 	@Inject
 	private Messages messages;
