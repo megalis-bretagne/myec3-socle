@@ -214,7 +214,7 @@ public class SdmConverterServiceImpl implements SdmConverterService {
         if (!resource.isRootDepartment() && resource.getParentDepartment() != null) {
             SynchroIdentifiantExterne synchroIdentifiantExterne = synchroIdentifiantExterneService.findByIdSocle(resource.getParentDepartment().getId(), ResourceType.ORGANISM_DEPARTMENT);
             if (synchroIdentifiantExterne != null) {
-                serviceSDM.setIdExterneParent(resource.getParentDepartment().getId());
+                serviceSDM.setIdExterneParent(resource.getParentDepartment().getExternalId());
                 serviceSDM.setIdParent(synchroIdentifiantExterne.getIdAppliExterne());
             }
         }
