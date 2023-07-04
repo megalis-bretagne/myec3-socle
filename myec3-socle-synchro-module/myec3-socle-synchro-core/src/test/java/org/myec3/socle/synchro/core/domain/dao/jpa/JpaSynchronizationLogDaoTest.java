@@ -32,10 +32,10 @@ public class JpaSynchronizationLogDaoTest extends AbstractDbUnitTest {
     @Test
     public void testFindAllSynchronizationLogByOrganism() {
         //GIVEN
-        Long organismId = new Long(31952);
+        Long organismId = 31952L;
         Long organismNull = null;
-        Long organismNotExist = new Long(2);
-        Long organismWithNoSynchro = new Long(1);
+        Long organismNotExist = 2L;
+        Long organismWithNoSynchro = 1L;
 
         //DO
         Assert.assertTrue(synchronizationLogDao.findAllSynchronizationLogByOrganism(organismNull).isEmpty());
@@ -83,9 +83,9 @@ public class JpaSynchronizationLogDaoTest extends AbstractDbUnitTest {
     @Test
     public void testFindAllSynchronizationLogByCompany() {
         //GIVEN
-        Long companyId = new Long(2);
+        Long companyId = 2L;
         Long companyNull = null;
-        Long companyNotExist = new Long(200);
+        Long companyNotExist = 200L;
 
         //DO
         Assert.assertTrue(synchronizationLogDao.findAllSynchronizationLogByCompany(companyNull).isEmpty());

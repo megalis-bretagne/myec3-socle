@@ -41,24 +41,12 @@
                 <div class="actions-bar">
                     <ul>
                     	<t:if test="isEnabled">
-	                        <t:if test="hasRightsOnOrganism">
-	                            <li>
-	                                <t:actionlink t:id="regeneratePassword" t:mixins="confirm" t:message="message:confirm-regenerate-password-label">
-	                                    <img src="${context:static/images/regenerate_password.png}" alt="${message:regenerate-password-label}" title="${message:regenerate-password-label}" /> ${message:regenerate-password-label}
-	                                </t:actionlink>
-	                            </li>
-	                        </t:if>
 	                        	<li>
 		                            <t:pagelink page="organism/agent/modify" context="agentProfile.id">
 			                                <img src="${context:static/images/agent_modifier.png}" alt="${message:modify-user-label}" title="${message:modify-user-label}"  /> <t:if test="!isHimselfAndNotAdmin">${message:modify-user-label}</t:if>
 		                            </t:pagelink>
 	                            </li>
                             <p:else>
-                                <li>
-                                    <a class="disable" >
-                                        <img src="${context:static/images/regenerate_password.png}" alt="${message:regenerate-password-label}" title="${message:modify-user-label-disable}" /> <span title="${message:modify-user-label-disable}">${message:regenerate-password-label}</span>
-                                    </a>
-                                </li>
                                 <li>
                                     <a class="disable" >
                                         <img src="${context:static/images/agent_modifier.png}" alt="${message:modify-user-label}" title="${message:modify-user-label-disable}"  />  <span title="${message:modify-user-label-disable}">${message:modify-user-label}</span>
@@ -81,18 +69,6 @@
                             ${message:creationDate-user-label} :
                         </label>
                         <t:output format="timestampFormat" t:value="agentProfile.user.creationDate"/>
-                    </p>
-                    <p>
-                    	<label>
-                        	 ${message:modificationDatePassword-label} :
-                        </label>
-                        <t:output format="timestampFormat" t:value="agentProfile.user.modifDatePassword"/>
-                    </p>
-                    <p>
-                    	<label>
-                        	 ${message:expirationDatePassword-label} :
-                        </label>
-                        <t:output format="dateFormat" t:value="agentProfile.user.expirationDatePassword"/>
                     </p>
                     <p>
                         <label>${message:civility-label} : </label>

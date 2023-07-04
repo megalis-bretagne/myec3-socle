@@ -150,11 +150,6 @@
 							context="loggedProfile.id">Voir/Modifier vos informations personnelles
 							</t:pagelink>
 						</li>
-						<li>
-							<t:pagelink page="user/RegeneratePassword"
-							context="loggedProfile.id">Regénérer votre mot de passe
-							</t:pagelink>
-						</li>
 					</ul>
 				</div>
 				<div id="search-intro" class="section">
@@ -228,11 +223,6 @@
 							context="loggedProfile.id">Voir/Modifier vos informations personnelles
 							</t:pagelink>
 						</li>
-						<li>
-							<t:pagelink page="user/RegeneratePassword"
-							context="loggedProfile.id">Regénérer votre mot de passe
-							</t:pagelink>
-						</li>
 					</ul>
 				</div>
 			</div>
@@ -262,11 +252,6 @@
 							context="loggedProfile.id">Voir/Modifier vos informations personnelles
 							</t:pagelink>
 						</li>
-						<li>
-							<t:pagelink page="user/RegeneratePassword"
-							context="loggedProfile.id">Regénérer votre mot de passe
-							</t:pagelink>
-						</li>
 					</ul>
 				</fieldset>
 			</div>
@@ -288,11 +273,6 @@
 						<li>
 							<t:pagelink page="company/establishment/create"
 							context="employeeProfile.companyDepartment.company.id">Créer un établissement au sein de votre entreprise
-							</t:pagelink>
-						</li>
-						<li>
-							<t:pagelink page="user/RegeneratePassword"
-							context="loggedProfile.id">Regénérer votre mot de passe
 							</t:pagelink>
 						</li>
 					</ul>

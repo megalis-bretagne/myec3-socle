@@ -2,6 +2,7 @@ package org.myec3.socle.webapp.pages.organism.agent.export;
 
 import java.io.IOException;
 import java.io.StringWriter;
+import java.util.Collections;
 import java.util.List;
 
 import javax.inject.Named;
@@ -19,14 +20,9 @@ import org.apache.tapestry5.ioc.annotations.Inject;
 import org.myec3.socle.core.domain.model.AgentProfile;
 import org.myec3.socle.core.domain.model.Application;
 import org.myec3.socle.core.domain.model.Organism;
-import org.myec3.socle.core.service.AgentProfileService;
 import org.myec3.socle.core.service.ApplicationService;
-import org.myec3.socle.core.service.ConnectionInfosService;
-import org.myec3.socle.core.service.OrganismDepartmentService;
+import org.myec3.socle.core.service.ExportAgentCSVGeneratorService;
 import org.myec3.socle.core.service.OrganismService;
-import org.myec3.socle.core.service.ProfileService;
-import org.myec3.socle.core.service.RoleService;
-import org.myec3.socle.core.service.UserService;
 import org.myec3.socle.webapp.pages.Index;
 import org.myec3.socle.webapp.utils.CsvStreamResponse;
 import org.slf4j.Logger;
@@ -50,8 +46,6 @@ public class Export extends org.myec3.socle.webapp.pages.user.Export {
 
 	private static final Logger logger = LoggerFactory.getLogger(Export.class);
 
-	private static final char SEPARATOR = ';';
-
 	@Inject
 	private Messages messages;
 
@@ -70,28 +64,8 @@ public class Export extends org.myec3.socle.webapp.pages.user.Export {
 	private ApplicationService applicationService;
 
 	@Inject
-	@Named("organismDepartmentService")
-	private OrganismDepartmentService organismDepartmentService;
-
-	@Inject
-	@Named("agentProfileService")
-	private AgentProfileService agentProfileService;
-
-	@Inject
-	@Named("profileService")
-	private ProfileService profileService;
-
-	@Inject
-	@Named("userService")
-	private UserService userService;
-
-	@Inject
-	@Named("connectionInfosService")
-	private ConnectionInfosService connectionInfosService;
-
-	@Inject
-	@Named("roleService")
-	private RoleService roleService;
+	@Named("exportAgentCSVGeneratorService")
+	private ExportAgentCSVGeneratorService exportAgentCSVGeneratorService;
 
 	// Next Page
 	@InjectPage
@@ -142,21 +116,14 @@ public class Export extends org.myec3.socle.webapp.pages.user.Export {
 			try {
 
 				StringWriter sw = new StringWriter();
-				CSVWriter writer = new CSVWriter(sw, SEPARATOR);
-
 				List<Application> applicationsList = applicationService.findAllApplicationByStructure(organism);
+				List<Organism> organismsList = Collections.singletonList(organism);
 
-				// Write header
-				String[] header = generateHeader(applicationsList);
-				writer.writeNext(header);
+				try (CSVWriter csvWriter = new CSVWriter(sw, ExportAgentCSVGeneratorService.CSV_DEFAULT_SEPARATOR)) {
+					exportAgentCSVGeneratorService.writeCsv(organismsList, applicationsList, csvWriter);
+				}
 
-				writeAllUserOfOrganismInfo(organism, writer, header);
-
-				writer.close();
-
-				CsvStreamResponse csr = new CsvStreamResponse(sw, "export_agent");
-
-				sr = csr;
+				sr = new CsvStreamResponse(sw, "export_agent");
 
 			} catch (IllegalArgumentException e) {
 				logger.debug(e.getMessage());

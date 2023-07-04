@@ -26,6 +26,7 @@ import org.myec3.socle.core.domain.model.Profile;
 import org.myec3.socle.core.domain.model.Role;
 import org.myec3.socle.core.domain.model.User;
 import org.myec3.socle.core.service.GenericProfileService;
+import org.myec3.socle.core.service.KeycloakUserService;
 import org.myec3.socle.core.service.UserService;
 import org.myec3.socle.core.service.exceptions.ProfileDeleteException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -61,6 +62,9 @@ public abstract class GenericProfileServiceImpl<T extends Profile, D extends Gen
 	 */
 	@Autowired
 	private UserService userService;
+
+	@Autowired
+	private KeycloakUserService keycloakUserService;
 
 	/**
 	 * {@inheritDoc}
@@ -174,6 +178,15 @@ public abstract class GenericProfileServiceImpl<T extends Profile, D extends Gen
 	}
 
 	/**
+	 * Update profile data in user account.
+	 *
+	 * @param profile updated profile
+	 */
+	protected void saveProfileInKeycloak(Profile profile) {
+		keycloakUserService.saveProfileToKeycloak(profile);
+	}
+
+	/**
 	 * {@inheritDoc}
 	 */
 	@Override
@@ -234,16 +247,5 @@ public abstract class GenericProfileServiceImpl<T extends Profile, D extends Gen
 		Assert.notNull(listOfIds, " List of profile's id is mandatory. null value is forbidden.");
 
 		return this.dao.findAllProfilesByListOfId(listOfIds);
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public List<T> findAllProfileEnabledByExpirationDatePassword(Date expirationDatePassword) {
-		// validate parameters
-		Assert.notNull(expirationDatePassword, "expiration dat word is mandatory. null value is forbidden.");
-
-		return this.dao.findAllProfileEnabledByExpirationDatePassword(expirationDatePassword);
 	}
 }

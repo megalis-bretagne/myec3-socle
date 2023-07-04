@@ -17,10 +17,12 @@
  */
 package org.myec3.socle.core.service;
 
+import java.util.Collection;
 import java.util.List;
 
 import org.myec3.socle.core.domain.model.Profile;
 import org.myec3.socle.core.domain.model.meta.ProfileType;
+import org.springframework.security.core.GrantedAuthority;
 
 /**
  * Interface defining Business Services methods and providing {@link Profile}
@@ -48,17 +50,13 @@ public interface ProfileService extends GenericProfileService<Profile> {
 	List<Profile> findAllProfilesByProfileType(ProfileType profileType);
 
 	/**
-	 * Add roles to profile.
-	 * 
-	 * @param profile
-	 *            : user's profile
-	 * 
-	 * @return authenticated profile with good roles
-	 * 
-	 * @throws IllegalArgumentException
-	 *             when profile is null
+	 * Retrieve granted authorities for profile.
+	 *
+	 * @param profile : user's profile
+	 * @return authorities for authenticated profile
+	 * @throws IllegalArgumentException when profile is null
 	 */
-	Profile addRoles(Profile profile);
+	Collection<GrantedAuthority> getAuthorities(Profile profile);
 	
 	/**
 	 * Retrieve profile by username

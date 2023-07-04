@@ -43,7 +43,6 @@ public class ProjectAccount extends FunctionalAccount {
 	private static final long serialVersionUID = 8087054965651402131L;
 
 	private String login;
-	private String password;
 	private String email;
 
 	/**
@@ -66,20 +65,6 @@ public class ProjectAccount extends FunctionalAccount {
 
 	public void setLogin(String login) {
 		this.login = login;
-	}
-
-	/**
-	 * @return the password of the project account. This column cannot be null.
-	 */
-	@NotNull
-	@Column(nullable = false)
-	@XmlElement(required = false)
-	public String getPassword() {
-		return password;
-	}
-
-	public void setPassword(String password) {
-		this.password = password;
 	}
 
 	/**

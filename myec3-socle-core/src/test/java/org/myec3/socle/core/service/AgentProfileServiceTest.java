@@ -148,7 +148,7 @@ public class AgentProfileServiceTest extends AbstractDbSocleUnitTest {
         organism.setName(ORGANISM_NAME);
         organism.setLabel("OrganismLabel");
         organism.setDescription("OrganismDescription");
-        organism.setExternalId(new Long(123));
+        organism.setExternalId(123L);
         organism.setPhone("0000000000");
         organism.setArticle(Article.LE);
         organism.setMember(true);
@@ -177,7 +177,6 @@ public class AgentProfileServiceTest extends AbstractDbSocleUnitTest {
         user.setLastname("Dupont");
         user.setCivility(Civility.MR);
         user.setEnabled(Boolean.TRUE);
-        user.setPassword("password");
         user.setUsername("a88888 " + Calendar.getInstance().getTimeInMillis());
         userService.create(user);
         USER_FINAL_NAME = user.getName();
@@ -678,7 +677,7 @@ public class AgentProfileServiceTest extends AbstractDbSocleUnitTest {
     @Test
     public void testIdNullEmailAlreadyExistsProfile() {
         AgentProfile newAgent = new AgentProfile();
-        newAgent.setExternalId(new Long(1240));
+        newAgent.setExternalId(1240L);
         newAgent.setName("new" + AGENT_NAME);
         newAgent.setAddress(address);
         newAgent.setEmail(EMAIL_AGENT);
@@ -718,13 +717,12 @@ public class AgentProfileServiceTest extends AbstractDbSocleUnitTest {
         newUser.setLastname("Abitbol");
         newUser.setCivility(Civility.MR);
         newUser.setEnabled(Boolean.TRUE);
-        newUser.setPassword("password");
         newUser.setUsername("a77777 "
                 + Calendar.getInstance().getTimeInMillis());
         userService.create(newUser);
 
         AgentProfile newAgent = new AgentProfile();
-        newAgent.setExternalId(new Long(1240));
+        newAgent.setExternalId(1240L);
         newAgent.setName("new" + AGENT_NAME);
         newAgent.setAddress(address);
         newAgent.setEmail(EMAIL_AGENT);
@@ -751,7 +749,7 @@ public class AgentProfileServiceTest extends AbstractDbSocleUnitTest {
     @Test
     public void testAgentSameMail() throws Exception {
         AgentProfile newAgent = new AgentProfile();
-        newAgent.setExternalId(new Long(1240));
+        newAgent.setExternalId(1240L);
         newAgent.setName("new" + AGENT_NAME);
         newAgent.setAddress(address);
         newAgent.setEmail(agent.getEmail());

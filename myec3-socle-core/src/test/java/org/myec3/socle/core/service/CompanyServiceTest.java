@@ -101,7 +101,7 @@ public class CompanyServiceTest extends AbstractDbSocleUnitTest {
 
         application2 = new Application();
         application2.setName(APP_NAME_2);
-        application2.setExternalId(new Long(1246));
+        application2.setExternalId(1246L);
         application2.setUrl("http://urlged");
         applicationService.create(application2);
 
@@ -110,7 +110,7 @@ public class CompanyServiceTest extends AbstractDbSocleUnitTest {
         listApplication.add(application2);
 
         company = new Company();
-        company.setExternalId(new Long(1235));
+        company.setExternalId(1235L);
         company.setName(COMPANY_NAME);
         company.setLabel(COMPANY_LABEL);
         company.setAddress(address);
@@ -244,7 +244,7 @@ public class CompanyServiceTest extends AbstractDbSocleUnitTest {
     @Test
     public void testPersistWithDepartment() throws Exception {
         Company newCompany = new Company();
-        newCompany.setExternalId(new Long(1235));
+        newCompany.setExternalId(1235L);
         newCompany.setName(COMPANY_NAME_2);
         newCompany.setAddress(address);
         newCompany.setDescription("Description company");
@@ -305,7 +305,7 @@ public class CompanyServiceTest extends AbstractDbSocleUnitTest {
         newCompany.setLabel("CompanyLabel 2"
                 + Calendar.getInstance().getTimeInMillis());
         newCompany.setDescription("CompanyDescription");
-        newCompany.setExternalId(new Long(123));
+        newCompany.setExternalId(123L);
         newCompany.setEmail("test-create-organism"
                 + Calendar.getInstance().getTimeInMillis() + "@test.fr");
         newCompany.setPhone("0000000000");
@@ -344,7 +344,7 @@ public class CompanyServiceTest extends AbstractDbSocleUnitTest {
                 + Calendar.getInstance().getTimeInMillis());
         newCompany.setLabel("PREFIX" + COMPANY_LABEL + "SUFFIX");
         newCompany.setDescription("CompanyDescription");
-        newCompany.setExternalId(new Long(123));
+        newCompany.setExternalId(123L);
         newCompany.setEmail("test-create-organism"
                 + Calendar.getInstance().getTimeInMillis() + "@test.fr");
         newCompany.setPhone("0000000000");
@@ -572,7 +572,7 @@ public class CompanyServiceTest extends AbstractDbSocleUnitTest {
                 + Calendar.getInstance().getTimeInMillis());
         newCompany.setLabel(COMPANY_LABEL);
         newCompany.setDescription("CompanyDescription");
-        newCompany.setExternalId(new Long(123));
+        newCompany.setExternalId(123L);
         newCompany.setEmail("test-create-organism"
                 + Calendar.getInstance().getTimeInMillis() + "@test.fr");
         newCompany.setPhone("0000000000");

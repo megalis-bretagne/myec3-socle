@@ -215,15 +215,4 @@ public interface GenericProfileService<T extends Profile> extends ResourceServic
 	 *         found.
 	 */
 	List<T> findAllProfilesByListOfId(List<Long> listOfIds);
-
-	/**
-	 * Find all concrete enabled T instances (extending profiles) associated at this
-	 * expiration Date password. This method could return objects of any concrete
-	 * instance, derived from {@link Profile}
-	 * 
-	 * @param expirationDatePassword : expiration date password to search for
-	 * @return the list of all matching profiles. Returns an empty list if no result
-	 *         found.
-	 */
-	List<T> findAllProfileEnabledByExpirationDatePassword(Date expirationDatePassword);
 }

@@ -175,7 +175,6 @@ public class ProfileServiceTest extends AbstractDbSocleUnitTest {
 		user.setLastname("Dupont");
 		user.setCivility(Civility.MR);
 		user.setEnabled(Boolean.TRUE);
-		user.setPassword("password");
 		user.setUsername("jean.dupont "
 				+ Calendar.getInstance().getTimeInMillis());
 		userService.create(user);

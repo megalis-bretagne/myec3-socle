@@ -37,6 +37,12 @@
 			<artifactId>myec3-socle-synchro-scheduler</artifactId>
 			<version>5.6.2-MEGALIS-SNAPSHOT</version>
 		</dependency>
+
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<scope>provided</scope>
+		</dependency>
 	</dependencies>
 
 	<build>

@@ -35,7 +35,6 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-actuator</artifactId>
-			<version>1.5.22.RELEASE</version>
 		</dependency>
 
 		<dependency>
@@ -196,16 +195,9 @@
 
 		<!--  Apache commons io -->
         <dependency>
-            <groupId>org.apache.commons</groupId>
+            <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
         </dependency>
-
-        <!--  Scrypt -->
-        <dependency>
-		    <groupId>com.lambdaworks</groupId>
-		    <artifactId>scrypt</artifactId>
-		    <version>1.4.0</version>
-		</dependency>
 		
 		<dependency>
 		    <groupId>com.h2database</groupId>
@@ -245,28 +237,18 @@
 			<scope>compile</scope>
 		</dependency>
 
-		<!-- Tests -->
 		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
+			<groupId>org.keycloak</groupId>
+			<artifactId>keycloak-admin-client</artifactId>
 		</dependency>
-
 		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-test</artifactId>
+			<groupId>org.keycloak</groupId>
+			<artifactId>keycloak-core</artifactId>
 		</dependency>
-
 		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-jdbc</artifactId>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-databind</artifactId>
 		</dependency>
-
-		<dependency>
-			<groupId>com.h2database</groupId>
-			<artifactId>h2</artifactId>
-			<scope>test</scope>
-		</dependency>
-
 	</dependencies>
 
 	<build>

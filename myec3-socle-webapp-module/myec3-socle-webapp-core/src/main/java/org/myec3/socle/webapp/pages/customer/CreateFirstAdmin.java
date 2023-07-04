@@ -160,7 +160,7 @@ public class CreateFirstAdmin extends AbstractPage {
 
 			// password for mail
 			String password = this.userService.generatePassword();
-			user.setPassword(this.userService.generateHashPassword(password));
+			user.setTemporaryPassword(password);
 
 			this.userService.create(user);
 

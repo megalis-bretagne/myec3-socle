@@ -1,6 +1,8 @@
 package org.myec3.socle.core.domain.dao;
 
 import org.apache.commons.dbcp.BasicDataSource;
+import org.myec3.socle.core.domain.model.Profile;
+import org.myec3.socle.core.service.KeycloakUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -172,5 +174,14 @@ public class CoreConfiguration {
         return new SchedulerFactoryBean();
     }
 
-
+    @Bean
+    public KeycloakUserService keycloakUserService() {
+        // Stub pour les tests : on ne communique pas avec Keycloak.
+        return new KeycloakUserService() {
+            @Override
+            public void saveProfileToKeycloak(Profile profile) {
+                // do nothing
+            }
+        };
+    }
 }

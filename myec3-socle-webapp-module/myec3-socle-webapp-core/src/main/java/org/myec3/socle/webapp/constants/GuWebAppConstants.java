@@ -120,16 +120,6 @@ public final class GuWebAppConstants {
     public static final String FILER_LOGO_CUSTOMERS_FOLDER = "customers/";
     public static final String CUSTOMER_FOLDER_NAME = "customer";
 
-    // Expiration time password (days)
-    public static int expirationTimePassword = Integer.valueOf(GU_BUNDLE.getString("expiration.time.password"));
-    public static int expirationTimeRegeneratePassword = Integer.valueOf(GU_BUNDLE
-		    .getString("expiration.time.regenerated.password"));
-    public static int expirationTimeAgentRegeneratePassword = Integer.valueOf(GU_BUNDLE
-		    .getString("expiration.time.agent.regenerated.password"));
-
-    // Expiration time url modif password (days)
-    public static int expirationTimeUrlModifPassword = Integer.valueOf(GU_BUNDLE.getString("expiration.time.url.modif.password"));
-
     public static final String MYEC3_BASE_URL = ENV_BUNDLE.getString("myec3.baseUrl");
 
     public static final String PORTAIL_BASE_URL = ENV_BUNDLE.getString("portail.baseUrl");
@@ -137,8 +127,6 @@ public final class GuWebAppConstants {
     public static final String KEYCLOAK_BASE_URL = ENV_BUNDLE.getString("keycloak.baseUrl");
 
     public static final String SDM_TOKEN_URL = ENV_BUNDLE.getString("sdm.tokenUrl");
-
-    public static final String REGENERATE_PASSWORD = ENV_BUNDLE.getString("myec3.baseUrl") + "/user/regeneratepassword";
 
     public static final List<String> LISTE_URL_LOGOUT = getListeUrlLogout();
 

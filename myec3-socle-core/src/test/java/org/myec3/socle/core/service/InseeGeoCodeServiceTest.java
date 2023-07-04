@@ -40,7 +40,7 @@ public class InseeGeoCodeServiceTest extends AbstractDbSocleUnitTest {
 		inseeGeoCode.setName(INSEE_CODE);
 		inseeGeoCode.setLabel(TOWN_1);
 		inseeGeoCode.setInseeCode(INSEE_CODE);
-		inseeGeoCode.setExternalId(new Long(123));
+		inseeGeoCode.setExternalId(123L);
 		inseeGeoCode.setCom(INSEE_CODE_COM);
 		inseeGeoCode.setDep(INSEE_CODE_DEP);
 		inseeGeoCode.setReg(INSEE_CODE_REG);
@@ -63,7 +63,7 @@ public class InseeGeoCodeServiceTest extends AbstractDbSocleUnitTest {
 		newInseeGeoCode.setName(NEW_INSEE_CODE);
 		newInseeGeoCode.setLabel("z9z");
 		newInseeGeoCode.setInseeCode(NEW_INSEE_CODE);
-		newInseeGeoCode.setExternalId(new Long(123));
+		newInseeGeoCode.setExternalId(123L);
 		newInseeGeoCode.setCom(INSEE_CODE_COM);
 		newInseeGeoCode.setDep(INSEE_CODE_DEP);
 		newInseeGeoCode.setReg(INSEE_CODE_REG);

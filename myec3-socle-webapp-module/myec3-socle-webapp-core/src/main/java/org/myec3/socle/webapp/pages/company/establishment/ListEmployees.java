@@ -210,12 +210,10 @@ public class ListEmployees extends AbstractPage {
 				this.getMessages());
 
 		PropertyConduit propCdtAttributeUser = this.propertyConduitSource.create(EmployeeProfile.class, "user");
-		PropertyConduit propCdtAttributeExpirationDatePassword = this.propertyConduitSource.create(EmployeeProfile.class, "user.expirationDatePassword");
 
 		model.add("user", propCdtAttributeUser);
-		model.add("expirationDatePassword", propCdtAttributeExpirationDatePassword).sortable(true);
 		model.add("actions", null);
-		model.include("user", "email", "username","expirationDatePassword", "actions");
+		model.include("user", "email", "username", "actions");
 		return model;
 	}
 
