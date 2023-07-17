@@ -18,6 +18,7 @@
 package org.myec3.socle.core.service.impl;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -39,6 +40,7 @@ import org.myec3.socle.core.service.ProfileService;
 import org.myec3.socle.core.service.StructureService;
 import org.myec3.socle.core.service.SviProfileService;
 import org.myec3.socle.core.service.UserService;
+import org.myec3.socle.core.util.MyEc3PasswordUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -146,29 +148,7 @@ public class UserServiceImpl extends ResourceServiceImpl<User, UserDao> implemen
 	 */
 	@Override
 	public String generatePassword() {
-
-		Random random = new Random(System.currentTimeMillis());
-		int min = 1;
-		int max = 3;
-
-		int numbers = random.nextInt(max - min + 1) + min;
-		int characters = MyEc3PasswordConstants.PASSWORD_LENGTH - numbers;
-
-		Random rand = new Random(System.currentTimeMillis());
-		StringBuffer sb = new StringBuffer();
-		for (int i = 0; i < characters; i++) {
-			int pos = rand.nextInt(MyEc3PasswordConstants.CHARSET_CHARACTERS.length());
-			sb.append(MyEc3PasswordConstants.CHARSET_CHARACTERS.charAt(pos));
-		}
-		for (int i = 0; i < numbers; i++) {
-			int pos = rand.nextInt(MyEc3PasswordConstants.CHARSET_NUMBERS.length());
-			sb.append(MyEc3PasswordConstants.CHARSET_NUMBERS.charAt(pos));
-		}
-		String sbString = sb.toString();
-		char[] sbArray = sbString.toCharArray();
-		Collections.shuffle(Arrays.asList(sbArray));
-
-		return new String(sbArray);
+		return MyEc3PasswordUtils.generatePassword();
 	}
 
 	/**
