@@ -310,9 +310,9 @@ public class MessageEmail {
 			content.append("<br/><br/>");
 
 			content.append(getMessage(messages, "content-email-info1"));
-			content.append("<br/><small>");
+			content.append("<br/>");
 			content.append(getMessage(messages, "content-email-info2"));
-			content.append("</small><br/><br/>");
+			content.append("<br/><br/>");
 
 			content.append(getMessage(messages,
 					"info-login-email-admin-organism"));
@@ -350,9 +350,9 @@ public class MessageEmail {
 			content.append("<br/><br/>");
 
 			content.append(getMessage(messages, "content-email-info1"));
-			content.append("<br/><small>");
+			content.append("<br/>");
 			content.append(getMessage(messages, "content-email-info2"));
-			content.append("</small><br/><br/>");
+			content.append("<br/><br/>");
 			break;
 
 		case EMPLOYEE_COMPANY_CREATE:
@@ -371,9 +371,9 @@ public class MessageEmail {
 			content.append("<br/><br/>");
 
 			content.append(getMessage(messages, "content-email-info1"));
-			content.append("<br/><small>");
+			content.append("<br/>");
 			content.append(getMessage(messages, "content-email-info2"));
-			content.append("</small><br/><br/>");
+			content.append("<br/><br/>");
 			break;
 
 		case EMPLOYEE_COMPANY_ADD:
@@ -401,9 +401,9 @@ public class MessageEmail {
 			content.append("<br/><br/>");
 
 			content.append(getMessage(messages, "content-email-info1"));
-			content.append("<br/><small>");
+			content.append("<br/>");
 			content.append(getMessage(messages, "content-email-info2"));
-			content.append("</small><br/><br/>");
+			content.append("<br/><br/>");
 			break;
 
 		case EMPLOYEE_COMPANY_ALREADY_EXISTS:
