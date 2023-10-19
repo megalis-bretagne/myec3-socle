@@ -69,7 +69,7 @@
 			</legend>
 		<p>
 				<t:label for="nationalID">${message:nationalID-label} :</t:label>
-               <t:textfield t:id="nationalID" t:value="company.nationalID" t:validate="required/>&nbsp;
+               <t:textfield t:id="nationalID" t:value="company.nationalID" t:validate="required" />&nbsp;
         </p>
 		<p class="foreign">${message:nationalID-exemple-label}</p>
 	            <div class="form-actions">
