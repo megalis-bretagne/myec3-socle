@@ -25,6 +25,7 @@ import org.apache.tapestry5.commons.Messages;
 import org.apache.tapestry5.http.services.Request;
 import org.apache.tapestry5.http.services.Session;
 import org.apache.tapestry5.ioc.annotations.Inject;
+import org.myec3.socle.config.KeycloakAdminConfig;
 import org.myec3.socle.core.domain.model.*;
 import org.myec3.socle.core.domain.model.enums.ProfileTypeValue;
 import org.myec3.socle.core.domain.model.enums.RoleProfile;
@@ -76,6 +77,9 @@ public class AbstractPage {
 
 	@Inject
 	private Request request;
+
+	@Inject
+	private KeycloakAdminConfig keycloakAdminConfig;
 
 	@SessionState
 	private Profile loggedProfile;
@@ -538,5 +542,12 @@ public class AbstractPage {
 			}
 		}
 		return Boolean.FALSE;
+	}
+
+	/**
+	 * Url de l'administration Keycloak pour accès à la fonctionnalité impersonate.
+	 */
+	public String getKeycloakAdminUrl() {
+		return String.format("%s/admin/%s/console", keycloakAdminConfig.getBaseUrl(), keycloakAdminConfig.getRealm());
 	}
 }
