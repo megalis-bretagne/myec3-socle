@@ -36,7 +36,7 @@
 					</ul>
 					<ul class="links">
 						<li><a href="./user/search/">${message:technical-admin-search-user-label}</a></li>
-						<li><a href="${keycloakAdminUrl}">SSO-Keycloak</a></li>
+						<li><a href="${keycloakAdminUrl}" target="_blank">SSO-Keycloak</a></li>
 						<li><a href="./user/export/">${message:technical-admin-export-user}</a></li>
 					</ul>
 				</div>
@@ -97,9 +97,8 @@
 				<div id="search-intro" class="section">
 					<h3>${message:manager-manage-users}</h3>
 					<ul class="links">
-						<li>
-							<a href="./user/search/">${message:manager-search-user}</a>
-						</li>
+						<li><a href="./user/search/">${message:manager-search-user}</a></li>
+						<li><a href="${keycloakAdminUrl}" target="_blank">SSO-Keycloak</a></li>
 					</ul>
 				</div>
 			</div>
