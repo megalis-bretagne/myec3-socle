@@ -70,7 +70,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 			Long id = null;
 			Profile profile = null;
 			try {
-				id = new Long(uid);
+				id = Long.valueOf(uid);
 				profile = this.profileService.findOne(id);
 			} catch (Exception e) {
 				// When trying to re-authenticate user, username is used insteadOf SSO id
@@ -89,9 +89,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
 			logger.debug("user with login: " + id + " found in database");
 
-			profile = this.profileService.addRoles(profile);
-
-			this.profileService.update(profile);
+			profile.setAuthorities(this.profileService.getAuthorities(profile));
 
 			logger.debug("user with login: " + id + " authenticated");
 

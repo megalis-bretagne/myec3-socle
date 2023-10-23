@@ -77,9 +77,8 @@ public class UserServiceTest extends AbstractDbSocleUnitTest {
 
 		user = new User(USER_NAME_1 + "FirstName", USER_NAME_1 + "TestLastName");
 		user.setName(USER_NAME_1);
-		user.setExternalId(new Long(123));
+		user.setExternalId(123L);
 		user.setCivility(Civility.MR);
-		user.setPassword("password");
 		user.setUsername("username" + Calendar.getInstance().getTimeInMillis());
 
 		userService.create(user);
@@ -97,9 +96,8 @@ public class UserServiceTest extends AbstractDbSocleUnitTest {
 
 		User newUser = new User(USER_NAME_2 + "FirstName", USER_NAME_2
 				+ "LastName");
-		newUser.setExternalId(new Long(123));
+		newUser.setExternalId(123L);
 		newUser.setCivility(Civility.MR);
-		newUser.setPassword("password");
 		newUser.setUsername("username2"
 				+ Calendar.getInstance().getTimeInMillis());
 
@@ -152,7 +150,7 @@ public class UserServiceTest extends AbstractDbSocleUnitTest {
 		newOrganism.setLabel("OrganismLabel");
 		newOrganism.setAcronym("c5r");
 		newOrganism.setDescription("OrganismDescription");
-		newOrganism.setExternalId(new Long(123));
+		newOrganism.setExternalId(123L);
 		newOrganism.setEmail("test-create-organism"
 				+ Calendar.getInstance().getTimeInMillis() + "@test.fr");
 		newOrganism.setPhone("0000000000");
@@ -180,7 +178,6 @@ public class UserServiceTest extends AbstractDbSocleUnitTest {
 				+ "LastName");
 		newUser.setUsername("username3"
 				+ Calendar.getInstance().getTimeInMillis());
-		newUser.setPassword("password");
 		userService.create(newUser);
 
 		AgentProfile userAgentProfile = new AgentProfile();
@@ -276,12 +273,6 @@ public class UserServiceTest extends AbstractDbSocleUnitTest {
 		User foundUser = userService.findByName(this.user.getName());
 		assertNotNull(foundUser);
 		assertEquals(this.user.getName(), foundUser.getName());
-	}
-
-	@Test
-	public void testGeneratePassword() throws Exception {
-		String password = userService.generatePassword();
-		assertNotNull(password);
 	}
 
 }

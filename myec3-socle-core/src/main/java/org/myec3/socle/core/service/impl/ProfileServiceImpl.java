@@ -89,7 +89,7 @@ public class ProfileServiceImpl extends GenericProfileServiceImpl<Profile, Profi
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Profile addRoles(Profile profile) {
+	public Collection<GrantedAuthority> getAuthorities(Profile profile) {
 		// validate parameters
 		Assert.notNull(profile, "profile is mandatory. null value is forbidden.");
 
@@ -127,9 +127,8 @@ public class ProfileServiceImpl extends GenericProfileServiceImpl<Profile, Profi
 				arrayAuths.add(new SimpleGrantedAuthority("ROLE_DEFAULT"));
 			}
 		}
-		profile.setAuthorities(arrayAuths);
 
-		return profile;
+		return arrayAuths;
 	}
 
 	/**

@@ -68,7 +68,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/user/admin/**").hasAuthority("ROLE_SUPER_ADMIN")
                 .antMatchers("/user/superadmin/**").hasAuthority("ROLE_SUPER_ADMIN")
                 .antMatchers("/user/search/**").hasAnyAuthority("ROLE_SUPER_ADMIN", "ROLE_ADMIN", "ROLE_MANAGER_AGENT", "ROLE_MANAGER_EMPLOYEE")
-                .antMatchers("/user/regeneratepassword").hasAnyAuthority("ROLE_AUTH", "ROLE_ANONYMOUS")
 
                 .antMatchers("/synchroman/**").hasAnyAuthority("ROLE_SUPER_ADMIN", "ROLE_ADMIN")
 

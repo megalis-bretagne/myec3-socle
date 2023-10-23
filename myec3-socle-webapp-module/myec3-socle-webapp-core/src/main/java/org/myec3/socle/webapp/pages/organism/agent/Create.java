@@ -258,9 +258,7 @@ public class Create extends AbstractPage {
 
 				// password for mail
 				String password = this.userService.generatePassword();
-				this.agentProfile.getUser()
-						.setExpirationDatePassword(this.userService.generateExpirationDatePassword());
-				this.agentProfile.getUser().setPassword(this.userService.generateHashPassword(password));
+				this.agentProfile.getUser().setTemporaryPassword(password);
 				this.userService.create(this.agentProfile.getUser());
 				User user = this.userService.findByName(this.agentProfile.getUser().getName());
 				this.agentProfile.setUser(user);

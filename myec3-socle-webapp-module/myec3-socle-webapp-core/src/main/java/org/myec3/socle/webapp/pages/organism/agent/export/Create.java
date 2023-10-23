@@ -191,8 +191,7 @@ public class Create extends AbstractImport {
 
 			// password for mail
 			String password = this.userService.generatePassword();
-			this.agentToCreate.getUser().setExpirationDatePassword(this.userService.generateExpirationDatePassword());
-			this.agentToCreate.getUser().setPassword(this.userService.generateHashPassword(password));
+			this.agentToCreate.getUser().setTemporaryPassword(password);
 			this.userService.create(this.agentToCreate.getUser());
 			User user = this.userService.findByName(this.agentToCreate.getUser().getName());
 			this.agentToCreate.setUser(user);

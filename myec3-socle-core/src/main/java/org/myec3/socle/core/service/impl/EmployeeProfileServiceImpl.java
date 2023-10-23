@@ -161,6 +161,9 @@ public class EmployeeProfileServiceImpl extends GenericProfileServiceImpl<Employ
 						+ employeeProfile.getCompanyDepartment().getCompany().getTenantIdentifier());
 				super.update(employeeProfile);
 			}
+
+			saveProfileInKeycloak(employeeProfile);
+
 		} catch (RuntimeException re) {
 			throw new ProfileCreationException("Cannot create Employee " + employeeProfile, re);
 		}
@@ -207,17 +210,15 @@ public class EmployeeProfileServiceImpl extends GenericProfileServiceImpl<Employ
 			// Get the user from the database
 			User foundUser = userService.findOne(employeeProfile.getUser().getId());
 
-			// We check if the password have been updated
-			if (employeeProfile.getUser().getNewPassword() != null) {
-				// We set the new password into the old password
-				employeeProfile.getUser().setPassword(employeeProfile.getUser().getNewPassword());
-			}
-
 			// reattach user object to the agent else the user is not updated
 			foundUser.reattach(employeeProfile.getUser());
 			employeeProfile.setUser(foundUser);
 
-			return super.update(employeeProfile);
+			EmployeeProfile updatedProfile = super.update(employeeProfile);
+
+			saveProfileInKeycloak(updatedProfile);
+
+			return updatedProfile;
 			// return resourceDao.merge(employeeProfile);
 		} catch (RuntimeException re) {
 			throw new ProfileUpdateException("Cannot update Employee " + employeeProfile, re);

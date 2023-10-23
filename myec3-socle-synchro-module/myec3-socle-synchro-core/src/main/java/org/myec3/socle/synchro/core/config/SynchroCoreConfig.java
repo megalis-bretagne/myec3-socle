@@ -25,7 +25,7 @@ import javax.sql.DataSource;
 import java.util.Properties;
 
 @Configuration
-@PropertySource({ "classpath:socleCore.properties", "classpath:db.properties", "classpath:pwd.properties", "classpath:database.properties" })
+@PropertySource({ "classpath:socleCore.properties", "classpath:pwd.properties", "classpath:database.properties" })
 @ComponentScan(basePackages = { "org.myec3.socle.core", "org.myec3.socle.synchro.core.domain",
 		"org.myec3.socle.synchro.core.service" })
 @EnableTransactionManagement

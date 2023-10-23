@@ -36,6 +36,7 @@
 					</ul>
 					<ul class="links">
 						<li><a href="./user/search/">${message:technical-admin-search-user-label}</a></li>
+						<li><a href="${keycloakAdminUrl}" target="_blank">SSO-Keycloak</a></li>
 						<li><a href="./user/export/">${message:technical-admin-export-user}</a></li>
 					</ul>
 				</div>
@@ -96,9 +97,8 @@
 				<div id="search-intro" class="section">
 					<h3>${message:manager-manage-users}</h3>
 					<ul class="links">
-						<li>
-							<a href="./user/search/">${message:manager-search-user}</a>
-						</li>
+						<li><a href="./user/search/">${message:manager-search-user}</a></li>
+						<li><a href="${keycloakAdminUrl}" target="_blank">SSO-Keycloak</a></li>
 					</ul>
 				</div>
 			</div>
@@ -148,11 +148,6 @@
 						<li>
 							<t:pagelink page="organism/agent/View"
 							context="loggedProfile.id">Voir/Modifier vos informations personnelles
-							</t:pagelink>
-						</li>
-						<li>
-							<t:pagelink page="user/RegeneratePassword"
-							context="loggedProfile.id">Regénérer votre mot de passe
 							</t:pagelink>
 						</li>
 					</ul>
@@ -228,11 +223,6 @@
 							context="loggedProfile.id">Voir/Modifier vos informations personnelles
 							</t:pagelink>
 						</li>
-						<li>
-							<t:pagelink page="user/RegeneratePassword"
-							context="loggedProfile.id">Regénérer votre mot de passe
-							</t:pagelink>
-						</li>
 					</ul>
 				</div>
 			</div>
@@ -262,11 +252,6 @@
 							context="loggedProfile.id">Voir/Modifier vos informations personnelles
 							</t:pagelink>
 						</li>
-						<li>
-							<t:pagelink page="user/RegeneratePassword"
-							context="loggedProfile.id">Regénérer votre mot de passe
-							</t:pagelink>
-						</li>
 					</ul>
 				</fieldset>
 			</div>
@@ -288,11 +273,6 @@
 						<li>
 							<t:pagelink page="company/establishment/create"
 							context="employeeProfile.companyDepartment.company.id">Créer un établissement au sein de votre entreprise
-							</t:pagelink>
-						</li>
-						<li>
-							<t:pagelink page="user/RegeneratePassword"
-							context="loggedProfile.id">Regénérer votre mot de passe
 							</t:pagelink>
 						</li>
 					</ul>

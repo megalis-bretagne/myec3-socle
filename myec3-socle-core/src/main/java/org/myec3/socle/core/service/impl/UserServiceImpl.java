@@ -17,18 +17,8 @@
  */
 package org.myec3.socle.core.service.impl;
 
-import java.math.BigInteger;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
-import java.util.Random;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.util.*;
+import java.util.stream.Collectors;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -50,13 +40,12 @@ import org.myec3.socle.core.service.ProfileService;
 import org.myec3.socle.core.service.StructureService;
 import org.myec3.socle.core.service.SviProfileService;
 import org.myec3.socle.core.service.UserService;
+import org.myec3.socle.core.util.MyEc3PasswordUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
-
-import com.lambdaworks.crypto.SCryptUtil;
 
 /**
  * Concrete Servicve implementation providing methods specific to {@link User}
@@ -159,143 +148,7 @@ public class UserServiceImpl extends ResourceServiceImpl<User, UserDao> implemen
 	 */
 	@Override
 	public String generatePassword() {
-
-		Random random = new Random(System.currentTimeMillis());
-		int min = 1;
-		int max = 3;
-
-		int numbers = random.nextInt(max - min + 1) + min;
-		int characters = MyEc3PasswordConstants.PASSWORD_LENGTH - numbers;
-
-		Random rand = new Random(System.currentTimeMillis());
-		StringBuffer sb = new StringBuffer();
-		for (int i = 0; i < characters; i++) {
-			int pos = rand.nextInt(MyEc3PasswordConstants.CHARSET_CHARACTERS.length());
-			sb.append(MyEc3PasswordConstants.CHARSET_CHARACTERS.charAt(pos));
-		}
-		for (int i = 0; i < numbers; i++) {
-			int pos = rand.nextInt(MyEc3PasswordConstants.CHARSET_NUMBERS.length());
-			sb.append(MyEc3PasswordConstants.CHARSET_NUMBERS.charAt(pos));
-		}
-		String sbString = sb.toString();
-		char[] sbArray = sbString.toCharArray();
-		Collections.shuffle(Arrays.asList(sbArray));
-
-		return new String(sbArray);
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public String generateHashPassword(String password) {
-
-		Assert.notNull(password, "password is mandatory, null value is forbidden");
-
-		String hashword = null;
-
-		if (MyEc3PasswordConstants.isScryptHashingAlgorithm) {
-			// generate SCRYPT Hash
-			try {
-				hashword = SCryptUtil.scrypt(password, MyEc3PasswordConstants.SCRYPT_PARAMETER_N,
-						MyEc3PasswordConstants.SCRYPT_PARAMETER_R, MyEc3PasswordConstants.SCRYPT_PARAMETER_P);
-			} catch (IllegalStateException ise) {
-				logger.error("Exception occured during password hash generation", ise);
-			}
-
-		} else {
-			// generate SHA1 Hash
-			hashword = generateSHA1HashPassword(password);
-		}
-
-		return hashword;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public String generateSHA1HashPassword(String password) {
-
-		String hashword = null;
-
-		try {
-			MessageDigest hashMessage = MessageDigest.getInstance(MyEc3PasswordConstants.SHA1_HASH);
-			hashMessage.update(password.getBytes());
-			BigInteger hash = new BigInteger(1, hashMessage.digest());
-			hashword = hash.toString(MyEc3PasswordConstants.SHA1_RADIX);
-			while (hashword.length() < MyEc3PasswordConstants.SHA1_HASH_LENGTH) {
-				hashword = "0" + hashword;
-			}
-		} catch (NoSuchAlgorithmException nsae) {
-			logger.error("Exception occured during password hash generation", nsae);
-		}
-
-		return hashword;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public boolean isPasswordOk(String enteredPassword, String storedPassword) {
-		boolean isPassworkOk = false;
-		try {
-			// SCRYPT
-			isPassworkOk = SCryptUtil.check(enteredPassword, storedPassword);
-		} catch (IllegalArgumentException iae) {
-			// SHA1
-			String hashedPassword = generateSHA1HashPassword(enteredPassword);
-			isPassworkOk = hashedPassword.equals(storedPassword);
-		} catch (Exception e) {
-			// ignore
-		}
-		return isPassworkOk;
-	}
-
-	@Override
-	public boolean isPasswordConform(String password) {
-
-		// We can do all checks in one regex, but we'll keep it that way to be more
-		// readable
-
-		// Check if password is at least 8 char long
-		Pattern p = Pattern.compile("\\S{8}\\S*");
-		Matcher m = p.matcher(password);
-
-		if (m.matches()) {
-			logger.trace("isPasswordConform : password is at least 8 char long");
-
-			// Check if password contains at least one letter
-			p = Pattern.compile(".*[a-zA-Z].*");
-			m = p.matcher(password);
-
-			if (m.matches()) {
-				logger.trace("isPasswordConform : contains at least one letter");
-
-				// Check if password contains at least one figure
-				p = Pattern.compile(".*\\d.*");
-				m = p.matcher(password);
-
-				if (m.matches()) {
-					logger.trace("isPasswordConform : contains at least one figure");
-					logger.trace("isPasswordConform : Password is conform");
-					return true;
-				}
-			}
-		}
-
-		logger.trace("isPasswordConform : password is not conform");
-		return false;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public String generateControlKeyNewPassword() {
-		String key = System.currentTimeMillis() + "," + generatePassword();
-		return key;
+		return MyEc3PasswordUtils.generatePassword();
 	}
 
 	/**
@@ -317,15 +170,6 @@ public class UserServiceImpl extends ResourceServiceImpl<User, UserDao> implemen
 
 		logger.info("cleaning collections of user");
 		user.setProfiles(new ArrayList<Profile>());
-	}
-
-	public Date generateExpirationDatePassword() {
-
-		Calendar cal = Calendar.getInstance();
-		cal.add(Calendar.DAY_OF_YEAR, expirationTimePassword);
-
-		return cal.getTime();
-
 	}
 
 	public Long getConnectionInfosRelatedUser(ConnectionInfos connectionInfos) {

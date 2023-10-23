@@ -17,14 +17,11 @@
  */
 package org.myec3.socle.synchro.scheduler.job.resources;
 
-import org.apache.commons.lang3.BooleanUtils;
 import org.myec3.socle.core.constants.MyEc3ApplicationConstants;
 import org.myec3.socle.core.domain.model.AgentProfile;
 import org.myec3.socle.core.domain.model.Application;
-import org.myec3.socle.core.domain.model.Role;
 import org.myec3.socle.core.domain.model.enums.ResourceType;
 import org.myec3.socle.core.domain.sdm.model.SdmAgent;
-import org.myec3.socle.core.domain.sdm.model.SdmService;
 import org.myec3.socle.core.sync.api.Error;
 import org.myec3.socle.core.sync.api.ErrorCodeType;
 import org.myec3.socle.core.sync.api.HttpStatus;
@@ -40,11 +37,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-import org.springframework.util.StringUtils;
-
-import java.util.List;
 
 /**
  * Concrete job implementation used when the resource to synchronize is an
@@ -66,9 +59,6 @@ public class AgentSynchronizationJob extends
     private static final Logger logger = LoggerFactory.getLogger(AgentSynchronizationJob.class);
 
     private static final String SUFFIX_MONOTENANT = "@monotenant.megalis";
-
-    @Value("#{'${myec3.synchro.applications.monotenant.ids}'.split(',')}")
-    private List<Integer> idsApplicationMonotenant;
 
     @Autowired
     @Qualifier("synchroIdentifiantExterneService")
@@ -177,6 +167,6 @@ public class AgentSynchronizationJob extends
         if (application == null || application.getId() == null) {
             return false;
         }
-        return idsApplicationMonotenant.contains(application.getId().intValue());
+        return application.isMonotenant();
     }
 }

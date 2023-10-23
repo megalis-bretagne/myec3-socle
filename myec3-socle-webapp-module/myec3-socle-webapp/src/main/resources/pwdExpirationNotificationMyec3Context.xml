@@ -10,35 +10,4 @@
     <context:component-scan base-package="org.myec3.socle.core" />
     <context:component-scan base-package="org.myec3.socle.webapp.batch" />
 
-    <bean id="pwdExpirationNotificationJob"
-          class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
-        <property name="targetObject" ref="PasswordExpirationNotification" />
-        <property name="targetMethod" value="launchNotification" />
-        <property name="arguments">
-            <!-- Number of days before expiration -->
-            <list>
-                <value>20</value>
-                <value>10</value>
-                <value>1</value>
-                <value>0</value>
-            </list>
-        </property>
-    </bean>
-
-    <bean id="pwdExpirationNotificationTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
-        <property name="jobDetail" ref="pwdExpirationNotificationJob" />
-        <!-- format <Seconds Minutes Hours Day-of-Month Month Day-of-Week Year
-            (optional field)> Everyday @ 01:00 -->
-        <!-- Test déclanchement toutes les 5 minutes -->
-        <property name="cronExpression" value="0 0 1 * * ?"  />
-    </bean>
-
-    <bean class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
-        <property name="triggers">
-            <list>
-                <ref bean="pwdExpirationNotificationTrigger" />
-            </list>
-        </property>
-    </bean>
-
 </beans>

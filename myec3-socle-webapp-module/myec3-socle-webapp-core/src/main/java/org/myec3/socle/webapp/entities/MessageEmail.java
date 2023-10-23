@@ -32,15 +32,13 @@ import org.myec3.socle.core.domain.model.User;
 import org.myec3.socle.core.domain.model.enums.ProfileTypeValue;
 import org.myec3.socle.webapp.constants.GuWebAppConstants;
 import org.myec3.socle.webapp.pages.organism.CreateFirstAgent;
-import org.myec3.socle.webapp.pages.user.RegeneratePassword;
 
 /**
  * Generate the content of email which will be sent to the new admin or new
  * user<br />
  * when creating new admin of organism {@link CreateFirstAgent}, new user
  * of<br />
- * organim{@link Organism} or company{@link Company}<br />
- * and regenerate the new password{@link RegeneratePassword}.<br />
+ * organim{@link Organism} or company{@link Company}.<br />
  *
  * @author Anthony Colas<anthony.j.colas@atosorigin.com>
  */
@@ -95,24 +93,10 @@ public class MessageEmail {
 		 */
 		EMPLOYEE_COMPANY_ADD(4),
 		/**
-		 * To use when a profile regenerate his password
-		 */
-		REGENERATE_PASSWORD(5),
-		/**
 		 * To use when you create a new employee by using the public company creation
 		 * page and that the company already exists.
 		 */
-		EMPLOYEE_COMPANY_ALREADY_EXISTS(6),
-
-		/**
-		 * To use when a profil password is about to expire
-		 */
-		PASSWORD_ABOUT_TO_EXPIRED(7),
-
-		/**
-		 * To use when a profil password is expired
-		 */
-		EXPIRED_PASSWORD(8);
+		EMPLOYEE_COMPANY_ALREADY_EXISTS(6);
 
 		private final int code;
 
@@ -246,7 +230,7 @@ public class MessageEmail {
 	/**
 	 * Generate the content of email which will be sent to the new admin or new user
 	 * when creating new admin of organisme(CreateFirstAgent), new user of organimse
-	 * or company and regenerate the new password
+	 * or company.
 	 *
 	 * @param messages : the text is defined in app.properties
 	 *
@@ -259,7 +243,7 @@ public class MessageEmail {
 	/**
 	 * Generate the content of email which will be sent to the new admin or new user
 	 * when creating new admin of organisme(CreateFirstAgent), new user of organimse
-	 * or company and regenerate the new password
+	 * or company.
 	 *
 	 * @param messages : the text is defined in app.properties
 	 *
@@ -273,7 +257,7 @@ public class MessageEmail {
 	/**
 	 * Generate the content of email which will be sent to the new admin or new user
 	 * when creating new admin of organisme(CreateFirstAgent), new user of organimse
-	 * or company and regenerate the new password
+	 * or company.
 	 *
 	 * @param messages : the text is defined in app.properties
 	 *
@@ -326,9 +310,9 @@ public class MessageEmail {
 			content.append("<br/><br/>");
 
 			content.append(getMessage(messages, "content-email-info1"));
-			content.append("<br/><small>");
+			content.append("<br/>");
 			content.append(getMessage(messages, "content-email-info2"));
-			content.append("</small><br/><br/>");
+			content.append("<br/><br/>");
 
 			content.append(getMessage(messages,
 					"info-login-email-admin-organism"));
@@ -366,9 +350,9 @@ public class MessageEmail {
 			content.append("<br/><br/>");
 
 			content.append(getMessage(messages, "content-email-info1"));
-			content.append("<br/><small>");
+			content.append("<br/>");
 			content.append(getMessage(messages, "content-email-info2"));
-			content.append("</small><br/><br/>");
+			content.append("<br/><br/>");
 			break;
 
 		case EMPLOYEE_COMPANY_CREATE:
@@ -387,9 +371,9 @@ public class MessageEmail {
 			content.append("<br/><br/>");
 
 			content.append(getMessage(messages, "content-email-info1"));
-			content.append("<br/><small>");
+			content.append("<br/>");
 			content.append(getMessage(messages, "content-email-info2"));
-			content.append("</small><br/><br/>");
+			content.append("<br/><br/>");
 			break;
 
 		case EMPLOYEE_COMPANY_ADD:
@@ -417,9 +401,9 @@ public class MessageEmail {
 			content.append("<br/><br/>");
 
 			content.append(getMessage(messages, "content-email-info1"));
-			content.append("<br/><small>");
+			content.append("<br/>");
 			content.append(getMessage(messages, "content-email-info2"));
-			content.append("</small><br/><br/>");
+			content.append("<br/><br/>");
 			break;
 
 		case EMPLOYEE_COMPANY_ALREADY_EXISTS:
@@ -458,80 +442,6 @@ public class MessageEmail {
 			content.append(MessageFormat.format(getMessage(messages,
 					"notification-content-email-info2"), GuWebAppConstants.MYEC3_BASE_URL));
 			content.append("<br/><br/>");
-			break;
-
-		case REGENERATE_PASSWORD:
-			content.append(getMessage(messages, "content-regenerate-password-url-info1"));
-			content.append("<br/>");
-
-			content.append(getMessage(messages, "content-regenerate-password-url-info2"));
-			content.append("<br/><br/>");
-
-			content.append(getMessage(messages, "content-regenerate-password-url-info3"));
-			content.append("<br/><br/><br/>");
-			content.append("<a href=\"").append(password).append("\">").append(password).append("</a>");
-			content.append("<br/><br/><br/>");
-
-			content.append(getMessage(messages, "content-regenerate-password-url-info4"));
-			content.append("<br/><br/>");
-
-			content.append(getMessage(messages, "content-regenerate-password-url-info5"));
-			content.append(" " + GuWebAppConstants.expirationTimeUrlModifPassword + " ");
-			content.append(getMessage(messages, "content-regenerate-password-url-info6"));
-			content.append("<br/><br/>");
-
-			// Add username temporaly
-			content.append(getMessage(messages,
-					"content-regenerate-password-url-info7"));
-			content.append(username);
-			content.append("<br/><br/><br/>");
-
-			break;
-
-		case PASSWORD_ABOUT_TO_EXPIRED:
-
-			content.append(MessageFormat
-					.format(getMessage(
-							messages,
-							"content-email-password-about-to-expired-"
-									+ mapAttributes.get(ATTR_NB_DAYS_EXPIRATION_DATE_PASSWORD)),
-							mapAttributes.get(ATTR_USER_ID),
-							mapAttributes.get(ATTR_STRUCTURE_NAME),
-							mapAttributes.get(ATTR_EXPIRATION_DATE_PASSWORD)));
-
-			content.append("<br/><br/>");
-			content.append(MessageFormat.format(getMessage(messages,
-					"content-email-password-about-to-expired-info1"), GuWebAppConstants.MYEC3_BASE_URL));
-			content.append("<br/><br/>");
-
-			String imgModifPwdURL = GU_BUNDLE
-					.getString("filer.img.modif.pwd.mail.url");
-			if ((imgModifPwdURL != null) && (!imgModifPwdURL.isEmpty())) {
-				content.append("" + "<img src='" + imgModifPwdURL + "' />");
-				content.append("<br/><br/>");
-			}
-
-			content.append(getMessage(messages,
-					"content-email-password-about-to-expired-info2"));
-			content.append("<br/><br/>");
-			break;
-
-		case EXPIRED_PASSWORD:
-			content.append(MessageFormat.format(
-					getMessage(messages, "content-email-password-expired"),
-					mapAttributes.get(ATTR_USER_ID),
-					mapAttributes.get(ATTR_STRUCTURE_NAME)));
-
-			content.append("<br/><br/>");
-
-			content.append(MessageFormat.format(getMessage(messages,
-					"content-email-password-expired-info1"), GuWebAppConstants.MYEC3_BASE_URL));
-			content.append("<br/><br/>");
-
-			content.append(getMessage(messages,
-					"content-email-password-expired-info2"));
-			content.append("<br/><br/>");
-
 			break;
 		}
 

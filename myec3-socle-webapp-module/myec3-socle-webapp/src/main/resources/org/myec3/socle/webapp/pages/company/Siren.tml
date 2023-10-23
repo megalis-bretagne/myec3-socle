@@ -49,6 +49,13 @@
 	</fieldset>
 	</t:form>
 	<t:form t:id="modification_foreign_form">
+	    <t:if test="errorMessage">
+        	<p class="error">${errorMessage}</p>
+        </t:if>
+        <p t:banner="message:form-error"  t:type="errors" t:clientClass="errorDialogue"></p>
+        <p class="mandatory">${message:mandatory-label}</p>
+
+
 		<fieldset>
 			<legend>${message:company-in-foreign-country-label}
 				<a href="#" title="${message:foreign-company-help}">
@@ -62,7 +69,7 @@
 			</legend>
 		<p>
 				<t:label for="nationalID">${message:nationalID-label} :</t:label>
-               <t:textfield t:id="nationalID" t:value="company.nationalID"/>&nbsp;
+               <t:textfield t:id="nationalID" t:value="company.nationalID" t:validate="required" />&nbsp;
         </p>
 		<p class="foreign">${message:nationalID-exemple-label}</p>
 	            <div class="form-actions">

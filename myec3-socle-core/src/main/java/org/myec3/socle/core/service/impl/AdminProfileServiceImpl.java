@@ -71,4 +71,16 @@ public class AdminProfileServiceImpl extends GenericProfileServiceImpl<AdminProf
 		// TODO : to implement
 	}
 
+	@Override
+	public void create(AdminProfile entity) {
+		super.create(entity);
+		saveProfileInKeycloak(entity);
+	}
+
+	@Override
+	public AdminProfile update(AdminProfile entity) {
+		AdminProfile updatedEntity = super.update(entity);
+		saveProfileInKeycloak(updatedEntity);
+		return updatedEntity;
+	}
 }

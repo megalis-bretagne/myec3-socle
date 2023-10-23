@@ -289,7 +289,6 @@ public class AgentProfile extends Profile {
 		clone.setGrade(this.getGrade());
 		clone.setProfileType(this.getProfileType());
 		clone.setPrefComMedia(this.getPrefComMedia());
-		clone.setPassword(this.getPassword());
 		clone.setUsername(this.getUsername());
 
 		// For this ones i'm not sure... seems to be working for now <3

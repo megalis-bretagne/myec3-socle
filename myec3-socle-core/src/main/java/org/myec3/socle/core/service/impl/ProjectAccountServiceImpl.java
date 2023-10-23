@@ -104,7 +104,6 @@ public class ProjectAccountServiceImpl extends ResourceServiceImpl<ProjectAccoun
 			user.setFirstname("projectAccount" + projectAccount.getName());
 			user.setLastname("projectAccount" + projectAccount.getName());
 			user.setName(projectAccount.getName());
-			user.setPassword(projectAccount.getPassword());
 			user.setUsername(projectAccount.getLogin());
 			user.setEnabled(Boolean.TRUE);
 
@@ -142,7 +141,6 @@ public class ProjectAccountServiceImpl extends ResourceServiceImpl<ProjectAccoun
 			User foundUser = userService.findByFunctionalAccountId(projectAccount.getId());
 			if (foundUser != null) {
 				// Update the user
-				foundUser.setPassword(projectAccount.getPassword());
 				foundUser.setUsername(projectAccount.getLogin());
 				foundUser.setEnabled(projectAccount.getEnabled());
 				userService.update(foundUser);

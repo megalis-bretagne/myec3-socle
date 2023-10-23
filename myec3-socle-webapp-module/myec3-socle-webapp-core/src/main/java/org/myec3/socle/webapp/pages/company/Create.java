@@ -286,9 +286,7 @@ public class Create extends AbstractPage {
 			this.user.setEnabled(Boolean.TRUE);
 			this.user.setUsername(this.email.toLowerCase());
 			String password = this.userService.generatePassword();
-			this.user.setPassword(this.userService
-					.generateHashPassword(password));
-			this.user.setExpirationDatePassword(this.userService.generateExpirationDatePassword());
+			this.user.setTemporaryPassword(password);
 			this.userService.create(this.user);
 
 			// CREATE EMPLOYEE

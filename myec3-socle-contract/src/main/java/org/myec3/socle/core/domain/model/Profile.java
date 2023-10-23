@@ -145,6 +145,15 @@ public abstract class Profile extends Resource implements UserDetails {
 	}
 
 	/**
+	 * {@inheritDoc}
+	 */
+	@Transient
+	@Override
+	public String getPassword() {
+		return "";
+	}
+
+	/**
 	 * Grade of the profile. For possible values @see ProfileGrade
 	 *
 	 *
@@ -561,18 +570,6 @@ public abstract class Profile extends Resource implements UserDetails {
 	@JsonIgnore
 	public boolean isCredentialsNonExpired() {
 		return true;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Transient
-	@Override
-	public String getPassword() {
-		return this.getUser().getPassword();
-	}
-
-	public void setPassword(String password) {
 	}
 
 	/**
