@@ -10,12 +10,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.myec3.socle.core.constants.MyEc3MpsUpdateConstants;
 import org.myec3.socle.core.domain.dao.ConnectionInfosDao;
-import org.myec3.socle.core.domain.model.Company;
-import org.myec3.socle.core.domain.model.ConnectionInfos;
-import org.myec3.socle.core.domain.model.EmployeeProfile;
-import org.myec3.socle.core.domain.model.Establishment;
-import org.myec3.socle.core.domain.model.MpsUpdateJob;
-import org.myec3.socle.core.domain.model.Profile;
+import org.myec3.socle.core.domain.model.*;
 import org.myec3.socle.core.domain.model.enums.MpsUpdateTypeValue;
 import org.myec3.socle.core.domain.model.enums.ProfileTypeValue;
 import org.myec3.socle.core.domain.model.enums.ResourceType;
@@ -179,4 +174,17 @@ public class ConnectionInfosServiceImpl extends AbstractGenericServiceImpl<Conne
 		return listToReturn;
 	}
 
+	@Override
+	@Transactional(readOnly = false)
+	public void updateUserLastConnectionTime(User user, long time) {
+		ConnectionInfos connectionInfos = user.getConnectionInfos();
+		if (connectionInfos == null) {
+			ConnectionInfos newConnectionInfos = new ConnectionInfos(time);
+			this.create(newConnectionInfos);
+			user.setConnectionInfos(newConnectionInfos);
+			userService.update(user);
+		} else {
+			this.update(connectionInfos, time);
+		}
+	}
 }
