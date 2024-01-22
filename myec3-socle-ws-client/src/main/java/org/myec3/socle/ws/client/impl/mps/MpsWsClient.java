@@ -558,8 +558,10 @@ public class MpsWsClient implements CompanyWSinfo {
 
     public static Company convertUniteLegaleToCompany(ApiGouvUniteLegale uniteLegale, ApiGouvEtablissement etablissement, ApiGouvMeta
             meta, List<ApiGouvMandataireSocial> mandatairesSociaux) {
-        String raisonSociale = uniteLegale.getPersonneMoraleAttributs() != null ? etablissement.getEnseigne() : "";
+
         Company company = new Company(uniteLegale.getFormeJuridique().getLibelle(), "");
+        company.setLabel(uniteLegale.getPersonneMoraleAttributs() != null ? uniteLegale.getPersonneMoraleAttributs().getRaisonSociale() : "");
+        company.setName(uniteLegale.getPersonneMoraleAttributs() != null ? uniteLegale.getPersonneMoraleAttributs().getRaisonSociale() : "");
         company.setSiren(uniteLegale.getSiren());
         company.setSiretHeadOffice(uniteLegale.getSiretSiegeSocial());
         company.setApeCode(convertMyec3NafFormat(uniteLegale.getActivitePrincipale()));
