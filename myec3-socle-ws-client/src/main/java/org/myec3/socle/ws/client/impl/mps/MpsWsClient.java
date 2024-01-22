@@ -276,6 +276,7 @@ public class MpsWsClient implements CompanyWSinfo {
         Company company = new Company();
         if (siren != null) {
             logger.info("Updating company : " + siren);
+            company.setSiren(siren);
             try {
                 // Call MPS to get the Company informations
                 ResponseUniteLegale responseEntreprises = responseEntreprises = this.getInfoEntreprises(company.getSiren());
