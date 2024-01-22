@@ -573,7 +573,9 @@ public class MpsWsClient implements CompanyWSinfo {
         if (mandatairesSociaux != null) {
             List<Person> persons = new ArrayList<>();
             for (ApiGouvMandataireSocial mandataireSocial : mandatairesSociaux) {
-                persons.add(convertMandataireSocialToPerson(mandataireSocial));
+                if (mandataireSocial.getData().getNom() != null) {
+                    persons.add(convertMandataireSocialToPerson(mandataireSocial));
+                }
             }
             company.setResponsibles(persons);
         }
