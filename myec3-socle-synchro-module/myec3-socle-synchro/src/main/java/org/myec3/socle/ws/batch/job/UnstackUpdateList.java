@@ -229,6 +229,7 @@ public class UnstackUpdateList {
                             try {
                                 // persist the update in database
                                 logger.debug("Update Company " + companyToUpdate.getId() + " completed.");
+                                logger.debug("Update Company " + companyToUpdate.getId() + " completed.");
 
                                 List<Person> tmpPersonList = tmpCompany.getResponsibles();
 

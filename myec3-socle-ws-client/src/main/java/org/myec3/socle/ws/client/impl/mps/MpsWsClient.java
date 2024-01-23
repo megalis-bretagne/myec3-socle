@@ -621,9 +621,10 @@ public class MpsWsClient implements CompanyWSinfo {
         establishment.setIsHeadOffice(Boolean.valueOf(etablissement.getSiegeSocial()));
         establishment.setApeCode(convertMyec3NafFormat(etablissement.getActivitePrincipale()));
         establishment.setApeNafLabel(etablissement.getActivitePrincipale() != null ? etablissement.getActivitePrincipale().getLibelle() : "");
-        establishment.setAddress(convertAdresseToAddress(etablissement.getAdresse()));
         establishment.setDiffusableInformations(Boolean.valueOf(etablissement.getDiffusableCommercialement()));
-        establishment.setPays(convertAdresseToPaysImplantation(etablissement.getAdresse()));
+        establishment.setAddress(convertAdresseToAddress(etablissement.getAdresse()));
+//        establishment.setPays(convertAdresseToPaysImplantation(etablissement.getAdresse()));
+
         establishment.setLastUpdate(meta.getDateDerniereMiseAjourAsDate());
         logger.info("New establishment generated from api.gouv WS :" + establishment.getSiret());
         return establishment;
@@ -637,11 +638,18 @@ public class MpsWsClient implements CompanyWSinfo {
         adresse.setInsee(apiGouvAdresse.getCodeCommune());
         adresse.setPostalCode(apiGouvAdresse.getCodePostal());
         adresse.setCity(apiGouvAdresse.getLibelleCommune());
+        if (apiGouvAdresse.codePaysEtranger == null) {
+            adresse.setCountry(Country.FR);
+        }
         logger.info("New adresse generated from api.gouv WS :" + adresse.getStreetName());
         return adresse;
     }
 
     public static PaysImplantation convertAdresseToPaysImplantation(ApiGouvAdresse adresse) {
+        if (adresse.codePaysEtranger == null) {
+            logger.info("Pas de paysImplantation api.gouv WS");
+            return null;
+        }
         PaysImplantation paysImplantation = new PaysImplantation();
         paysImplantation.setCode(adresse.getCodePaysEtranger());
         paysImplantation.setValue(adresse.libellePaysEtranger);
