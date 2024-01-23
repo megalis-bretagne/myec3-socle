@@ -172,10 +172,7 @@ public class UnstackUpdateList {
                                     companyToUpdate.setInsee(insee.getInseeCode());
                                 }
                             }
-                            if (!tmpEstablishment.getName().isEmpty()){
-                                companyToUpdate.setName(tmpEstablishment.getName());
-                                companyToUpdate.setLabel(tmpEstablishment.getName());
-                            }
+
 
                             // update apeCode
                             if (tmpEstablishment.getApeCode() != null) {
@@ -199,6 +196,7 @@ public class UnstackUpdateList {
                             }
                             companyToUpdate.setNic(tmpCompany.getNic());
                             companyToUpdate.setLabel(tmpCompany.getLabel());
+                            companyToUpdate.setName(tmpCompany.getName());
 
                             if (tmpCompany.getLegalCategory() != null) {
                                 companyToUpdate.setLegalCategory(tmpCompany.getLegalCategory());
@@ -225,7 +223,10 @@ public class UnstackUpdateList {
                             }
                             companyToUpdate.setAdministrativeState(administrativeState);
 
-                            companyToUpdate.setAddress(tmpCompany.getAddress());
+                            if (tmpEstablishment.getAddress() != null){
+                                companyToUpdate.setAddress(tmpEstablishment.getAddress() );
+                            }
+
                             try {
                                 // persist the update in database
                                 logger.debug("Update Company " + companyToUpdate.getId() + " completed.");

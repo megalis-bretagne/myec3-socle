@@ -623,7 +623,7 @@ public class MpsWsClient implements CompanyWSinfo {
         establishment.setApeNafLabel(etablissement.getActivitePrincipale() != null ? etablissement.getActivitePrincipale().getLibelle() : "");
         establishment.setDiffusableInformations(Boolean.valueOf(etablissement.getDiffusableCommercialement()));
         establishment.setAddress(convertAdresseToAddress(etablissement.getAdresse()));
-//        establishment.setPays(convertAdresseToPaysImplantation(etablissement.getAdresse()));
+        establishment.setPays(convertAdresseToPaysImplantation(etablissement.getAdresse()));
 
         establishment.setLastUpdate(meta.getDateDerniereMiseAjourAsDate());
         logger.info("New establishment generated from api.gouv WS :" + establishment.getSiret());
