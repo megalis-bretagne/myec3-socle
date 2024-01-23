@@ -276,6 +276,7 @@ public class MpsWsClient implements CompanyWSinfo {
         Company company = new Company();
         if (siren != null) {
             logger.info("Updating company : " + siren);
+            company.setSiren(siren);
             try {
                 // Call MPS to get the Company informations
                 ResponseUniteLegale responseEntreprises = responseEntreprises = this.getInfoEntreprises(company.getSiren());
@@ -557,8 +558,10 @@ public class MpsWsClient implements CompanyWSinfo {
 
     public static Company convertUniteLegaleToCompany(ApiGouvUniteLegale uniteLegale, ApiGouvEtablissement etablissement, ApiGouvMeta
             meta, List<ApiGouvMandataireSocial> mandatairesSociaux) {
-        String raisonSociale = uniteLegale.getPersonneMoraleAttributs() != null ? etablissement.getEnseigne() : "";
+
         Company company = new Company(uniteLegale.getFormeJuridique().getLibelle(), "");
+        company.setLabel(uniteLegale.getPersonneMoraleAttributs() != null ? uniteLegale.getPersonneMoraleAttributs().getRaisonSociale() : "");
+        company.setName(uniteLegale.getPersonneMoraleAttributs() != null ? uniteLegale.getPersonneMoraleAttributs().getRaisonSociale() : "");
         company.setSiren(uniteLegale.getSiren());
         company.setSiretHeadOffice(uniteLegale.getSiretSiegeSocial());
         company.setApeCode(convertMyec3NafFormat(uniteLegale.getActivitePrincipale()));
@@ -570,9 +573,13 @@ public class MpsWsClient implements CompanyWSinfo {
         if (mandatairesSociaux != null) {
             List<Person> persons = new ArrayList<>();
             for (ApiGouvMandataireSocial mandataireSocial : mandatairesSociaux) {
-                persons.add(convertMandataireSocialToPerson(mandataireSocial));
+                if (mandataireSocial.getData().getNom() != null) {
+                    persons.add(convertMandataireSocialToPerson(mandataireSocial));
+                }
             }
-            company.setResponsibles(persons);
+            if (persons.size() > 0){
+                company.setResponsibles(persons);
+            }
         }
         logger.info("New company generated from api.gouv.fr  :" + company.getSiren());
         company.setEnabled(true);
@@ -608,15 +615,16 @@ public class MpsWsClient implements CompanyWSinfo {
 
     public static Establishment convertEtablissementToEtablishment(ApiGouvEtablissement etablissement, ApiGouvMeta
             meta) {
-        String raisonSociale = etablissement.getUniteLegale() != null && etablissement.getUniteLegale().getPersonneMoraleAttributs() != null ? etablissement.getEnseigne() : "";
+        String raisonSociale = etablissement.getUniteLegale() != null && etablissement.getUniteLegale().getPersonneMoraleAttributs() != null ? etablissement.getUniteLegale().getPersonneMoraleAttributs().raisonSociale: "";
         Establishment establishment = new Establishment(raisonSociale, raisonSociale);
         establishment.setSiret(etablissement.getSiret());
         establishment.setIsHeadOffice(Boolean.valueOf(etablissement.getSiegeSocial()));
         establishment.setApeCode(convertMyec3NafFormat(etablissement.getActivitePrincipale()));
         establishment.setApeNafLabel(etablissement.getActivitePrincipale() != null ? etablissement.getActivitePrincipale().getLibelle() : "");
-        establishment.setAddress(convertAdresseToAddress(etablissement.getAdresse()));
         establishment.setDiffusableInformations(Boolean.valueOf(etablissement.getDiffusableCommercialement()));
+        establishment.setAddress(convertAdresseToAddress(etablissement.getAdresse()));
         establishment.setPays(convertAdresseToPaysImplantation(etablissement.getAdresse()));
+
         establishment.setLastUpdate(meta.getDateDerniereMiseAjourAsDate());
         logger.info("New establishment generated from api.gouv WS :" + establishment.getSiret());
         return establishment;
@@ -630,11 +638,18 @@ public class MpsWsClient implements CompanyWSinfo {
         adresse.setInsee(apiGouvAdresse.getCodeCommune());
         adresse.setPostalCode(apiGouvAdresse.getCodePostal());
         adresse.setCity(apiGouvAdresse.getLibelleCommune());
+        if (apiGouvAdresse.codePaysEtranger == null) {
+            adresse.setCountry(Country.FR);
+        }
         logger.info("New adresse generated from api.gouv WS :" + adresse.getStreetName());
         return adresse;
     }
 
     public static PaysImplantation convertAdresseToPaysImplantation(ApiGouvAdresse adresse) {
+        if (adresse.codePaysEtranger == null) {
+            logger.info("Pas de paysImplantation api.gouv WS");
+            return null;
+        }
         PaysImplantation paysImplantation = new PaysImplantation();
         paysImplantation.setCode(adresse.getCodePaysEtranger());
         paysImplantation.setValue(adresse.libellePaysEtranger);

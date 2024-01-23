@@ -173,6 +173,15 @@ public class UnstackUpdateList {
                                 }
                             }
 
+
+                            // update apeCode
+                            if (tmpEstablishment.getApeCode() != null) {
+                                companyToUpdate.setApeCode(tmpEstablishment.getApeCode());
+                            } else if (companyToUpdate.getApeCode() == null) {
+                                companyToUpdate.setApeCode("");
+                            }
+
+
                             // update apeCode
                             if (tmpEstablishment.getApeCode() != null) {
                                 companyToUpdate.setApeCode(tmpEstablishment.getApeCode());
@@ -187,6 +196,7 @@ public class UnstackUpdateList {
                             }
                             companyToUpdate.setNic(tmpCompany.getNic());
                             companyToUpdate.setLabel(tmpCompany.getLabel());
+                            companyToUpdate.setName(tmpCompany.getName());
 
                             if (tmpCompany.getLegalCategory() != null) {
                                 companyToUpdate.setLegalCategory(tmpCompany.getLegalCategory());
@@ -213,9 +223,13 @@ public class UnstackUpdateList {
                             }
                             companyToUpdate.setAdministrativeState(administrativeState);
 
-                            companyToUpdate.setAddress(tmpCompany.getAddress());
+                            if (tmpEstablishment.getAddress() != null){
+                                companyToUpdate.setAddress(tmpEstablishment.getAddress() );
+                            }
+
                             try {
                                 // persist the update in database
+                                logger.debug("Update Company " + companyToUpdate.getId() + " completed.");
                                 logger.debug("Update Company " + companyToUpdate.getId() + " completed.");
 
                                 List<Person> tmpPersonList = tmpCompany.getResponsibles();
@@ -323,6 +337,11 @@ public class UnstackUpdateList {
                             Date date = new Date();
                             establishmentToUpdate.setLastUpdate(date);
                             establishmentToUpdate.setAddress(tmpEstablishment.getAddress());
+
+                            if (!tmpEstablishment.getName().isEmpty()){
+                                establishmentToUpdate.setName(tmpEstablishment.getName());
+                                establishmentToUpdate.setLabel(tmpEstablishment.getName());
+                            }
 
                             if (tmpEstablishment.getAddress().getInsee() != null) {
                                 InseeGeoCode insee = this.inseeGeoCodeService

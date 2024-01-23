@@ -1,6 +1,7 @@
 package org.myec3.socle.synchro.controller;
 
 import lombok.Data;
+import org.myec3.socle.core.domain.model.ConnectionInfos;
 import org.myec3.socle.core.domain.model.User;
 import org.myec3.socle.core.service.ConnectionInfosService;
 import org.myec3.socle.core.service.UserService;
@@ -57,7 +58,7 @@ public class AuthEventsController {
             logger.warn("Auth event ignored: no user found for username \"" + username + "\"");
             return ResponseEntity.ok().build();
         }
-        connectionInfosService.update(user.getConnectionInfos(), event.getTime());
+        connectionInfosService.updateUserLastConnectionTime(user, event.getTime());
         return ResponseEntity.ok().build();
     }
 

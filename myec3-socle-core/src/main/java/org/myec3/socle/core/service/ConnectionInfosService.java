@@ -5,6 +5,7 @@ import java.util.List;
 import org.myec3.socle.core.domain.model.Company;
 import org.myec3.socle.core.domain.model.ConnectionInfos;
 import org.myec3.socle.core.domain.model.MpsUpdateJob;
+import org.myec3.socle.core.domain.model.User;
 
 public interface ConnectionInfosService extends IGenericService<ConnectionInfos> {
 
@@ -16,4 +17,5 @@ public interface ConnectionInfosService extends IGenericService<ConnectionInfos>
 
 	List<MpsUpdateJob> getUserCompanyToUpdate();
 
+	void updateUserLastConnectionTime(User user, long time);
 }
