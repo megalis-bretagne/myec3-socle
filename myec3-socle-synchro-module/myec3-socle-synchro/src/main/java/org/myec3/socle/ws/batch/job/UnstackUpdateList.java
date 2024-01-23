@@ -172,6 +172,18 @@ public class UnstackUpdateList {
                                     companyToUpdate.setInsee(insee.getInseeCode());
                                 }
                             }
+                            if (!tmpEstablishment.getName().isEmpty()){
+                                companyToUpdate.setName(tmpEstablishment.getName());
+                                companyToUpdate.setLabel(tmpEstablishment.getName());
+                            }
+
+                            // update apeCode
+                            if (tmpEstablishment.getApeCode() != null) {
+                                companyToUpdate.setApeCode(tmpEstablishment.getApeCode());
+                            } else if (companyToUpdate.getApeCode() == null) {
+                                companyToUpdate.setApeCode("");
+                            }
+
 
                             // update apeCode
                             if (tmpEstablishment.getApeCode() != null) {
@@ -323,6 +335,11 @@ public class UnstackUpdateList {
                             Date date = new Date();
                             establishmentToUpdate.setLastUpdate(date);
                             establishmentToUpdate.setAddress(tmpEstablishment.getAddress());
+
+                            if (!tmpEstablishment.getName().isEmpty()){
+                                establishmentToUpdate.setName(tmpEstablishment.getName());
+                                establishmentToUpdate.setLabel(tmpEstablishment.getName());
+                            }
 
                             if (tmpEstablishment.getAddress().getInsee() != null) {
                                 InseeGeoCode insee = this.inseeGeoCodeService

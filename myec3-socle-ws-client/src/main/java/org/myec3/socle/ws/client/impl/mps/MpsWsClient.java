@@ -577,7 +577,9 @@ public class MpsWsClient implements CompanyWSinfo {
                     persons.add(convertMandataireSocialToPerson(mandataireSocial));
                 }
             }
-            company.setResponsibles(persons);
+            if (persons.size() > 0){
+                company.setResponsibles(persons);
+            }
         }
         logger.info("New company generated from api.gouv.fr  :" + company.getSiren());
         company.setEnabled(true);
@@ -613,7 +615,7 @@ public class MpsWsClient implements CompanyWSinfo {
 
     public static Establishment convertEtablissementToEtablishment(ApiGouvEtablissement etablissement, ApiGouvMeta
             meta) {
-        String raisonSociale = etablissement.getUniteLegale() != null && etablissement.getUniteLegale().getPersonneMoraleAttributs() != null ? etablissement.getEnseigne() : "";
+        String raisonSociale = etablissement.getUniteLegale() != null && etablissement.getUniteLegale().getPersonneMoraleAttributs() != null ? etablissement.getUniteLegale().getPersonneMoraleAttributs().raisonSociale: "";
         Establishment establishment = new Establishment(raisonSociale, raisonSociale);
         establishment.setSiret(etablissement.getSiret());
         establishment.setIsHeadOffice(Boolean.valueOf(etablissement.getSiegeSocial()));
