@@ -13,6 +13,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
+
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.*;
@@ -173,14 +175,12 @@ public class UnstackUpdateList {
                                 }
                             }
 
-
                             // update apeCode
                             if (tmpEstablishment.getApeCode() != null) {
                                 companyToUpdate.setApeCode(tmpEstablishment.getApeCode());
                             } else if (companyToUpdate.getApeCode() == null) {
                                 companyToUpdate.setApeCode("");
                             }
-
 
                             // update apeCode
                             if (tmpEstablishment.getApeCode() != null) {
@@ -195,8 +195,12 @@ public class UnstackUpdateList {
                                 companyToUpdate.setApeNafLabel("");
                             }
                             companyToUpdate.setNic(tmpCompany.getNic());
-                            companyToUpdate.setLabel(tmpCompany.getLabel());
-                            companyToUpdate.setName(tmpCompany.getName());
+                            if (!StringUtils.isEmpty(tmpCompany.getLabel())){
+                                companyToUpdate.setLabel(tmpCompany.getLabel());
+                            }
+                            if (!StringUtils.isEmpty(tmpCompany.getName() )){
+                                companyToUpdate.setName(tmpCompany.getName());
+                            }
 
                             if (tmpCompany.getLegalCategory() != null) {
                                 companyToUpdate.setLegalCategory(tmpCompany.getLegalCategory());
@@ -338,7 +342,7 @@ public class UnstackUpdateList {
                             establishmentToUpdate.setLastUpdate(date);
                             establishmentToUpdate.setAddress(tmpEstablishment.getAddress());
 
-                            if (!tmpEstablishment.getName().isEmpty()){
+                            if (!StringUtils.isEmpty(tmpEstablishment.getName())){
                                 establishmentToUpdate.setName(tmpEstablishment.getName());
                                 establishmentToUpdate.setLabel(tmpEstablishment.getName());
                             }
