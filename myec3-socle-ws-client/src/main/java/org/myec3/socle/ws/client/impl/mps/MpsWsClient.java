@@ -648,7 +648,10 @@ public class MpsWsClient implements CompanyWSinfo {
     public static PaysImplantation convertAdresseToPaysImplantation(ApiGouvAdresse adresse) {
         if (adresse.codePaysEtranger == null) {
             logger.info("Pas de paysImplantation api.gouv WS");
-            return null;
+            PaysImplantation paysImplantation = new PaysImplantation();
+            paysImplantation.setCode("FR");
+            paysImplantation.setValue("FRANCE");
+            return paysImplantation;
         }
         PaysImplantation paysImplantation = new PaysImplantation();
         paysImplantation.setCode(adresse.getCodePaysEtranger());
