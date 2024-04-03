@@ -5,6 +5,16 @@ Tous changements importants seront journalisés dans ce fichier.
 Basé sur [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 
+## [0.3.5] - 2024-04-03
+
+### Changed
+- [Config]  no-reply@prae.megalis.bretagne.bzh en lieu et place de no-reply@megalis.bretagne.bzh
+
+### Fixed
+
+- [R-230830] - Init du pays implantation à france par defaut
+- [HOTFIX][R-188186]- Correction IdExterneParent envoyé à la SDM valorisé correctement
+
 ## [0.3.0] - 2023-06-20
 
 ### Changed
