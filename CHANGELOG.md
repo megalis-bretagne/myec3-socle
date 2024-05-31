@@ -4,6 +4,12 @@ Tous changements importants seront journalisés dans ce fichier.
 
 Basé sur [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## Unreleased
+
+### Changed
+
+- [opendata-marqueblanche#32](https://github.com/megalis-bretagne/opendata-marqueblanche/issues/32) synchro des infos utilisateurs vers Keycloak : renommage de l'attribut "role" en "role_opendata"
+- [Config] Migration de données pour les comptes Keycloak existants : renommage de l'attribut utilisateur "role" en "role_opendata"
 
 ## [0.3.5] - 2024-04-03
 
