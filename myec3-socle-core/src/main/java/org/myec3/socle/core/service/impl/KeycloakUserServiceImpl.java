@@ -30,7 +30,7 @@ public class KeycloakUserServiceImpl implements KeycloakUserService {
     private static final String ALFUSERNAME_MONOTENANT_ATTR_NAME = "alfUserNameMonoTenant";
     private static final String ALFUSERNAME_MULTITENANT_ATTR_NAME = "alfUserNameMultiTenant";
     private static final String SIREN = "siren";
-    private static final String ROLE = "role";
+    private static final String ROLE_OPENDATA = "role_opendata";
     private static final String SUFFIX_MONOTENANT = "@monotenant.megalis";
 
     private final RealmResource realm;
@@ -118,11 +118,11 @@ public class KeycloakUserServiceImpl implements KeycloakUserService {
         String email = profile.getEmail();
         String userType = profile.getProfileType().getValue().getLabel();
 
-        String role = null;
+        String roleOpenData = null;
         if (profile.getRoles() != null) {
             for (Role profileRole : profile.getRoles()) {
                 if ("pub-open-data".equals(profileRole.getApplication().getName())) {
-                    role = profileRole.getName();
+                    roleOpenData = profileRole.getName();
                 }
             }
         }
@@ -159,7 +159,7 @@ public class KeycloakUserServiceImpl implements KeycloakUserService {
         setUserAttributeValue(userAttributes, ALFUSERNAME_MONOTENANT_ATTR_NAME, alfUserNameMonoTenant);
         setUserAttributeValue(userAttributes, ALFUSERNAME_MULTITENANT_ATTR_NAME, alfUserNameMultiTenant);
         setUserAttributeValue(userAttributes, SIREN, siren);
-        setUserAttributeValue(userAttributes, ROLE, role);
+        setUserAttributeValue(userAttributes, ROLE_OPENDATA, roleOpenData);
 
         userRepresentation.setAttributes(userAttributes);
     }
